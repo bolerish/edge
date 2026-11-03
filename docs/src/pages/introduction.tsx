@@ -50,7 +50,7 @@ export const introduction: DocPage = {
         <>
           <P>
             Use a material to describe how an edge responds to light. The
-            optional Wisp theme offers 01 Raised and 03 Matte. An unthemed
+            optional Wisp theme offers Raised and Matte. An unthemed
             recessed material supports inset elements such as input wrappers.
           </P>
           <P>
@@ -67,8 +67,10 @@ export const introduction: DocPage = {
       content: (
         <>
           <P>
-            Auto mode respects reduced motion. Choose Pointer mode to explicitly
-            enable tracking, or Static mode for a fixed light direction.
+            The documentation demo starts in Dynamic (<code>pointer</code>) mode
+            to show pointer tracking. Choose System (<code>auto</code>) to respect
+            your device and motion preferences, or Static (<code>static</code>)
+            for a fixed light direction.
           </P>
           <P>
             Keep visible borders and keyboard focus without relying on the

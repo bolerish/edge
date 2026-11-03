@@ -96,7 +96,12 @@ test('materials and modes update without further pointer movement', async ({
 }) => {
   await page.goto('/');
   const card = page.getByTestId('surface-card');
-  await page.getByRole('button', { name: 'Static', exact: true }).click();
+  const light = page.getByRole('combobox', { name: 'Light', exact: true });
+  const surface = page.getByRole('combobox', { name: 'Surface', exact: true });
+  await expect(light).toContainText('Dynamic');
+  await expect(surface).toContainText('Raised');
+  await light.click();
+  await page.getByRole('option', { name: 'Static', exact: true }).click();
   await expect
     .poll(() =>
       card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
@@ -112,7 +117,8 @@ test('materials and modes update without further pointer movement', async ({
   const strength = await card.evaluate((node) =>
     Number(node.style.getPropertyValue('--wisp-strength')),
   );
-  await page.getByRole('button', { name: '03 Matte' }).click();
+  await surface.click();
+  await page.getByRole('option', { name: 'Matte', exact: true }).click();
   await expect
     .poll(() =>
       card.evaluate((node) =>
@@ -121,13 +127,15 @@ test('materials and modes update without further pointer movement', async ({
     )
     .toBeCloseTo(strength * 0.3, 2);
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.getByRole('button', { name: 'Auto', exact: true }).click();
+  await light.click();
+  await page.getByRole('option', { name: 'System', exact: true }).click();
   await expect
     .poll(() =>
       card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
     )
     .toBe('315.0deg');
-  await page.getByRole('button', { name: 'Mouse', exact: true }).click();
+  await light.click();
+  await page.getByRole('option', { name: 'Dynamic', exact: true }).click();
   await card.scrollIntoViewIfNeeded();
   const box = await card.boundingBox();
   if (!box) throw new Error('Missing card');

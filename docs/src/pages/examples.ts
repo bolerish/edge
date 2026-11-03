@@ -1,7 +1,7 @@
 export const firstSurface = `import { useLight, useSurface, type Light } from '@bolerish/wisp-react';
 
 function App() {
-  const light = useLight();
+  const light = useLight({ mode: 'pointer' });
   return <Card light={light} />;
 }
 

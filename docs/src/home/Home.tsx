@@ -11,7 +11,14 @@ import { Heading } from '@bolerish/ui/heading';
 import { Input } from '@bolerish/ui/input';
 import { Label } from '@bolerish/ui/label';
 import { Paragraph } from '@bolerish/ui/paragraph';
-import { ToggleGroup, ToggleGroupItem } from '@bolerish/ui/toggle-group';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectPopup,
+  SelectList,
+  SelectItem,
+} from '@bolerish/ui/select';
 import {
   useLight,
   useSurface,
@@ -23,6 +30,11 @@ import { CodeBlock } from '../ui/CodeBlock.js';
 
 type Material = 'raised' | 'matte';
 type Mode = NonNullable<LightOptions['mode']>;
+const modeDescriptions: Record<Mode, string> = {
+  auto: 'Adapts to your device and motion preferences.',
+  pointer: 'Follows your pointer, even when reduced motion is enabled.',
+  static: 'Keeps the light direction fixed.',
+};
 interface Project {
   id: number;
   name: string;
@@ -76,7 +88,7 @@ export function Home() {
 
 function Dashboard() {
   const [material, setMaterial] = useState<Material>('raised');
-  const [mode, setMode] = useState<Mode>('auto');
+  const [mode, setMode] = useState<Mode>('pointer');
   const [projects, setProjects] = useState(initialProjects);
   const [query, setQuery] = useState('');
   const [announcement, setAnnouncement] = useState('');
@@ -121,47 +133,54 @@ function Dashboard() {
         <div className="dashboard-controls">
           <div className="control-group">
             <span id="material-label">Surface</span>
-            <ToggleGroup
-              aria-labelledby="material-label"
-              variant="outline"
-              size="sm"
-              value={[material]}
-              onValueChange={(values: unknown[]) => {
-                const value = values[0];
+            <Select
+              items={{ raised: 'Raised', matte: 'Matte' }}
+              value={material}
+              onValueChange={(value) => {
                 if (value === 'raised' || value === 'matte') setMaterial(value);
               }}
             >
-              <ToggleGroupItem value="raised">01 Raised</ToggleGroupItem>
-              <ToggleGroupItem value="matte">03 Matte</ToggleGroupItem>
-            </ToggleGroup>
+              <SelectTrigger aria-labelledby="material-label">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectPopup>
+                <SelectList>
+                  <SelectItem value="raised">Raised</SelectItem>
+                  <SelectItem value="matte">Matte</SelectItem>
+                </SelectList>
+              </SelectPopup>
+            </Select>
           </div>
           <div className="control-group">
             <span id="mode-label">Light</span>
-            <ToggleGroup
-              aria-labelledby="mode-label"
-              variant="outline"
-              size="sm"
-              value={[mode]}
-              onValueChange={(values: unknown[]) => {
-                const value = values[0];
-                if (
-                  value === 'auto' ||
-                  value === 'pointer' ||
-                  value === 'static'
-                )
+            <Select
+              items={{ static: 'Static', pointer: 'Dynamic', auto: 'System' }}
+              value={mode}
+              onValueChange={(value) => {
+                if (value === 'auto' || value === 'pointer' || value === 'static')
                   setMode(value);
               }}
             >
-              <ToggleGroupItem value="auto">Auto</ToggleGroupItem>
-              <ToggleGroupItem value="pointer">Mouse</ToggleGroupItem>
-              <ToggleGroupItem value="static">Static</ToggleGroupItem>
-            </ToggleGroup>
+              <SelectTrigger
+                aria-labelledby="mode-label"
+                aria-describedby="mode-description"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectPopup>
+                <SelectList>
+                  <SelectItem value="static">Static</SelectItem>
+                  <SelectItem value="pointer">Dynamic</SelectItem>
+                  <SelectItem value="auto">System</SelectItem>
+                </SelectList>
+              </SelectPopup>
+            </Select>
           </div>
         </div>
       </header>
       <Paragraph variant="caption" className="dashboard-note">
-        Demo workspace · Changes reset on reload. Auto respects reduced motion;
-        Mouse explicitly enables tracking.
+        Demo workspace · Changes reset on reload.{' '}
+        <span id="mode-description">{modeDescriptions[mode]}</span>
       </Paragraph>
       <div className="summary-grid">
         <Summary
