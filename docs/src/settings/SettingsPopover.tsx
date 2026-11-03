@@ -16,7 +16,7 @@ export function SettingsPopover() {
         <div className="preferences">
           <PopoverTitle>Settings</PopoverTitle>
           <label>
-            <span>Edge style</span>
+            <span>Style</span>
             <NativeSelect value={preferences.material} onChange={(event: ChangeEvent<HTMLSelectElement>) => {
               const material = event.target.value;
               if (material === 'raised' || material === 'matte') updatePreferences({ material });

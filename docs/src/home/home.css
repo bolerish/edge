@@ -210,11 +210,8 @@
   position: absolute;
   width: 68%;
   height: 200px;
-  padding: 28px;
   border-radius: 20px;
-  background: var(--site-subtle);
-  border: 1px solid var(--site-border);
-  color: var(--site-foreground);
+
 }
 .hero-example-back {
   top: 18px;
@@ -259,4 +256,17 @@
   .hero-example {
     margin-bottom: 40px;
   }
+}
+
+.hero-example-panel {
+  height: 100%;
+  padding: 28px;
+  border-radius: inherit;
+  border-color: color-mix(in srgb, currentColor 30%, transparent);
+}
+.hero-example-panel .hero-example-line {
+  background: color-mix(in srgb, currentColor 25%, transparent);
+}
+.hero-example-panel .hero-example-orbit {
+  border-color: color-mix(in srgb, currentColor 35%, transparent);
 }

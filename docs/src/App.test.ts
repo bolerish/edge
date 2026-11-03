@@ -83,7 +83,7 @@ test('materials and modes update without further pointer movement', async ({
   const card = page.getByTestId('surface-card');
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   const light = page.getByRole('combobox', { name: 'Pointer tracking', exact: true });
-  const surface = page.getByRole('combobox', { name: 'Edge style', exact: true });
+  const surface = page.getByRole('combobox', { name: 'Style', exact: true });
   await expect(light).toHaveValue('pointer');
   await expect(surface).toHaveValue('raised');
   await light.selectOption('static');
@@ -292,13 +292,13 @@ test('skip link, code scrolling, zoom reflow and high-contrast code stay usable'
 test('header settings persist across documentation navigation and reloads', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Edge style' }).selectOption('matte');
+  await page.getByRole('combobox', { name: 'Style' }).selectOption('matte');
   await page.getByRole('combobox', { name: 'Pointer tracking' }).selectOption('static');
   await page.keyboard.press('Escape');
   await page.getByRole('link', { name: 'Docs', exact: true }).click();
   await page.reload();
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await expect(page.getByRole('combobox', { name: 'Edge style' })).toHaveValue('matte');
+  await expect(page.getByRole('combobox', { name: 'Style' })).toHaveValue('matte');
   await expect(page.getByRole('combobox', { name: 'Pointer tracking' })).toHaveValue('static');
 });
 
@@ -383,15 +383,7 @@ test('hero compares lighting and package-manager tabs expose matching commands',
   page,
 }) => {
   await page.goto('/');
-  const surface = page.getByTestId('hero-surface');
-  await page.getByRole('button', { name: 'Lighting on', exact: true }).click();
-  expect(
-    await surface.evaluate((node) => getComputedStyle(node, '::after').opacity),
-  ).toBe('0');
-  await page.getByRole('button', { name: 'Lighting off', exact: true }).click();
-  await expect(
-    page.getByRole('button', { name: 'Lighting on', exact: true }),
-  ).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: /Lighting (on|off)/ })).toHaveCount(0);
   for (const [manager, command] of [
     ['npm', 'npm install'],
     ['pnpm', 'pnpm add'],
