@@ -84,12 +84,38 @@ const library = await readFile(
 assert(
   library.startsWith('"use client"') || library.startsWith("'use client'"),
 );
-const docs = await readFile(resolve(root, 'apps/docs/dist/index.html'), 'utf8');
-const ids = new Set(
-  [...docs.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]),
-);
-for (const match of docs.matchAll(/href="#([^"]+)"/g))
-  assert(ids.has(match[1]), `Broken documentation link: ${match[1]}`);
+const site = resolve(root, 'docs/dist');
+const routes = JSON.parse(await readFile(resolve(site, 'routes.json'), 'utf8'));
+assert(routes.includes('/docs/') && routes.includes('/playground/'));
+const documents = new Map();
+for (const route of routes) {
+  const html = await readFile(resolve(site, `.${route}`, 'index.html'), 'utf8');
+  assert(
+    html.includes(`data-path="${route}"`) && html.includes('<h1'),
+    `Missing prerendered content: ${route}`,
+  );
+  documents.set(route, html);
+}
+for (const [route, html] of documents) {
+  for (const match of html.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)) {
+    const target = new URL(
+      match[1].replaceAll('&amp;', '&'),
+      `https://wisp.invalid${route}`,
+    );
+    if (target.origin !== 'https://wisp.invalid') continue;
+    const page = documents.get(target.pathname);
+    assert(page, `Broken site route: ${match[1]} from ${route}`);
+    if (target.hash) {
+      const ids = new Set(
+        [...page.matchAll(/\bid="([^"]+)"/g)].map((item) => item[1]),
+      );
+      assert(
+        ids.has(decodeURIComponent(target.hash.slice(1))),
+        `Broken site anchor: ${match[1]} from ${route}`,
+      );
+    }
+  }
+}
 console.log(
   'Package archives verified: public imports, SSR, declarations, CSS, licenses, docs anchors and private-file exclusion.',
 );

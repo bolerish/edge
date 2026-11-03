@@ -32,10 +32,9 @@ Use the versions in `.node-version` and `package.json`.
 ```sh
 pnpm install --frozen-lockfile
 pnpm dev
-pnpm dev:docs
 ```
 
-Read the [public documentation](apps/docs/index.html) or run `pnpm dev:docs`. The interactive React playground is in `apps/demo`. See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and package boundaries.
+The site lives in `docs/`. Run `pnpm dev`, then open [documentation](http://127.0.0.1:4173/docs/) or the [public Playground](http://127.0.0.1:4173/playground/). Both use Bolerish UI; the Playground connects a card, input wrapper and button to one light. See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and package boundaries.
 
 ## Rendering and limits
 

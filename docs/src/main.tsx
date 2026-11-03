@@ -1,0 +1,12 @@
+import '@bolerish/ui/global.css';
+import '@wisp-lighting/react/style.css';
+import './ui/site.css';
+import './playground/playground.css';
+import { createRoot, hydrateRoot } from 'react-dom/client';
+import { App, normalizePath, titleFor } from './App.js';
+const root = document.querySelector<HTMLElement>('#root');
+if (!root) throw new Error('Missing site root');
+const path = normalizePath(location.pathname);
+document.title = titleFor(path);
+if (root.dataset.path === path) hydrateRoot(root, <App pathname={path} />);
+else createRoot(root).render(<App pathname={path} />);
