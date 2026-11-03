@@ -192,37 +192,60 @@
 .home-hero-layout .home-hero {
   min-width: 0;
 }
+/* The stage stays open; only the decorative elements have edges. */
 .hero-example {
-  border: 1px solid var(--site-border);
-  border-radius: 10px;
-  padding: 20px;
   min-width: 0;
 }
 .hero-example-toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  font-size: 12px;
-  color: var(--site-muted);
+  justify-content: center;
 }
 .hero-example-stage {
-  display: grid;
-  place-items: center;
-  padding: 44px 12px;
+  position: relative;
+  height: 360px;
+  width: min(100%, 440px);
+  margin: 0 auto;
 }
 .hero-example-surface {
-  width: 100%;
-  max-width: 340px;
-  border-radius: 8px;
-  --wisp-highlight: var(--site-foreground);
+  position: absolute;
+  width: 68%;
+  height: 200px;
+  padding: 28px;
+  border-radius: 20px;
+  background: var(--site-subtle);
+  border: 1px solid var(--site-border);
+  color: var(--site-foreground);
 }
-.hero-example-button {
-  display: inline-flex;
-  border-radius: 6px;
-  --wisp-highlight: var(--site-foreground);
+.hero-example-back {
+  top: 18px;
+  left: 27%;
 }
-.hero-example-caption,
+.hero-example-middle {
+  top: 70px;
+  left: 16%;
+}
+.hero-example-front {
+  top: 122px;
+  left: 5%;
+}
+.hero-example-orbit {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin-bottom: 28px;
+  border: 1px solid var(--site-border);
+}
+.hero-example-line {
+  display: block;
+  width: 75%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--site-border);
+}
+.hero-example-line-short {
+  width: 45%;
+  margin-top: 12px;
+}
 .install-notice {
   font-size: 12px;
   line-height: 1.6;

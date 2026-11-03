@@ -403,8 +403,5 @@ test('hero compares lighting and package-manager tabs expose matching commands',
       `${command} @bolerish/edge`,
     );
   }
-  await page.getByRole('button', { name: 'Save for later' }).click();
-  await expect(
-    page.getByRole('button', { name: 'Saved', exact: true }),
-  ).toHaveAttribute('aria-pressed', 'true');
+
 });
