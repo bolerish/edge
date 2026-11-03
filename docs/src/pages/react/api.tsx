@@ -15,12 +15,14 @@ export const api: DocPage = {
         <>
           <P>
             Shares one light with explicitly marked descendants without adding
-            a DOM wrapper. tracking accepts on, off, frozen or system (default). On
+            a DOM wrapper. tracking accepts on, off or system (default). On
             enables pointer tracking, Off keeps fixed lighting, and System
-            follows device and reduced-motion preferences. Frozen captures the first mouse or pen position and holds it until the mode changes or the scope remounts. Before the first input, it uses fixed lighting. Touch movement is ignored.
+            follows device and reduced-motion preferences. Touch movement is ignored.
           </P>
           <P>
-            radius (default 480) and intensity (default 0.75) configure the shared
+            staticDirection accepts an angle in degrees (default 315) or random.
+            Random samples one shared direction per mount and keeps it across
+            ordinary rerenders. It applies to fixed lighting. radius (default 480) and intensity (default 0.75) configure the shared
             light. An optional ref exposes the stable Light handle for refresh().
             Pointer input is read from the document; the scope selects which
             surfaces receive the effect, rather than clipping pointer input.
@@ -74,7 +76,7 @@ export const api: DocPage = {
                   <td>
                     <code>'auto'</code>
                   </td>
-                  <td>auto, pointer, static, frozen</td>
+                  <td>auto, pointer, static</td>
                 </tr>
                 <tr>
                   <td>

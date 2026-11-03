@@ -20,10 +20,10 @@ const DISTANCE_FALLOFF_EXPONENT = 2;
 const MATTE_STRENGTH_MULTIPLIER = 0.3;
 const STATIC_LIGHT_STRENGTH = 0.7;
 
-export function getStaticLighting(material: Material) {
+export function getStaticLighting(material: Material, direction = DEFAULT_DIRECTION_DEGREES) {
   return {
     angle:
-      (DEFAULT_DIRECTION_DEGREES +
+      (direction +
         (material === 'recessed' ? HALF_TURN_DEGREES : 0)) % FULL_TURN_DEGREES,
     strength:
       STATIC_LIGHT_STRENGTH *

@@ -25,7 +25,6 @@ export function createLightSession(
     const mode = getMode();
     const fixed =
       mode === 'static' ||
-      (mode === 'frozen' && !pointer) ||
       (mode === 'auto' && (reduced.matches || (!fine.matches && !pointer)));
     render(pointer, fixed);
   }
@@ -33,7 +32,6 @@ export function createLightSession(
     if (
       event.pointerType === 'touch' ||
       getMode() === 'static' ||
-      (getMode() === 'frozen' && pointer !== null) ||
       (getMode() === 'auto' && reduced.matches)
     )
       return;
@@ -41,7 +39,6 @@ export function createLightSession(
     scheduleFrame();
   }
   function clear() {
-    if (getMode() === 'frozen') return;
     pointer = null;
     scheduleFrame();
   }
@@ -52,7 +49,6 @@ export function createLightSession(
     if (live) invalidate();
   }
   function mediaChanged() {
-    if (getMode() === 'frozen') return;
     pointer = null;
     scheduleFrame();
   }

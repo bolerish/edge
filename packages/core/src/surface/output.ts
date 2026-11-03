@@ -50,7 +50,7 @@ export function renderSurfaces(
   for (const entry of entries) {
     const rect = entry.rect;
     if (!rect) continue;
-    const staticLighting = getStaticLighting(entry.material);
+    const staticLighting = getStaticLighting(entry.material, typeof options.staticDirection === 'number' ? options.staticDirection : undefined);
     let angle = staticLighting.angle;
     let strength = 0;
     if (entry.element.isConnected && rect.width > 0 && rect.height > 0) {

@@ -14,18 +14,19 @@ export interface Light {
 /** Owns one shared light. Pointer frames never update React state. */
 export function useLight({
   mode,
+  staticDirection,
   radius,
   intensity,
 }: LightOptions = {}): Light {
   const [state] = useState(() => {
-    const core = createLight({ mode, radius, intensity });
+    const core = createLight({ mode, radius, intensity, staticDirection });
     const handle: Light = { [lightBrand]: core, refresh: core.refresh };
     return { core, handle };
   });
   useEffect(() => state.core.mount(document), [state]);
   useEffect(
-    () => state.core.configure({ mode, radius, intensity }),
-    [state, mode, radius, intensity],
+    () => state.core.configure({ mode, radius, intensity, staticDirection }),
+    [state, mode, radius, intensity, staticDirection],
   );
   return state.handle;
 }

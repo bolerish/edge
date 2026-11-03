@@ -39,10 +39,10 @@ const projects: readonly Project[] = [
 ];
 
 export function Home() {
-  const { mode } = usePreferences();
-  const tracking = { pointer: 'on', static: 'off', frozen: 'frozen' } as const;
+  const { mode, staticDirection } = usePreferences();
+  const tracking = { pointer: 'on', static: 'off' } as const;
   return (
-    <Lighting tracking={tracking[mode]} intensity={0.8}>
+    <Lighting tracking={tracking[mode]} staticDirection={staticDirection === 'random' ? 'random' : undefined} intensity={0.8}>
       <SiteShell section="home" pathname="/">
         <div className="home-hero-layout">
           <section className="home-hero" aria-labelledby="home-title">

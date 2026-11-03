@@ -19,6 +19,7 @@ export interface LightController {
   refresh(): void;
 }
 
+const FULL_TURN_DEGREES = 360;
 const owners = new WeakMap<HTMLElement, object>();
 
 /** Creates an inert controller. Framework adapters own mount and registration lifetimes. */
@@ -26,6 +27,7 @@ export function createLight(initial: LightOptions = {}): LightController {
   let options = normalizeLightOptions(initial);
   let document: Document | null = null;
   let session: ReturnType<typeof createLightSession> | null = null;
+  let randomDirection: number | null = null;
   const entries = new Set<SurfaceEntry>();
   const dirty = new Set<SurfaceEntry>();
   const owner = {};
@@ -44,10 +46,15 @@ export function createLight(initial: LightOptions = {}): LightController {
       if (document && target !== document)
         throw new Error('Light cannot span different documents');
       document = target;
+      randomDirection = null;
       const connection = createLightSession(target, {
         getMode: () => options.mode,
-        render: (pointer, fixed) =>
-          renderSurfaces(entries, dirty, options, pointer, fixed),
+        render: (pointer, fixed) => {
+          const staticDirection = options.staticDirection === 'random'
+            ? (randomDirection ??= Math.random() * FULL_TURN_DEGREES)
+            : options.staticDirection;
+          renderSurfaces(entries, dirty, { ...options, staticDirection }, pointer, fixed);
+        },
         invalidate: refresh,
       });
       for (const entry of entries) connection.observe(entry.element);

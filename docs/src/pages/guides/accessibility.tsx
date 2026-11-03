@@ -25,14 +25,9 @@ export const accessibility: DocPage = {
             than silently overriding a preference.
           </P>
           <P>
-            <strong>Frozen</strong> (<code>frozen</code>) captures the first mouse
-            or pen position, then keeps the light there. Browsers do not expose
-            a pointer position before an input event; fixed lighting is used
-            until the first input. Changing mode or remounting resets it.
-          </P>
-          <P>
             <strong>Off</strong> (<code>static</code>) uses a fixed light direction on each
-            surface.
+            surface. Set staticDirection to random to choose one shared direction
+            per mount, or pass an angle in degrees. Ordinary rerenders keep it.
           </P>
         </>
       ),

@@ -87,6 +87,7 @@ test('materials and modes update without further pointer movement', async ({
   await expect(light).toHaveValue('pointer');
   await expect(surface).toHaveValue('raised');
   await light.selectOption('static');
+  await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('fixed');
   await page.keyboard.press('Escape');
   await expect
     .poll(() =>
@@ -116,6 +117,7 @@ test('materials and modes update without further pointer movement', async ({
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await light.selectOption('static');
+  await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('fixed');
   await page.keyboard.press('Escape');
   await expect
     .poll(() =>
@@ -399,20 +401,16 @@ test('hero compares lighting and package-manager tabs expose matching commands',
 });
 
 
-test('Frozen retains the first pointer position and persists the selected mode', async ({ page }) => {
+test('static random direction is stable across appearance updates', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  const motion = page.getByRole('combobox', { name: 'Motion', exact: true });
-  await expect(motion.locator('option')).toHaveText(['Static', 'Dynamic', 'Frozen']);
-  await motion.selectOption('frozen');
-  await page.keyboard.press('Escape');
+  await page.getByRole('combobox', { name: 'Motion', exact: true }).selectOption('static');
+  await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('random');
   const card = page.getByTestId('hero-surface');
-  await page.mouse.move(700, 200);
-  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('315.0deg');
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('');
   const angle = await card.evaluate(node => node.style.getPropertyValue('--wisp-angle'));
-  await page.mouse.move(100, 500);
+  await page.getByRole('combobox', { name: 'Style', exact: true }).selectOption('matte');
   await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe(angle);
-  await page.reload();
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await expect(motion).toHaveValue('frozen');
+  await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('fixed');
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
 });

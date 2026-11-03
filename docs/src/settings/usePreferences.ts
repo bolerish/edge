@@ -2,13 +2,15 @@ import { useSyncExternalStore } from 'react';
 
 export interface SitePreferences {
   material: 'raised' | 'matte';
-  mode: 'pointer' | 'static' | 'frozen';
+  mode: 'pointer' | 'static';
+  staticDirection: 'fixed' | 'random';
   theme: 'light' | 'dark';
 }
 const storageKey = 'wisp:preferences:v1';
 const defaults: Readonly<SitePreferences> = Object.freeze({
   material: 'raised',
   mode: 'pointer',
+  staticDirection: 'random',
   theme: 'light',
 });
 // Only the client snapshot changes. SSR always uses the immutable defaults.
@@ -19,7 +21,6 @@ const listeners = new Set<() => void>();
 export const modeDescriptions: Record<SitePreferences['mode'], string> = {
   pointer: 'Follows your pointer, even when reduced motion is enabled.',
   static: 'Keeps the light direction fixed.',
-  frozen: 'Locks the light at your first pointer position until you change the mode.',
 };
 
 export function usePreferences() {
@@ -70,9 +71,10 @@ function parsePreferences(serialized: string | null): Readonly<SitePreferences> 
       material:
         'material' in value && value.material === 'matte' ? 'matte' : 'raised',
       mode:
-        'mode' in value && (value.mode === 'static' || value.mode === 'frozen')
+        'mode' in value && (value.mode === 'static')
           ? value.mode
           : 'pointer',
+      staticDirection: 'staticDirection' in value && value.staticDirection === 'fixed' ? 'fixed' : 'random',
       theme: 'theme' in value && value.theme === 'dark' ? 'dark' : 'light',
     });
   } catch {

@@ -407,33 +407,27 @@ it('suppresses output for detached surfaces', () => {
 });
 
 
-it('freezes the first non-touch position until the mode changes', () => {
-  const light = createLight({ mode: 'frozen' });
+it('samples a shared static direction once per mount and preserves it on configure', () => {
+  const random = vi.spyOn(Math, 'random').mockReturnValueOnce(0.25).mockReturnValueOnce(0.5);
+  const light = createLight({ mode: 'static', staticDirection: 'random' });
   const { node } = element();
   light.register(node, 'raised');
+  expect(random).not.toHaveBeenCalled();
   const stop = light.mount(document);
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
-  point(50, 150, 'touch');
-  flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
-  point();
-  flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
-  point(50, 150);
-  window.dispatchEvent(new Event('blur'));
-  document.dispatchEvent(Object.assign(new Event('pointerout'), { relatedTarget: null }));
-  queries[0]!.dispatchEvent(new Event('change'));
+  light.configure({ mode: 'static', staticDirection: 'random' });
   light.refresh();
-  flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
-  light.configure({ mode: 'pointer' });
-  point(50, 150);
-  flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('270.0deg');
-  light.configure({ mode: 'frozen' });
   point();
   flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  expect(random).toHaveBeenCalledOnce();
   stop();
+  const stopAgain = light.mount(document);
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('180.0deg');
+  light.configure({ mode: 'static', staticDirection: 45 });
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('45.0deg');
+  stopAgain();
 });
