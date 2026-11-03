@@ -187,7 +187,7 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
   await expect(copy).toHaveText('Copied');
   expect(
     await page.evaluate(() => (window as unknown as { copied: string }).copied),
-  ).toContain('pnpm');
+  ).toBe('npm install @bolerish/wisp-react');
   await page.evaluate(() =>
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -377,4 +377,34 @@ test('shared guides appear before framework-specific documentation', async ({ pa
   await groups.nth(1).getByRole('link', { name: 'Materials', exact: true }).click();
   await expect(page).toHaveURL(/\/docs\/materials\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Materials');
+});
+
+test('hero compares lighting and package-manager tabs expose matching commands', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const surface = page.getByTestId('hero-surface');
+  await page.getByRole('button', { name: 'Lighting on', exact: true }).click();
+  expect(
+    await surface.evaluate((node) => getComputedStyle(node, '::after').opacity),
+  ).toBe('0');
+  await page.getByRole('button', { name: 'Lighting off', exact: true }).click();
+  await expect(
+    page.getByRole('button', { name: 'Lighting on', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  for (const [manager, command] of [
+    ['npm', 'npm install'],
+    ['pnpm', 'pnpm add'],
+    ['Yarn', 'yarn add'],
+    ['Bun', 'bun add'],
+  ]) {
+    await page.getByRole('tab', { name: manager, exact: true }).click();
+    await expect(page.getByRole('tabpanel',{name:manager,exact:true})).toContainText(
+      `${command} @bolerish/wisp-react`,
+    );
+  }
+  await page.getByRole('button', { name: 'Save for later' }).click();
+  await expect(
+    page.getByRole('button', { name: 'Saved', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
 });

@@ -13,8 +13,12 @@ import { Label } from '@bolerish/ui/label';
 import { Paragraph } from '@bolerish/ui/paragraph';
 import { Lighting } from '@bolerish/wisp-react';
 import { SiteShell } from '../ui/SiteShell.js';
-import { CodeBlock } from '../ui/CodeBlock.js';
-import { modeDescriptions, usePreferences } from '../settings/usePreferences.js';
+import { InstallCommands } from '../ui/InstallCommands.js';
+import { HeroExample } from './HeroExample.js';
+import {
+  modeDescriptions,
+  usePreferences,
+} from '../settings/usePreferences.js';
 
 type Material = 'raised' | 'matte';
 interface Project {
@@ -35,180 +39,178 @@ const projects: readonly Project[] = [
 ];
 
 export function Home() {
+  const { mode } = usePreferences();
+  const tracking =
+    mode === 'auto' ? 'system' : mode === 'pointer' ? 'on' : 'off';
   return (
-    <SiteShell section="home" pathname="/">
-      <section className="home-hero" aria-labelledby="home-title">
-        <Heading id="home-title" level={1} size="page">
-          Light that reveals your interface.
-        </Heading>
-        <Paragraph variant="description">
-          Directional lighting for the components you own. One shared light,
-          with your colors and interactions.
-        </Paragraph>
-        <Button
-          role="link"
-          nativeButton={false}
-          render={<a href="/docs/" />}
-        >
-          Get started <span aria-hidden="true">↗</span>
-        </Button>
-        <div className="home-install">
-          <CodeBlock
-            label="Try locally"
-            language="bash"
-            code={'pnpm install --frozen-lockfile\npnpm dev'}
-          />
-          <Paragraph variant="caption">
-            Private preview · Run from the repository root.
-          </Paragraph>
+    <Lighting tracking={tracking} intensity={0.8}>
+      <SiteShell section="home" pathname="/">
+        <div className="home-hero-layout">
+          <section className="home-hero" aria-labelledby="home-title">
+            <Heading id="home-title" level={1} size="page">
+              Light that reveals your interface.
+            </Heading>
+            <Paragraph variant="description">
+              Directional lighting for the components you own. One shared light,
+              with your colors and interactions.
+            </Paragraph>
+            <Button
+              role="link"
+              nativeButton={false}
+              render={<a href="/docs/" />}
+            >
+              Get started <span aria-hidden="true">↗</span>
+            </Button>
+            <div className="home-install">
+              <InstallCommands />
+            </div>
+          </section>
+          <HeroExample />
         </div>
-      </section>
-      <Dashboard />
-    </SiteShell>
+        <Dashboard />
+      </SiteShell>
+    </Lighting>
   );
 }
 
 function Dashboard() {
   const { material, mode } = usePreferences();
-  const tracking = mode === 'auto' ? 'system' : mode === 'pointer' ? 'on' : 'off';
   const completed = projects.filter(
     (project) => project.status === 'Completed',
   ).length;
   return (
-    <Lighting tracking={tracking} intensity={0.8}>
-      <section className="dashboard" aria-labelledby="dashboard-title">
-        <header className="dashboard-header">
-          <div>
-            <Heading id="dashboard-title" level={2} size="section">
-              Dashboard
-            </Heading>
-            <Paragraph variant="description">
-              Built with Bolerish UI. Move your pointer to explore the edges.
-            </Paragraph>
-          </div>
-        </header>
-        <Paragraph variant="caption" className="dashboard-note">
-          Interface preview · Search and project actions are inactive.{' '}
-          <span id="dashboard-mode-description">{modeDescriptions[mode]}</span>
-        </Paragraph>
-        <div className="summary-grid">
-          <Summary
-            material={material}
-            title="Projects"
-            value={projects.length}
-            description="Across your workspace"
-            testId="surface-card"
-          />
-          <Summary
-            material={material}
-            title="In progress"
-            value={projects.length - completed}
-            description="Currently being worked on"
-          />
-          <Summary
-            material={material}
-            title="Completed"
-            value={completed}
-            description="Finished and ready to use"
-          />
+    <section className="dashboard" aria-labelledby="dashboard-title">
+      <header className="dashboard-header">
+        <div>
+          <Heading id="dashboard-title" level={2} size="section">
+            Dashboard
+          </Heading>
+          <Paragraph variant="description">
+            Built with Bolerish UI. Move your pointer to explore the edges.
+          </Paragraph>
         </div>
-        <div className="dashboard-panels">
-          <SurfaceCard material={material}>
-            <CardHeader className="projects-header">
-              <CardTitle id="projects-title">Projects</CardTitle>
-              <div className="project-actions">
-                <div className="project-search">
-                  <Label htmlFor="project-search" className="visually-hidden">
-                    Search projects
-                  </Label>
-                  <Lighting.Surface
-                    material="recessed"
-                    className="dashboard-input"
-                    data-testid="surface-input"
-                  >
-                    <Input
-                      id="project-search"
-                      placeholder="Search projects…"
-                      readOnly
-                    />
-                  </Lighting.Surface>
-                </div>
+      </header>
+      <Paragraph variant="caption" className="dashboard-note">
+        Interface preview · Search and project actions are inactive.{' '}
+        <span id="dashboard-mode-description">{modeDescriptions[mode]}</span>
+      </Paragraph>
+      <div className="summary-grid">
+        <Summary
+          material={material}
+          title="Projects"
+          value={projects.length}
+          description="Across your workspace"
+          testId="surface-card"
+        />
+        <Summary
+          material={material}
+          title="In progress"
+          value={projects.length - completed}
+          description="Currently being worked on"
+        />
+        <Summary
+          material={material}
+          title="Completed"
+          value={completed}
+          description="Finished and ready to use"
+        />
+      </div>
+      <div className="dashboard-panels">
+        <SurfaceCard material={material}>
+          <CardHeader className="projects-header">
+            <CardTitle id="projects-title">Projects</CardTitle>
+            <div className="project-actions">
+              <div className="project-search">
+                <Label htmlFor="project-search" className="visually-hidden">
+                  Search projects
+                </Label>
                 <Lighting.Surface
-                  as="span"
-                  material={material}
-                  className="dashboard-button"
-                  data-testid="surface-button"
+                  material="recessed"
+                  className="dashboard-input"
+                  data-testid="surface-input"
                 >
-                  <Button disabled>New project</Button>
+                  <Input
+                    id="project-search"
+                    placeholder="Search projects…"
+                    readOnly
+                  />
                 </Lighting.Surface>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div
-                className="table-scroll"
-                tabIndex={0}
-                role="region"
-                aria-labelledby="projects-title"
+              <Lighting.Surface
+                as="span"
+                material={material}
+                className="dashboard-button"
+                data-testid="surface-button"
               >
-                <table className="projects-table">
-                  <caption className="visually-hidden">
-                    Demo workspace projects
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Updated</th>
+                <Button disabled>New project</Button>
+              </Lighting.Surface>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div
+              className="table-scroll"
+              tabIndex={0}
+              role="region"
+              aria-labelledby="projects-title"
+            >
+              <table className="projects-table">
+                <caption className="visually-hidden">
+                  Demo workspace projects
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Updated</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {projects.map((project) => (
+                    <tr key={project.id}>
+                      <th scope="row">{project.name}</th>
+                      <td>
+                        <span className="project-status">{project.status}</span>
+                      </td>
+                      <td>{project.updated}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {projects.map((project) => (
-                      <tr key={project.id}>
-                        <th scope="row">{project.name}</th>
-                        <td>
-                          <span className="project-status">{project.status}</span>
-                        </td>
-                        <td>{project.updated}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </SurfaceCard>
-          <SurfaceCard material={material}>
-            <CardHeader>
-              <CardTitle>Recent activity</CardTitle>
-              <CardDescription>
-                A few updates from this demo workspace.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="activity-list">
-                <li>
-                  <p>
-                    Updated <strong>Design system</strong>
-                  </p>
-                  <span>Today at 10:24 AM</span>
-                </li>
-                <li>
-                  <p>
-                    Created <strong>Website refresh</strong>
-                  </p>
-                  <span>Yesterday at 4:19 PM</span>
-                </li>
-                <li>
-                  <p>
-                    Completed <strong>Mobile app</strong>
-                  </p>
-                  <span>5 days ago</span>
-                </li>
-              </ul>
-            </CardContent>
-          </SurfaceCard>
-        </div>
-      </section>
-    </Lighting>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </SurfaceCard>
+        <SurfaceCard material={material}>
+          <CardHeader>
+            <CardTitle>Recent activity</CardTitle>
+            <CardDescription>
+              A few updates from this demo workspace.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="activity-list">
+              <li>
+                <p>
+                  Updated <strong>Design system</strong>
+                </p>
+                <span>Today at 10:24 AM</span>
+              </li>
+              <li>
+                <p>
+                  Created <strong>Website refresh</strong>
+                </p>
+                <span>Yesterday at 4:19 PM</span>
+              </li>
+              <li>
+                <p>
+                  Completed <strong>Mobile app</strong>
+                </p>
+                <span>5 days ago</span>
+              </li>
+            </ul>
+          </CardContent>
+        </SurfaceCard>
+      </div>
+    </section>
   );
 }
 

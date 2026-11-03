@@ -1,5 +1,6 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
+import { InstallCommands } from '../../ui/InstallCommands.js';
 import { CodeBlock } from '../../ui/CodeBlock.js';
 import { firstSurface } from './examples.js';
 import type { DocPage } from '../types.js';
@@ -11,6 +12,11 @@ export const installation: DocPage = {
   description:
     'Prepare the local workspace and load Wisp’s compiled styles before connecting a surface. The packages are currently private and have not been published to npm.',
   sections: [
+    {
+      id: 'package-installation',
+      title: 'Package installation',
+      content: <InstallCommands />,
+    },
     {
       id: 'prepare-the-workspace',
       title: 'Prepare the workspace',
@@ -75,17 +81,17 @@ export const installation: DocPage = {
               unchanged, even inside the same area.
             </li>
             <li>
-              <strong>Tracking:</strong> <code>tracking="on"</code> follows
-              the pointer. Use <code>"off"</code> for a fixed light direction
-              or <code>"system"</code> to follow device and motion preferences.
+              <strong>Tracking:</strong> <code>tracking="on"</code> follows the
+              pointer. Use <code>"off"</code> for a fixed light direction or{' '}
+              <code>"system"</code> to follow device and motion preferences.
               System is the library default.
             </li>
           </ul>
           <P>
-            You can start with one card; the rest of your app does not need
-            a lighting area. Continue with{' '}
-            <Link href="/docs/react/usage/">Usage</Link> to share the light across
-            components.
+            You can start with one card; the rest of your app does not need a
+            lighting area. Continue with{' '}
+            <Link href="/docs/react/usage/">Usage</Link> to share the light
+            across components.
           </P>
         </>
       ),
