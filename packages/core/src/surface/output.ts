@@ -9,11 +9,13 @@ import type { LightOptions } from '../light/options.js';
 
 const ANGLE_DECIMAL_PLACES = 1;
 const STRENGTH_DECIMAL_PLACES = 3;
-const outputProperties = ['--wisp-angle', '--wisp-strength'] as const;
+const insetProperties = ['--wisp-inset-top', '--wisp-inset-right', '--wisp-inset-bottom', '--wisp-inset-left'] as const;
+const outputProperties = ['--wisp-angle', '--wisp-strength', ...insetProperties] as const;
 export interface SurfaceEntry {
   element: HTMLElement;
   edgeStyle: EdgeStyle;
   rect: Rectangle | null;
+  insets: string[];
   output: readonly string[] | null;
   original: Array<{ name: string; value: string; priority: string }>;
 }
@@ -26,6 +28,7 @@ export function createSurfaceEntry(
     element,
     edgeStyle,
     rect: null,
+    insets: ['0px', '0px', '0px', '0px'],
     output: null,
     original: outputProperties.map((name) => ({
       name,
@@ -43,8 +46,12 @@ export function renderSurfaces(
   fixed: boolean,
 ) {
   for (const entry of dirty) {
-    if (entries.has(entry))
+    if (entries.has(entry)) {
       entry.rect = entry.element.getBoundingClientRect();
+      const computed = entry.element.ownerDocument.defaultView!.getComputedStyle(entry.element);
+      entry.insets = [computed.borderTopWidth, computed.borderRightWidth, computed.borderBottomWidth, computed.borderLeftWidth]
+        .map(width => `${-(Number.parseFloat(width) || 0)}px`);
+    }
   }
   dirty.clear();
   for (const entry of entries) {
@@ -66,6 +73,7 @@ export function renderSurfaces(
     const values = [
       `${angle.toFixed(ANGLE_DECIMAL_PLACES)}deg`,
       (strength * options.intensity).toFixed(STRENGTH_DECIMAL_PLACES),
+      ...entry.insets,
     ];
     outputProperties.forEach((name, index) => {
       const value = values[index];

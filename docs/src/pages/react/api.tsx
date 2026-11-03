@@ -42,9 +42,13 @@ export const api: DocPage = {
             is preserved. A surface outside Lighting throws an error.
           </P>
           <P>
-            edgeStyle, theme, color and intensity use the same options as
+            edgeStyle, theme, color, shadowColor, borderWidth and intensity use the same options as
             useSurface below. Input elements need a wrapper such as a label
-            because the border decoration uses ::after. For a custom component
+            because the border decoration uses ::after. shadowColor accepts a
+            CSS color (default #0008); use transparent to disable the opposite
+            shadow. borderWidth sets decoration thickness in pixels (default 1).
+            Existing host borders are measured so the decoration aligns with
+            their outside edge. For a custom component
             that already owns its host, use the hooks instead.
           </P>
         </>

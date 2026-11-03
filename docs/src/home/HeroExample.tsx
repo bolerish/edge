@@ -12,6 +12,7 @@ export function HeroExample() {
             key={layer}
             edgeStyle={edgeStyle}
             color="var(--site-foreground)"
+            shadowColor="transparent"
             intensity={1}
             className={`hero-example-surface hero-example-${layer}`}
             data-testid={layer === 'front' ? 'hero-surface' : undefined}
@@ -20,6 +21,7 @@ export function HeroExample() {
             <Lighting.Surface
               edgeStyle={edgeStyle}
               color="var(--site-foreground)"
+            shadowColor="transparent"
               intensity={1}
               className="hero-example-orbit"
             />

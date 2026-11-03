@@ -148,7 +148,7 @@ it('separates visual and geometry invalidation and refreshes stationary pointers
   const stop = light.mount(document);
   point();
   flush();
-  node.dispatchEvent(new Event('scroll'));
+  document.dispatchEvent(new Event('scroll'));
   flush();
   expect(measure).toHaveBeenCalledTimes(2);
   light.refresh();
@@ -430,4 +430,47 @@ it('samples a shared static direction once per mount and preserves it on configu
   flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('45.0deg');
   stopAgain();
+});
+
+
+it('refreshes geometry after font loading and removes the font subscription on stop', async () => {
+  const fonts = Object.assign(new EventTarget(), { ready: Promise.resolve() });
+  const previous = Object.getOwnPropertyDescriptor(document, 'fonts');
+  Object.defineProperty(document, 'fonts', { configurable: true, value: fonts });
+  try {
+    const light = createLight();
+    const { node, measure } = element();
+    light.register(node, 'raised');
+    const stop = light.mount(document);
+    await fonts.ready;
+    flush();
+    measure.mockClear();
+    fonts.dispatchEvent(new Event('loadingdone'));
+    flush();
+    expect(measure).toHaveBeenCalledOnce();
+    stop();
+    fonts.dispatchEvent(new Event('loadingdone'));
+    expect(frames.size).toBe(0);
+  } finally {
+    if (previous) Object.defineProperty(document, 'fonts', previous);
+    else Reflect.deleteProperty(document, 'fonts');
+  }
+});
+
+
+it('aligns decoration to asymmetric host borders and restores owned inset variables', () => {
+  const light = createLight();
+  const { node } = element();
+  node.style.borderStyle = 'solid';
+  node.style.borderWidth = '2px 3px 4px 5px';
+  node.style.setProperty('--wisp-inset-top', '7px');
+  const registration = light.register(node, 'raised');
+  const stop = light.mount(document);
+  flush();
+  for (const [side, width] of [['top', 2], ['right', 3], ['bottom', 4], ['left', 5]] as const)
+    expect(node.style.getPropertyValue(`--wisp-inset-${side}`)).toBe(`-${width}px`);
+  registration.destroy();
+  expect(node.style.getPropertyValue('--wisp-inset-top')).toBe('7px');
+  expect(node.style.getPropertyValue('--wisp-inset-right')).toBe('');
+  stop();
 });

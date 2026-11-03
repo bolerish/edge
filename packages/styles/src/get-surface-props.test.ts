@@ -29,3 +29,11 @@ it.each([
 ])('normalizes intensity %s to %s', (intensity, expected) => {
   expect(getSurfaceProps({ intensity }).style['--wisp-intensity']).toBe(expected);
 });
+
+it('supports a separate shadow color and edge thickness', () => {
+  const props = getSurfaceProps({ shadowColor: 'transparent', borderWidth: 2 });
+  expect(props.style['--wisp-shadow']).toBe('transparent');
+  expect(props.style['--wisp-border-width']).toBe('2px');
+  expect(getSurfaceProps({ borderWidth: -1 }).style['--wisp-border-width']).toBe('0px');
+  expect(getSurfaceProps({ borderWidth: Infinity }).style['--wisp-border-width']).toBeUndefined();
+});

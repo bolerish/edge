@@ -15,7 +15,8 @@ const FULL_TURN_DEGREES = 360;
 const HALF_TURN_DEGREES = FULL_TURN_DEGREES / 2;
 const CSS_ANGLE_OFFSET_DEGREES = FULL_TURN_DEGREES + 90;
 const DEFAULT_DIRECTION_DEGREES = 315;
-const CENTER_FADE_RADIUS_PX = 12;
+const CENTER_FADE_SIZE_RATIO = 0.25;
+const CENTER_FADE_EXPONENT = 2;
 const DISTANCE_FALLOFF_EXPONENT = 2;
 const MATTE_STRENGTH_MULTIPLIER = 0.3;
 const STATIC_LIGHT_STRENGTH = 0.7;
@@ -55,7 +56,7 @@ export function getLighting(
       FULL_TURN_DEGREES,
     strength:
       Math.max(0, 1 - edgeDistance / radius) ** DISTANCE_FALLOFF_EXPONENT *
-      Math.min(1, centerDistance / CENTER_FADE_RADIUS_PX) *
+      Math.min(1, centerDistance / Math.max(1, Math.max(rect.width, rect.height) * CENTER_FADE_SIZE_RATIO)) ** CENTER_FADE_EXPONENT *
       (edgeStyle === 'matte' ? MATTE_STRENGTH_MULTIPLIER : 1),
   };
 }

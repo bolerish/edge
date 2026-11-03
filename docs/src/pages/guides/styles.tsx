@@ -73,6 +73,9 @@ export const styles: DocPage = {
           <P>
             Set <code>color</code> and <code>intensity</code> on a surface
             to customize the highlight.
+            Set shadowColor to transparent on light surfaces if a dark
+            opposite edge is unwanted. borderWidth controls the decorative
+            thickness in pixels; it does not change the host border.
             Surface intensity multiplies the shared light intensity. Internal
             CSS variables are reserved for Wisp; no CSS variable declarations
             are required in your application. In React, pass these options to{' '}
@@ -81,8 +84,9 @@ export const styles: DocPage = {
           <P>
             The effect approximates lighting on axis-aligned rectangles. It is
             not a physically accurate point-light renderer. Directional
-            intensity fades near the exact center, where a unique edge direction
-            is ambiguous.
+            intensity fades across a region proportional to the element size
+            near the center, where a unique edge direction is ambiguous.
+            The light follows a direction rather than simulating a local point light.
           </P>
         </>
       ),

@@ -451,3 +451,51 @@ test('scrolling and opening search keep the header in the same horizontal positi
   await page.getByRole('link', { name: 'Docs', exact: true }).click();
   await expect.poll(async () => (await brand.boundingBox())?.x).toBe(initial?.x);
 });
+
+
+test('surface decoration aligns with the host border instead of drawing an inner ring', async ({ page }) => {
+  await page.goto('/');
+  const orbit = page.locator('.hero-example-orbit').first();
+  await expect.poll(() => orbit.evaluate(node => {
+    const host = getComputedStyle(node);
+    const after = getComputedStyle(node, '::after');
+    return Number.parseFloat(after.top) + Number.parseFloat(host.borderTopWidth);
+  })).toBe(0);
+});
+
+
+test('border offsets follow asymmetric host borders and hidden startup stays consistent', async ({ page, browser }) => {
+  const staticContext = await browser.newContext({ javaScriptEnabled: false });
+  const staticPage = await staticContext.newPage();
+  await staticPage.goto('http://127.0.0.1:4183/');
+  expect(await staticPage.locator('.hero-example-orbit').first().evaluate(node => getComputedStyle(node, '::after').opacity)).toBe('0');
+  await staticContext.close();
+  await page.goto('/');
+  const orbit = page.locator('.hero-example-orbit').first();
+  expect(await orbit.evaluate(node => getComputedStyle(node, '::after').opacity)).toBe('0');
+  await orbit.evaluate(node => {
+    (node as HTMLElement).style.borderWidth = '2px 3px 4px 5px';
+    window.dispatchEvent(new Event('resize'));
+  });
+  await expect.poll(() => orbit.evaluate(node => {
+    const after = getComputedStyle(node, '::after');
+    return [after.top, after.right, after.bottom, after.left];
+  })).toEqual(['-2px', '-3px', '-4px', '-5px']);
+  expect(await orbit.evaluate(node => getComputedStyle(node, '::after').backgroundImage)).not.toContain('0.533');
+});
+
+
+test('large-card center crossings fade before the edge direction reverses', async ({ page }) => {
+  await page.goto('/');
+  const surface = page.getByTestId('hero-surface');
+  await surface.evaluate(node => {
+    Object.assign((node as HTMLElement).style, { position: 'fixed', left: '100px', top: '100px', width: '766px', height: '316px', zIndex: '100' });
+    window.dispatchEvent(new Event('resize'));
+  });
+  for (const x of [463, 503]) {
+    await page.mouse.move(x, 258);
+    await expect.poll(() => surface.evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')))).toBeLessThan(0.02);
+  }
+  await page.mouse.move(865, 258);
+  await expect.poll(() => surface.evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')))).toBeGreaterThan(0.7);
+});

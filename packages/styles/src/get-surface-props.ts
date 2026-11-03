@@ -4,6 +4,10 @@ import type { EdgeStyle } from '@bolerish/edge-core';
 interface SurfaceAppearance {
   /** Any CSS color. */
   color?: string;
+  /** Opposite-edge shadow; use transparent on light surfaces when appropriate. */
+  shadowColor?: string;
+  /** Decorative edge thickness in pixels. Defaults to 1. */
+  borderWidth?: number;
   /** Multiplier for the shared light, clamped to 0–1. Defaults to 1. */
   intensity?: number;
 }
@@ -20,6 +24,8 @@ export function getSurfaceProps(options: SurfaceOptions = {}) {
   const intensity = options.intensity;
   const style = {
     '--wisp-highlight': options.color,
+    '--wisp-shadow': options.shadowColor,
+    '--wisp-border-width': options.borderWidth === undefined || !Number.isFinite(options.borderWidth) ? undefined : `${Math.max(0, options.borderWidth)}px`,
     '--wisp-intensity':
       intensity === undefined || !Number.isFinite(intensity)
         ? undefined
@@ -34,7 +40,7 @@ const HIGHLIGHT_HALF_WIDTH_DEGREES = 40;
 const SHADOW_PEAK_DEGREES = 220;
 const FULL_TURN_DEGREES = 360;
 const FALLBACK_DIRECTION_DEGREES = 315;
-const FALLBACK_STRENGTH = 0.25;
+const FALLBACK_STRENGTH = 0;
 
 const surfaceStyles = stylex.create({
   border: {
@@ -42,13 +48,16 @@ const surfaceStyles = stylex.create({
     '::after': {
       content: '""',
       position: 'absolute',
-      inset: 0,
+      top: 'var(--wisp-inset-top, 0px)',
+      right: 'var(--wisp-inset-right, 0px)',
+      bottom: 'var(--wisp-inset-bottom, 0px)',
+      left: 'var(--wisp-inset-left, 0px)',
       boxSizing: 'border-box',
       borderRadius: 'inherit',
       pointerEvents: 'none',
       padding: 'var(--wisp-border-width, 1px)',
       backgroundImage:
-        `conic-gradient(from calc(var(--wisp-angle, ${FALLBACK_DIRECTION_DEGREES}deg) - ${HIGHLIGHT_HALF_WIDTH_DEGREES}deg), transparent 0deg, var(--wisp-highlight, #e5edc8) ${HIGHLIGHT_HALF_WIDTH_DEGREES}deg, transparent ${HIGHLIGHT_HALF_WIDTH_DEGREES * 2}deg, #0008 ${SHADOW_PEAK_DEGREES}deg, transparent ${FULL_TURN_DEGREES}deg)`,
+        `conic-gradient(from calc(var(--wisp-angle, ${FALLBACK_DIRECTION_DEGREES}deg) - ${HIGHLIGHT_HALF_WIDTH_DEGREES}deg), transparent 0deg, var(--wisp-highlight, #e5edc8) ${HIGHLIGHT_HALF_WIDTH_DEGREES}deg, transparent ${HIGHLIGHT_HALF_WIDTH_DEGREES * 2}deg, var(--wisp-shadow, #0008) ${SHADOW_PEAK_DEGREES}deg, transparent ${FULL_TURN_DEGREES}deg)`,
       opacity: {
         default: `calc(var(--wisp-strength, ${FALLBACK_STRENGTH}) * var(--wisp-intensity, 1))`,
         '@media (forced-colors: active)': 0,

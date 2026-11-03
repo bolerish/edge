@@ -40,7 +40,7 @@ describe('CSS light directions', () => {
 it('attenuates vertically using the surface height and fades near the center', () => {
   const wide = { left: 0, top: 0, width: 200, height: 40 };
   expect(getLighting(wide, { x: 100, y: 90 }, 100, 'raised').strength).toBeCloseTo(0.25);
-  expect(getLighting(rect, { x: 156, y: 150 }, 100, 'raised').strength).toBeCloseTo(0.5);
+  expect(getLighting(rect, { x: 156, y: 150 }, 100, 'raised').strength).toBeCloseTo((6 / 25) ** 2);
 });
 
 it.each([
@@ -50,4 +50,13 @@ it.each([
 ] as const)('provides static lighting for %s', (edgeStyle, angle, strength) => {
   expect(getStaticLighting(edgeStyle).angle).toBe(angle);
   expect(getStaticLighting(edgeStyle).strength).toBeCloseTo(strength);
+});
+
+
+it('scales center fading for large cards without dimming the edges of small controls', () => {
+  const large = { left: 0, top: 0, width: 766, height: 316 };
+  for (const x of [363, 403])
+    expect(getLighting(large, { x, y: 158 }, 480, 'raised').strength).toBeLessThan(0.02);
+  const small = { left: 0, top: 0, width: 24, height: 24 };
+  expect(getLighting(small, { x: 18, y: 12 }, 480, 'raised').strength).toBe(1);
 });

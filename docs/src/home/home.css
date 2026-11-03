@@ -86,7 +86,7 @@
   max-width: 240px;
 }
 .dashboard-input {
-  border-radius: 6px;
+  border-radius: 4px;
   --wisp-highlight: var(--site-foreground);
 }
 .dashboard-input:focus-within {
@@ -95,8 +95,8 @@
 }
 .dashboard-button {
   display: inline-flex;
-  border-radius: 6px;
-  --wisp-highlight: var(--site-background);
+  border-radius: 4px;
+  --wisp-highlight: var(--site-foreground);
 }
 .projects-table {
   width: 100%;
@@ -269,4 +269,8 @@
 }
 .hero-example-panel .hero-example-orbit {
   border-color: color-mix(in srgb, currentColor 35%, transparent);
+}
+
+.dashboard-surface, .dashboard-input, .dashboard-button {
+  --wisp-shadow: transparent;
 }
