@@ -38,19 +38,6 @@
 .dashboard-header h2 {
   margin-bottom: 8px;
 }
-.dashboard-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 24px;
-}
-.control-group {
-  display: grid;
-  gap: 8px;
-  font-size: 12px;
-}
-.control-group > span {
-  color: var(--site-muted);
-}
 .dashboard-note {
   margin: 20px 0 24px;
 }
@@ -182,9 +169,6 @@
   .summary-grid,
   .dashboard-panels {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .dashboard-controls {
-    gap: 16px;
   }
   .project-actions {
     width: 100%;

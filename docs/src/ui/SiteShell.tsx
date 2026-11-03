@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Button } from '@bolerish/ui/button';
 import { Link } from '@bolerish/ui/link';
+import { MoonIcon } from '@phosphor-icons/react/Moon';
+import { SunIcon } from '@phosphor-icons/react/Sun';
+import { DocumentationSearch } from '../search/DocumentationSearch.js';
+import { SettingsPopover } from '../settings/SettingsPopover.js';
+import { updatePreferences, usePreferences } from '../settings/usePreferences.js';
 
 export interface NavigationGroup {
   title?: string;
@@ -24,7 +29,7 @@ export function SiteShell({
   toc?: SectionLink[];
   children: ReactNode;
 }) {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const { theme } = usePreferences();
   const [open, setOpen] = useState(false);
   const [hash, setHash] = useState('');
   const menu = useRef<HTMLButtonElement>(null);
@@ -111,16 +116,18 @@ export function SiteShell({
             Docs
           </Link>
         </nav>
-        <Button
-          size="icon"
-          variant="ghost"
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
-          onClick={() =>
-            setTheme((value) => (value === 'light' ? 'dark' : 'light'))
-          }
-        >
-          <span aria-hidden="true">{theme === 'light' ? '☼' : '☾'}</span>
-        </Button>
+        <div className="header-actions">
+          <DocumentationSearch />
+          <SettingsPopover />
+          <Button
+            size="icon"
+            variant="ghost"
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            onClick={() => updatePreferences({ theme: theme === 'light' ? 'dark' : 'light' })}
+          >
+            {theme === 'light' ? <SunIcon aria-hidden="true" /> : <MoonIcon aria-hidden="true" />}
+          </Button>
+        </div>
       </header>
       {section === 'docs' ? (
         <div

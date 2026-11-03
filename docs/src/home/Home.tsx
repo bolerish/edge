@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Button } from '@bolerish/ui/button';
 import {
   Card,
@@ -12,29 +12,15 @@ import { Input } from '@bolerish/ui/input';
 import { Label } from '@bolerish/ui/label';
 import { Paragraph } from '@bolerish/ui/paragraph';
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectPopup,
-  SelectList,
-  SelectItem,
-} from '@bolerish/ui/select';
-import {
   useLight,
   useSurface,
   type Light,
-  type LightOptions,
 } from '@bolerish/wisp-react';
 import { SiteShell } from '../ui/SiteShell.js';
 import { CodeBlock } from '../ui/CodeBlock.js';
+import { modeDescriptions, usePreferences } from '../settings/usePreferences.js';
 
 type Material = 'raised' | 'matte';
-type Mode = NonNullable<LightOptions['mode']>;
-const modeDescriptions: Record<Mode, string> = {
-  auto: 'Adapts to your device and motion preferences.',
-  pointer: 'Follows your pointer, even when reduced motion is enabled.',
-  static: 'Keeps the light direction fixed.',
-};
 interface Project {
   id: number;
   name: string;
@@ -87,8 +73,7 @@ export function Home() {
 }
 
 function Dashboard() {
-  const [material, setMaterial] = useState<Material>('raised');
-  const [mode, setMode] = useState<Mode>('pointer');
+  const { material, mode } = usePreferences();
   const light = useLight({ mode, intensity: 0.8 });
   const input = useSurface<HTMLDivElement>(light, { material: 'recessed' });
   const action = useSurface<HTMLSpanElement>(light, { material });
@@ -108,57 +93,10 @@ function Dashboard() {
             Built with Bolerish UI. Move your pointer to explore the edges.
           </Paragraph>
         </div>
-        <div className="dashboard-controls">
-          <div className="control-group">
-            <span id="material-label">Edge style</span>
-            <Select
-              items={{ raised: 'Raised', matte: 'Matte' }}
-              value={material}
-              onValueChange={(value) => {
-                if (value === 'raised' || value === 'matte') setMaterial(value);
-              }}
-            >
-              <SelectTrigger aria-labelledby="material-label">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectPopup>
-                <SelectList>
-                  <SelectItem value="raised">Raised</SelectItem>
-                  <SelectItem value="matte">Matte</SelectItem>
-                </SelectList>
-              </SelectPopup>
-            </Select>
-          </div>
-          <div className="control-group">
-            <span id="mode-label">Pointer tracking</span>
-            <Select
-              items={{ static: 'Off', pointer: 'On', auto: 'System' }}
-              value={mode}
-              onValueChange={(value) => {
-                if (value === 'auto' || value === 'pointer' || value === 'static')
-                  setMode(value);
-              }}
-            >
-              <SelectTrigger
-                aria-labelledby="mode-label"
-                aria-describedby="mode-description"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectPopup>
-                <SelectList>
-                  <SelectItem value="static">Off</SelectItem>
-                  <SelectItem value="pointer">On</SelectItem>
-                  <SelectItem value="auto">System</SelectItem>
-                </SelectList>
-              </SelectPopup>
-            </Select>
-          </div>
-        </div>
       </header>
       <Paragraph variant="caption" className="dashboard-note">
         Interface preview · Search and project actions are inactive.{' '}
-        <span id="mode-description">{modeDescriptions[mode]}</span>
+        <span id="dashboard-mode-description">{modeDescriptions[mode]}</span>
       </Paragraph>
       <div className="summary-grid">
         <Summary

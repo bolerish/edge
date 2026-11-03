@@ -23,7 +23,7 @@ for (const viewport of [
       const reports = [];
       for (const route of routes) {
         await page.goto(route);
-        if (theme === 'dark')
+        if (theme === 'dark' && await page.getByRole('button', { name: 'Switch to dark theme' }).isVisible())
           await page
             .getByRole('button', { name: 'Switch to dark theme' })
             .click();
@@ -106,7 +106,7 @@ for (const viewport of [
       ).toEqual([]);
       if (viewport.width === 1440) {
         await page.goto('/');
-        if (theme === 'dark')
+        if (theme === 'dark' && await page.getByRole('button', { name: 'Switch to dark theme' }).isVisible())
           await page
             .getByRole('button', { name: 'Switch to dark theme' })
             .click();

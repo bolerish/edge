@@ -27,7 +27,8 @@ test('public routes render content before JavaScript and hydrate without errors'
         path: `../.private/${route === '/docs/' ? 'site-docs' : 'site-home'}.png`,
         fullPage: true,
       });
-    await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+    const darkTheme = page.getByRole('button', { name: 'Switch to dark theme' });
+    if (await darkTheme.isVisible()) await darkTheme.click();
     await expect(page.locator('html')).toHaveAttribute(
       'data-bolerish-theme',
       'dark',
@@ -80,12 +81,13 @@ test('materials and modes update without further pointer movement', async ({
 }) => {
   await page.goto('/');
   const card = page.getByTestId('surface-card');
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
   const light = page.getByRole('combobox', { name: 'Pointer tracking', exact: true });
   const surface = page.getByRole('combobox', { name: 'Edge style', exact: true });
-  await expect(light).toContainText('On');
-  await expect(surface).toContainText('Raised');
-  await light.click();
-  await page.getByRole('option', { name: 'Off', exact: true }).click();
+  await expect(light).toHaveValue('pointer');
+  await expect(surface).toHaveValue('raised');
+  await light.selectOption('static');
+  await page.keyboard.press('Escape');
   await expect
     .poll(() =>
       card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
@@ -101,8 +103,9 @@ test('materials and modes update without further pointer movement', async ({
   const strength = await card.evaluate((node) =>
     Number(node.style.getPropertyValue('--wisp-strength')),
   );
-  await surface.click();
-  await page.getByRole('option', { name: 'Matte', exact: true }).click();
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await surface.selectOption('matte');
+  await page.keyboard.press('Escape');
   await expect
     .poll(() =>
       card.evaluate((node) =>
@@ -111,15 +114,17 @@ test('materials and modes update without further pointer movement', async ({
     )
     .toBeCloseTo(strength * 0.3, 2);
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await light.click();
-  await page.getByRole('option', { name: 'System', exact: true }).click();
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await light.selectOption('auto');
+  await page.keyboard.press('Escape');
   await expect
     .poll(() =>
       card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
     )
     .toBe('315.0deg');
-  await light.click();
-  await page.getByRole('option', { name: 'On', exact: true }).click();
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await light.selectOption('pointer');
+  await page.keyboard.press('Escape');
   await card.scrollIntoViewIfNeeded();
   const box = await card.boundingBox();
   if (!box) throw new Error('Missing card');
@@ -271,4 +276,38 @@ test('skip link, code scrolling, zoom reflow and high-contrast code stay usable'
       ),
     ).toBe(true);
   }
+});
+
+
+test('header settings persist across documentation navigation and reloads', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Edge style' }).selectOption('matte');
+  await page.getByRole('combobox', { name: 'Pointer tracking' }).selectOption('static');
+  await page.keyboard.press('Escape');
+  await page.getByRole('link', { name: 'Docs', exact: true }).click();
+  await page.reload();
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await expect(page.getByRole('combobox', { name: 'Edge style' })).toHaveValue('matte');
+  await expect(page.getByRole('combobox', { name: 'Pointer tracking' })).toHaveValue('static');
+});
+
+test('documentation search finds section content and supports keyboard dismissal', async ({ page }) => {
+  await page.goto('/');
+  const trigger = page.getByRole('button', { name: 'Search documentation', exact: true });
+  await trigger.click();
+  const dialog = page.getByRole('dialog', { name: 'Search documentation' });
+  const query = dialog.getByRole('textbox', { name: 'Search titles and content' });
+  await query.fill('stationary');
+  await expect(dialog.getByRole('link', { name: /Refresh after layout changes/ })).toBeVisible();
+  await query.fill('no-such-document-987');
+  await expect(dialog.getByRole('status')).toContainText('No documents found');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await page.keyboard.press('Control+k');
+  await expect(dialog).toBeVisible();
+  await query.fill('installation');
+  await dialog.getByRole('link', { name: /^Installation/ }).click();
+  await expect(page).toHaveURL(/\/docs\/installation\/$/);
 });

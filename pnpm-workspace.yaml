@@ -3,6 +3,7 @@ packages:
   - docs
 
 catalog:
+  '@phosphor-icons/react': 2.1.10
   '@stryker-mutator/core': 10.1.1
   '@stryker-mutator/vitest-runner': 10.1.1
   typescript: 7.0.2

@@ -16,7 +16,8 @@
     "@stylexjs/stylex": "catalog:2026-11-03--stylex-stable",
     "@bolerish/ui": "catalog:2026-11-03--bolerish-stable",
     "prism-react-renderer": "catalog:",
-    "prismjs": "catalog:"
+    "prismjs": "catalog:",
+    "@phosphor-icons/react": "catalog:"
   },
   "devDependencies": {
     "vite": "catalog:2026-11-03--vite-vitest-stable",
