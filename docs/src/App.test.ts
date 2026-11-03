@@ -217,7 +217,12 @@ test('preview data stays fixed and getting started leads to React installation',
   await page.getByRole('link', { name: 'Get started' }).click();
   await expect(page).toHaveURL(/\/docs\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
-  await page.getByRole('link', { name: 'Start with React', exact: true }).click();
+  const integrations = page.getByRole('list', { name: 'Framework integrations' });
+  await expect(integrations.getByRole('listitem')).toHaveCount(4);
+  await expect(integrations.getByRole('link')).toHaveCount(1);
+  await expect(integrations.getByText('Coming soon', { exact: true })).toHaveCount(3);
+  await integrations.getByRole('link', { name: /Start with React/ }).focus();
+  await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/docs\/react\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Installation',
@@ -229,7 +234,9 @@ test('SSG documents include highlighted code and remain readable without JavaScr
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
-  await page.goto('http://127.0.0.1:4183/docs/react/');
+  await page.goto('http://127.0.0.1:4183/docs/');
+  await page.getByRole('link', { name: /Start with React/ }).click();
+  await expect(page).toHaveURL('http://127.0.0.1:4183/docs/react/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Installation',
   );
