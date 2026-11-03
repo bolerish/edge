@@ -11,9 +11,14 @@ export const surfaceStyles = stylex.create({
       borderRadius: 'inherit',
       pointerEvents: 'none',
       padding: 'var(--wisp-border-width, 1px)',
-      backgroundImage: 'conic-gradient(from calc(var(--wisp-angle, 315deg) - 40deg), transparent 0deg, var(--wisp-highlight, #e5edc8) 40deg, transparent 80deg, #0008 220deg, transparent 360deg)',
-      opacity: { default: 'var(--wisp-strength, 0.25)', '@media (forced-colors: active)': 0 },
-      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+      backgroundImage:
+        'conic-gradient(from calc(var(--wisp-angle, 315deg) - 40deg), transparent 0deg, var(--wisp-highlight, #e5edc8) 40deg, transparent 80deg, #0008 220deg, transparent 360deg)',
+      opacity: {
+        default: 'var(--wisp-strength, 0.25)',
+        '@media (forced-colors: active)': 0,
+      },
+      WebkitMask:
+        'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
       mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
       WebkitMaskComposite: 'xor',
       maskComposite: 'exclude',
