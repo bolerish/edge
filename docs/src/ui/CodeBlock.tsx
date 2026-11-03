@@ -9,6 +9,7 @@ import { Button } from '@bolerish/ui/button';
 
 // React owns the highlighted DOM; disable Prism’s automatic document scan.
 Prism.manual = true;
+const codeTheme = { plain: {}, styles: [] };
 export function CodeBlock({
   code,
   label = 'Example',
@@ -46,7 +47,7 @@ export function CodeBlock({
         prism={Prism}
         code={code}
         language={language}
-        theme={{ plain: {}, styles: [] }}
+        theme={codeTheme}
       >
         {({ tokens, getLineProps, getTokenProps }) => (
           <pre role="region" tabIndex={0} aria-label={`${label} code`}>

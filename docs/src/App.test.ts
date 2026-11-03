@@ -311,3 +311,15 @@ test('documentation search finds section content and supports keyboard dismissal
   await dialog.getByRole('link', { name: /^Installation/ }).click();
   await expect(page).toHaveURL(/\/docs\/installation\/$/);
 });
+
+test('API navigation follows the URL hash after hydration and in-page navigation', async ({ page }) => {
+  await page.goto('/docs/api/#use-surface');
+  const sidebar = page.locator('.sidebar');
+  await expect(sidebar.getByRole('link', { name: 'useSurface', exact: true }))
+    .toHaveAttribute('aria-current', 'page');
+  await page.locator('.table-of-contents').getByRole('link', { name: 'useLight(options?)', exact: true }).click();
+  await expect(sidebar.getByRole('link', { name: 'useLight', exact: true }))
+    .toHaveAttribute('aria-current', 'page');
+  await expect(sidebar.getByRole('link', { name: 'useSurface', exact: true }))
+    .not.toHaveAttribute('aria-current');
+});

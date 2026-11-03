@@ -60,7 +60,7 @@ export function App({ pathname }: { pathname: string }) {
             {section.content}
           </section>
         ))}
-        <footer className="page-footer">Wisp · React + StyleX</footer>
+        <footer className="page-footer">Wisp · React</footer>
       </article>
     </SiteShell>
   );

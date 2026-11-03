@@ -7,7 +7,7 @@ import {
   type RefCallback,
 } from 'react';
 import type { Material, Registration } from '@bolerish/wisp-core';
-import { controllers, type Light } from './useLight.js';
+import { getLightController, type Light } from './useLight.js';
 
 interface SurfaceAppearance {
   /** Any CSS color. */
@@ -25,9 +25,7 @@ export function useSurface<T extends HTMLElement = HTMLElement>(
   light: Light,
   options: SurfaceOptions = {},
 ) {
-  const core = controllers.get(light);
-  if (!core)
-    throw new Error('useSurface requires a Light returned by useLight');
+  const core = getLightController(light);
   const material = options.material ?? 'raised';
   const currentMaterial = useRef(material);
   const registration = useRef<Registration | null>(null);
@@ -44,7 +42,7 @@ export function useSurface<T extends HTMLElement = HTMLElement>(
   useLayoutEffect(() => {
     currentMaterial.current = material;
     registration.current?.update(material);
-  });
+  }, [material]);
   const theme =
     options.theme === 'wisp' ? wispStyles[options.material ?? 'raised'] : null;
   const props = stylex.props(surfaceStyles.border, theme);

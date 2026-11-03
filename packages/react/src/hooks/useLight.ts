@@ -7,12 +7,9 @@ import {
 
 const lightBrand = Symbol('WispLight');
 export interface Light {
-  readonly [lightBrand]: true;
+  readonly [lightBrand]: LightController;
   refresh(): void;
 }
-
-// Shared privately by the two hooks, never exposed by the package barrel.
-export const controllers = new WeakMap<Light, LightController>();
 
 /** Owns one shared light. Pointer frames never update React state. */
 export function useLight({
@@ -22,8 +19,7 @@ export function useLight({
 }: LightOptions = {}): Light {
   const [state] = useState(() => {
     const core = createLight({ mode, radius, intensity });
-    const handle: Light = { [lightBrand]: true, refresh: core.refresh };
-    controllers.set(handle, core);
+    const handle: Light = { [lightBrand]: core, refresh: core.refresh };
     return { core, handle };
   });
   useEffect(() => state.core.mount(document), [state]);
@@ -32,4 +28,12 @@ export function useLight({
     [state, mode, radius, intensity],
   );
   return state.handle;
+}
+
+/** Internal access keeps controller ownership on the opaque handle. */
+export function getLightController(light: Light): LightController {
+  const core = light?.[lightBrand];
+  if (!core)
+    throw new Error('useSurface requires a Light returned by useLight');
+  return core;
 }

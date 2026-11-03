@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Button } from '@bolerish/ui/button';
 import { Link } from '@bolerish/ui/link';
+import { useLocationHash } from './useLocationHash.js';
 import { MoonIcon } from '@phosphor-icons/react/Moon';
 import { SunIcon } from '@phosphor-icons/react/Sun';
 import { DocumentationSearch } from '../search/DocumentationSearch.js';
@@ -31,17 +32,11 @@ export function SiteShell({
 }) {
   const { theme } = usePreferences();
   const [open, setOpen] = useState(false);
-  const [hash, setHash] = useState('');
+  const hash = useLocationHash();
   const menu = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     document.documentElement.dataset.bolerishTheme = theme;
   }, [theme]);
-  useEffect(() => {
-    const sync = () => setHash(location.hash);
-    sync();
-    window.addEventListener('hashchange', sync);
-    return () => window.removeEventListener('hashchange', sync);
-  }, []);
   useEffect(() => {
     if (!open) return;
     const escape = (event: KeyboardEvent) => {
