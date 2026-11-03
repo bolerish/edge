@@ -20,7 +20,6 @@ body {
   color: var(--site-foreground);
 }
 a {
-  color: inherit;
   text-underline-offset: 3px;
 }
 button,
@@ -328,5 +327,37 @@ pre code {
 @media (prefers-reduced-motion: reduce) {
   * {
     scroll-behavior: auto;
+  }
+}
+
+pre:focus-visible,
+.table-scroll:focus-visible {
+  outline: 2px solid var(--site-foreground);
+  outline-offset: -2px;
+}
+:focus-visible {
+  scroll-margin-block: 90px 24px;
+}
+@media (forced-colors: active) {
+  :root {
+    --site-background: Canvas;
+    --site-foreground: CanvasText;
+    --site-muted: CanvasText;
+    --site-border: ButtonBorder;
+    --site-subtle: Canvas;
+    --site-selected: Canvas;
+  }
+}
+
+.wordmark,
+.skip-link {
+  color: var(--site-foreground);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
   }
 }

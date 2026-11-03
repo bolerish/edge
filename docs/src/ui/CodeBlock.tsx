@@ -1,11 +1,22 @@
+import { Highlight } from 'prism-react-renderer';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-jsx.js';
+import 'prismjs/components/prism-typescript.js';
+import 'prismjs/components/prism-tsx.js';
+import 'prismjs/components/prism-bash.js';
 import { useState } from 'react';
 import { Button } from '@bolerish/ui/button';
+
+// React owns the highlighted DOM; disable Prism’s automatic document scan.
+Prism.manual = true;
 export function CodeBlock({
   code,
   label = 'Example',
+  language = 'tsx',
 }: {
   code: string;
   label?: string;
+  language?: 'tsx' | 'bash';
 }) {
   const [status, setStatus] = useState<'idle' | 'copied' | 'unavailable'>(
     'idle',
@@ -31,9 +42,26 @@ export function CodeBlock({
           {status === 'copied' ? 'Copied' : 'Copy'}
         </Button>
       </div>
-      <pre>
-        <code>{code}</code>
-      </pre>
+      <Highlight
+        prism={Prism}
+        code={code}
+        language={language}
+        theme={{ plain: {}, styles: [] }}
+      >
+        {({ tokens, getLineProps, getTokenProps }) => (
+          <pre role="region" tabIndex={0} aria-label={`${label} code`}>
+            <code>
+              {tokens.map((line, index) => (
+                <div key={index} {...getLineProps({ line })}>
+                  {line.map((token, tokenIndex) => (
+                    <span key={tokenIndex} {...getTokenProps({ token })} />
+                  ))}
+                </div>
+              ))}
+            </code>
+          </pre>
+        )}
+      </Highlight>
       <span
         className={status === 'unavailable' ? 'copy-error' : 'visually-hidden'}
         role="status"

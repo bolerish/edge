@@ -56,7 +56,7 @@ export const introduction: DocPage = {
           <P>
             Read <Link href="/docs/materials/">Materials</Link> for the
             differences, then compare them in the{' '}
-            <Link href="/playground/">Playground</Link>.
+            <Link href="/">dashboard example</Link>.
           </P>
         </>
       ),

@@ -22,7 +22,11 @@ for (const name of ['core', 'react']) {
       !listing.includes('/tests/') &&
       !listing.includes('/src/'),
   );
-  const destination = resolve(sandbox, 'node_modules/@bolerish', `wisp-${name}`);
+  const destination = resolve(
+    sandbox,
+    'node_modules/@bolerish',
+    `wisp-${name}`,
+  );
   await mkdir(destination, { recursive: true });
   execFileSync('tar', [
     '-xzf',
@@ -87,7 +91,19 @@ assert(
 );
 const site = resolve(root, 'docs/dist');
 const routes = JSON.parse(await readFile(resolve(site, 'routes.json'), 'utf8'));
-assert(routes.includes('/docs/') && routes.includes('/playground/'));
+assert(
+  routes.includes('/docs/') &&
+    routes.includes('/') &&
+    !routes.includes('/playground/'),
+);
+const installation = await readFile(
+  resolve(site, 'docs/installation/index.html'),
+  'utf8',
+);
+assert(
+  installation.includes('token keyword'),
+  'SSG must include highlighted code tokens',
+);
 const documents = new Map();
 for (const route of routes) {
   const html = await readFile(resolve(site, `.${route}`, 'index.html'), 'utf8');

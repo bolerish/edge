@@ -6,7 +6,7 @@ Use the pinned Node and pnpm versions, then install with `pnpm install --frozen-
 
 - `packages/core`: framework-independent DOM controller and pure geometry. No React or StyleX imports.
 - `packages/react`: React lifetime integration and precompiled StyleX surface styles.
-- `docs`: public documentation, Playground and browser integration tests. Documentation routes are prerendered during the site build.
+- `docs`: public documentation, homepage dashboard and browser integration tests. Documentation routes are prerendered during the site build.
 
 Import other packages through their public exports. Declare direct dependencies in the package that uses them, use `workspace:^` internally, and reference shared external versions through catalogs in `pnpm-workspace.yaml`. Do not rely on undeclared root dependencies.
 

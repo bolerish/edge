@@ -21,6 +21,7 @@ export const installation: DocPage = {
           </P>
           <CodeBlock
             label="Workspace setup"
+            language="bash"
             code={'pnpm install --frozen-lockfile\npnpm build'}
           />
           <P>

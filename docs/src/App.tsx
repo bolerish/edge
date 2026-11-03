@@ -2,7 +2,7 @@ import { Heading } from '@bolerish/ui/heading';
 import { Paragraph } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
 import { pages } from './pages/index.js';
-import { Playground } from './playground/Playground.js';
+import { Home } from './home/Home.js';
 import { SiteShell, docsNavigation } from './ui/SiteShell.js';
 
 export function normalizePath(path: string) {
@@ -13,20 +13,17 @@ export const publicPaths = [
   '/',
   '/docs/',
   ...pages.filter((page) => page.slug).map((page) => `/docs/${page.slug}/`),
-  '/playground/',
 ];
 export function titleFor(path: string) {
   const normalized = normalizePath(path);
-  if (normalized === '/playground/') return 'Playground · Wisp';
+  if (normalized === '/') return 'Wisp · Directional surface lighting';
   return `${pages.find((page) => `/docs/${page.slug ? `${page.slug}/` : ''}` === normalized)?.title ?? (normalized === '/' ? 'Introduction' : 'Page not found')} · Wisp`;
 }
 export function App({ pathname }: { pathname: string }) {
   const path = normalizePath(pathname);
-  if (path === '/playground/') return <Playground />;
+  if (path === '/') return <Home />;
   const page = pages.find(
-    (page) =>
-      `/docs/${page.slug ? `${page.slug}/` : ''}` ===
-      (path === '/' ? '/docs/' : path),
+    (page) => `/docs/${page.slug ? `${page.slug}/` : ''}` === path,
   );
   if (!page)
     return (
@@ -38,7 +35,7 @@ export function App({ pathname }: { pathname: string }) {
           <Paragraph>
             This page is not available.{' '}
             <Link href="/docs/">Return to the introduction</Link> or explore the{' '}
-            <Link href="/playground/">Playground</Link>.
+            <Link href="/">dashboard example</Link>.
           </Paragraph>
         </article>
       </SiteShell>
@@ -46,7 +43,7 @@ export function App({ pathname }: { pathname: string }) {
   return (
     <SiteShell
       section="docs"
-      pathname={path === '/' ? '/docs/' : path}
+      pathname={path}
       navigation={docsNavigation}
       toc={page.sections.map(({ id, title }) => ({ id, title }))}
     >

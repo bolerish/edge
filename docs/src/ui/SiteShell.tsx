@@ -14,13 +14,13 @@ export interface SectionLink {
 export function SiteShell({
   section,
   pathname,
-  navigation,
+  navigation = [],
   toc = [],
   children,
 }: {
-  section: 'docs' | 'playground';
+  section: 'docs' | 'home';
   pathname: string;
-  navigation: NavigationGroup[];
+  navigation?: NavigationGroup[];
   toc?: SectionLink[];
   children: ReactNode;
 }) {
@@ -80,36 +80,38 @@ export function SiteShell({
         Skip to content
       </a>
       <header className="site-header">
-        <div className="mobile-toggle">
-          <Button
-            ref={menu}
-            size="icon"
-            variant="ghost"
-            aria-label="Open navigation"
-            aria-expanded={open}
-            aria-controls="mobile-navigation"
-            onClick={() => setOpen((value) => !value)}
-          >
-            <span aria-hidden="true">☰</span>
-          </Button>
-        </div>
+        {section === 'docs' ? (
+          <div className="mobile-toggle">
+            <Button
+              ref={menu}
+              size="icon"
+              variant="ghost"
+              aria-label="Open navigation"
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
+              onClick={() => setOpen((value) => !value)}
+            >
+              <span aria-hidden="true">☰</span>
+            </Button>
+          </div>
+        ) : null}
         <a className="wordmark" href="/">
           wisp<span>/lighting</span>
         </a>
         <nav className="top-nav" aria-label="Sections">
+          <Link
+            href="/"
+            variant="plain"
+            aria-current={section === 'home' ? 'page' : undefined}
+          >
+            Home
+          </Link>
           <Link
             href="/docs/"
             variant="plain"
             aria-current={section === 'docs' ? 'page' : undefined}
           >
             Docs
-          </Link>
-          <Link
-            href="/playground/"
-            variant="plain"
-            aria-current={section === 'playground' ? 'page' : undefined}
-          >
-            Playground
           </Link>
         </nav>
         <Button
@@ -123,13 +125,23 @@ export function SiteShell({
           <span aria-hidden="true">{theme === 'light' ? '☼' : '☾'}</span>
         </Button>
       </header>
-      <div id="mobile-navigation" className="mobile-navigation" hidden={!open}>
-        {nav}
-      </div>
+      {section === 'docs' ? (
+        <div
+          id="mobile-navigation"
+          className="mobile-navigation"
+          hidden={!open}
+        >
+          {nav}
+        </div>
+      ) : null}
       <div
-        className={`site-layout ${toc.length ? 'with-toc' : 'wide-content'}`}
+        className={
+          section === 'home'
+            ? 'home-layout'
+            : `site-layout ${toc.length ? 'with-toc' : 'wide-content'}`
+        }
       >
-        <aside className="sidebar">{nav}</aside>
+        {section === 'docs' ? <aside className="sidebar">{nav}</aside> : null}
         <main id="content" tabIndex={-1} className="site-content">
           {children}
         </main>

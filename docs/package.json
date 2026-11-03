@@ -14,7 +14,9 @@
     "react": "catalog:2026-11-03--react-stable",
     "react-dom": "catalog:2026-11-03--react-stable",
     "@stylexjs/stylex": "catalog:2026-11-03--stylex-stable",
-    "@bolerish/ui": "catalog:2026-11-03--bolerish-stable"
+    "@bolerish/ui": "catalog:2026-11-03--bolerish-stable",
+    "prism-react-renderer": "catalog:",
+    "prismjs": "catalog:"
   },
   "devDependencies": {
     "vite": "catalog:2026-11-03--vite-vitest-stable",
@@ -22,6 +24,8 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:2026-11-03--react-stable",
     "@types/react-dom": "catalog:2026-11-03--react-stable",
-    "@playwright/test": "catalog:"
+    "@playwright/test": "catalog:",
+    "@axe-core/playwright": "catalog:",
+    "@types/prismjs": "catalog:"
   }
 }

@@ -1,7 +1,8 @@
 import '@bolerish/ui/global.css';
 import '@bolerish/wisp-react/style.css';
 import './ui/site.css';
-import './playground/playground.css';
+import './home/home.css';
+import './ui/code-theme.css';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { App, normalizePath, titleFor } from './App.js';
 const root = document.querySelector<HTMLElement>('#root');

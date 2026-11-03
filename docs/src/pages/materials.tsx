@@ -56,8 +56,9 @@ export const materials: DocPage = {
           />
           <P>
             Leave the theme unset to retain your existing component appearance.
-            The recessed material is not a Wisp theme choice. Compare the two
-            theme choices in the <Link href="/playground/">Playground</Link>.
+            The recessed material is not a Wisp theme choice. The{' '}
+            <Link href="/">dashboard example</Link> uses unthemed materials to
+            preserve Bolerish component colors.
           </P>
         </>
       ),

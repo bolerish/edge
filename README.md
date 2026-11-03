@@ -34,7 +34,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-The site lives in `docs/`. Run `pnpm dev`, then open [documentation](http://127.0.0.1:4173/docs/) or the [public Playground](http://127.0.0.1:4173/playground/). Both use Bolerish UI; the Playground connects a card, input wrapper and button to one light. See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and package boundaries.
+The site lives in `docs/`. Run `pnpm dev`, then open [documentation](http://127.0.0.1:4173/docs/) or the [dashboard example](http://127.0.0.1:4173/). Both use Bolerish UI; the dashboard connects real cards, fields and buttons to one light. Documentation and syntax-highlighted code are generated as static HTML. See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and package boundaries.
 
 ## Rendering and limits
 
