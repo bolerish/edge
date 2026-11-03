@@ -20,7 +20,7 @@ import {
   useSurface,
   type Light,
   type LightOptions,
-} from '@wisp-lighting/react';
+} from '@bolerish/wisp-react';
 import { SiteShell } from '../ui/SiteShell.js';
 import type { ReactNode } from 'react';
 type Variant = 'raised' | 'matte';

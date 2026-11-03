@@ -6,8 +6,8 @@ This is an unreleased React MVP. All workspace packages are private. Solid and S
 
 ```tsx
 import * as stylex from '@stylexjs/stylex';
-import { useLight, useSurface } from '@wisp-lighting/react';
-import '@wisp-lighting/react/style.css';
+import { useLight, useSurface } from '@bolerish/wisp-react';
+import '@bolerish/wisp-react/style.css';
 
 function Card() {
   const light = useLight();

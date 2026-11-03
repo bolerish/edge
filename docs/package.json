@@ -1,5 +1,5 @@
 {
-  "name": "@wisp-lighting/docs",
+  "name": "@bolerish/wisp-docs",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "test:browser": "playwright test"
   },
   "dependencies": {
-    "@wisp-lighting/react": "workspace:^",
+    "@bolerish/wisp-react": "workspace:^",
     "react": "catalog:2026-11-03--react-stable",
     "react-dom": "catalog:2026-11-03--react-stable",
     "@stylexjs/stylex": "catalog:2026-11-03--stylex-stable",

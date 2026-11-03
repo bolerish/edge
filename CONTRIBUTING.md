@@ -18,7 +18,7 @@ Dated catalogs identify jointly validated dependency combinations. Upgrade a com
 pnpm build
 pnpm typecheck
 pnpm test
-pnpm --filter @wisp-lighting/docs exec playwright install chromium
+pnpm --filter @bolerish/wisp-docs exec playwright install chromium
 pnpm test:browser
 pnpm verify:packages
 pnpm check

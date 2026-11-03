@@ -12,10 +12,10 @@ import {
   type LightOptions,
   type Material,
   type Registration,
-} from '@wisp-lighting/core';
+} from '@bolerish/wisp-core';
 import { surfaceStyles, wispStyles } from './surface-styles.js';
 
-export type { LightOptions, Material } from '@wisp-lighting/core';
+export type { LightOptions, Material } from '@bolerish/wisp-core';
 const lightBrand = Symbol('WispLight');
 export interface Light {
   readonly [lightBrand]: true;

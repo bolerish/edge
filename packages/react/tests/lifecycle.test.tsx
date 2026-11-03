@@ -10,7 +10,7 @@ import {
   type Material,
   type LightOptions,
   type Light,
-} from '@wisp-lighting/react';
+} from '@bolerish/wisp-react';
 import * as stylex from '@stylexjs/stylex';
 
 let frames: Map<number, FrameRequestCallback>;

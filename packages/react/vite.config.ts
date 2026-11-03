@@ -10,7 +10,7 @@ export default defineConfig({
         'react',
         'react/jsx-runtime',
         '@stylexjs/stylex',
-        '@wisp-lighting/core',
+        '@bolerish/wisp-core',
       ],
     },
   },

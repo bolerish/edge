@@ -223,7 +223,7 @@ importers:
       '@stylexjs/stylex':
         specifier: catalog:2026-11-03--stylex-stable
         version: 0.19.1
-      '@wisp-lighting/react':
+      '@bolerish/wisp-react':
         specifier: workspace:^
         version: link:../packages/react
       react:
@@ -266,7 +266,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@wisp-lighting/core':
+      '@bolerish/wisp-core':
         specifier: workspace:^
         version: link:../core
     devDependencies:

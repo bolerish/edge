@@ -41,7 +41,7 @@ export const installation: DocPage = {
           </P>
           <CodeBlock
             label="Stylesheet import"
-            code={"import '@wisp-lighting/react/style.css';"}
+            code={"import '@bolerish/wisp-react/style.css';"}
           />
           <P>
             The library ships compiled JavaScript and CSS. Your own calls to{' '}

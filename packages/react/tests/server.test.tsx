@@ -2,7 +2,7 @@
 import { renderToStaticMarkup, renderToString } from 'react-dom/server';
 import * as stylex from '@stylexjs/stylex';
 import { expect, it, vi } from 'vitest';
-import { useLight, useSurface } from '@wisp-lighting/react';
+import { useLight, useSurface } from '@bolerish/wisp-react';
 
 function Scene() {
   const light = useLight();

@@ -1,5 +1,5 @@
 import '@bolerish/ui/global.css';
-import '@wisp-lighting/react/style.css';
+import '@bolerish/wisp-react/style.css';
 import './ui/site.css';
 import './playground/playground.css';
 import { createRoot, hydrateRoot } from 'react-dom/client';

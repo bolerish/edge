@@ -1,5 +1,5 @@
 export const firstSurface = `import * as stylex from '@stylexjs/stylex';
-import { useLight, useSurface, type Light } from '@wisp-lighting/react';
+import { useLight, useSurface, type Light } from '@bolerish/wisp-react';
 
 function App() {
   const light = useLight();
@@ -20,7 +20,7 @@ function Card({ light }: { light: Light }) {
 
 const styles = stylex.create({ card: { padding: 24, borderRadius: 12 } });`;
 export const inputSurface = `import * as stylex from '@stylexjs/stylex';
-import { useSurface, type Light } from '@wisp-lighting/react';
+import { useSurface, type Light } from '@bolerish/wisp-react';
 
 function Search({ light }: { light: Light }) {
   const surface = useSurface<HTMLLabelElement>(light, { material: 'recessed' });

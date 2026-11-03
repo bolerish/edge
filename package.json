@@ -10,10 +10,10 @@
     "build": "pnpm -r build",
     "typecheck": "pnpm --filter './packages/**' build && pnpm -r typecheck",
     "test": "pnpm --filter './packages/**' build && pnpm -r test",
-    "dev": "pnpm --filter './packages/**' build && pnpm -r --parallel --filter './packages/**' --filter @wisp-lighting/docs dev",
+    "dev": "pnpm --filter './packages/**' build && pnpm -r --parallel --filter './packages/**' --filter @bolerish/wisp-docs dev",
     "dev:docs": "pnpm dev",
-    "test:browser": "pnpm --filter './packages/**' build && pnpm --filter @wisp-lighting/docs test:browser",
-    "check": "pnpm build && pnpm -r typecheck && pnpm -r test && pnpm --filter @wisp-lighting/docs test:browser && pnpm verify:packages",
+    "test:browser": "pnpm --filter './packages/**' build && pnpm --filter @bolerish/wisp-docs test:browser",
+    "check": "pnpm build && pnpm -r typecheck && pnpm -r test && pnpm --filter @bolerish/wisp-docs test:browser && pnpm verify:packages",
     "verify:packages": "node scripts/verify-packages.mjs"
   }
 }

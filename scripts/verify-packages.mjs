@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const sandbox = resolve(root, '.private/package-check');
 await rm(sandbox, { recursive: true, force: true });
-await mkdir(resolve(sandbox, 'node_modules/@wisp-lighting'), {
+await mkdir(resolve(sandbox, 'node_modules/@bolerish'), {
   recursive: true,
 });
 for (const name of ['core', 'react']) {
@@ -22,7 +22,7 @@ for (const name of ['core', 'react']) {
       !listing.includes('/tests/') &&
       !listing.includes('/src/'),
   );
-  const destination = resolve(sandbox, 'node_modules/@wisp-lighting', name);
+  const destination = resolve(sandbox, 'node_modules/@bolerish', `wisp-${name}`);
   await mkdir(destination, { recursive: true });
   execFileSync('tar', [
     '-xzf',
@@ -34,6 +34,7 @@ for (const name of ['core', 'react']) {
   const manifest = JSON.parse(
     await readFile(resolve(destination, 'package.json'), 'utf8'),
   );
+  assert.equal(manifest.name, `@bolerish/wisp-${name}`);
   for (const target of Object.values(manifest.exports)) {
     if (typeof target === 'string')
       await readFile(resolve(destination, target));
@@ -62,8 +63,8 @@ execFileSync(
   import React from 'react';
   import {renderToStaticMarkup} from 'react-dom/server';
   import * as stylex from '@stylexjs/stylex';
-  import {createLight} from '@wisp-lighting/core';
-  import {useLight,useSurface} from '@wisp-lighting/react';
+  import {createLight} from '@bolerish/wisp-core';
+  import {useLight,useSurface} from '@bolerish/wisp-react';
   assert.equal(typeof window,'undefined');
   createLight().refresh();
   function Card(){const light=useLight();const surface=useSurface(light,{theme:'wisp'});return React.createElement('article',stylex.props(surface.style),'Packed card');}
@@ -73,12 +74,12 @@ execFileSync(
   { cwd: sandbox, stdio: 'pipe' },
 );
 const css = await readFile(
-  resolve(sandbox, 'node_modules/@wisp-lighting/react/dist/assets/stylex.css'),
+  resolve(sandbox, 'node_modules/@bolerish/wisp-react/dist/assets/stylex.css'),
   'utf8',
 );
 assert(css.includes('conic-gradient') && css.includes('--wisp-angle'));
 const library = await readFile(
-  resolve(sandbox, 'node_modules/@wisp-lighting/react/dist/index.js'),
+  resolve(sandbox, 'node_modules/@bolerish/wisp-react/dist/index.js'),
   'utf8',
 );
 assert(
