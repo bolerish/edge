@@ -26,14 +26,14 @@ export function SettingsPopover() {
             </NativeSelect>
           </label>
           <label>
-            <span>Pointer tracking</span>
+            <span>Motion</span>
             <NativeSelect aria-describedby="tracking-description" value={preferences.mode} onChange={(event: ChangeEvent<HTMLSelectElement>) => {
               const mode = event.target.value;
-              if (mode === 'auto' || mode === 'pointer' || mode === 'static') updatePreferences({ mode });
+              if (mode === 'frozen' || mode === 'pointer' || mode === 'static') updatePreferences({ mode });
             }}>
-              <option value="static">Off</option>
-              <option value="pointer">On</option>
-              <option value="auto">System</option>
+              <option value="static">Static</option>
+              <option value="pointer">Dynamic</option>
+              <option value="frozen">Frozen</option>
             </NativeSelect>
           </label>
           <p id="tracking-description" className="preference-description">{modeDescriptions[preferences.mode]}</p>

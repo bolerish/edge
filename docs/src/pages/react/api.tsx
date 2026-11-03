@@ -15,9 +15,9 @@ export const api: DocPage = {
         <>
           <P>
             Shares one light with explicitly marked descendants without adding
-            a DOM wrapper. tracking accepts on, off or system (default). On
+            a DOM wrapper. tracking accepts on, off, frozen or system (default). On
             enables pointer tracking, Off keeps fixed lighting, and System
-            follows device and reduced-motion preferences. Touch movement is ignored.
+            follows device and reduced-motion preferences. Frozen captures the first mouse or pen position and holds it until the mode changes or the scope remounts. Before the first input, it uses fixed lighting. Touch movement is ignored.
           </P>
           <P>
             radius (default 480) and intensity (default 0.75) configure the shared
@@ -74,7 +74,7 @@ export const api: DocPage = {
                   <td>
                     <code>'auto'</code>
                   </td>
-                  <td>auto, pointer, static</td>
+                  <td>auto, pointer, static, frozen</td>
                 </tr>
                 <tr>
                   <td>

@@ -405,3 +405,35 @@ it('suppresses output for detached surfaces', () => {
   expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
   stop();
 });
+
+
+it('freezes the first non-touch position until the mode changes', () => {
+  const light = createLight({ mode: 'frozen' });
+  const { node } = element();
+  light.register(node, 'raised');
+  const stop = light.mount(document);
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
+  point(50, 150, 'touch');
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
+  point();
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  point(50, 150);
+  window.dispatchEvent(new Event('blur'));
+  document.dispatchEvent(Object.assign(new Event('pointerout'), { relatedTarget: null }));
+  queries[0]!.dispatchEvent(new Event('change'));
+  light.refresh();
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  light.configure({ mode: 'pointer' });
+  point(50, 150);
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('270.0deg');
+  light.configure({ mode: 'frozen' });
+  point();
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  stop();
+});

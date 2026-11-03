@@ -1,5 +1,5 @@
 export interface LightOptions {
-  mode?: 'auto' | 'pointer' | 'static';
+  mode?: 'auto' | 'pointer' | 'static' | 'frozen';
   radius?: number;
   intensity?: number;
 }
@@ -10,7 +10,7 @@ export function normalizeLightOptions(options: LightOptions) {
   const mode = options.mode ?? 'auto';
   const radius = options.radius ?? DEFAULT_LIGHT_RADIUS_PX;
   const intensity = options.intensity ?? DEFAULT_LIGHT_INTENSITY;
-  if (!['auto', 'pointer', 'static'].includes(mode))
+  if (!['auto', 'pointer', 'static', 'frozen'].includes(mode))
     throw new RangeError('Unknown light mode');
   if (!Number.isFinite(radius) || radius <= 0)
     throw new RangeError('radius must be positive and finite');

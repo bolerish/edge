@@ -82,7 +82,7 @@ test('materials and modes update without further pointer movement', async ({
   await page.goto('/');
   const card = page.getByTestId('surface-card');
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  const light = page.getByRole('combobox', { name: 'Pointer tracking', exact: true });
+  const light = page.getByRole('combobox', { name: 'Motion', exact: true });
   const surface = page.getByRole('combobox', { name: 'Style', exact: true });
   await expect(light).toHaveValue('pointer');
   await expect(surface).toHaveValue('raised');
@@ -115,7 +115,7 @@ test('materials and modes update without further pointer movement', async ({
     .toBeCloseTo(strength * 0.3, 2);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await light.selectOption('auto');
+  await light.selectOption('static');
   await page.keyboard.press('Escape');
   await expect
     .poll(() =>
@@ -293,13 +293,13 @@ test('header settings persist across documentation navigation and reloads', asyn
   await page.goto('/');
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await page.getByRole('combobox', { name: 'Style' }).selectOption('matte');
-  await page.getByRole('combobox', { name: 'Pointer tracking' }).selectOption('static');
+  await page.getByRole('combobox', { name: 'Motion' }).selectOption('static');
   await page.keyboard.press('Escape');
   await page.getByRole('link', { name: 'Docs', exact: true }).click();
   await page.reload();
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'Style' })).toHaveValue('matte');
-  await expect(page.getByRole('combobox', { name: 'Pointer tracking' })).toHaveValue('static');
+  await expect(page.getByRole('combobox', { name: 'Motion' })).toHaveValue('static');
 });
 
 test('documentation search finds section content and supports keyboard dismissal', async ({ page }) => {
@@ -396,4 +396,23 @@ test('hero compares lighting and package-manager tabs expose matching commands',
     );
   }
 
+});
+
+
+test('Frozen retains the first pointer position and persists the selected mode', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  const motion = page.getByRole('combobox', { name: 'Motion', exact: true });
+  await expect(motion.locator('option')).toHaveText(['Static', 'Dynamic', 'Frozen']);
+  await motion.selectOption('frozen');
+  await page.keyboard.press('Escape');
+  const card = page.getByTestId('hero-surface');
+  await page.mouse.move(700, 200);
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('315.0deg');
+  const angle = await card.evaluate(node => node.style.getPropertyValue('--wisp-angle'));
+  await page.mouse.move(100, 500);
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe(angle);
+  await page.reload();
+  await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await expect(motion).toHaveValue('frozen');
 });

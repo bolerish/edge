@@ -1,9 +1,8 @@
 import { useSyncExternalStore } from 'react';
-import type { LightOptions } from '@bolerish/edge';
 
 export interface SitePreferences {
   material: 'raised' | 'matte';
-  mode: NonNullable<LightOptions['mode']>;
+  mode: 'pointer' | 'static' | 'frozen';
   theme: 'light' | 'dark';
 }
 const storageKey = 'wisp:preferences:v1';
@@ -18,9 +17,9 @@ let storedValue: string | null | undefined;
 const listeners = new Set<() => void>();
 
 export const modeDescriptions: Record<SitePreferences['mode'], string> = {
-  auto: 'Adapts to your device and motion preferences.',
   pointer: 'Follows your pointer, even when reduced motion is enabled.',
   static: 'Keeps the light direction fixed.',
+  frozen: 'Locks the light at your first pointer position until you change the mode.',
 };
 
 export function usePreferences() {
@@ -71,7 +70,7 @@ function parsePreferences(serialized: string | null): Readonly<SitePreferences> 
       material:
         'material' in value && value.material === 'matte' ? 'matte' : 'raised',
       mode:
-        'mode' in value && (value.mode === 'auto' || value.mode === 'static')
+        'mode' in value && (value.mode === 'static' || value.mode === 'frozen')
           ? value.mode
           : 'pointer',
       theme: 'theme' in value && value.theme === 'dark' ? 'dark' : 'light',

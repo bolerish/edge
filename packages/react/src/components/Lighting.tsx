@@ -4,7 +4,7 @@ import { useLight, type Light } from '../hooks/useLight.js';
 import { LightContext } from './light-context.js';
 import { Surface } from './Surface.js';
 
-export type Tracking = 'off' | 'on' | 'system';
+export type Tracking = 'off' | 'on' | 'system' | 'frozen';
 export interface LightingProps {
   children: ReactNode;
   /** Defaults to system, respecting motion and device preferences. */
@@ -18,6 +18,7 @@ const modes = {
   off: 'static',
   on: 'pointer',
   system: 'auto',
+  frozen: 'frozen',
 } satisfies Record<Tracking, NonNullable<LightOptions['mode']>>;
 
 /** Shares one light with explicit descendant surfaces, without adding DOM. */

@@ -40,10 +40,9 @@ const projects: readonly Project[] = [
 
 export function Home() {
   const { mode } = usePreferences();
-  const tracking =
-    mode === 'auto' ? 'system' : mode === 'pointer' ? 'on' : 'off';
+  const tracking = { pointer: 'on', static: 'off', frozen: 'frozen' } as const;
   return (
-    <Lighting tracking={tracking} intensity={0.8}>
+    <Lighting tracking={tracking[mode]} intensity={0.8}>
       <SiteShell section="home" pathname="/">
         <div className="home-hero-layout">
           <section className="home-hero" aria-labelledby="home-title">
