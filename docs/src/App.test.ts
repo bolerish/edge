@@ -4,8 +4,8 @@ const routes = [
   '/docs/',
   '/docs/react/',
   '/docs/react/usage/',
-  '/docs/react/materials/',
-  '/docs/react/accessibility/',
+  '/docs/materials/',
+  '/docs/accessibility/',
   '/docs/react/api/',
   '/',
 ];
@@ -342,10 +342,12 @@ test('previous guide URLs preserve their content and API anchors', async ({ page
   for (const [slug, title] of [
     ['installation', 'Installation'], ['usage', 'Usage'], ['materials', 'Materials'],
     ['accessibility', 'Accessibility'], ['api', 'API reference'],
+    ['react/materials', 'Materials'], ['react/accessibility', 'Accessibility'],
   ] as const) {
     await page.goto(`/docs/${slug}/`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title);
-    await expect(page.locator('.sidebar .nav-heading')).toHaveText('React');
+    await expect(page.locator('.sidebar').getByRole('link', { name: title, exact: true }))
+      .toHaveAttribute('aria-current', 'page');
   }
   await page.goto('/docs/api/#use-surface');
   await expect(page.locator('.table-of-contents').getByRole('link', { name: 'useSurface(light, options?)', exact: true }))
@@ -362,4 +364,17 @@ test('framework search uses canonical React guides and contextual labels', async
   const result = dialog.getByRole('link', { name: /^Installation/ });
   await expect(result).toContainText('React · Installation');
   await expect(result).toHaveAttribute('href', '/docs/react/');
+});
+
+
+test('shared guides appear before framework-specific documentation', async ({ page }) => {
+  await page.goto('/docs/');
+  const groups = page.locator('.sidebar .nav-group');
+  await expect(groups).toHaveCount(3);
+  await expect(groups.nth(0).getByRole('link')).toHaveText(['Getting started']);
+  await expect(groups.nth(1).getByRole('link')).toHaveText(['Materials', 'Accessibility']);
+  await expect(groups.nth(2).getByRole('link')).toHaveText(['Installation', 'Usage', 'API reference']);
+  await groups.nth(1).getByRole('link', { name: 'Materials', exact: true }).click();
+  await expect(page).toHaveURL(/\/docs\/materials\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Materials');
 });

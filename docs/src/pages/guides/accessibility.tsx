@@ -1,9 +1,9 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import type { DocPage } from '../types.js';
 export const accessibility: DocPage = {
-  slug: 'react/accessibility',
-  aliases: ['accessibility'],
-  section: 'React',
+  slug: 'accessibility',
+  aliases: ['react/accessibility'],
+  section: 'Guides',
   title: 'Accessibility',
   description:
     'Treat lighting as decoration. Components must remain readable and operable without a moving highlight.',
@@ -60,7 +60,7 @@ export const accessibility: DocPage = {
             skipped.
           </P>
           <P>
-            Changing gradients can still require browser rendering work. React
+            Changing gradients can still require browser rendering work. Framework
             execution counts and functional browser tests are not measurements
             of paint, compositing, battery use or frame-rate guarantees.
           </P>

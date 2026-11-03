@@ -7,8 +7,8 @@ const routes = [
   '/docs/',
   '/docs/react/',
   '/docs/react/usage/',
-  '/docs/react/materials/',
-  '/docs/react/accessibility/',
+  '/docs/materials/',
+  '/docs/accessibility/',
   '/docs/react/api/',
 ];
 for (const viewport of [

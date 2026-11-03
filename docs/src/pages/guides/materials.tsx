@@ -3,9 +3,9 @@ import { Link } from '@bolerish/ui/link';
 import { CodeBlock } from '../../ui/CodeBlock.js';
 import type { DocPage } from '../types.js';
 export const materials: DocPage = {
-  slug: 'react/materials',
-  aliases: ['materials'],
-  section: 'React',
+  slug: 'materials',
+  aliases: ['react/materials'],
+  section: 'Guides',
   title: 'Materials',
   description:
     'Choose how an edge responds to light. Material response and base component styling are separate decisions.',
@@ -53,7 +53,7 @@ export const materials: DocPage = {
           <CodeBlock
             label="Wisp theme"
             code={
-              "const surface = useSurface(light, { material: 'matte', theme: 'wisp' });"
+              "import { getSurfaceProps } from '@bolerish/wisp-styles';\n\nconst surface = getSurfaceProps({ material: 'matte', theme: 'wisp' });"
             }
           />
           <P>
@@ -71,11 +71,12 @@ export const materials: DocPage = {
       content: (
         <>
           <P>
-            Pass <code>color</code> and <code>intensity</code> to{' '}
-            <code>useSurface</code> to customize the highlight in JavaScript.
+            Set <code>color</code> and <code>intensity</code> on a surface
+            to customize the highlight.
             Surface intensity multiplies the shared light intensity. Internal
             CSS variables are reserved for Wisp; no CSS variable declarations
-            are required in your application.
+            are required in your application. In React, pass these options to{' '}
+            <Link href="/docs/react/api/#lighting-surface">Lighting.Surface</Link>.
           </P>
           <P>
             The effect approximates lighting on axis-aligned rectangles. It is
