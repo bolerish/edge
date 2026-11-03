@@ -54,7 +54,9 @@ test('changes the real border direction and preserves input, portals and consume
       node.selectionEnd,
     ]),
   ).toEqual([2, 7]);
-  await page.getByRole('button', { name: 'Open quick note' }).click();
+  await input.press('Tab');
+  await expect(page.getByRole('button', { name: 'Open quick note' })).toBeFocused();
+  await page.keyboard.press('Enter');
   const portal = page.getByTestId('portal');
   await expect(portal).toBeVisible();
   expect(await portal.evaluate((node) => getComputedStyle(node).position)).toBe(
