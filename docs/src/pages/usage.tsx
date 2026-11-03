@@ -1,6 +1,6 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { CodeBlock } from '../ui/CodeBlock.js';
-import { inputSurface, refreshSurface } from './examples.js';
+import { inputSurface, refreshSurface, hookSurface } from './examples.js';
 import type { DocPage } from './types.js';
 export const usage: DocPage = {
   slug: 'usage',
@@ -14,9 +14,10 @@ export const usage: DocPage = {
       content: (
         <>
           <P>
-            Call <code>useLight()</code> in a common owner and pass its stable
-            handle to child components. Every surface using that handle responds
-            to the same source.
+            Wrap a section in <code>Lighting</code>. Only its explicit{' '}
+            <code>Lighting.Surface</code> descendants respond to that light.
+            Nest another Lighting to give part of the section an independent
+            light; each surface uses its nearest owner.
           </P>
           <P>
             A surface unregisters when its element is removed or replaced.
@@ -32,18 +33,17 @@ export const usage: DocPage = {
       content: (
         <>
           <P>
-            Combine <code>surface.className</code> with your own classes and spread
-            <code>surface.style</code> into your inline styles.
-            Your component retains its positioning, radius and appearance:
+            Pass className and style directly to <code>Lighting.Surface</code>.
+            Your styles compose with the lighting decoration:
           </P>
           <CodeBlock
             label="Style composition"
             code={
-              '<article ref={surface.ref} className={`${surface.className} card`} style={surface.style}>\n  Your content\n</article>'
+              '<Lighting.Surface as="article" className="card" style={{ padding: 24 }}>\n  Your content\n</Lighting.Surface>'
             }
           />
           <P>
-            <code>surface.style</code> is a React inline-style object. Wisp reserves the element’s{' '}
+            The scope adds no wrapper. Each surface renders one host and reserves its{' '}
             <code>::after</code> for its border decoration.
           </P>
         </>
@@ -69,6 +69,20 @@ export const usage: DocPage = {
       ),
     },
     {
+      id: 'connect-existing-components',
+      title: 'Connect existing components with hooks',
+      content: (
+        <>
+          <P>
+            Use useLight and useSurface when an existing component should own
+            the registered host. Merge the returned className and style with
+            your component’s own styling, and attach the ref to that host.
+          </P>
+          <CodeBlock label="Hook escape hatch" code={hookSurface} />
+        </>
+      ),
+    },
+    {
       id: 'refresh-after-layout-changes',
       title: 'Refresh after layout changes',
       content: (
@@ -83,7 +97,7 @@ export const usage: DocPage = {
             This also schedules an update while the pointer is stationary.
             Rotation, perspective transforms and cross-document portals are
             outside the current support scope. Same-document portals can use the
-            same light handle.
+            declaring Lighting scope.
           </P>
         </>
       ),

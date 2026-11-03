@@ -1,31 +1,57 @@
-export const firstSurface = `import { useLight, useSurface, type Light } from '@bolerish/wisp-react';
+export const firstSurface = `import { Lighting } from '@bolerish/wisp-react';
+import '@bolerish/wisp-react/style.css';
 
 function App() {
-  const light = useLight({ mode: 'pointer' });
-  return <Card light={light} />;
-}
-
-function Card({ light }: { light: Light }) {
-  const surface = useSurface<HTMLElement>(light, {
-    material: 'raised',
-    theme: 'wisp',
-  });
   return (
-    <article ref={surface.ref} className={surface.className} style={{ ...surface.style, padding: 24, borderRadius: 12 }}>
-      Project overview
+    <Lighting tracking="on">
+      <Lighting.Surface as="article" theme="wisp" style={{ padding: 24 }}>
+        Project overview
+      </Lighting.Surface>
+      <article>This element keeps its own appearance.</article>
+    </Lighting>
+  );
+}`;
+export const inputSurface = `import { Lighting } from '@bolerish/wisp-react';
+
+function Search() {
+  return (
+    <Lighting tracking="on">
+      <Lighting.Surface
+        as="label"
+        material="recessed"
+        style={{ display: 'grid', gap: 8, padding: 16, borderRadius: 12 }}
+      >
+        Search <input name="query" />
+      </Lighting.Surface>
+    </Lighting>
+  );
+}`;
+export const hookSurface = `import { useLight, useSurface } from '@bolerish/wisp-react';
+
+function Card() {
+  const light = useLight({ mode: 'pointer' });
+  const surface = useSurface<HTMLElement>(light, { color: 'white' });
+  return (
+    <article
+      ref={surface.ref}
+      className={surface.className}
+      style={{ ...surface.style, padding: 24 }}
+    >
+      Your existing host
     </article>
   );
 }`;
-export const inputSurface = `import { useSurface, type Light } from '@bolerish/wisp-react';
+export const refreshSurface = `import { useEffect, useRef } from 'react';
+import { Lighting, type Light } from '@bolerish/wisp-react';
 
-function Search({ light }: { light: Light }) {
-  const surface = useSurface<HTMLLabelElement>(light, { material: 'recessed' });
+function Area({ expanded }: { expanded: boolean }) {
+  const light = useRef<Light>(null);
+  useEffect(() => light.current?.refresh(), [expanded]);
   return (
-    <label ref={surface.ref} className={surface.className} style={{ ...surface.style, display: 'grid', gap: 8, padding: 16, borderRadius: 12 }}>
-      Search <input name="query" />
-    </label>
+    <Lighting ref={light}>
+      <Lighting.Surface style={{ marginLeft: expanded ? 100 : 0 }}>
+        Your content
+      </Lighting.Surface>
+    </Lighting>
   );
 }`;
-export const refreshSurface = `useEffect(() => {
-  light.refresh();
-}, [light, expanded]);`;

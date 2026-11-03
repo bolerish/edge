@@ -231,7 +231,7 @@ test('SSG documents include highlighted code and remain readable without JavaScr
     'Installation',
   );
   await expect(page.locator('.token.keyword').first()).toBeVisible();
-  await expect(page.locator('pre').last()).toContainText('useSurface');
+  await expect(page.locator('pre').last()).toContainText('Lighting.Surface');
   await page.goto('http://127.0.0.1:4183/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Light that reveals your interface.',

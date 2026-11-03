@@ -2,29 +2,29 @@
 
 Directional border lighting for the React components you own. Share one light across cards, buttons, input wrappers and same-document portals. Compose the UI with React and your preferred styling tool; Wisp handles pointer scheduling, geometry and decorative border output.
 
-This is an unreleased React MVP. All workspace packages are private. Solid and Svelte adapters are not available yet.
+This is an unreleased React MVP. All workspace packages are private. Svelte, Solid and Vue adapters are not implemented yet. The DOM engine and compiled surface bindings are framework-independent.
 
 ```tsx
-import { useLight, useSurface } from '@bolerish/wisp-react';
+import { Lighting } from '@bolerish/wisp-react';
 import '@bolerish/wisp-react/style.css';
 
-function Card() {
-  const light = useLight();
-  const surface = useSurface<HTMLElement>(light, {
-    material: 'raised',
-    theme: 'wisp',
-    color: '#e5edc8',
-    intensity: 0.8,
-  });
+function Area() {
   return (
-    <article ref={surface.ref} className={surface.className} style={surface.style}>
-      Your content
-    </article>
+    <Lighting tracking="on">
+      <Lighting.Surface as="article" theme="wisp" color="#e5edc8">
+        Your lit card
+      </Lighting.Surface>
+      <article>This element keeps its own appearance.</article>
+    </Lighting>
   );
 }
 ```
 
-Create the light in a common owner and pass it to child surfaces to share it. Combine `surface.className` with your classes and spread `surface.style` into your inline styles. Set `color` and `intensity` through `useSurface` options; surface intensity multiplies the shared light intensity. The Wisp theme offers Raised and Matte; an unthemed recessed material supports inset wrappers.
+`Lighting` shares one light without adding DOM. Only explicit `Lighting.Surface` descendants respond; nested owners create independent lights. A surface renders a div by default. Use `as` for another HTML tag, and pass normal attributes, events, className, style and refs to that host.
+
+Tracking accepts `on`, `off` or `system` (the default). System respects device and reduced-motion preferences. The documentation demo opts into On. The optional Wisp theme provides Raised and Matte; unthemed recessed surfaces support input wrappers. Set `color` and `intensity` through props; surface intensity multiplies shared light intensity.
+
+For an existing component that already owns its host, `useLight` and `useSurface` remain available. Attach the returned ref, combine className with your own classes and spread the returned style into your inline styles. Use a wrapper around inputs because the decoration uses `::after`.
 
 ## Development
 
@@ -39,8 +39,14 @@ The site lives in `docs/`. Run `pnpm dev`, then open [documentation](http://127.
 
 ## Rendering and limits
 
-SSR/static rendering and client hydration are supported by the React adapter. Pointer frames do not update React state. Auto mode respects reduced motion; explicit pointer mode opts into tracking, and static mode uses fixed lighting. Lighting does not replace base borders, contrast or keyboard focus.
+SSR/static rendering and client hydration are supported by the React adapter. Pointer frames do not update React state. System tracking respects reduced motion; On opts into tracking, and Off uses fixed lighting. Lighting does not replace base borders, contrast or keyboard focus.
 
-The effect approximates axis-aligned rectangular surfaces. Position-only layout changes may require `light.refresh()` after commit. Changing gradients still has browser rendering costs; no FPS or speedup is promised. Cross-document portals and rotated/perspective geometry are not supported.
+The effect approximates axis-aligned rectangular surfaces. Position-only layout changes may require `light.refresh()` after commit. The declarative owner exposes the same handle through an optional `ref`. Changing gradients still has browser rendering costs; no FPS or speedup is promised. Cross-document portals and rotated/perspective geometry are not supported.
 
 MIT licensed.
+
+## Package boundaries
+
+- `@bolerish/wisp-core`: framework-independent DOM engine and geometry.
+- `@bolerish/wisp-styles`: framework-independent `getSurfaceProps()` and compiled CSS; no React runtime required.
+- `@bolerish/wisp-react`: declarative React components and low-level hooks. It re-exports the shared CSS at its existing `style.css` path.

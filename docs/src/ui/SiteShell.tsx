@@ -48,7 +48,7 @@ export function SiteShell({
     window.addEventListener('keydown', escape);
     return () => window.removeEventListener('keydown', escape);
   }, [open]);
-  const effectiveHash = hash || (pathname === '/docs/api/' ? '#use-light' : '');
+  const effectiveHash = hash || (pathname === '/docs/api/' ? '#lighting' : '');
   const nav = (
     <nav aria-label="Documentation">
       {navigation.map((group, index) => (
@@ -181,6 +181,8 @@ export const docsNavigation: NavigationGroup[] = [
   {
     title: 'API',
     items: [
+      { title: 'Lighting', href: '/docs/api/#lighting' },
+      { title: 'Lighting.Surface', href: '/docs/api/#lighting-surface' },
       { title: 'useLight', href: '/docs/api/#use-light' },
       { title: 'useSurface', href: '/docs/api/#use-surface' },
     ],

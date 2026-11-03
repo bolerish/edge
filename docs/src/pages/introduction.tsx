@@ -13,9 +13,9 @@ export const introduction: DocPage = {
       content: (
         <>
           <P>
-            Create a light with <code>useLight()</code> and pass it to the
-            components in the same scene. The component that creates the light
-            owns its lifetime.
+            Wrap the area that shares a light in <code>Lighting</code>. Add{' '}
+            <code>Lighting.Surface</code> only to the elements that should
+            respond. Ordinary elements stay unchanged, even inside the area.
           </P>
           <P>
             Follow <Link href="/docs/installation/">Installation</Link> to
@@ -31,9 +31,10 @@ export const introduction: DocPage = {
       content: (
         <>
           <P>
-            Register an element with <code>useSurface()</code>. Apply the
-            returned className and inline style, then compose your own styles
-            using your preferred styling tool.
+            A <code>Lighting.Surface</code> renders a div by default. Choose
+            another HTML element with <code>as</code>, and pass your own
+            className, style, events and ref. Existing hooks remain available
+            when you need to connect a component directly.
           </P>
           <P>
             The library coordinates pointer input, geometry and decorative
@@ -68,9 +69,9 @@ export const introduction: DocPage = {
         <>
           <P>
             Pointer tracking starts On (<code>pointer</code>) in the documentation
-            demo. Choose System (<code>auto</code>) to follow your device and
-            motion preferences, or Off (<code>static</code>) to keep a fixed
-            light direction.
+            demo. Use <code>tracking="system"</code> to follow device and
+            motion preferences, or <code>tracking="off"</code> for a fixed
+            light direction. The library defaults to System.
           </P>
           <P>
             Keep visible borders and keyboard focus without relying on the

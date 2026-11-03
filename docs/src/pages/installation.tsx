@@ -57,14 +57,14 @@ export const installation: DocPage = {
       content: (
         <>
           <P>
-            Create a shared light in the owner component and pass it to a
-            surface component. This example uses the Wisp theme to provide a
-            complete base appearance:
+            Declare a light owner and mark only the hosts that should respond.
+            This example uses the optional Wisp theme for a complete base
+            appearance:
           </P>
           <CodeBlock label="First surface" code={firstSurface} />
           <P>
             This example turns pointer tracking On to follow the pointer near the card’s
-            edges. Use <code>mode: 'auto'</code> (System) to respect reduced-motion
+            edges. Use <code>tracking="system"</code> to respect reduced-motion
             preferences with fixed lighting instead. Continue with{' '}
             <Link href="/docs/usage/">Usage</Link> to share the light across
             components.

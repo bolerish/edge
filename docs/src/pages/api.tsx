@@ -7,6 +7,46 @@ export const api: DocPage = {
     'Use one light handle to connect explicit surface elements. Pointer updates run outside React state and context updates.',
   sections: [
     {
+      id: 'lighting',
+      title: 'Lighting',
+      content: (
+        <>
+          <P>
+            Shares one light with explicitly marked descendants without adding
+            a DOM wrapper. tracking accepts on, off or system (default). On
+            enables pointer tracking, Off keeps fixed lighting, and System
+            follows device and reduced-motion preferences. Touch movement is ignored.
+          </P>
+          <P>
+            radius (default 480) and intensity (default 0.75) configure the shared
+            light. An optional ref exposes the stable Light handle for refresh().
+            Pointer input is read from the document; the scope selects which
+            surfaces receive the effect, rather than clipping pointer input.
+          </P>
+        </>
+      ),
+    },
+    {
+      id: 'lighting-surface',
+      title: 'Lighting.Surface',
+      content: (
+        <>
+          <P>
+            Renders one HTML host inside its nearest Lighting owner. as chooses
+            the tag (default div). Native attributes, events, className, style
+            and refs are forwarded to that host. React 19 callback-ref cleanup
+            is preserved. A surface outside Lighting throws an error.
+          </P>
+          <P>
+            material, theme, color and intensity use the same options as
+            useSurface below. Input elements need a wrapper such as a label
+            because the border decoration uses ::after. For a custom component
+            that already owns its host, use the hooks instead.
+          </P>
+        </>
+      ),
+    },
+    {
       id: 'use-light',
       title: 'useLight(options?)',
       content: (
@@ -145,7 +185,8 @@ export const api: DocPage = {
             The package supports SSR and static React markup with client
             hydration. The current tests use React’s server renderer and
             hydration APIs; they do not establish integration with every SSR
-            framework. Solid and Svelte adapters are not implemented.
+            framework. Svelte, Solid and Vue adapters are not implemented. The DOM engine and
+            compiled style bindings are shared independently of React.
           </P>
         </>
       ),
