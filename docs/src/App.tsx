@@ -1,30 +1,14 @@
 import { Heading } from '@bolerish/ui/heading';
 import { Paragraph } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
-import { pages } from './pages/index.js';
+import { findPage, getPagePath, normalizePath } from './pages/routes.js';
 import { Home } from './home/Home.js';
 import { SiteShell, docsNavigation } from './ui/SiteShell.js';
 
-export function normalizePath(path: string) {
-  const pathname = path.split('?')[0] ?? '/';
-  return pathname.endsWith('/') ? pathname : `${pathname}/`;
-}
-export const publicPaths = [
-  '/',
-  '/docs/',
-  ...pages.filter((page) => page.slug).map((page) => `/docs/${page.slug}/`),
-];
-export function titleFor(path: string) {
-  const normalized = normalizePath(path);
-  if (normalized === '/') return 'Wisp · Directional surface lighting';
-  return `${pages.find((page) => `/docs/${page.slug ? `${page.slug}/` : ''}` === normalized)?.title ?? (normalized === '/' ? 'Introduction' : 'Page not found')} · Wisp`;
-}
 export function App({ pathname }: { pathname: string }) {
   const path = normalizePath(pathname);
   if (path === '/') return <Home />;
-  const page = pages.find(
-    (page) => `/docs/${page.slug ? `${page.slug}/` : ''}` === path,
-  );
+  const page = findPage(path);
   if (!page)
     return (
       <SiteShell section="docs" pathname={path} navigation={docsNavigation}>
@@ -43,7 +27,7 @@ export function App({ pathname }: { pathname: string }) {
   return (
     <SiteShell
       section="docs"
-      pathname={path}
+      pathname={getPagePath(page)}
       navigation={docsNavigation}
       toc={page.sections.map(({ id, title }) => ({ id, title }))}
     >
@@ -60,7 +44,7 @@ export function App({ pathname }: { pathname: string }) {
             {section.content}
           </section>
         ))}
-        <footer className="page-footer">Wisp · React</footer>
+        <footer className="page-footer">Wisp{page.section ? ` · ${page.section}` : ''}</footer>
       </article>
     </SiteShell>
   );

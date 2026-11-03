@@ -1,7 +1,9 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
-import type { DocPage } from './types.js';
+import type { DocPage } from '../types.js';
 export const accessibility: DocPage = {
-  slug: 'accessibility',
+  slug: 'react/accessibility',
+  aliases: ['accessibility'],
+  section: 'React',
   title: 'Accessibility',
   description:
     'Treat lighting as decoration. Components must remain readable and operable without a moving highlight.',

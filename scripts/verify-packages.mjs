@@ -123,8 +123,9 @@ assert(
     routes.includes('/') &&
     !routes.includes('/playground/'),
 );
+assert.equal(new Set(routes).size, routes.length, 'Documentation routes must be unique');
 const installation = await readFile(
-  resolve(site, 'docs/installation/index.html'),
+  resolve(site, 'docs/react/index.html'),
   'utf8',
 );
 assert(

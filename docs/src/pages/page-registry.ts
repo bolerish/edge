@@ -1,9 +1,9 @@
 import { introduction } from './introduction.js';
-import { installation } from './installation.js';
-import { usage } from './usage.js';
-import { materials } from './materials.js';
-import { accessibility } from './accessibility.js';
-import { api } from './api.js';
+import { installation } from './react/installation.js';
+import { usage } from './react/usage.js';
+import { materials } from './react/materials.js';
+import { accessibility } from './react/accessibility.js';
+import { api } from './react/api.js';
 export const pages = [
   introduction,
   installation,

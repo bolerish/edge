@@ -1,5 +1,6 @@
 import { isValidElement, type ReactNode } from 'react';
 import { pages } from '../pages/index.js';
+import { getPagePath } from '../pages/routes.js';
 
 interface SearchDocument {
   title: string;
@@ -9,7 +10,7 @@ interface SearchDocument {
   description: string;
 }
 const documents: SearchDocument[] = pages.flatMap((page) => {
-  const href = `/docs/${page.slug ? `${page.slug}/` : ''}`;
+  const href = getPagePath(page);
   return [
     { title: page.title, pageTitle: page.title, href, text: `${page.title} ${page.description}`.toLowerCase(), description: page.description },
     ...page.sections.map((section) => {

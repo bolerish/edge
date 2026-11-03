@@ -1,5 +1,6 @@
 import { renderToString } from 'react-dom/server';
-import { App, publicPaths, titleFor } from './App.js';
+import { App } from './App.js';
+import { publicPaths, titleFor } from './pages/routes.js';
 export { publicPaths };
 export function render(path: string) {
   return {

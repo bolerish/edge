@@ -5,11 +5,11 @@ import { mkdir, writeFile } from 'node:fs/promises';
 const routes = [
   '/',
   '/docs/',
-  '/docs/installation/',
-  '/docs/usage/',
-  '/docs/materials/',
-  '/docs/accessibility/',
-  '/docs/api/',
+  '/docs/react/',
+  '/docs/react/usage/',
+  '/docs/react/materials/',
+  '/docs/react/accessibility/',
+  '/docs/react/api/',
 ];
 for (const viewport of [
   { width: 1440, height: 900 },

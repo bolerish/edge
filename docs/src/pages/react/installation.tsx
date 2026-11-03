@@ -1,10 +1,12 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
-import { CodeBlock } from '../ui/CodeBlock.js';
+import { CodeBlock } from '../../ui/CodeBlock.js';
 import { firstSurface } from './examples.js';
-import type { DocPage } from './types.js';
+import type { DocPage } from '../types.js';
 export const installation: DocPage = {
-  slug: 'installation',
+  slug: 'react',
+  aliases: ['installation'],
+  section: 'React',
   title: 'Installation',
   description:
     'Prepare the local workspace and load Wisp’s compiled styles before connecting a surface. The packages are currently private and have not been published to npm.',
@@ -66,7 +68,7 @@ export const installation: DocPage = {
             This example turns pointer tracking On to follow the pointer near the card’s
             edges. Use <code>tracking="system"</code> to respect reduced-motion
             preferences with fixed lighting instead. Continue with{' '}
-            <Link href="/docs/usage/">Usage</Link> to share the light across
+            <Link href="/docs/react/usage/">Usage</Link> to share the light across
             components.
           </P>
         </>

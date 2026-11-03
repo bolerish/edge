@@ -1,7 +1,9 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
-import type { DocPage } from './types.js';
+import type { DocPage } from '../types.js';
 export const api: DocPage = {
-  slug: 'api',
+  slug: 'react/api',
+  aliases: ['api'],
+  section: 'React',
   title: 'API reference',
   description:
     'Use one light handle to connect explicit surface elements. Pointer updates run outside React state and context updates.',

@@ -1,9 +1,11 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
-import { CodeBlock } from '../ui/CodeBlock.js';
-import type { DocPage } from './types.js';
+import { CodeBlock } from '../../ui/CodeBlock.js';
+import type { DocPage } from '../types.js';
 export const materials: DocPage = {
-  slug: 'materials',
+  slug: 'react/materials',
+  aliases: ['materials'],
+  section: 'React',
   title: 'Materials',
   description:
     'Choose how an edge responds to light. Material response and base component styling are separate decisions.',

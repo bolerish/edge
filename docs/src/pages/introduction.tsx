@@ -18,8 +18,8 @@ export const introduction: DocPage = {
             respond. Ordinary elements stay unchanged, even inside the area.
           </P>
           <P>
-            Follow <Link href="/docs/installation/">Installation</Link> to
-            prepare the workspace and <Link href="/docs/usage/">Usage</Link> to
+            Follow <Link href="/docs/react/">Installation</Link> to
+            prepare the workspace and <Link href="/docs/react/usage/">Usage</Link> to
             connect your first surface.
           </P>
         </>
@@ -55,7 +55,7 @@ export const introduction: DocPage = {
             recessed material supports inset elements such as input wrappers.
           </P>
           <P>
-            Read <Link href="/docs/materials/">Materials</Link> for the
+            Read <Link href="/docs/react/materials/">Materials</Link> for the
             differences, then compare them in the{' '}
             <Link href="/">dashboard example</Link>.
           </P>
@@ -75,7 +75,7 @@ export const introduction: DocPage = {
           </P>
           <P>
             Keep visible borders and keyboard focus without relying on the
-            effect. See <Link href="/docs/accessibility/">Accessibility</Link>{' '}
+            effect. See <Link href="/docs/react/accessibility/">Accessibility</Link>{' '}
             for input modes and supported behavior.
           </P>
         </>

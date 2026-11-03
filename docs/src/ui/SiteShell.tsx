@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Button } from '@bolerish/ui/button';
 import { Link } from '@bolerish/ui/link';
+import { pages } from '../pages/index.js';
+import { getPagePath } from '../pages/routes.js';
 import { useLocationHash } from './useLocationHash.js';
 import { MoonIcon } from '@phosphor-icons/react/Moon';
 import { SunIcon } from '@phosphor-icons/react/Sun';
@@ -48,7 +50,6 @@ export function SiteShell({
     window.addEventListener('keydown', escape);
     return () => window.removeEventListener('keydown', escape);
   }, [open]);
-  const effectiveHash = hash || (pathname === '/docs/api/' ? '#lighting' : '');
   const nav = (
     <nav aria-label="Documentation">
       {navigation.map((group, index) => (
@@ -56,8 +57,7 @@ export function SiteShell({
           {group.title ? <p className="nav-heading">{group.title}</p> : null}
           {group.items.map((item) => {
             const active =
-              item.href === pathname + effectiveHash ||
-              (!effectiveHash && item.href === pathname);
+              item.href === pathname || item.href === pathname + hash;
             return (
               <a
                 key={item.href}
@@ -164,27 +164,10 @@ export function SiteShell({
 }
 
 export const docsNavigation: NavigationGroup[] = [
-  {
-    items: [
-      { title: 'Introduction', href: '/docs/' },
-      { title: 'Installation', href: '/docs/installation/' },
-      { title: 'Usage', href: '/docs/usage/' },
-    ],
-  },
-  {
-    title: 'Guides',
-    items: [
-      { title: 'Materials', href: '/docs/materials/' },
-      { title: 'Accessibility', href: '/docs/accessibility/' },
-    ],
-  },
-  {
-    title: 'API',
-    items: [
-      { title: 'Lighting', href: '/docs/api/#lighting' },
-      { title: 'Lighting.Surface', href: '/docs/api/#lighting-surface' },
-      { title: 'useLight', href: '/docs/api/#use-light' },
-      { title: 'useSurface', href: '/docs/api/#use-surface' },
-    ],
-  },
-];
+  ...new Set(pages.map((page) => page.section)),
+].map((section) => ({
+  title: section,
+  items: pages
+    .filter((page) => page.section === section)
+    .map((page) => ({ title: page.title, href: getPagePath(page) })),
+}));

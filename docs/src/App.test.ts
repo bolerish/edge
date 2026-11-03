@@ -2,11 +2,11 @@ import { test, expect } from '@playwright/test';
 
 const routes = [
   '/docs/',
-  '/docs/installation/',
-  '/docs/usage/',
-  '/docs/materials/',
-  '/docs/accessibility/',
-  '/docs/api/',
+  '/docs/react/',
+  '/docs/react/usage/',
+  '/docs/react/materials/',
+  '/docs/react/accessibility/',
+  '/docs/react/api/',
   '/',
 ];
 
@@ -171,7 +171,7 @@ test('mobile navigation supports Escape and pages stay inside the viewport', asy
 test('copy reports actual clipboard success and gives a fallback on denial', async ({
   page,
 }) => {
-  await page.goto('/docs/installation/');
+  await page.goto('/docs/react/');
   await page.evaluate(() =>
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -215,7 +215,7 @@ test('preview data stays fixed and the CTA opens installation', async ({
     'Website refresh', 'Design system', 'Mobile app',
   ]);
   await page.getByRole('link', { name: 'Get started' }).click();
-  await expect(page).toHaveURL(/\/docs\/installation\/$/);
+  await expect(page).toHaveURL(/\/docs\/react\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Installation',
   );
@@ -226,7 +226,7 @@ test('SSG documents include highlighted code and remain readable without JavaScr
 }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
-  await page.goto('http://127.0.0.1:4183/docs/installation/');
+  await page.goto('http://127.0.0.1:4183/docs/react/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Installation',
   );
@@ -250,7 +250,7 @@ test('skip link, code scrolling, zoom reflow and high-contrast code stay usable'
   ).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('main')).toBeFocused();
-  await page.goto('/docs/installation/');
+  await page.goto('/docs/react/');
   const code = page.locator('pre').last();
   await code.focus();
   await expect(code).toBeFocused();
@@ -265,7 +265,7 @@ test('skip link, code scrolling, zoom reflow and high-contrast code stay usable'
       .evaluate((node) => getComputedStyle(node).color),
   ).not.toBe('transparent');
   await page.emulateMedia({ forcedColors: 'none' });
-  for (const route of ['/', '/docs/installation/']) {
+  for (const route of ['/', '/docs/react/']) {
     await page.goto(route);
     await page.evaluate(() => {
       document.documentElement.style.zoom = '2';
@@ -309,17 +309,35 @@ test('documentation search finds section content and supports keyboard dismissal
   await expect(dialog).toBeVisible();
   await query.fill('installation');
   await dialog.getByRole('link', { name: /^Installation/ }).click();
-  await expect(page).toHaveURL(/\/docs\/installation\/$/);
+  await expect(page).toHaveURL(/\/docs\/react\/$/);
 });
 
 test('API navigation follows the URL hash after hydration and in-page navigation', async ({ page }) => {
-  await page.goto('/docs/api/#use-surface');
+  await page.goto('/docs/react/api/#use-surface');
   const sidebar = page.locator('.sidebar');
-  await expect(sidebar.getByRole('link', { name: 'useSurface', exact: true }))
+  const toc = page.locator('.table-of-contents');
+  await expect(sidebar.getByRole('link', { name: 'API reference', exact: true }))
     .toHaveAttribute('aria-current', 'page');
+  await expect(toc.getByRole('link', { name: 'useSurface(light, options?)', exact: true }))
+    .toHaveAttribute('aria-current', 'location');
   await page.locator('.table-of-contents').getByRole('link', { name: 'useLight(options?)', exact: true }).click();
-  await expect(sidebar.getByRole('link', { name: 'useLight', exact: true }))
-    .toHaveAttribute('aria-current', 'page');
-  await expect(sidebar.getByRole('link', { name: 'useSurface', exact: true }))
+  await expect(toc.getByRole('link', { name: 'useLight(options?)', exact: true }))
+    .toHaveAttribute('aria-current', 'location');
+  await expect(toc.getByRole('link', { name: 'useSurface(light, options?)', exact: true }))
     .not.toHaveAttribute('aria-current');
+});
+
+
+test('previous guide URLs preserve their content and API anchors', async ({ page }) => {
+  for (const [slug, title] of [
+    ['installation', 'Installation'], ['usage', 'Usage'], ['materials', 'Materials'],
+    ['accessibility', 'Accessibility'], ['api', 'API reference'],
+  ] as const) {
+    await page.goto(`/docs/${slug}/`);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(title);
+    await expect(page.locator('.sidebar .nav-heading')).toHaveText('React');
+  }
+  await page.goto('/docs/api/#use-surface');
+  await expect(page.locator('.table-of-contents').getByRole('link', { name: 'useSurface(light, options?)', exact: true }))
+    .toHaveAttribute('aria-current', 'location');
 });

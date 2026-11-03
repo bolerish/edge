@@ -1,9 +1,11 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
-import { CodeBlock } from '../ui/CodeBlock.js';
+import { CodeBlock } from '../../ui/CodeBlock.js';
 import { inputSurface, refreshSurface, hookSurface } from './examples.js';
-import type { DocPage } from './types.js';
+import type { DocPage } from '../types.js';
 export const usage: DocPage = {
-  slug: 'usage',
+  slug: 'react/usage',
+  aliases: ['usage'],
+  section: 'React',
   title: 'Usage',
   description:
     'Connect elements you own to a shared light. Wisp does not inspect children, replace components or manage your UI state.',
