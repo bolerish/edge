@@ -1,10 +1,10 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
 import { CodeBlock } from './CodeBlock.js';
 const commands = [
-  { manager: 'npm', command: 'npm install @bolerish/wisp-react' },
-  { manager: 'pnpm', command: 'pnpm add @bolerish/wisp-react' },
-  { manager: 'Yarn', command: 'yarn add @bolerish/wisp-react' },
-  { manager: 'Bun', command: 'bun add @bolerish/wisp-react' },
+  { manager: 'npm', command: 'npm install @bolerish/edge' },
+  { manager: 'pnpm', command: 'pnpm add @bolerish/edge' },
+  { manager: 'Yarn', command: 'yarn add @bolerish/edge' },
+  { manager: 'Bun', command: 'bun add @bolerish/edge' },
 ];
 export function InstallCommands() {
   return (

@@ -53,7 +53,7 @@ export const materials: DocPage = {
           <CodeBlock
             label="Wisp theme"
             code={
-              "import { getSurfaceProps } from '@bolerish/wisp-styles';\n\nconst surface = getSurfaceProps({ material: 'matte', theme: 'wisp' });"
+              "import { getSurfaceProps } from '@bolerish/edge-styles';\n\nconst surface = getSurfaceProps({ material: 'matte', theme: 'wisp' });"
             }
           />
           <P>

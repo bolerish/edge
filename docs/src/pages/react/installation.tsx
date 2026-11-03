@@ -50,7 +50,7 @@ export const installation: DocPage = {
           </P>
           <CodeBlock
             label="Stylesheet import"
-            code={"import '@bolerish/wisp-react/style.css';"}
+            code={"import '@bolerish/edge/style.css';"}
           />
           <P>
             The library ships compiled JavaScript and CSS. Use your preferred

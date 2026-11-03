@@ -3,7 +3,7 @@ import {
   createLight,
   type LightController,
   type LightOptions,
-} from '@bolerish/wisp-core';
+} from '@bolerish/edge-core';
 
 const lightBrand = Symbol('WispLight');
 export interface Light {

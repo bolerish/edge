@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
-import type { Material } from '@bolerish/wisp-core';
+import type { Material } from '@bolerish/edge-core';
 
 interface SurfaceAppearance {
   /** Any CSS color. */

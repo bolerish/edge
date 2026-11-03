@@ -5,12 +5,12 @@ import {
   type CSSProperties,
   type RefCallback,
 } from 'react';
-import type { Registration } from '@bolerish/wisp-core';
+import type { Registration } from '@bolerish/edge-core';
 import { getLightController, type Light } from './useLight.js';
 
-import { getSurfaceProps, type SurfaceOptions } from '@bolerish/wisp-styles';
+import { getSurfaceProps, type SurfaceOptions } from '@bolerish/edge-styles';
 
-export type { SurfaceOptions } from '@bolerish/wisp-styles';
+export type { SurfaceOptions } from '@bolerish/edge-styles';
 
 /** Register your own host element and apply the returned className and inline style. */
 export function useSurface<T extends HTMLElement = HTMLElement>(

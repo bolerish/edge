@@ -1,5 +1,5 @@
 {
-  "name": "@bolerish/wisp-docs",
+  "name": "@bolerish/edge-docs",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "test:browser": "playwright test"
   },
   "dependencies": {
-    "@bolerish/wisp-react": "workspace:^",
+    "@bolerish/edge": "workspace:^",
     "react": "catalog:2026-11-03--react-stable",
     "react-dom": "catalog:2026-11-03--react-stable",
     "@stylexjs/stylex": "catalog:2026-11-03--stylex-stable",

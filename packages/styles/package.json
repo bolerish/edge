@@ -1,5 +1,5 @@
 {
-  "name": "@bolerish/wisp-styles",
+  "name": "@bolerish/edge-styles",
   "version": "0.1.0-alpha.0",
   "private": true,
   "type": "module",
@@ -28,7 +28,7 @@
     "test:mutation": "stryker run"
   },
   "dependencies": {
-    "@bolerish/wisp-core": "workspace:^"
+    "@bolerish/edge-core": "workspace:^"
   },
   "devDependencies": {
     "@stylexjs/stylex": "catalog:2026-11-03--stylex-stable",

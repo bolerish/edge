@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardFooter,
 } from '@bolerish/ui/card';
-import { Lighting } from '@bolerish/wisp-react';
+import { Lighting } from '@bolerish/edge';
 import { usePreferences } from '../settings/usePreferences.js';
 export function HeroExample() {
   const [enabled, setEnabled] = useState(true);

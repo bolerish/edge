@@ -12,6 +12,6 @@ export default defineConfig({
   plugins: [stylex.vite({ dev: false, useCSSLayers: true }), stylesheetTypes],
   build: {
     lib: { entry: 'src/index.ts', formats: ['es'], fileName: 'index' },
-    rollupOptions: { external: ['@bolerish/wisp-core'] },
+    rollupOptions: { external: ['@bolerish/edge-core'] },
   },
 });

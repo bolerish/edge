@@ -1,5 +1,5 @@
-export const firstSurface = `import { Lighting } from '@bolerish/wisp-react';
-import '@bolerish/wisp-react/style.css';
+export const firstSurface = `import { Lighting } from '@bolerish/edge';
+import '@bolerish/edge/style.css';
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
     </Lighting>
   );
 }`;
-export const inputSurface = `import { Lighting } from '@bolerish/wisp-react';
+export const inputSurface = `import { Lighting } from '@bolerish/edge';
 
 function Search() {
   return (
@@ -26,7 +26,7 @@ function Search() {
     </Lighting>
   );
 }`;
-export const hookSurface = `import { useLight, useSurface } from '@bolerish/wisp-react';
+export const hookSurface = `import { useLight, useSurface } from '@bolerish/edge';
 
 function Card() {
   const light = useLight({ mode: 'pointer' });
@@ -42,7 +42,7 @@ function Card() {
   );
 }`;
 export const refreshSurface = `import { useEffect, useRef } from 'react';
-import { Lighting, type Light } from '@bolerish/wisp-react';
+import { Lighting, type Light } from '@bolerish/edge';
 
 function Area({ expanded }: { expanded: boolean }) {
   const light = useRef<Light>(null);

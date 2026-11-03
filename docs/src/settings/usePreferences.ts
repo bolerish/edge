@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import type { LightOptions } from '@bolerish/wisp-react';
+import type { LightOptions } from '@bolerish/edge';
 
 export interface SitePreferences {
   material: 'raised' | 'matte';

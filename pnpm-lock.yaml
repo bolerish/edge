@@ -243,7 +243,7 @@ importers:
       '@bolerish/ui':
         specifier: catalog:2026-11-03--bolerish-stable
         version: 0.18.1(@date-fns/tz@1.5.0)(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@bolerish/wisp-react':
+      '@bolerish/edge':
         specifier: workspace:^
         version: link:../packages/react
       '@phosphor-icons/react':
@@ -310,10 +310,10 @@ importers:
 
   packages/react:
     dependencies:
-      '@bolerish/wisp-core':
+      '@bolerish/edge-core':
         specifier: workspace:^
         version: link:../core
-      '@bolerish/wisp-styles':
+      '@bolerish/edge-styles':
         specifier: workspace:^
         version: link:../styles
     devDependencies:
@@ -353,7 +353,7 @@ importers:
 
   packages/styles:
     dependencies:
-      '@bolerish/wisp-core':
+      '@bolerish/edge-core':
         specifier: workspace:^
         version: link:../core
     devDependencies:

@@ -5,8 +5,8 @@ Directional border lighting for the React components you own. Share one light ac
 This is an unreleased React MVP. All workspace packages are private. Svelte, Solid and Vue adapters are not implemented yet. The DOM engine and compiled surface bindings are framework-independent.
 
 ```tsx
-import { Lighting } from '@bolerish/wisp-react';
-import '@bolerish/wisp-react/style.css';
+import { Lighting } from '@bolerish/edge';
+import '@bolerish/edge/style.css';
 
 function Area() {
   return (
@@ -47,6 +47,6 @@ MIT licensed.
 
 ## Package boundaries
 
-- `@bolerish/wisp-core`: framework-independent DOM engine and geometry.
-- `@bolerish/wisp-styles`: framework-independent `getSurfaceProps()` and compiled CSS; no React runtime required.
-- `@bolerish/wisp-react`: declarative React components and low-level hooks. It re-exports the shared CSS at its existing `style.css` path.
+- `@bolerish/edge-core`: framework-independent DOM engine and geometry.
+- `@bolerish/edge-styles`: framework-independent `getSurfaceProps()` and compiled CSS; no React runtime required.
+- `@bolerish/edge`: declarative React components and low-level hooks. It re-exports the shared CSS at its existing `style.css` path.

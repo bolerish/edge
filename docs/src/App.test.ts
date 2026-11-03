@@ -187,7 +187,7 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
   await expect(copy).toHaveText('Copied');
   expect(
     await page.evaluate(() => (window as unknown as { copied: string }).copied),
-  ).toBe('npm install @bolerish/wisp-react');
+  ).toBe('npm install @bolerish/edge');
   await page.evaluate(() =>
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -400,7 +400,7 @@ test('hero compares lighting and package-manager tabs expose matching commands',
   ]) {
     await page.getByRole('tab', { name: manager, exact: true }).click();
     await expect(page.getByRole('tabpanel',{name:manager,exact:true})).toContainText(
-      `${command} @bolerish/wisp-react`,
+      `${command} @bolerish/edge`,
     );
   }
   await page.getByRole('button', { name: 'Save for later' }).click();

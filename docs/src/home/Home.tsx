@@ -11,7 +11,7 @@ import { Heading } from '@bolerish/ui/heading';
 import { Input } from '@bolerish/ui/input';
 import { Label } from '@bolerish/ui/label';
 import { Paragraph } from '@bolerish/ui/paragraph';
-import { Lighting } from '@bolerish/wisp-react';
+import { Lighting } from '@bolerish/edge';
 import { SiteShell } from '../ui/SiteShell.js';
 import { InstallCommands } from '../ui/InstallCommands.js';
 import { HeroExample } from './HeroExample.js';

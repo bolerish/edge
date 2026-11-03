@@ -1,5 +1,5 @@
 import { useImperativeHandle, type ReactNode, type Ref } from 'react';
-import type { LightOptions } from '@bolerish/wisp-core';
+import type { LightOptions } from '@bolerish/edge-core';
 import { useLight, type Light } from '../hooks/useLight.js';
 import { LightContext } from './light-context.js';
 import { Surface } from './Surface.js';

@@ -1,5 +1,5 @@
 import '@bolerish/ui/global.css';
-import '@bolerish/wisp-react/style.css';
+import '@bolerish/edge/style.css';
 import './ui/site.css';
 import './home/home.css';
 import './ui/code-theme.css';

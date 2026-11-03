@@ -1,5 +1,5 @@
 {
-  "name": "@bolerish/wisp-react",
+  "name": "@bolerish/edge",
   "version": "0.1.0-alpha.0",
   "private": true,
   "type": "module",
@@ -28,8 +28,8 @@
     "test:mutation": "stryker run"
   },
   "dependencies": {
-    "@bolerish/wisp-core": "workspace:^",
-    "@bolerish/wisp-styles": "workspace:^"
+    "@bolerish/edge-core": "workspace:^",
+    "@bolerish/edge-styles": "workspace:^"
   },
   "peerDependencies": {
     "react": "^19.0.0"

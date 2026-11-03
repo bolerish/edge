@@ -26,7 +26,7 @@ for (const name of ['core', 'styles', 'react']) {
   const destination = resolve(
     sandbox,
     'node_modules/@bolerish',
-    `wisp-${name}`,
+    name === 'react' ? 'edge' : `edge-${name}`,
   );
   await mkdir(destination, { recursive: true });
   execFileSync('tar', [
@@ -39,7 +39,7 @@ for (const name of ['core', 'styles', 'react']) {
   const manifest = JSON.parse(
     await readFile(resolve(destination, 'package.json'), 'utf8'),
   );
-  assert.equal(manifest.name, `@bolerish/wisp-${name}`);
+  assert.equal(manifest.name, name === 'react' ? '@bolerish/edge' : `@bolerish/edge-${name}`);
   for (const target of Object.values(manifest.exports)) {
     if (typeof target === 'string')
       await readFile(resolve(destination, target));
@@ -53,7 +53,7 @@ for (const name of ['core', 'styles', 'react']) {
 // The common style bindings must work before any React package is available.
 execFileSync(process.execPath, ['--input-type=module', '-e', `
   import assert from 'node:assert/strict';
-  import {getSurfaceProps} from '@bolerish/wisp-styles';
+  import {getSurfaceProps} from '@bolerish/edge-styles';
   const props = getSurfaceProps({color:'red',intensity:0.4});
   assert(props.className);
   assert.equal(props.style['--wisp-highlight'],'red');
@@ -75,8 +75,8 @@ execFileSync(
   import assert from 'node:assert/strict';
   import React from 'react';
   import {renderToStaticMarkup} from 'react-dom/server';
-  import {createLight} from '@bolerish/wisp-core';
-  import {Lighting,useLight,useSurface} from '@bolerish/wisp-react';
+  import {createLight} from '@bolerish/edge-core';
+  import {Lighting,useLight,useSurface} from '@bolerish/edge';
   assert.equal(typeof window,'undefined');
   createLight().refresh();
   function Card(){const light=useLight();const surface=useSurface(light,{theme:'wisp'});return React.createElement('article',{className:surface.className,style:surface.style},'Packed card');}
@@ -90,26 +90,26 @@ execFileSync(
 );
 const consumer = resolve(sandbox, 'consumer.mts');
 await writeFile(consumer, `
-  import '@bolerish/wisp-react/style.css';
-  import '@bolerish/wisp-styles/style.css';
-  import {Lighting} from '@bolerish/wisp-react';
-  import {getSurfaceProps} from '@bolerish/wisp-styles';
+  import '@bolerish/edge/style.css';
+  import '@bolerish/edge-styles/style.css';
+  import {Lighting} from '@bolerish/edge';
+  import {getSurfaceProps} from '@bolerish/edge-styles';
   void Lighting;
   getSurfaceProps({color:'red'});
 `);
 execFileSync('pnpm', [
-  '--filter', '@bolerish/wisp-react', 'exec', 'tsc', '--ignoreConfig',
+  '--filter', '@bolerish/edge', 'exec', 'tsc', '--ignoreConfig',
   '--noEmit', '--strict', '--skipLibCheck', '--module', 'nodenext',
   '--target', 'es2022', consumer,
 ], {cwd:root, stdio:'pipe'});
 
 const css = await readFile(
-  resolve(sandbox, 'node_modules/@bolerish/wisp-react/dist/assets/stylex.css'),
+  resolve(sandbox, 'node_modules/@bolerish/edge/dist/assets/stylex.css'),
   'utf8',
 );
 assert(css.includes('conic-gradient') && css.includes('--wisp-angle'));
 const library = await readFile(
-  resolve(sandbox, 'node_modules/@bolerish/wisp-react/dist/index.js'),
+  resolve(sandbox, 'node_modules/@bolerish/edge/dist/index.js'),
   'utf8',
 );
 assert(!/from\s*["']@stylexjs\/stylex/.test(library), 'Consumers must not need StyleX');

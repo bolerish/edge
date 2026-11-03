@@ -20,7 +20,7 @@ Group code by each package's responsibilities, rather than requiring identical f
 - Introduce another folder when it represents a distinct, named responsibility. Do not pre-create empty `components/`, `types/` or `lib/` folders.
 - Keep code with its domain owner even when another module imports it. Extract shared utilities only when multiple contexts need genuinely domain-independent behavior.
 
-The core keeps controller ownership in `light/create.ts`, browser subscriptions and frame scheduling in `light/session.ts`, option validation in `light/options.ts`, surface output and restoration in `surface/output.ts`, and pure lighting calculations in `surface/geometry.ts`. React exposes `hooks/useLight.ts` and `hooks/useSurface.ts`; both consume framework-independent surface bindings from `@bolerish/wisp-styles`. `components/Lighting.tsx` composes those hooks behind the public `Lighting` and `Lighting.Surface` API.
+The core keeps controller ownership in `light/create.ts`, browser subscriptions and frame scheduling in `light/session.ts`, option validation in `light/options.ts`, surface output and restoration in `surface/output.ts`, and pure lighting calculations in `surface/geometry.ts`. React exposes `hooks/useLight.ts` and `hooks/useSurface.ts`; both consume framework-independent surface bindings from `@bolerish/edge-styles`. `components/Lighting.tsx` composes those hooks behind the public `Lighting` and `Lighting.Surface` API.
 
 This organization takes references from [Floating UI's React package](https://github.com/floating-ui/floating-ui/tree/master/packages/react/src) (`hooks/`, `components/`) and [react-spring's hooks](https://github.com/pmndrs/react-spring/tree/next/packages/core/src/hooks) (hook implementations with adjacent tests). These are structural references; the responsibility and dependency rules above are Wisp's own conventions.
 
@@ -35,7 +35,7 @@ pnpm build
 pnpm typecheck
 pnpm test
 pnpm test:mutation
-pnpm --filter @bolerish/wisp-docs exec playwright install chromium
+pnpm --filter @bolerish/edge-docs exec playwright install chromium
 pnpm test:browser
 pnpm verify:packages
 pnpm check
@@ -53,7 +53,7 @@ Keep changes scoped and independently verifiable. Include relevant tests and pub
 
 ## Mutation testing
 
-Run `pnpm test:mutation` from the repository root. It builds package dependencies and runs Stryker against core implementation files, common style bindings and React hooks. Run only one package with `pnpm --filter @bolerish/wisp-core test:mutation` or `pnpm --filter @bolerish/wisp-react test:mutation` after building dependencies.
+Run `pnpm test:mutation` from the repository root. It builds package dependencies and runs Stryker against core implementation files, common style bindings and React hooks. Run only one package with `pnpm --filter @bolerish/edge-core test:mutation` or `pnpm --filter @bolerish/edge test:mutation` after building dependencies.
 
 Mutation testing supplements the adjacent Vitest tests: Stryker changes production code and checks whether those tests fail. Package unit tests import source through their source barrels; common-style tests use the StyleX compiler. React tests consume the built common style package, while Stryker tests its source separately. Packed-package checks independently exercise the published import paths.
 
