@@ -1,12 +1,21 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
+import { CodeBlock } from '../../ui/CodeBlock.js';
+import {
+  apiTable,
+  lightingPropRows,
+  lightOptionRows,
+  surfacePropRows,
+  surfaceOptionRows,
+} from './api-options.js';
 import type { DocPage } from '../types.js';
+
 export const api: DocPage = {
   slug: 'react/api',
   aliases: ['api'],
   section: 'React',
   title: 'API reference',
   description:
-    'Use one light handle to connect explicit surface elements. Pointer updates run outside React state and context updates.',
+    'Look up component props, hook options and their defaults. Start with Lighting and Lighting.Surface; use the hooks when you need to connect an existing host.',
   sections: [
     {
       id: 'lighting',
@@ -14,18 +23,21 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Shares one light with explicitly marked descendants without adding
-            a DOM wrapper. motion accepts dynamic, static or system (default). Dynamic
-            follows the pointer, Static keeps fixed lighting, and System
-            follows device and reduced-motion preferences. Touch movement is ignored.
+            Wrap the part of your interface that should share a light.
+            <code> Lighting</code> adds no DOM element. Each surface uses its
+            nearest owner, so nested owners create independent lights.
           </P>
+          <CodeBlock
+            label="Lighting signature"
+            code={'<Lighting motion="system" radius={480} intensity={0.75}>\n  {/* Your surfaces */}\n</Lighting>'}
+          />
+          {apiTable('Lighting props', lightingPropRows)}
           <P>
-            staticDirection accepts an angle in degrees (default 315) or random.
-            Random samples one shared direction per mount and keeps it across
-            ordinary rerenders. It applies to fixed lighting. radius (default 480) and intensity (default 0.75) configure the shared
-            light. An optional ref exposes the stable Light handle for refresh().
-            Pointer input is read from the document; the scope selects which
-            surfaces receive the effect, rather than clipping pointer input.
+            Pointer input comes from the document. The scope chooses which
+            surfaces respond; it does not clip input to a wrapper rectangle.
+            <code> staticDirection</code> applies whenever fixed lighting is
+            active, including when <code>motion="system"</code> respects
+            reduced motion.
           </P>
         </>
       ),
@@ -36,20 +48,28 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Renders one HTML host inside its nearest Lighting owner. as chooses
-            the tag (default div). Native attributes, events, className, style
-            and refs are forwarded to that host. React 19 callback-ref cleanup
-            is preserved. A surface outside Lighting throws an error.
+            Mark an element that should respond to its nearest light. It renders
+            one HTML host and preserves your native attributes and event handlers.
           </P>
+          <CodeBlock
+            label="Lighting.Surface signature"
+            code={'<Lighting.Surface as="article" edgeStyle="raised">\n  Your content\n</Lighting.Surface>'}
+          />
+          {apiTable('Lighting.Surface props', surfacePropRows)}
+          <div role="note" aria-label="Surface ownership" className="doc-note">
+            <P>
+              Place every <code>Lighting.Surface</code> inside a
+              <code> Lighting</code> owner; rendering it outside one throws an
+              error. The decoration reserves <code>::after</code>. Wrap an input
+              or a component that already uses this pseudo-element instead of
+              attaching the effect to that same host.
+            </P>
+          </div>
           <P>
-            edgeStyle, theme, color, shadowColor, borderWidth and intensity use the same options as
-            useSurface below. Input elements need a wrapper such as a label
-            because the border decoration uses ::after. shadowColor accepts a
-            CSS color (default #0008); use transparent to disable the opposite
-            shadow. borderWidth sets decoration thickness in pixels (default 1).
             Existing host borders are measured so the decoration aligns with
-            their outside edge. For a custom component
-            that already owns its host, use the hooks instead.
+            their outside edge. <code>borderWidth</code> changes the decoration
+            thickness, not the host border. For a custom component that already
+            exposes its host, use <code>useSurface</code> below.
           </P>
         </>
       ),
@@ -60,49 +80,20 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Returns a stable <code>Light</code> handle. Options update the
-            existing light; omitted options use their defaults.
+            Create a light when you need to connect existing components through
+            hooks. The returned <code>Light</code> handle stays stable; changing
+            options updates the existing light.
           </P>
-          <div className="table-scroll">
-            <table className="api-table">
-              <thead>
-                <tr>
-                  <th>Option</th>
-                  <th>Default</th>
-                  <th>Accepted values</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <code>motion</code>
-                  </td>
-                  <td>
-                    <code>'system'</code>
-                  </td>
-                  <td>system, dynamic, static</td>
-                </tr>
-                <tr>
-                  <td>
-                    <code>radius</code>
-                  </td>
-                  <td>480</td>
-                  <td>Positive finite number in viewport CSS pixels</td>
-                </tr>
-                <tr>
-                  <td>
-                    <code>intensity</code>
-                  </td>
-                  <td>0.75</td>
-                  <td>Finite number from 0 to 1</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <CodeBlock
+            label="useLight signature"
+            code={'function useLight(options?: LightOptions): Light;'}
+          />
+          {apiTable('useLight options', lightOptionRows)}
           <P>
-            <code>radius</code> controls dynamic distance attenuation. Static
-            motion uses a fixed per-surface direction and does not fade out
-            because the surface is far from an arbitrary origin.
+            Omitted options use their defaults. <code>radius</code> controls
+            distance attenuation for dynamic lighting. Fixed lighting uses
+            <code> staticDirection</code> and does not fade because an element
+            is far from an arbitrary origin.
           </P>
         </>
       ),
@@ -111,11 +102,20 @@ export const api: DocPage = {
       id: 'refresh',
       title: 'light.refresh()',
       content: (
-        <P>
-          Invalidates cached geometry and schedules a frame. Call it after
-          application-controlled layout changes have committed. It does not
-          require pointer movement and does not replace the light handle.
-        </P>
+        <>
+          <P>
+            Call <code>light.refresh()</code> after your application moves an
+            element without changing its size. It remeasures geometry on the
+            next frame, including while the pointer is stationary.
+          </P>
+          <CodeBlock label="refresh signature" code={`interface Light {
+  refresh(): void;
+}`} />
+          <P>
+            Call it after React commits the new layout. It schedules an update
+            without replacing the light handle or requiring pointer movement.
+          </P>
+        </>
       ),
     },
     {
@@ -124,55 +124,27 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Returns <code>{'{ ref, className, style }'}</code>. Connect the ref to one HTML
-            element and apply the returned className and React inline style.
+            Connect one existing HTML host to a light. Attach the returned
+            <code> ref</code> and merge <code>className</code> and
+            <code> style</code> with your own styles.
           </P>
-          <div className="table-scroll">
-            <table className="api-table">
-              <thead>
-                <tr>
-                  <th>Option</th>
-                  <th>Default</th>
-                  <th>Accepted values</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <code>edgeStyle</code>
-                  </td>
-                  <td>
-                    <code>'raised'</code>
-                  </td>
-                  <td>raised, recessed, matte without a theme</td>
-                </tr>
-                <tr>
-                  <td>
-                    <code>theme</code>
-                  </td>
-                  <td>Unset</td>
-                  <td>wisp or false</td>
-                </tr>
-                <tr>
-                  <td><code>color</code></td>
-                  <td><code>#e5edc8</code></td>
-                  <td>Any CSS color string</td>
-                </tr>
-                <tr>
-                  <td><code>intensity</code></td>
-                  <td>1</td>
-                  <td>Finite number from 0 to 1; multiplies shared intensity</td>
-                </tr>
-              </tbody>
-            </table>
+          <CodeBlock
+            label="useSurface signature"
+            code={'const { ref, className, style } = useSurface<HTMLElement>(light, options);'}
+          />
+          {apiTable('useSurface options', surfaceOptionRows)}
+          <div role="note" aria-label="One owner per element" className="doc-note">
+            <P>
+              An element can belong to only one light controller. Connect the
+              returned ref to the element that actually displays the border,
+              not to a parent whose dimensions differ.
+            </P>
           </div>
           <P>
-            With <code>theme: 'wisp'</code>, edgeStyle is limited to raised or
-            matte. Set color to any CSS color string. Surface intensity defaults to 1
-            and multiplies the shared light intensity; finite values are clamped
-            to 0–1 and non-finite values use the default.
-            EdgeStyle changes update the current registration. An element
-            cannot belong to two light controllers.
+            <code>edgeStyle</code> changes update the existing registration.
+            With <code>theme="wisp"</code>, only <code>raised</code> and
+            <code> matte</code> are supported. Leave the theme unset to use
+            <code> recessed</code> or keep your existing appearance.
           </P>
         </>
       ),
@@ -183,18 +155,17 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Creating hooks and server-rendering their markup does not access the
-            DOM. Client effects activate the light after hydration. Cleanup
-            restores controller-owned inline variables, removes external
+            Hooks can create handles and render markup on the server without
+            accessing the DOM. Client effects activate the light after hydration.
+            Cleanup restores controller-owned inline variables, removes browser
             subscriptions and cancels pending frames. Setup can restart during
             React StrictMode checks.
           </P>
           <P>
-            The package supports SSR and static React markup with client
-            hydration. The current tests use React’s server renderer and
-            hydration APIs; they do not establish integration with every SSR
-            framework. Svelte, Solid and Vue adapters are not implemented. The DOM engine and
-            compiled style bindings are shared independently of React.
+            The React adapter requires React 19. Tests cover React’s server
+            renderer and hydration APIs; they do not establish integration with
+            every SSR framework. Svelte, Solid and Vue adapters are not available
+            yet, while the DOM engine and style bindings are framework-independent.
           </P>
         </>
       ),

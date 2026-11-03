@@ -562,6 +562,28 @@ test('style comparison shares a light with opposing recessed and softer matte ed
   await expect.poll(() => cards.nth(2).evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')))).toBeCloseTo(raised * 0.3, 2);
 });
 
+test('component and hook tables expose complete searchable options', async ({ page }) => {
+  await page.goto('/docs/react/api/');
+  for (const caption of ['Lighting props', 'useLight options']) {
+    const table = page.getByRole('table', { name: caption, exact: true });
+    for (const option of ['motion', 'staticDirection', 'radius', 'intensity'])
+      await expect(table.getByRole('rowheader', { name: option, exact: true })).toBeVisible();
+  }
+  for (const caption of ['Lighting.Surface props', 'useSurface options']) {
+    const table = page.getByRole('table', { name: caption, exact: true });
+    for (const option of ['edgeStyle', 'theme', 'color', 'shadowColor', 'borderWidth', 'intensity'])
+      await expect(table.getByRole('rowheader', { name: option, exact: true })).toBeVisible();
+  }
+  await page.getByRole('button', { name: 'Search documentation', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Search documentation' });
+  const query = dialog.getByRole('textbox', { name: 'Search titles and content' });
+  await query.fill('shadowColor');
+  await expect(dialog.locator('a[href="/docs/react/api/#lighting-surface"]')).toBeVisible();
+  await expect(dialog.locator('a[href="/docs/react/api/#use-surface"]')).toBeVisible();
+  await query.fill('One light, your components');
+  await expect(dialog.locator('a[href="/docs/react/usage/#share-one-light"]')).toBeVisible();
+});
+
 test('existing section anchors remain in the catalog after rewriting the pages', async ({ page }) => {
   const anchors = {
     '/docs/': ['choose-your-framework'],
