@@ -21,3 +21,8 @@ catalogs:
     '@stylexjs/stylex': 0.19.1
     '@stylexjs/unplugin': 0.19.1
     unplugin: 2.3.11
+
+minimumReleaseAgeExclude:
+  - '@vitest/mocker@5.1.0'
+  - '@vitest/spy@5.1.0'
+  - vitest@5.1.0
