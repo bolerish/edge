@@ -76,11 +76,14 @@ execFileSync(
   import React from 'react';
   import {renderToStaticMarkup} from 'react-dom/server';
   import {createLight} from '@bolerish/wisp-core';
-  import {useLight,useSurface} from '@bolerish/wisp-react';
+  import {Lighting,useLight,useSurface} from '@bolerish/wisp-react';
   assert.equal(typeof window,'undefined');
   createLight().refresh();
   function Card(){const light=useLight();const surface=useSurface(light,{theme:'wisp'});return React.createElement('article',{className:surface.className,style:surface.style},'Packed card');}
   assert.match(renderToStaticMarkup(React.createElement(Card)),/Packed card/);
+  const scope=React.createElement(Lighting,{tracking:'off'},React.createElement(Lighting.Surface,{as:'article'},'Scoped card'));
+  assert.match(renderToStaticMarkup(scope),/^<article /);
+
 `,
   ],
   { cwd: sandbox, stdio: 'pipe' },
