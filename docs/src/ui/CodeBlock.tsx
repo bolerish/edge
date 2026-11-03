@@ -13,10 +13,12 @@ const codeTheme = { plain: {}, styles: [] };
 export function CodeBlock({
   code,
   label = 'Example',
+  hideLabel = false,
   language = 'tsx',
 }: {
   code: string;
   label?: string;
+  hideLabel?: boolean;
   language?: 'tsx' | 'bash';
 }) {
   const [status, setStatus] = useState<'idle' | 'copied' | 'unavailable'>(
@@ -33,7 +35,7 @@ export function CodeBlock({
   return (
     <div className="code-block">
       <div className="code-toolbar">
-        <span>{label}</span>
+        <span className={hideLabel ? 'visually-hidden' : undefined}>{label}</span>
         <Button
           size="sm"
           variant="ghost"

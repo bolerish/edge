@@ -21,15 +21,14 @@ export function InstallCommands() {
           <TabsContent key={manager} value={manager}>
             <CodeBlock
               label={`${manager} installation`}
+              hideLabel
               language="bash"
               code={command}
             />
           </TabsContent>
         ))}
       </Tabs>
-      <p className="install-notice">
-        Not published yet · Commands become available after the public release.
-      </p>
+
     </div>
   );
 }
