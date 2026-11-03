@@ -1,0 +1,16 @@
+{
+  "name": "wisp-workspace",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.15.0",
+  "engines": { "node": ">=22.23.2 <23" },
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "dev": "pnpm build && pnpm -r --parallel --filter './packages/**' --filter @wisp-lighting/demo dev",
+    "dev:docs": "pnpm --filter @wisp-lighting/docs dev",
+    "test:browser": "pnpm --filter @wisp-lighting/demo test:browser",
+    "check": "pnpm build && pnpm typecheck && pnpm test && pnpm test:browser"
+  }
+}
