@@ -95,17 +95,14 @@ export function SiteShell({
             </Button>
           </div>
         ) : null}
-        <a className="wordmark" href="/">
+        <a
+          className="wordmark"
+          href="/"
+          aria-current={section === 'home' ? 'page' : undefined}
+        >
           wisp<span>/lighting</span>
         </a>
         <nav className="top-nav" aria-label="Sections">
-          <Link
-            href="/"
-            variant="plain"
-            aria-current={section === 'home' ? 'page' : undefined}
-          >
-            Home
-          </Link>
           <Link
             href="/docs/"
             variant="plain"
