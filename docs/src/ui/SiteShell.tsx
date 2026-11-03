@@ -80,21 +80,6 @@ export function SiteShell({
         Skip to content
       </a>
       <header className="site-header">
-        {section === 'docs' ? (
-          <div className="mobile-toggle">
-            <Button
-              ref={menu}
-              size="icon"
-              variant="ghost"
-              aria-label="Open navigation"
-              aria-expanded={open}
-              aria-controls="mobile-navigation"
-              onClick={() => setOpen((value) => !value)}
-            >
-              <span aria-hidden="true">☰</span>
-            </Button>
-          </div>
-        ) : null}
         <a
           className="wordmark"
           href="/"
@@ -122,6 +107,21 @@ export function SiteShell({
           >
             {theme === 'light' ? <SunIcon aria-hidden="true" /> : <MoonIcon aria-hidden="true" />}
           </Button>
+        {section === 'docs' ? (
+          <div className="mobile-toggle">
+            <Button
+              ref={menu}
+              size="icon"
+              variant="ghost"
+              aria-label="Open navigation"
+              aria-expanded={open}
+              aria-controls="mobile-navigation"
+              onClick={() => setOpen((value) => !value)}
+            >
+              <span aria-hidden="true">☰</span>
+            </Button>
+          </div>
+        ) : null}
         </div>
       </header>
       {section === 'docs' ? (

@@ -414,3 +414,25 @@ test('static random direction is stable across appearance updates', async ({ pag
   await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('fixed');
   await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
 });
+
+
+test('home and docs navigate without reloading or resetting the theme and header', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Switch to dark theme' }).click();
+  const brand = page.locator('.wordmark');
+  const before = await brand.boundingBox();
+  await page.evaluate(() => { (window as unknown as { navigationMarker: boolean }).navigationMarker = true; });
+  let documents = 0;
+  page.on('request', request => { if (request.isNavigationRequest()) documents++; });
+  await page.getByRole('link', { name: 'Get started' }).click();
+  await expect(page).toHaveURL(/\/docs\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
+  await expect(page.locator('html')).toHaveAttribute('data-bolerish-theme', 'dark');
+  expect(await page.evaluate(() => (window as unknown as { navigationMarker: boolean }).navigationMarker)).toBe(true);
+  expect((await brand.boundingBox())?.x).toBe(before?.x);
+  await page.goBack();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Light that reveals your interface.');
+  await page.goForward();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
+  expect(documents).toBe(0);
+});
