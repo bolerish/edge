@@ -1,11 +1,10 @@
 # Wisp
 
-Directional border lighting for the React components you own. Share one light across cards, buttons, input wrappers and same-document portals. Compose the UI with React and StyleX; Wisp handles pointer scheduling, geometry and decorative border output.
+Directional border lighting for the React components you own. Share one light across cards, buttons, input wrappers and same-document portals. Compose the UI with React and your preferred styling tool; Wisp handles pointer scheduling, geometry and decorative border output.
 
 This is an unreleased React MVP. All workspace packages are private. Solid and Svelte adapters are not available yet.
 
 ```tsx
-import * as stylex from '@stylexjs/stylex';
 import { useLight, useSurface } from '@bolerish/wisp-react';
 import '@bolerish/wisp-react/style.css';
 
@@ -14,16 +13,18 @@ function Card() {
   const surface = useSurface<HTMLElement>(light, {
     material: 'raised',
     theme: 'wisp',
+    color: '#e5edc8',
+    intensity: 0.8,
   });
   return (
-    <article ref={surface.ref} {...stylex.props(surface.style)}>
+    <article ref={surface.ref} className={surface.className} style={surface.style}>
       Your content
     </article>
   );
 }
 ```
 
-Create the light in a common owner and pass it to child surfaces to share it. Apply your StyleX styles after `surface.style` so your layout takes precedence. The Wisp theme offers Raised and Matte; an unthemed recessed material supports inset wrappers.
+Create the light in a common owner and pass it to child surfaces to share it. Combine `surface.className` with your classes and spread `surface.style` into your inline styles. Set `color` and `intensity` through `useSurface` options; surface intensity multiplies the shared light intensity. The Wisp theme offers Raised and Matte; an unthemed recessed material supports inset wrappers.
 
 ## Development
 

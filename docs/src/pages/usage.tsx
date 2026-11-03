@@ -32,18 +32,18 @@ export const usage: DocPage = {
       content: (
         <>
           <P>
-            Compose <code>surface.style</code> before your own StyleX styles.
+            Combine <code>surface.className</code> with your own classes and spread
+            <code>surface.style</code> into your inline styles.
             Your component retains its positioning, radius and appearance:
           </P>
           <CodeBlock
             label="Style composition"
             code={
-              '<article ref={surface.ref} {...stylex.props(surface.style, styles.card)}>\n  Your content\n</article>'
+              '<article ref={surface.ref} className={`${surface.className} card`} style={surface.style}>\n  Your content\n</article>'
             }
           />
           <P>
-            <code>surface.style</code> is a StyleX value, not a React
-            inline-style object. Wisp reserves the element’s{' '}
+            <code>surface.style</code> is a React inline-style object. Wisp reserves the element’s{' '}
             <code>::after</code> for its border decoration.
           </P>
         </>

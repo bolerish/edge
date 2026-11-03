@@ -1,6 +1,5 @@
 // @vitest-environment node
 import { renderToStaticMarkup, renderToString } from 'react-dom/server';
-import * as stylex from '@stylexjs/stylex';
 import { expect, it, vi } from 'vitest';
 import { useLight, useSurface } from '@bolerish/wisp-react';
 
@@ -11,7 +10,7 @@ function Scene() {
     theme: 'wisp',
   });
   return (
-    <button ref={surface.ref} {...stylex.props(surface.style)}>
+    <button ref={surface.ref} className={surface.className} style={surface.style}>
       Save
     </button>
   );

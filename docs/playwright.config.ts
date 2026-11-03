@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 export default defineConfig({
-  testDir: 'tests',
+  testDir: 'src',
   fullyParallel: false,
   outputDir: '../.private/playwright',
   reporter: 'list',

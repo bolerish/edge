@@ -69,11 +69,11 @@ export const materials: DocPage = {
       content: (
         <>
           <P>
-            Your styles can set <code>--wisp-highlight</code> and{' '}
-            <code>--wisp-border-width</code>. Keep <code>--wisp-angle</code> and{' '}
-            <code>--wisp-strength</code> reserved for the controller; writing
-            them from React or another animation system creates competing
-            ownership.
+            Pass <code>color</code> and <code>intensity</code> to{' '}
+            <code>useSurface</code> to customize the highlight in JavaScript.
+            Surface intensity multiplies the shared light intensity. Internal
+            CSS variables are reserved for Wisp; no CSS variable declarations
+            are required in your application.
           </P>
           <P>
             The effect approximates lighting on axis-aligned rectangles. It is

@@ -27,8 +27,7 @@
     "@bolerish/wisp-core": "workspace:^"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "@stylexjs/stylex": "^0.19.1"
+    "react": "^19.0.0"
   },
   "devDependencies": {
     "react": "catalog:2026-11-03--react-stable",

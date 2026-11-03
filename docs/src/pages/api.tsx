@@ -76,8 +76,8 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Returns <code>{'{ ref, style }'}</code>. Connect the ref to one HTML
-            element and compose the style with <code>stylex.props()</code>.
+            Returns <code>{'{ ref, className, style }'}</code>. Connect the ref to one HTML
+            element and apply the returned className and React inline style.
           </P>
           <div className="table-scroll">
             <table className="api-table">
@@ -105,12 +105,25 @@ export const api: DocPage = {
                   <td>Unset</td>
                   <td>wisp or false</td>
                 </tr>
+                <tr>
+                  <td><code>color</code></td>
+                  <td><code>#e5edc8</code></td>
+                  <td>Any CSS color string</td>
+                </tr>
+                <tr>
+                  <td><code>intensity</code></td>
+                  <td>1</td>
+                  <td>Finite number from 0 to 1; multiplies shared intensity</td>
+                </tr>
               </tbody>
             </table>
           </div>
           <P>
             With <code>theme: 'wisp'</code>, material is limited to raised or
-            matte. Material changes update the current registration. An element
+            matte. Set color to any CSS color string. Surface intensity defaults to 1
+            and multiplies the shared light intensity; finite values are clamped
+            to 0–1 and non-finite values use the default.
+            Material changes update the current registration. An element
             cannot belong to two light controllers.
           </P>
         </>

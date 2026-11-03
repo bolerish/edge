@@ -32,8 +32,8 @@ export const introduction: DocPage = {
         <>
           <P>
             Register an element with <code>useSurface()</code>. Apply the
-            returned StyleX value before your own styles so your layout and
-            appearance take precedence.
+            returned className and inline style, then compose your own styles
+            using your preferred styling tool.
           </P>
           <P>
             The library coordinates pointer input, geometry and decorative

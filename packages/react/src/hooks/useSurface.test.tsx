@@ -11,7 +11,6 @@ import {
   type LightOptions,
   type Light,
 } from '@bolerish/wisp-react';
-import * as stylex from '@stylexjs/stylex';
 
 let frames: Map<number, FrameRequestCallback>;
 let sequence: number;
@@ -36,7 +35,7 @@ function Button({
     <button
       key={String(replace)}
       ref={surface.ref}
-      {...stylex.props(surface.style)}
+      className={surface.className} style={surface.style}
     >
       Save
     </button>
@@ -146,7 +145,7 @@ it('does not rerender React components during pointer updates and preserves node
     const light = useLight({ mode: 'pointer' });
     const surface = useSurface<HTMLButtonElement>(light);
     return (
-      <button ref={surface.ref} {...stylex.props(surface.style)}>
+      <button ref={surface.ref} className={surface.className} style={surface.style}>
         Save
       </button>
     );
@@ -184,7 +183,7 @@ it('hydrates server markup and keeps an edited input value and selection', async
     });
     const [value, setValue] = useState('hello');
     return (
-      <label ref={surface.ref} {...stylex.props(surface.style)}>
+      <label ref={surface.ref} className={surface.className} style={surface.style}>
         Query
         <input
           value={value}
@@ -212,4 +211,30 @@ it('hydrates server markup and keeps an edited input value and selection', async
   expect(input.selectionStart).toBe(2);
   expect(input.selectionEnd).toBe(7);
   expect(errors).toEqual([]);
+});
+
+it('updates and clears surface appearance without replacing its registration', async () => {
+  function Appearance({ color, intensity }: { color?: string; intensity?: number }) {
+    const light = useLight({ mode: 'static' });
+    const surface = useSurface<HTMLButtonElement>(light, { color, intensity });
+    return <button {...surface}>Save</button>;
+  }
+  await act(async () => root.render(<Appearance color="red" intensity={0.4} />));
+  flush();
+  const button = container.querySelector('button')!;
+  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('red');
+  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('0.4');
+  const angle = button.style.getPropertyValue('--wisp-angle');
+  await act(async () => root.render(<Appearance color="blue" intensity={2} />));
+  expect(container.querySelector('button')).toBe(button);
+  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('blue');
+  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('1');
+  expect(button.style.getPropertyValue('--wisp-angle')).toBe(angle);
+  await act(async () => root.render(<Appearance intensity={-1} />));
+  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('0');
+  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('');
+  await act(async () => root.render(<Appearance intensity={NaN} />));
+  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('');
+  await act(async () => root.render(<Appearance />));
+  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('');
 });

@@ -25,8 +25,8 @@ export const installation: DocPage = {
             code={'pnpm install --frozen-lockfile\npnpm build'}
           />
           <P>
-            The React adapter currently targets React 19 and StyleX 0.19. The
-            checked workspace uses React 19.3.1 and StyleX 0.19.1.
+            The React adapter targets React 19. StyleX is compiled inside the
+            library; consumers do not need to install or configure it.
           </P>
         </>
       ),
@@ -45,9 +45,8 @@ export const installation: DocPage = {
             code={"import '@bolerish/wisp-react/style.css';"}
           />
           <P>
-            The library ships compiled JavaScript and CSS. Your own calls to{' '}
-            <code>stylex.create()</code> still need your application’s StyleX
-            compiler.
+            The library ships compiled JavaScript and CSS. Use your preferred
+            styling tool, including Tailwind CSS, StyleX or vanilla-extract.
           </P>
         </>
       ),

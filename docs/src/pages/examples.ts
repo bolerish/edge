@@ -1,5 +1,4 @@
-export const firstSurface = `import * as stylex from '@stylexjs/stylex';
-import { useLight, useSurface, type Light } from '@bolerish/wisp-react';
+export const firstSurface = `import { useLight, useSurface, type Light } from '@bolerish/wisp-react';
 
 function App() {
   const light = useLight();
@@ -12,28 +11,21 @@ function Card({ light }: { light: Light }) {
     theme: 'wisp',
   });
   return (
-    <article ref={surface.ref} {...stylex.props(surface.style, styles.card)}>
+    <article ref={surface.ref} className={surface.className} style={{ ...surface.style, padding: 24, borderRadius: 12 }}>
       Project overview
     </article>
   );
-}
-
-const styles = stylex.create({ card: { padding: 24, borderRadius: 12 } });`;
-export const inputSurface = `import * as stylex from '@stylexjs/stylex';
-import { useSurface, type Light } from '@bolerish/wisp-react';
+}`;
+export const inputSurface = `import { useSurface, type Light } from '@bolerish/wisp-react';
 
 function Search({ light }: { light: Light }) {
   const surface = useSurface<HTMLLabelElement>(light, { material: 'recessed' });
   return (
-    <label ref={surface.ref} {...stylex.props(surface.style, styles.field)}>
+    <label ref={surface.ref} className={surface.className} style={{ ...surface.style, display: 'grid', gap: 8, padding: 16, borderRadius: 12 }}>
       Search <input name="query" />
     </label>
   );
-}
-
-const styles = stylex.create({
-  field: { display: 'grid', gap: 8, padding: 16, borderRadius: 12 },
-});`;
+}`;
 export const refreshSurface = `useEffect(() => {
   light.refresh();
 }, [light, expanded]);`;

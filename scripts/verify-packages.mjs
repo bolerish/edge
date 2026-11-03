@@ -20,7 +20,8 @@ for (const name of ['core', 'react']) {
   assert(
     !listing.includes('.private/') &&
       !listing.includes('/tests/') &&
-      !listing.includes('/src/'),
+      !listing.includes('/src/') &&
+      !/\.test\.[cm]?[jt]sx?/.test(listing),
   );
   const destination = resolve(
     sandbox,
@@ -49,8 +50,7 @@ for (const name of ['core', 'react']) {
   assert(!JSON.stringify(manifest.dependencies ?? {}).includes('workspace:'));
   await readFile(resolve(destination, 'dist/LICENSE'));
 }
-await mkdir(resolve(sandbox, 'node_modules/@stylexjs'), { recursive: true });
-for (const name of ['react', 'react-dom', '@stylexjs/stylex']) {
+for (const name of ['react', 'react-dom']) {
   await symlink(
     resolve(root, 'packages/react/node_modules', name),
     resolve(sandbox, 'node_modules', name),
@@ -66,12 +66,11 @@ execFileSync(
   import assert from 'node:assert/strict';
   import React from 'react';
   import {renderToStaticMarkup} from 'react-dom/server';
-  import * as stylex from '@stylexjs/stylex';
   import {createLight} from '@bolerish/wisp-core';
   import {useLight,useSurface} from '@bolerish/wisp-react';
   assert.equal(typeof window,'undefined');
   createLight().refresh();
-  function Card(){const light=useLight();const surface=useSurface(light,{theme:'wisp'});return React.createElement('article',stylex.props(surface.style),'Packed card');}
+  function Card(){const light=useLight();const surface=useSurface(light,{theme:'wisp'});return React.createElement('article',{className:surface.className,style:surface.style},'Packed card');}
   assert.match(renderToStaticMarkup(React.createElement(Card)),/Packed card/);
 `,
   ],
@@ -86,6 +85,7 @@ const library = await readFile(
   resolve(sandbox, 'node_modules/@bolerish/wisp-react/dist/index.js'),
   'utf8',
 );
+assert(!/from\s*["']@stylexjs\/stylex/.test(library), 'Consumers must not need StyleX');
 assert(
   library.startsWith('"use client"') || library.startsWith("'use client'"),
 );

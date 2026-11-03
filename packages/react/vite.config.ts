@@ -9,7 +9,6 @@ export default defineConfig({
       external: [
         'react',
         'react/jsx-runtime',
-        '@stylexjs/stylex',
         '@bolerish/wisp-core',
       ],
     },

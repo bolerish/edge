@@ -1,5 +1,4 @@
 import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
-import * as stylex from '@stylexjs/stylex';
 import { Button } from '@bolerish/ui/button';
 import {
   Card,
@@ -84,8 +83,8 @@ function Dashboard() {
   const light = useLight({ mode, intensity: 0.8 });
   const input = useSurface<HTMLDivElement>(light, { material: 'recessed' });
   const action = useSurface<HTMLSpanElement>(light, { material });
-  const inputProps = stylex.props(input.style);
-  const actionProps = stylex.props(action.style);
+  const inputProps = input;
+  const actionProps = action;
   const filtered = projects.filter((project) =>
     project.name.toLowerCase().includes(query.trim().toLowerCase()),
   );
@@ -198,7 +197,6 @@ function Dashboard() {
                   Search projects
                 </Label>
                 <div
-                  ref={input.ref}
                   {...inputProps}
                   className={`${inputProps.className} dashboard-input`}
                   data-testid="surface-input"
@@ -214,7 +212,6 @@ function Dashboard() {
                 </div>
               </div>
               <span
-                ref={action.ref}
                 {...actionProps}
                 className={`${actionProps.className} dashboard-button`}
                 data-testid="surface-button"
@@ -357,10 +354,9 @@ function SurfaceCard({
   children: ReactNode;
 }) {
   const surface = useSurface<HTMLDivElement>(light, { material });
-  const props = stylex.props(surface.style);
+  const props = surface;
   return (
     <div
-      ref={surface.ref}
       {...props}
       className={`${props.className} dashboard-surface`}
       data-testid={testId}
