@@ -17,11 +17,14 @@
     "build": "rm -rf dist && tsc -p tsconfig.build.json && node ../../scripts/package-license.mjs",
     "dev": "tsc -p tsconfig.build.json --watch",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:mutation": "stryker run"
   },
   "devDependencies": {
     "typescript": "catalog:",
     "vitest": "catalog:2026-11-03--vite-vitest-stable",
-    "jsdom": "catalog:"
+    "jsdom": "catalog:",
+    "@stryker-mutator/core": "catalog:",
+    "@stryker-mutator/vitest-runner": "catalog:"
   }
 }

@@ -33,6 +33,7 @@ Dated catalogs identify jointly validated dependency combinations. Upgrade a com
 pnpm build
 pnpm typecheck
 pnpm test
+pnpm test:mutation
 pnpm --filter @bolerish/wisp-docs exec playwright install chromium
 pnpm test:browser
 pnpm verify:packages
@@ -46,3 +47,13 @@ The browser test runner builds and owns its preview server. `WISP_CHROMIUM_EXECU
 Preserve StrictMode restartability, per-element ownership, SSR-safe imports, native interactions, and read-before-write ordering. A material or options update must work with a stationary pointer. Call explicit `refresh()` after application-controlled position changes that size observers cannot detect.
 
 Keep changes scoped and independently verifiable. Include relevant tests and public documentation with behavior changes. Package build files whitelist distribution artifacts; avoid adding unreviewed files to package archives.
+
+## Mutation testing
+
+Run `pnpm test:mutation` from the repository root. It builds package dependencies and runs Stryker against core implementation files and React hooks. Run only one package with `pnpm --filter @bolerish/wisp-core test:mutation` or `pnpm --filter @bolerish/wisp-react test:mutation` after building dependencies.
+
+Mutation testing supplements the adjacent Vitest tests: Stryker changes production code and checks whether those tests fail. React unit tests import source through the source barrel and use the library's StyleX compiler configuration, so mutations cannot be hidden by stale compiled output. Packed-package checks independently exercise the published import paths.
+
+Reports are local to `.private/mutation/core/` and `.private/mutation/react/` (`index.html` and `report.json`). Review surviving and uncovered mutants for missing behavioral assertions; a completed run does not mean all mutants were detected. No score threshold is enforced until the remaining mutants have been reviewed. Excluded files are tests and the export-only package barrels. The static StyleX declaration section is explicitly excluded because mutation instrumentation makes compile-time style expressions dynamic; browser integration tests cover decorative output.
+
+The Stryker sandbox preprocessor requires the JavaScript TypeScript compiler API. A scoped pnpm package extension supplies TypeScript 6 only to Stryker; the project build and type checks continue to use the pinned TypeScript 7 compiler. Stryker's [Vitest runner](https://stryker-mutator.io/docs/stryker-js/vitest-runner/) runs the existing tests with per-test mutation coverage.

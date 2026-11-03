@@ -21,7 +21,8 @@
     "build": "vite build && tsc -p tsconfig.build.json && node ../../scripts/package-license.mjs",
     "dev": "vite build --watch --emptyOutDir false",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:mutation": "stryker run"
   },
   "dependencies": {
     "@bolerish/wisp-core": "workspace:^"
@@ -41,6 +42,8 @@
     "vitest": "catalog:2026-11-03--vite-vitest-stable",
     "typescript": "catalog:",
     "jsdom": "catalog:",
-    "@types/node": "catalog:"
+    "@types/node": "catalog:",
+    "@stryker-mutator/core": "catalog:",
+    "@stryker-mutator/vitest-runner": "catalog:"
   }
 }

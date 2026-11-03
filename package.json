@@ -14,6 +14,7 @@
     "dev:docs": "pnpm dev",
     "test:browser": "pnpm --filter './packages/**' build && pnpm --filter @bolerish/wisp-docs test:browser",
     "check": "pnpm build && pnpm -r typecheck && pnpm -r test && pnpm --filter @bolerish/wisp-docs test:browser && pnpm verify:packages",
-    "verify:packages": "node scripts/verify-packages.mjs"
+    "verify:packages": "node scripts/verify-packages.mjs",
+    "test:mutation": "pnpm --filter './packages/**' build && pnpm -r --filter './packages/**' test:mutation"
   }
 }

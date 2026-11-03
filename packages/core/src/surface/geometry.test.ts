@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getLighting } from './geometry.js';
+import { getLighting, getStaticLighting } from './geometry.js';
 
 const rect = { left: 100, top: 100, width: 100, height: 100 };
 describe('CSS light directions', () => {
@@ -35,4 +35,19 @@ describe('CSS light directions', () => {
       strength: 0,
     });
   });
+});
+
+it('attenuates vertically using the surface height and fades near the center', () => {
+  const wide = { left: 0, top: 0, width: 200, height: 40 };
+  expect(getLighting(wide, { x: 100, y: 90 }, 100, 'raised').strength).toBeCloseTo(0.25);
+  expect(getLighting(rect, { x: 156, y: 150 }, 100, 'raised').strength).toBeCloseTo(0.5);
+});
+
+it.each([
+  ['raised', 315, 0.7],
+  ['recessed', 135, 0.7],
+  ['matte', 315, 0.21],
+] as const)('provides static lighting for %s', (material, angle, strength) => {
+  expect(getStaticLighting(material).angle).toBe(angle);
+  expect(getStaticLighting(material).strength).toBeCloseTo(strength);
 });

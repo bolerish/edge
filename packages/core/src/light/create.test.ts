@@ -285,3 +285,123 @@ it('writes only the changed CSS property when material flips the direction', () 
   entry.destroy();
   stop();
 });
+
+it('rejects concurrent mounts and documents without a browser window', () => {
+  const light = createLight();
+  const stop = light.mount(document);
+  expect(() => light.mount(document)).toThrow(/active owner/);
+  stop();
+  expect(() => createLight().mount(document.implementation.createHTMLDocument()))
+    .toThrow(/browser document/);
+});
+it('ignores an old cleanup after a new session has started', () => {
+  const light = createLight({ mode: 'pointer' });
+  const { node } = element();
+  light.register(node, 'raised');
+  const previousStop = light.mount(document);
+  previousStop();
+  const stop = light.mount(document);
+  previousStop();
+  point();
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  stop();
+});
+it('keeps document ownership until both the session and surfaces are released', () => {
+  const other = document.implementation.createHTMLDocument();
+  const light = createLight();
+  const entry = light.register(element().node, 'raised');
+  const stop = light.mount(document);
+  stop();
+  expect(() => light.mount(other)).toThrow(/different documents/);
+  expect(() => light.register(other.createElement('div'), 'raised')).toThrow(/different document/);
+  entry.destroy();
+  const foreign = light.register(other.createElement('div'), 'raised');
+  foreign.destroy();
+  const stopEmpty = light.mount(document);
+  stopEmpty();
+  light.register(other.createElement('div'), 'raised').destroy();
+});
+it('retains the active document when its last surface is removed', () => {
+  const light = createLight();
+  const stop = light.mount(document);
+  light.register(element().node, 'raised').destroy();
+  const other = document.implementation.createHTMLDocument();
+  expect(() => light.register(other.createElement('div'), 'raised')).toThrow(/different document/);
+  stop();
+  light.register(other.createElement('div'), 'raised').destroy();
+});
+it('schedules late registrations and leaves removed surfaces untouched', () => {
+  const light = createLight({ mode: 'static' });
+  const stop = light.mount(document);
+  flush();
+  const { node } = element();
+  const entry = light.register(node, 'raised');
+  expect(frames.size).toBe(1);
+  flush();
+  entry.destroy();
+  light.refresh();
+  flush();
+  expect(node.style.getPropertyValue('--wisp-strength')).toBe('');
+  entry.update('matte');
+  expect(frames.size).toBe(0);
+  const replacement = createLight().register(node, 'raised');
+  entry.destroy();
+  expect(() => createLight().register(node, 'raised')).toThrow(/owner/);
+  replacement.destroy();
+  stop();
+});
+it('preserves the pointer for same-mode configuration and clears it on mode changes', () => {
+  const light = createLight({ mode: 'pointer' });
+  const { node } = element();
+  light.register(node, 'raised');
+  const stop = light.mount(document);
+  point();
+  flush();
+  light.configure({ mode: 'pointer', intensity: 0.4 });
+  flush();
+  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  expect(Number(node.style.getPropertyValue('--wisp-strength'))).toBeGreaterThan(0);
+  light.configure({ mode: 'auto' });
+  flush();
+  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  stop();
+});
+it('clears light only when the pointer exits the document', () => {
+  const light = createLight({ mode: 'pointer' });
+  const { node } = element();
+  light.register(node, 'raised');
+  const stop = light.mount(document);
+  point();
+  flush();
+  document.dispatchEvent(Object.assign(new Event('pointerout'), { relatedTarget: node }));
+  flush();
+  expect(Number(node.style.getPropertyValue('--wisp-strength'))).toBeGreaterThan(0);
+  document.dispatchEvent(Object.assign(new Event('pointerout'), { relatedTarget: null }));
+  flush();
+  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  stop();
+});
+it.each([
+  [0, 100],
+  [100, 0],
+])('suppresses output for a surface sized %s by %s', (width, height) => {
+  const light = createLight({ mode: 'static' });
+  const { node, measure } = element();
+  measure.mockReturnValue(new DOMRect(0, 0, width, height));
+  light.register(node, 'raised');
+  const stop = light.mount(document);
+  flush();
+  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  stop();
+});
+it('suppresses output for detached surfaces', () => {
+  const light = createLight({ mode: 'static' });
+  const { node } = element();
+  light.register(node, 'raised');
+  node.remove();
+  const stop = light.mount(document);
+  flush();
+  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  stop();
+});

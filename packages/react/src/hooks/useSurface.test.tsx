@@ -10,7 +10,7 @@ import {
   type Material,
   type LightOptions,
   type Light,
-} from '@bolerish/wisp-react';
+} from '../index.js';
 
 let frames: Map<number, FrameRequestCallback>;
 let sequence: number;
@@ -237,4 +237,50 @@ it('updates and clears surface appearance without replacing its registration', a
   expect(button.style.getPropertyValue('--wisp-intensity')).toBe('');
   await act(async () => root.render(<Appearance />));
   expect(button.style.getPropertyValue('--wisp-intensity')).toBe('');
+});
+
+it('reconnects an existing surface when its light handle changes', async () => {
+  function Scene({ second }: { second: boolean }) {
+    const firstLight = useLight({ mode: 'static', intensity: 0.2 });
+    const secondLight = useLight({ mode: 'static', intensity: 0.8 });
+    const surface = useSurface<HTMLButtonElement>(second ? secondLight : firstLight);
+    return <button {...surface}>Save</button>;
+  }
+  await act(async () => root.render(<Scene second={false} />));
+  flush();
+  const button = container.querySelector('button')!;
+  expect(button.style.getPropertyValue('--wisp-strength')).toBe('0.140');
+  await act(async () => root.render(<Scene second />));
+  flush();
+  expect(container.querySelector('button')).toBe(button);
+  expect(button.style.getPropertyValue('--wisp-strength')).toBe('0.560');
+});
+it('allows a surface hook without an attached host', async () => {
+  function Hidden() {
+    const light = useLight();
+    useSurface(light);
+    return null;
+  }
+  await act(async () => root.render(<Hidden />));
+  expect(container.childElementCount).toBe(0);
+});
+it('exposes refresh to remeasure a stationary pointer after a position change', async () => {
+  let refresh: (() => void) | undefined;
+  function Scene() {
+    const light = useLight({ mode: 'pointer', radius: 10 });
+    refresh = light.refresh;
+    return <button {...useSurface<HTMLButtonElement>(light)}>Save</button>;
+  }
+  await act(async () => root.render(<Scene />));
+  document.dispatchEvent(Object.assign(new Event('pointermove'), {
+    clientX: 50, clientY: -10, pointerType: 'mouse',
+  }));
+  flush();
+  const button = container.querySelector('button')!;
+  expect(button.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, -20, 100, 100));
+  expect(refresh).toBeTypeOf('function');
+  refresh!();
+  flush();
+  expect(Number(button.style.getPropertyValue('--wisp-strength'))).toBeGreaterThan(0);
 });

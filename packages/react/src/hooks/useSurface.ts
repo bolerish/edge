@@ -63,6 +63,7 @@ export function useSurface<T extends HTMLElement = HTMLElement>(
   return { ref, className: props.className, style };
 }
 
+// Stryker disable all: StyleX declarations must stay static; browser tests cover decorative CSS.
 // The highlight spans twice its half-width; the shadow peaks opposite it.
 const HIGHLIGHT_HALF_WIDTH_DEGREES = 40;
 const SHADOW_PEAK_DEGREES = 220;
