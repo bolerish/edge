@@ -100,7 +100,7 @@ export function SiteShell({
           href="/"
           aria-current={section === 'home' ? 'page' : undefined}
         >
-          wisp<span>/lighting</span>
+          bolerish<span>/edge</span>
         </a>
         <nav className="top-nav" aria-label="Sections">
           <Link

@@ -24,10 +24,10 @@ export function normalizePath(path: string) {
   return pathname.endsWith('/') ? pathname : `${pathname}/`;
 }
 export function titleFor(path: string) {
-  if (normalizePath(path) === '/') return 'Wisp · Directional surface lighting';
+  if (normalizePath(path) === '/') return 'bolerish/edge · Directional surface lighting';
   const page = findPage(path);
   const title = page ? [page.section, page.title].filter(Boolean).join(' · ') : 'Page not found';
-  return `${title} · Wisp`;
+  return `${title} · bolerish/edge`;
 }
 function documentPath(slug: string) {
   return `/docs/${slug ? `${slug}/` : ''}`;

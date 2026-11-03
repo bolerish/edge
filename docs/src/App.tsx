@@ -44,7 +44,7 @@ export function App({ pathname }: { pathname: string }) {
             {section.content}
           </section>
         ))}
-        <footer className="page-footer">Wisp{page.section ? ` · ${page.section}` : ''}</footer>
+        <footer className="page-footer">bolerish/edge{page.section ? ` · ${page.section}` : ''}</footer>
       </article>
     </SiteShell>
   );
