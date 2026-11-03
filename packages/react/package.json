@@ -19,7 +19,7 @@
   },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json && node ../../scripts/package-license.mjs",
-    "dev": "vite build --watch",
+    "dev": "vite build --watch --emptyOutDir false",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
