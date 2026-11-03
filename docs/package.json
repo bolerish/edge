@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir ../.private/docs-ssr && node scripts/prerender.mjs",
+    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir ../.private/docs-ssr && node scripts/prerender.ts",
     "dev": "vite --host localhost --port 4173 --strictPort",
     "typecheck": "tsc --noEmit",
     "test:browser": "playwright test"

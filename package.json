@@ -8,13 +8,14 @@
   },
   "scripts": {
     "build": "pnpm -r build",
-    "typecheck": "pnpm --filter './packages/**' build && pnpm -r typecheck",
+    "typecheck": "pnpm --filter './packages/**' build && pnpm -r typecheck && pnpm typecheck:scripts",
     "test": "pnpm --filter './packages/**' build && pnpm -r test",
     "dev": "pnpm --filter './packages/**' build && pnpm -r --parallel --filter './packages/**' --filter @bolerish/edge-docs dev",
     "dev:docs": "pnpm dev",
     "test:browser": "pnpm --filter './packages/**' build && pnpm --filter @bolerish/edge-docs test:browser",
-    "check": "pnpm build && pnpm -r typecheck && pnpm -r test && pnpm --filter @bolerish/edge-docs test:browser && pnpm verify:packages",
-    "verify:packages": "node scripts/verify-packages.mjs",
-    "test:mutation": "pnpm --filter './packages/**' build && pnpm -r --filter './packages/**' test:mutation"
+    "check": "pnpm build && pnpm -r typecheck && pnpm typecheck:scripts && pnpm -r test && pnpm --filter @bolerish/edge-docs test:browser && pnpm verify:packages",
+    "verify:packages": "node scripts/verify-packages.ts",
+    "test:mutation": "pnpm --filter './packages/**' build && pnpm -r --filter './packages/**' test:mutation",
+    "typecheck:scripts": "pnpm --filter @bolerish/edge-docs exec tsc -p tsconfig.scripts.json"
   }
 }

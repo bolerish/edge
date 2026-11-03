@@ -33,6 +33,7 @@ Dated catalogs identify jointly validated dependency combinations. Upgrade a com
 ```sh
 pnpm build
 pnpm typecheck
+pnpm typecheck:scripts
 pnpm test
 pnpm test:mutation
 pnpm --filter @bolerish/edge-docs exec playwright install chromium
@@ -40,6 +41,8 @@ pnpm test:browser
 pnpm verify:packages
 pnpm check
 ```
+
+Repository scripts use `.ts` and run directly on the pinned Node version. Node strips erasable types but does not check them; `pnpm typecheck:scripts` checks all three scripts against the actual documentation server exports. It is included in `pnpm typecheck` and `pnpm check`.
 
 The browser test runner builds and owns its preview server. `WISP_CHROMIUM_EXECUTABLE` optionally selects an existing compatible Chromium installation. Standard runs use Playwright's installed browser. The complete check builds packages and the documentation site, checks types and tests, then validates package archives.
 

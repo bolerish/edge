@@ -4,17 +4,16 @@ await symlink(
   resolve('node_modules'),
   resolve('../.private/docs-ssr/node_modules'),
   'dir',
-).catch((error) => {
-  if (error.code !== 'EEXIST') throw error;
+).catch((error: unknown) => {
+  if (!(error instanceof Error && 'code' in error && error.code === 'EEXIST')) throw error;
 });
-const { render, publicPaths } = await import(
-  '../../.private/docs-ssr/entry-server.js'
-);
+const serverUrl = new URL('../../.private/docs-ssr/entry-server.js', import.meta.url);
+const { render, publicPaths }: typeof import('../src/entry-server.js') = await import(serverUrl.href);
 const destination = resolve('dist');
 const template = await readFile(resolve(destination, 'index.html'), 'utf8');
 if ([...template.matchAll(/<title>[^<]*<\/title>/g)].length !== 1)
   throw new Error('Expected one template title');
-function escapeHtml(text) {
+function escapeHtml(text: string) {
   return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\"', '&quot;').replaceAll("'", '&#39;');
 }
 if (!template.includes('<!--app-html-->'))

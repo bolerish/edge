@@ -36,7 +36,11 @@ for (const name of ['core', 'styles', 'react']) {
     '-C',
     destination,
   ]);
-  const manifest = JSON.parse(
+  const manifest: {
+    name: string;
+    exports: Record<string, string | Record<string, string>>;
+    dependencies?: Record<string, string>;
+  } = JSON.parse(
     await readFile(resolve(destination, 'package.json'), 'utf8'),
   );
   assert.equal(manifest.name, name === 'react' ? '@bolerish/edge' : `@bolerish/edge-${name}`);
@@ -93,9 +97,11 @@ const consumer = resolve(sandbox, 'consumer.mts');
 await writeFile(consumer, `
   import '@bolerish/edge/style.css';
   import '@bolerish/edge-styles/style.css';
-  import {Lighting} from '@bolerish/edge';
+  import {Lighting, type SurfaceProps} from '@bolerish/edge';
   import {getSurfaceProps} from '@bolerish/edge-styles';
   void Lighting;
+  const surface: SurfaceProps = {pseudoElement:'before'};
+  void surface;
   getSurfaceProps({color:'red',pseudoElement:'before'});
 `);
 execFileSync('pnpm', [
@@ -117,11 +123,12 @@ assert(!/from\s*["']@stylexjs\/stylex/.test(library), 'Consumers must not need S
 assert(
   library.startsWith('"use client"') || library.startsWith("'use client'"),
 );
-const { titleFor, pages, learningPath } = await import('../.private/docs-ssr/entry-server.js');
+const serverUrl = new URL('../.private/docs-ssr/entry-server.js', import.meta.url);
+const { titleFor, pages, learningPath }: typeof import('../docs/src/entry-server.js') = await import(serverUrl.href);
 assert.equal(new Set(learningPath).size, pages.length, 'Reading path covers each page once');
 assert(learningPath.every(page => pages.includes(page)), 'Reading path contains only known pages');
 const site = resolve(root, 'docs/dist');
-const routes = JSON.parse(await readFile(resolve(site, 'routes.json'), 'utf8'));
+const routes: string[] = JSON.parse(await readFile(resolve(site, 'routes.json'), 'utf8'));
 assert(
   routes.includes('/docs/') &&
     routes.includes('/') &&
@@ -136,7 +143,7 @@ assert(
   installation.includes('token keyword'),
   'SSG must include highlighted code tokens',
 );
-const documents = new Map();
+const documents = new Map<string, string>();
 for (const route of routes) {
   const html = await readFile(resolve(site, `.${route}`, 'index.html'), 'utf8');
   assert(
@@ -149,8 +156,10 @@ for (const route of routes) {
 }
 for (const [route, html] of documents) {
   for (const match of html.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)) {
+    const href = match[1];
+    assert(href !== undefined);
     const target = new URL(
-      match[1].replaceAll('&amp;', '&'),
+      href.replaceAll('&amp;', '&'),
       `https://wisp.invalid${route}`,
     );
     if (target.origin !== 'https://wisp.invalid') continue;
