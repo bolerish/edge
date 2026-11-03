@@ -37,3 +37,17 @@ it('supports a separate shadow color and edge thickness', () => {
   expect(getSurfaceProps({ borderWidth: -1 }).style['--wisp-border-width']).toBe('0px');
   expect(getSurfaceProps({ borderWidth: Infinity }).style['--wisp-border-width']).toBeUndefined();
 });
+
+it('selects one decoration slot without changing the binding shape', () => {
+  const after = getSurfaceProps();
+  const before = getSurfaceProps({ pseudoElement: 'before' });
+  expect(getSurfaceProps({ pseudoElement: 'after' })).toEqual(after);
+  expect(Object.keys(before)).toEqual(['className', 'style']);
+  expect(before.className).not.toBe(after.className);
+  const themed = getSurfaceProps({ pseudoElement: 'before', theme: 'wisp' });
+  expect(themed.className).not.toBe(before.className);
+  expect(themed.className).not.toBe(getSurfaceProps({ theme: 'wisp' }).className);
+});
+it.each(['first-line', '', null, 0])('rejects invalid decoration slot %s', (pseudoElement) => {
+  expect(() => getSurfaceProps({ pseudoElement: pseudoElement as never })).toThrow(new RangeError('Unknown surface pseudoElement'));
+});

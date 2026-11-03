@@ -9,7 +9,7 @@ it('renders plain host markup without adding a scope wrapper or leaking options'
   try {
     const html = renderToStaticMarkup(
       <Lighting motion="dynamic">
-        <Lighting.Surface as="article" className="card" edgeStyle="matte" theme="wisp" color="red" intensity={0.4}>
+        <Lighting.Surface as="article" className="card" pseudoElement="before" edgeStyle="matte" theme="wisp" color="red" intensity={0.4}>
           Card
         </Lighting.Surface>
       </Lighting>,
@@ -18,7 +18,7 @@ it('renders plain host markup without adding a scope wrapper or leaking options'
     expect(html).toContain('card');
     expect(html).toContain('--wisp-highlight:red');
     expect(html).toContain('--wisp-intensity:0.4');
-    expect(html).not.toMatch(/ (edgeStyle|theme|color|intensity|motion)=/);
+    expect(html).not.toMatch(/ (edgeStyle|theme|color|intensity|motion|pseudoElement)=/);
     expect(html).not.toContain('--wisp-angle:');
     expect(error).not.toHaveBeenCalled();
   } finally {
@@ -42,3 +42,9 @@ it('rejects unknown motion values from JavaScript consumers', () => {
 <Lighting.Surface href="/docs/" />;
 // @ts-expect-error The optional Wisp theme has no recessed variant.
 <Lighting.Surface theme="wisp" edgeStyle="recessed" />;
+
+it('rejects invalid decoration slots during SSR', () => {
+  expect(() => renderToStaticMarkup(
+    <Lighting><Lighting.Surface pseudoElement={'invalid' as never} /></Lighting>,
+  )).toThrow(RangeError);
+});

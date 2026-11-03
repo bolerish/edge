@@ -40,6 +40,11 @@ const lightOptions = {
 } satisfies OptionDocs<LightOptions>;
 
 const surfaceOptions = {
+  pseudoElement: {
+    type: "'after' | 'before'",
+    defaultValue: "'after'",
+    description: 'Decoration slot. Choose before to preserve an existing ::after. If both slots are occupied, or the host is a native input, use a wrapper. Invalid values throw a RangeError.',
+  },
   edgeStyle: {
     type: "'raised' | 'recessed' | 'matte'",
     defaultValue: "'raised'",

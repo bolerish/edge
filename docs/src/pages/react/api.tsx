@@ -60,7 +60,7 @@ export const api: DocPage = {
             <P>
               Place every <code>Lighting.Surface</code> inside a
               <code> Lighting</code> owner; rendering it outside one throws an
-              error. The decoration reserves <code>::after</code>. Wrap an input
+              error. The decoration reserves <code>::after</code> by default; choose <code>pseudoElement="before"</code> to use the other slot. If both slots are occupied, use a wrapper. Wrap an input
               or a component that already uses this pseudo-element instead of
               attaching the effect to that same host.
             </P>

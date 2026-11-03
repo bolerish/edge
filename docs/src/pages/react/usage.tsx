@@ -1,7 +1,7 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { CodeBlock } from '../../ui/CodeBlock.js';
 import { refreshSurface, hookSurface } from './examples.js';
-import { sharedLightExample } from '../../examples/examples.js';
+import { decorationSlotExample, sharedLightExample } from '../../examples/examples.js';
 import { ExamplePreview } from '../../ui/ExamplePreview.js';
 import { Note } from '../../ui/Note.js';
 import type { DocPage } from '../types.js';
@@ -50,9 +50,12 @@ export const usage: DocPage = {
               '<Lighting.Surface as="article" className="card" style={{ padding: 24 }}>\n  Your content\n</Lighting.Surface>'
             }
           />
+          <ExamplePreview title={decorationSlotExample.title} code={decorationSlotExample.code}>
+            <decorationSlotExample.Component />
+          </ExamplePreview>
           <P>
             The scope adds no wrapper. Each surface renders one host and reserves its{' '}
-            <code>::after</code> for its border decoration.
+            <code>::after</code> for its border decoration by default. Choose <code>pseudoElement="before"</code> when your component already uses that slot.
           </P>
         </>
       ),
@@ -70,7 +73,7 @@ export const usage: DocPage = {
             value, selection and keyboard behavior:
           </P>
           <Note title="Keep existing decorations">
-            <P>If a component already uses <code>::after</code>, apply lighting to a wrapper so the decorations do not compete. Match the wrapper’s radius to the visible control.</P>
+            <P>Use <code>pseudoElement="before"</code> if only <code>::after</code> is occupied. If both pseudo-elements are occupied, apply lighting to a wrapper. Native inputs also need a wrapper. Match its radius to the visible control.</P>
           </Note>
         </>
       ),

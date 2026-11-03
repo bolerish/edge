@@ -100,6 +100,7 @@ export const styles: DocPage = {
             near the center, where a unique edge direction is ambiguous.
             The light follows a direction rather than simulating a local point light.
           </P>
+          <P>The decoration uses <code>::after</code> by default. Choose <code>pseudoElement="before"</code> to preserve an existing <code>::after</code>. If both slots are occupied, use a wrapper.</P>
         </>
       ),
     },

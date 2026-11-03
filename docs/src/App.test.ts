@@ -571,7 +571,7 @@ test('component and hook tables expose complete searchable options', async ({ pa
   }
   for (const caption of ['Lighting.Surface props', 'useSurface options']) {
     const table = page.getByRole('table', { name: caption, exact: true });
-    for (const option of ['edgeStyle', 'theme', 'color', 'shadowColor', 'borderWidth', 'intensity'])
+    for (const option of ['edgeStyle', 'theme', 'color', 'shadowColor', 'borderWidth', 'intensity', 'pseudoElement'])
       await expect(table.getByRole('rowheader', { name: option, exact: true })).toBeVisible();
   }
   await page.getByRole('button', { name: 'Search documentation', exact: true }).click();
@@ -597,4 +597,31 @@ test('existing section anchors remain in the catalog after rewriting the pages',
     await page.goto(path);
     for (const id of ids) await expect(page.locator(`section[id="${id}"]`)).toHaveCount(1);
   }
+});
+
+test('decoration slots preserve consumer pseudo-elements and switch without extra DOM', async ({ page }) => {
+  await page.goto('/docs/react/usage/');
+  const ownAfter = page.locator('.edge-example-after');
+  const ownBefore = page.locator('.edge-example-before');
+  expect(await ownAfter.evaluate(node => getComputedStyle(node, '::after').content)).toBe('"Saved"');
+  expect(await ownBefore.evaluate(node => getComputedStyle(node, '::before').content)).toBe('"Ready"');
+  expect(await ownAfter.evaluate(node => getComputedStyle(node, '::before').backgroundImage)).toContain('conic-gradient');
+  expect(await ownBefore.evaluate(node => getComputedStyle(node, '::after').backgroundImage)).toContain('conic-gradient');
+  const host = page.getByTestId('decoration-slot');
+  await expect.poll(() => host.evaluate(node => node.style.getPropertyValue('--wisp-inset-top'))).toBe('-2px');
+  const geometry = await host.evaluate(node => {
+    const decoration = getComputedStyle(node, '::before');
+    return [decoration.top, decoration.right, decoration.bottom, decoration.left, decoration.borderRadius, decoration.padding, decoration.pointerEvents];
+  });
+  expect(geometry).toEqual(['-2px', '-3px', '-4px', '-5px', '16px', '2px', 'none']);
+  await host.evaluate(node => { node.dataset.identity = 'original'; });
+  await page.getByRole('button', { name: 'Use after decoration', exact: true }).click();
+  await expect(host).toHaveAttribute('data-identity', 'original');
+  expect(await host.evaluate(node => node.childElementCount)).toBe(0);
+  expect(await host.evaluate(node => getComputedStyle(node, '::before').content)).toBe('none');
+  expect(await host.evaluate(node => getComputedStyle(node, '::after').backgroundImage)).toContain('conic-gradient');
+  await page.getByRole('button', { name: 'Use before decoration', exact: true }).click();
+  await page.emulateMedia({ forcedColors: 'active' });
+  expect(await host.evaluate(node => getComputedStyle(node, '::before').opacity)).toBe('0');
+  expect(await ownAfter.evaluate(node => getComputedStyle(node, '::after').content)).toBe('"Saved"');
 });

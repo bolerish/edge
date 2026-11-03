@@ -7,6 +7,7 @@ function Scene() {
   const light = useLight();
   const surface = useSurface<HTMLButtonElement>(light, {
     edgeStyle: 'raised',
+    pseudoElement: 'before',
     theme: 'wisp',
   });
   return (
@@ -53,4 +54,13 @@ it('rejects a light handle not created by useLight', () => {
     return null;
   }
   expect(() => renderToStaticMarkup(<Invalid />)).toThrow(/returned by useLight/);
+});
+
+it('validates hook decoration options during SSR', () => {
+  function Invalid() {
+    const light = useLight();
+    useSurface(light, { pseudoElement: 'invalid' as never });
+    return null;
+  }
+  expect(() => renderToStaticMarkup(<Invalid />)).toThrow(RangeError);
 });

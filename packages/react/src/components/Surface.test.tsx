@@ -199,3 +199,26 @@ it('unregisters removed surfaces while their light owner and siblings stay mount
   expect(container.querySelector('[data-testid=second]')).toBe(sibling);
   expect(sibling.style.getPropertyValue('--wisp-strength')).toBe('0.525');
 });
+
+it('switches decoration slots without replacing or registering the host again', async () => {
+  const ref = vi.fn((_node: HTMLButtonElement | null) => {});
+  const click = vi.fn();
+  function Scene({ pseudoElement }: { pseudoElement: 'before' | 'after' }) {
+    return <Lighting motion="dynamic"><Lighting.Surface as="button" ref={ref} onClick={click} pseudoElement={pseudoElement} /></Lighting>;
+  }
+  await act(async () => root.render(<Scene pseudoElement="after" />));
+  move();
+  flush();
+  const host = container.firstElementChild as HTMLButtonElement;
+  const previousClass = host.className;
+  const angle = host.style.getPropertyValue('--wisp-angle');
+  await act(async () => root.render(<Scene pseudoElement="before" />));
+  expect(container.firstElementChild).toBe(host);
+  expect(host.className).not.toBe(previousClass);
+  expect(host.childElementCount).toBe(0);
+  expect(host.hasAttribute('pseudoElement')).toBe(false);
+  expect(host.style.getPropertyValue('--wisp-angle')).toBe(angle);
+  expect(ref).toHaveBeenCalledTimes(1);
+  await act(async () => host.click());
+  expect(click).toHaveBeenCalledOnce();
+});

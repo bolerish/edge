@@ -56,6 +56,7 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
   import {getSurfaceProps} from '@bolerish/edge-styles';
   const props = getSurfaceProps({color:'red',intensity:0.4});
   assert(props.className);
+  assert.notEqual(getSurfaceProps({pseudoElement:'before'}).className,getSurfaceProps().className);
   assert.equal(props.style['--wisp-highlight'],'red');
   assert.equal(props.style['--wisp-intensity'],0.4);
 `], {cwd:sandbox, stdio:'pipe'});
@@ -95,7 +96,7 @@ await writeFile(consumer, `
   import {Lighting} from '@bolerish/edge';
   import {getSurfaceProps} from '@bolerish/edge-styles';
   void Lighting;
-  getSurfaceProps({color:'red'});
+  getSurfaceProps({color:'red',pseudoElement:'before'});
 `);
 execFileSync('pnpm', [
   '--filter', '@bolerish/edge', 'exec', 'tsc', '--ignoreConfig',

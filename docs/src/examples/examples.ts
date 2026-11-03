@@ -1,3 +1,5 @@
+import { DecorationSlotExample } from './decoration-slot.example.js';
+import decorationSlotSource from './decoration-slot.example.tsx?raw';
 import { FirstSurfaceExample } from './first-surface.example.js';
 import firstSurfaceSource from './first-surface.example.tsx?raw';
 import { SharedLightExample } from './shared-light.example.js';
@@ -19,4 +21,10 @@ export const edgeStylesExample = {
   title: 'Compare edge styles',
   Component: EdgeStylesExample,
   code: edgeStylesSource,
+};
+
+export const decorationSlotExample = {
+  title: 'Keep existing pseudo-elements',
+  Component: DecorationSlotExample,
+  code: decorationSlotSource,
 };

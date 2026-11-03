@@ -24,7 +24,7 @@ function Area() {
 
 Motion accepts `dynamic`, `static` or `system` (the default). System respects device and reduced-motion preferences. The documentation demo opts into Dynamic. The optional Wisp theme provides Raised and Matte; unthemed recessed surfaces support input wrappers. Set `color` and `intensity` through props; surface intensity multiplies shared light intensity.
 
-For an existing component that already owns its host, `useLight` and `useSurface` remain available. Attach the returned ref, combine className with your own classes and spread the returned style into your inline styles. Use a wrapper around inputs because the decoration uses `::after`.
+For an existing component that already owns its host, `useLight` and `useSurface` remain available. Attach the returned ref, combine className with your own classes and spread the returned style into your inline styles. The decoration uses `::after` by default. Set `pseudoElement: 'before'` (or `<Lighting.Surface pseudoElement="before">`) to preserve an existing `::after`. Use a wrapper around native inputs or components that already use both pseudo-elements.
 
 ## Development
 
