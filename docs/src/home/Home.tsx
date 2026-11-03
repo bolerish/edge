@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Button } from '@bolerish/ui/button';
 import {
   Card,
@@ -41,7 +41,7 @@ interface Project {
   status: 'In progress' | 'Completed';
   updated: string;
 }
-const initialProjects: Project[] = [
+const projects: readonly Project[] = [
   { id: 1, name: 'Website refresh', status: 'In progress', updated: 'Today' },
   {
     id: 2,
@@ -89,36 +89,14 @@ export function Home() {
 function Dashboard() {
   const [material, setMaterial] = useState<Material>('raised');
   const [mode, setMode] = useState<Mode>('pointer');
-  const [projects, setProjects] = useState(initialProjects);
-  const [query, setQuery] = useState('');
-  const [announcement, setAnnouncement] = useState('');
   const light = useLight({ mode, intensity: 0.8 });
   const input = useSurface<HTMLDivElement>(light, { material: 'recessed' });
   const action = useSurface<HTMLSpanElement>(light, { material });
   const inputProps = input;
   const actionProps = action;
-  const filtered = projects.filter((project) =>
-    project.name.toLowerCase().includes(query.trim().toLowerCase()),
-  );
   const completed = projects.filter(
     (project) => project.status === 'Completed',
   ).length;
-  useEffect(() => light.refresh(), [light, projects, query]);
-
-  function addProject() {
-    const name = `Untitled project ${projects.length - initialProjects.length + 1}`;
-    setProjects([
-      ...projects,
-      {
-        id: projects.length + 1,
-        name,
-        status: 'In progress',
-        updated: 'Just now',
-      },
-    ]);
-    setQuery('');
-    setAnnouncement(`Created ${name}.`);
-  }
   return (
     <section className="dashboard" aria-labelledby="dashboard-title">
       <header className="dashboard-header">
@@ -179,7 +157,7 @@ function Dashboard() {
         </div>
       </header>
       <Paragraph variant="caption" className="dashboard-note">
-        Demo workspace · Changes reset on reload.{' '}
+        Interface preview · Search and project actions are inactive.{' '}
         <span id="mode-description">{modeDescriptions[mode]}</span>
       </Paragraph>
       <div className="summary-grid">
@@ -223,10 +201,7 @@ function Dashboard() {
                   <Input
                     id="project-search"
                     placeholder="Search projects…"
-                    value={query}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                      setQuery(event.target.value)
-                    }
+                    readOnly
                   />
                 </div>
               </div>
@@ -235,7 +210,7 @@ function Dashboard() {
                 className={`${actionProps.className} dashboard-button`}
                 data-testid="surface-button"
               >
-                <Button onClick={addProject}>New project</Button>
+                <Button disabled>New project</Button>
               </span>
             </div>
           </CardHeader>
@@ -258,7 +233,7 @@ function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map((project) => (
+                  {projects.map((project) => (
                     <tr key={project.id}>
                       <th scope="row">{project.name}</th>
                       <td>
@@ -270,23 +245,6 @@ function Dashboard() {
                 </tbody>
               </table>
             </div>
-            {filtered.length === 0 ? (
-              <div className="empty-projects">
-                <Paragraph>No projects match “{query}”.</Paragraph>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setQuery('')}
-                >
-                  Clear search
-                </Button>
-              </div>
-            ) : null}
-            <p className="visually-hidden" role="status">
-              {query
-                ? `${filtered.length} matching ${filtered.length === 1 ? 'project' : 'projects'}.`
-                : announcement}
-            </p>
           </CardContent>
         </SurfaceCard>
         <SurfaceCard light={light} material={material}>
@@ -298,17 +256,6 @@ function Dashboard() {
           </CardHeader>
           <CardContent>
             <ul className="activity-list">
-              {projects
-                .slice(initialProjects.length)
-                .reverse()
-                .map((project) => (
-                  <li key={project.id}>
-                    <p>
-                      Created <strong>{project.name}</strong>
-                    </p>
-                    <span>Just now</span>
-                  </li>
-                ))}
               <li>
                 <p>
                   Updated <strong>Design system</strong>

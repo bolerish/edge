@@ -36,7 +36,7 @@ test('public routes render content before JavaScript and hydrate without errors'
   expect(errors).toEqual([]);
 });
 
-test('one light changes real borders while input and button retain native interactions', async ({
+test('one light changes preview borders while project actions stay inactive', async ({
   page,
 }) => {
   await page.goto('/');
@@ -67,28 +67,12 @@ test('one light changes real borders while input and button retain native intera
     ),
   ).toBe('none');
   const input = page.getByRole('textbox', { name: 'Search projects' });
-  await input.fill('still my input');
-  await input.evaluate((node: HTMLInputElement) =>
-    node.setSelectionRange(2, 7),
-  );
+  await expect(input).toHaveJSProperty('readOnly', true);
+  await input.focus();
   await page.mouse.move(box.x + 4, box.y + 40);
   await expect(input).toBeFocused();
-  expect(
-    await input.evaluate((node: HTMLInputElement) => [
-      node.selectionStart,
-      node.selectionEnd,
-    ]),
-  ).toEqual([2, 7]);
-  await input.press('Tab');
-  await expect(page.getByRole('button', { name: 'New project' })).toBeFocused();
-  await page.keyboard.press('Enter');
-  await expect(
-    page.getByRole('status').filter({ hasText: 'Created Untitled project 1.' }),
-  ).toBeVisible();
-  await expect(input).toHaveValue('');
-  await expect(
-    page.getByRole('rowheader', { name: 'Untitled project 1' }),
-  ).toBeVisible();
+  await expect(page.getByRole('button', { name: 'New project' })).toBeDisabled();
+  await expect(page.getByRole('rowheader')).toHaveCount(3);
 });
 
 test('materials and modes update without further pointer movement', async ({
@@ -215,22 +199,16 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
   );
 });
 
-test('dashboard search, empty state and CTA lead to useful results', async ({
+test('preview data stays fixed and the CTA opens installation', async ({
   page,
 }) => {
   await page.goto('/');
   const input = page.getByRole('textbox', { name: 'Search projects' });
-  await input.fill('Design');
-  await expect(
-    page.getByRole('rowheader', { name: 'Design system' }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole('rowheader', { name: 'Website refresh' }),
-  ).toHaveCount(0);
-  await input.fill('missing');
-  await expect(page.getByText('No projects match “missing”.')).toBeVisible();
-  await page.getByRole('button', { name: 'Clear search' }).click();
-  await expect(page.getByRole('rowheader')).toHaveCount(3);
+  await expect(input).toHaveJSProperty('readOnly', true);
+  await expect(page.getByRole('button', { name: 'New project' })).toBeDisabled();
+  await expect(page.getByRole('rowheader')).toHaveText([
+    'Website refresh', 'Design system', 'Mobile app',
+  ]);
   await page.getByRole('link', { name: 'Get started' }).click();
   await expect(page).toHaveURL(/\/docs\/installation\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
