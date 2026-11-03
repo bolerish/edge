@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node ../../scripts/package-license.mjs",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && node ../../scripts/package-license.mjs",
     "dev": "tsc -p tsconfig.build.json --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"

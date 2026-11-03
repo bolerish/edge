@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { createLight } from '../src/index.js';
+import { createLight } from './create.js';
 
 let frames: Map<number, FrameRequestCallback>;
 let frameId: number;

@@ -1,7 +1,4 @@
-export { createLight } from './controller.js';
-export type {
-  LightController,
-  LightOptions,
-  Registration,
-} from './controller.js';
-export type { Material } from './geometry.js';
+export { createLight } from './light/create.js';
+export type { LightController, Registration } from './light/create.js';
+export type { LightOptions } from './light/options.js';
+export type { Material } from './surface/geometry.js';

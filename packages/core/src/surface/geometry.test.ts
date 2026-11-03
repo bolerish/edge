@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getLighting } from '../src/geometry.js';
+import { getLighting } from './geometry.js';
 
 const rect = { left: 100, top: 100, width: 100, height: 100 };
 describe('CSS light directions', () => {
