@@ -59,15 +59,31 @@ export const installation: DocPage = {
       content: (
         <>
           <P>
-            Declare a light owner and mark only the hosts that should respond.
-            This example uses the optional Wisp theme for a complete base
-            appearance:
+            Add lighting to one area of your app and mark the elements that
+            should respond. This example uses the optional Wisp theme for a
+            complete base appearance:
           </P>
           <CodeBlock label="First surface" code={firstSurface} />
+          <ul>
+            <li>
+              <strong>Area:</strong> <code>Lighting</code> shares one light
+              within this part of the app. It adds no wrapper element.
+            </li>
+            <li>
+              <strong>Target:</strong> <code>Lighting.Surface</code> marks an
+              element that responds to the light. The ordinary article stays
+              unchanged, even inside the same area.
+            </li>
+            <li>
+              <strong>Tracking:</strong> <code>tracking="on"</code> follows
+              the pointer. Use <code>"off"</code> for a fixed light direction
+              or <code>"system"</code> to follow device and motion preferences.
+              System is the library default.
+            </li>
+          </ul>
           <P>
-            This example turns pointer tracking On to follow the pointer near the card’s
-            edges. Use <code>tracking="system"</code> to respect reduced-motion
-            preferences with fixed lighting instead. Continue with{' '}
+            You can start with one card; the rest of your app does not need
+            a lighting area. Continue with{' '}
             <Link href="/docs/react/usage/">Usage</Link> to share the light across
             components.
           </P>
