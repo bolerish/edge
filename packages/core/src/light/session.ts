@@ -6,7 +6,7 @@ export function createLightSession(
   { getMotion, render, invalidate }: {
     getMotion(): Required<LightOptions>['motion'];
     render(pointer: Point | null, fixed: boolean): void;
-    invalidate(): void;
+    invalidate(scrollContainer?: Element): void;
   },
 ) {
   const view = target.defaultView;
@@ -52,10 +52,15 @@ export function createLightSession(
     pointer = null;
     scheduleFrame();
   }
+  function scrolled(event: Event) {
+    if (!live) return;
+    const container = event.target instanceof view!.Element ? event.target as Element : undefined;
+    invalidate(container);
+  }
   const observer = new view.ResizeObserver(invalidateGeometry);
   target.addEventListener('pointermove', move, { passive: true });
   target.addEventListener('pointerout', out, { passive: true });
-  target.addEventListener('scroll', invalidateGeometry, {
+  target.addEventListener('scroll', scrolled, {
     capture: true,
     passive: true,
   });
@@ -84,7 +89,7 @@ export function createLightSession(
       observer.disconnect();
       target.removeEventListener('pointermove', move);
       target.removeEventListener('pointerout', out);
-      target.removeEventListener('scroll', invalidateGeometry, true);
+      target.removeEventListener('scroll', scrolled, true);
       target.removeEventListener('load', invalidateGeometry, true);
       view.removeEventListener('resize', invalidateGeometry);
       view.removeEventListener('blur', clear);

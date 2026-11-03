@@ -35,9 +35,15 @@ export function createLight(initial: LightOptions = {}): LightController {
   function schedule() {
     session?.schedule();
   }
-  function refresh() {
-    for (const entry of entries) dirty.add(entry);
-    schedule();
+  function refresh(scrollContainer?: Element) {
+    let affected = false;
+    for (const entry of entries) {
+      if (!scrollContainer || (scrollContainer !== entry.element && scrollContainer.contains(entry.element))) {
+        dirty.add(entry);
+        affected = true;
+      }
+    }
+    if (affected) schedule();
   }
 
   return {

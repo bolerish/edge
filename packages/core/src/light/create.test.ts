@@ -458,6 +458,30 @@ it('refreshes geometry after font loading and removes the font subscription on s
 });
 
 
+it('remeasures only descendants of a scrolled container', () => {
+  const light = createLight();
+  const inside = element();
+  const outside = element();
+  const container = document.createElement('div');
+  document.body.append(container);
+  container.append(inside.node);
+  light.register(inside.node, 'raised');
+  light.register(outside.node, 'raised');
+  const stop = light.mount(document);
+  flush();
+  inside.measure.mockClear();
+  outside.measure.mockClear();
+  container.dispatchEvent(new Event('scroll'));
+  flush();
+  expect(inside.measure).toHaveBeenCalledOnce();
+  expect(outside.measure).not.toHaveBeenCalled();
+  document.dispatchEvent(new Event('scroll'));
+  flush();
+  expect(outside.measure).toHaveBeenCalledOnce();
+  stop();
+});
+
+
 it('aligns decoration to asymmetric host borders and restores owned inset variables', () => {
   const light = createLight();
   const { node } = element();
