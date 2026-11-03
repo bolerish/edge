@@ -1,0 +1,41 @@
+{
+  "name": "@bolerish/wisp-styles",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": "./dist/assets/stylex.css"
+  },
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json && node ../../scripts/package-license.mjs",
+    "dev": "vite build --watch --emptyOutDir false",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:mutation": "stryker run"
+  },
+  "dependencies": {
+    "@bolerish/wisp-core": "workspace:^"
+  },
+  "devDependencies": {
+    "@stylexjs/stylex": "catalog:2026-11-03--stylex-stable",
+    "@stylexjs/unplugin": "catalog:2026-11-03--stylex-stable",
+    "unplugin": "catalog:2026-11-03--stylex-stable",
+    "vite": "catalog:2026-11-03--vite-vitest-stable",
+    "vitest": "catalog:2026-11-03--vite-vitest-stable",
+    "typescript": "catalog:",
+    "@types/node": "catalog:",
+    "@stryker-mutator/core": "catalog:",
+    "@stryker-mutator/vitest-runner": "catalog:"
+  }
+}

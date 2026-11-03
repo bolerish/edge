@@ -10,7 +10,7 @@ await rm(sandbox, { recursive: true, force: true });
 await mkdir(resolve(sandbox, 'node_modules/@bolerish'), {
   recursive: true,
 });
-for (const name of ['core', 'react']) {
+for (const name of ['core', 'styles', 'react']) {
   const archive = resolve(sandbox, `${name}.tgz`);
   execFileSync('pnpm', ['pack', '--out', archive], {
     cwd: resolve(root, 'packages', name),
@@ -50,6 +50,15 @@ for (const name of ['core', 'react']) {
   assert(!JSON.stringify(manifest.dependencies ?? {}).includes('workspace:'));
   await readFile(resolve(destination, 'dist/LICENSE'));
 }
+// The common style bindings must work before any React package is available.
+execFileSync(process.execPath, ['--input-type=module', '-e', `
+  import assert from 'node:assert/strict';
+  import {getSurfaceProps} from '@bolerish/wisp-styles';
+  const props = getSurfaceProps({color:'red',intensity:0.4});
+  assert(props.className);
+  assert.equal(props.style['--wisp-highlight'],'red');
+  assert.equal(props.style['--wisp-intensity'],0.4);
+`], {cwd:sandbox, stdio:'pipe'});
 for (const name of ['react', 'react-dom']) {
   await symlink(
     resolve(root, 'packages/react/node_modules', name),

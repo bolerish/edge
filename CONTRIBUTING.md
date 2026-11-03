@@ -5,7 +5,8 @@ Use the pinned Node and pnpm versions, then install with `pnpm install --frozen-
 ## Packages
 
 - `packages/core`: framework-independent DOM controller and pure geometry. No React or StyleX imports.
-- `packages/react`: React lifetime integration and internally compiled StyleX surface styles, colocated with `useSurface`.
+- `packages/styles`: framework-independent surface bindings and internally compiled StyleX styles. No React dependency.
+- `packages/react`: React lifetime integration; consumes the common engine and style bindings.
 - `docs`: public documentation, homepage dashboard and browser integration tests. Documentation routes are prerendered during the site build.
 
 Keep `index.ts` files limited to imports and re-exports. Name implementation files after their responsibility. Keep tests beside their implementation (`*.test.ts` / `*.test.tsx`); build configurations exclude those tests from distribution. Browser integration tests live beside `docs/src/App.tsx`.
@@ -14,12 +15,12 @@ Group code by each package's responsibilities, rather than requiring identical f
 
 - `core/src/light/` owns shared-light creation, options, browser subscriptions and frame scheduling.
 - `core/src/surface/` owns surface geometry, decorative output and restoration.
-- `react/src/hooks/` owns React lifetime adapters. Keep each hook's tests and exclusive CSS-in-JS declarations beside its implementation.
+- `react/src/hooks/` owns React lifetime adapters. Keep each hook's tests beside its implementation. Shared CSS-in-JS declarations live with their framework-independent bindings in `styles/src/`.
 - Keep the root `index.ts` as the public barrel. Internal modules import their implementation dependencies directly; do not add internal barrels just to hide paths.
 - Introduce another folder when it represents a distinct, named responsibility. Do not pre-create empty `components/`, `types/` or `lib/` folders.
 - Keep code with its domain owner even when another module imports it. Extract shared utilities only when multiple contexts need genuinely domain-independent behavior.
 
-The core keeps controller ownership in `light/create.ts`, browser subscriptions and frame scheduling in `light/session.ts`, option validation in `light/options.ts`, surface output and restoration in `surface/output.ts`, and pure lighting calculations in `surface/geometry.ts`. React exposes `hooks/useLight.ts` and `hooks/useSurface.ts`; the latter owns its CSS-in-JS declarations.
+The core keeps controller ownership in `light/create.ts`, browser subscriptions and frame scheduling in `light/session.ts`, option validation in `light/options.ts`, surface output and restoration in `surface/output.ts`, and pure lighting calculations in `surface/geometry.ts`. React exposes `hooks/useLight.ts` and `hooks/useSurface.ts`; both consume framework-independent surface bindings from `@bolerish/wisp-styles`.
 
 This organization takes references from [Floating UI's React package](https://github.com/floating-ui/floating-ui/tree/master/packages/react/src) (`hooks/`, `components/`) and [react-spring's hooks](https://github.com/pmndrs/react-spring/tree/next/packages/core/src/hooks) (hook implementations with adjacent tests). These are structural references; the responsibility and dependency rules above are Wisp's own conventions.
 
@@ -50,10 +51,10 @@ Keep changes scoped and independently verifiable. Include relevant tests and pub
 
 ## Mutation testing
 
-Run `pnpm test:mutation` from the repository root. It builds package dependencies and runs Stryker against core implementation files and React hooks. Run only one package with `pnpm --filter @bolerish/wisp-core test:mutation` or `pnpm --filter @bolerish/wisp-react test:mutation` after building dependencies.
+Run `pnpm test:mutation` from the repository root. It builds package dependencies and runs Stryker against core implementation files, common style bindings and React hooks. Run only one package with `pnpm --filter @bolerish/wisp-core test:mutation` or `pnpm --filter @bolerish/wisp-react test:mutation` after building dependencies.
 
-Mutation testing supplements the adjacent Vitest tests: Stryker changes production code and checks whether those tests fail. React unit tests import source through the source barrel and use the library's StyleX compiler configuration, so mutations cannot be hidden by stale compiled output. Packed-package checks independently exercise the published import paths.
+Mutation testing supplements the adjacent Vitest tests: Stryker changes production code and checks whether those tests fail. Package unit tests import source through their source barrels; common-style tests use the StyleX compiler. React tests consume the built common style package, while Stryker tests its source separately. Packed-package checks independently exercise the published import paths.
 
-Reports are local to `.private/mutation/core/` and `.private/mutation/react/` (`index.html` and `report.json`). Review surviving and uncovered mutants for missing behavioral assertions; a completed run does not mean all mutants were detected. No score threshold is enforced until the remaining mutants have been reviewed. Excluded files are tests and the export-only package barrels. The static StyleX declaration section is explicitly excluded because mutation instrumentation makes compile-time style expressions dynamic; browser integration tests cover decorative output.
+Reports are local to `.private/mutation/core/`, `.private/mutation/styles/` and `.private/mutation/react/` (`index.html` and `report.json`). Review surviving and uncovered mutants for missing behavioral assertions; a completed run does not mean all mutants were detected. No score threshold is enforced until the remaining mutants have been reviewed. Excluded files are tests and the export-only package barrels. The static StyleX declaration section is explicitly excluded because mutation instrumentation makes compile-time style expressions dynamic; browser integration tests cover decorative output.
 
 The Stryker sandbox preprocessor requires the JavaScript TypeScript compiler API. A scoped pnpm package extension supplies TypeScript 6 only to Stryker; the project build and type checks continue to use the pinned TypeScript 7 compiler. Stryker's [Vitest runner](https://stryker-mutator.io/docs/stryker-js/vitest-runner/) runs the existing tests with per-test mutation coverage.

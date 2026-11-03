@@ -25,7 +25,8 @@
     "test:mutation": "stryker run"
   },
   "dependencies": {
-    "@bolerish/wisp-core": "workspace:^"
+    "@bolerish/wisp-core": "workspace:^",
+    "@bolerish/wisp-styles": "workspace:^"
   },
   "peerDependencies": {
     "react": "^19.0.0"
@@ -35,9 +36,6 @@
     "react-dom": "catalog:2026-11-03--react-stable",
     "@types/react": "catalog:2026-11-03--react-stable",
     "@types/react-dom": "catalog:2026-11-03--react-stable",
-    "@stylexjs/stylex": "catalog:2026-11-03--stylex-stable",
-    "@stylexjs/unplugin": "catalog:2026-11-03--stylex-stable",
-    "unplugin": "catalog:2026-11-03--stylex-stable",
     "vite": "catalog:2026-11-03--vite-vitest-stable",
     "vitest": "catalog:2026-11-03--vite-vitest-stable",
     "typescript": "catalog:",
