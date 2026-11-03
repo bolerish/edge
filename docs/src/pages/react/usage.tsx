@@ -1,6 +1,9 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { CodeBlock } from '../../ui/CodeBlock.js';
-import { inputSurface, refreshSurface, hookSurface } from './examples.js';
+import { refreshSurface, hookSurface } from './examples.js';
+import { sharedLightExample } from '../../examples/examples.js';
+import { ExamplePreview } from '../../ui/ExamplePreview.js';
+import { Note } from '../../ui/Note.js';
 import type { DocPage } from '../types.js';
 export const usage: DocPage = {
   slug: 'react/usage',
@@ -8,7 +11,7 @@ export const usage: DocPage = {
   section: 'React',
   title: 'Usage',
   description:
-    'Connect elements you own to a shared light. Wisp does not inspect children, replace components or manage your UI state.',
+    'Connect elements you own to a shared light. Edge does not inspect children, replace components or manage your UI state.',
   sections: [
     {
       id: 'share-one-light',
@@ -21,6 +24,9 @@ export const usage: DocPage = {
             Nest another Lighting to give part of the section an independent
             light; each surface uses its nearest owner.
           </P>
+          <ExamplePreview title={sharedLightExample.title} code={sharedLightExample.code}>
+            <sharedLightExample.Component />
+          </ExamplePreview>
           <P>
             A surface unregisters when its element is removed or replaced.
             Removing one surface does not stop its siblings. The light stops
@@ -57,16 +63,15 @@ export const usage: DocPage = {
       content: (
         <>
           <P>
-            Register an input wrapper rather than the replaced input element
-            itself. The input retains its native value, selection and keyboard
-            behavior:
+            Put the decoration on a label or div around the input. The border
+            uses <code>::after</code>, which is not a reliable drawing surface
+            on native input elements. The editable Project name field in the
+            example above uses a label wrapper; its native input keeps its
+            value, selection and keyboard behavior:
           </P>
-          <CodeBlock label="Input wrapper" code={inputSurface} />
-          <P>
-            Bolerish controls keep their documented styling targets. Use a
-            consumer-owned wrapper when a control does not accept the full
-            surface recipe.
-          </P>
+          <Note title="Keep existing decorations">
+            <P>If a component already uses <code>::after</code>, apply lighting to a wrapper so the decorations do not compete. Match the wrapper’s radius to the visible control.</P>
+          </Note>
         </>
       ),
     },
@@ -95,12 +100,14 @@ export const usage: DocPage = {
             need an explicit refresh after React commits the new layout:
           </P>
           <CodeBlock label="Layout refresh" code={refreshSurface} />
+          <Note title="Position changes need a refresh">
           <P>
             This also schedules an update while the pointer is stationary.
             Rotation, perspective transforms and cross-document portals are
             outside the current support scope. Same-document portals can use the
             declaring Lighting scope.
           </P>
+          </Note>
         </>
       ),
     },

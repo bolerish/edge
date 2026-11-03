@@ -1,31 +1,3 @@
-export const firstSurface = `import { Lighting } from '@bolerish/edge';
-import '@bolerish/edge/style.css';
-
-function App() {
-  return (
-    <Lighting motion="dynamic">
-      <Lighting.Surface as="article" theme="wisp" style={{ padding: 24 }}>
-        Project overview
-      </Lighting.Surface>
-      <article>This element keeps its own appearance.</article>
-    </Lighting>
-  );
-}`;
-export const inputSurface = `import { Lighting } from '@bolerish/edge';
-
-function Search() {
-  return (
-    <Lighting motion="dynamic">
-      <Lighting.Surface
-        as="label"
-        edgeStyle="recessed"
-        style={{ display: 'grid', gap: 8, padding: 16, borderRadius: 12 }}
-      >
-        Search <input name="query" />
-      </Lighting.Surface>
-    </Lighting>
-  );
-}`;
 export const hookSurface = `import { useLight, useSurface } from '@bolerish/edge';
 
 function Card() {

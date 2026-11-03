@@ -1,6 +1,8 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
 import { CodeBlock } from '../../ui/CodeBlock.js';
+import { ExamplePreview } from '../../ui/ExamplePreview.js';
+import { edgeStylesExample } from '../../examples/examples.js';
 import type { DocPage } from '../types.js';
 export const styles: DocPage = {
   slug: 'styles',
@@ -10,6 +12,16 @@ export const styles: DocPage = {
   description:
     'Choose how an edge responds to light. Edge style response and base component styling are separate decisions.',
   sections: [
+    {
+      id: 'compare-styles',
+      title: 'Compare the edge response',
+      content: <>
+        <P>Choose the edge response independently of your colors and layout. This React example places all three styles under one light. Use Static to compare the direction without moving the pointer, or Dynamic to explore the edges.</P>
+        <ExamplePreview title={edgeStylesExample.title} code={edgeStylesExample.code}>
+          <edgeStylesExample.Component />
+        </ExamplePreview>
+      </>,
+    },
     {
       id: 'raised',
       title: 'Raised',
@@ -53,7 +65,7 @@ export const styles: DocPage = {
           <CodeBlock
             label="Wisp theme"
             code={
-              "import { getSurfaceProps } from '@bolerish/edge-styles';\n\nconst surface = getSurfaceProps({ edgeStyle: 'matte', theme: 'wisp' });"
+              '<Lighting.Surface edgeStyle="matte" theme="wisp">\n  Your content\n</Lighting.Surface>'
             }
           />
           <P>
@@ -77,7 +89,7 @@ export const styles: DocPage = {
             opposite edge is unwanted. borderWidth controls the decorative
             thickness in pixels; it does not change the host border.
             Surface intensity multiplies the shared light intensity. Internal
-            CSS variables are reserved for Wisp; no CSS variable declarations
+            CSS variables are reserved for Edge; no CSS variable declarations
             are required in your application. In React, pass these options to{' '}
             <Link href="/docs/react/api/#lighting-surface">Lighting.Surface</Link>.
           </P>

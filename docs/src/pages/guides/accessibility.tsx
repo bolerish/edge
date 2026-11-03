@@ -39,7 +39,7 @@ export const accessibility: DocPage = {
         <>
           <P>
             Keep useful base borders, text contrast, labels and focus styles.
-            Wisp’s decoration does not capture pointer events. Your app owns
+            Edge’s decoration does not capture pointer events. Your app owns
             input values, selection, keyboard handlers and portal composition.
           </P>
           <P>

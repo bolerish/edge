@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 const routes = [
   '/docs/',
@@ -189,7 +190,7 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
   await expect(copy).toHaveText('Copied');
   expect(
     await page.evaluate(() => (window as unknown as { copied: string }).copied),
-  ).toBe('npm install @bolerish/edge');
+  ).toBe('pnpm install --frozen-lockfile\npnpm dev');
   await page.evaluate(() =>
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -295,13 +296,13 @@ test('header settings persist across documentation navigation and reloads', asyn
   await page.goto('/');
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await page.getByRole('combobox', { name: 'Style' }).selectOption('matte');
-  await page.getByRole('combobox', { name: 'Motion' }).selectOption('static');
+  await page.locator('.preferences').getByRole('combobox', { name: 'Motion' }).selectOption('static');
   await page.keyboard.press('Escape');
   await page.getByRole('link', { name: 'Docs', exact: true }).click();
   await page.reload();
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'Style' })).toHaveValue('matte');
-  await expect(page.getByRole('combobox', { name: 'Motion' })).toHaveValue('static');
+  await expect(page.locator('.preferences').getByRole('combobox', { name: 'Motion' })).toHaveValue('static');
 });
 
 test('documentation search finds section content and supports keyboard dismissal', async ({ page }) => {
@@ -498,4 +499,80 @@ test('large-card center crossings fade before the edge direction reverses', asyn
   }
   await page.mouse.move(865, 258);
   await expect.poll(() => surface.evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')))).toBeGreaterThan(0.7);
+});
+
+
+test('the reading journey and document titles work without JavaScript', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  const journey = [
+    ['/docs/', 'Getting started · bolerish/edge'],
+    ['/docs/react/', 'React · Installation · bolerish/edge'],
+    ['/docs/react/usage/', 'React · Usage · bolerish/edge'],
+    ['/docs/styles/', 'Guides · Styles · bolerish/edge'],
+    ['/docs/accessibility/', 'Guides · Accessibility · bolerish/edge'],
+    ['/docs/react/api/', 'React · API reference · bolerish/edge'],
+  ] as const;
+  await page.goto('http://127.0.0.1:4183/docs/');
+  for (const [index, [path, title]] of journey.entries()) {
+    await expect(page).toHaveURL(`http://127.0.0.1:4183${path}`);
+    await expect(page).toHaveTitle(title);
+    const reading = page.getByRole('navigation', { name: 'Continue reading' });
+    if (index > 0) await expect(reading.locator('[rel="prev"]')).toHaveAttribute('href', journey[index - 1]![0]);
+    if (index < journey.length - 1) await reading.locator('[rel="next"]').click();
+    else await expect(reading.locator('[rel="next"]')).toHaveCount(0);
+  }
+  await context.close();
+});
+
+test('shared light demo preserves native controls and displays its executable source', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/docs/react/usage/');
+  const demo = page.getByRole('group', { name: 'Shared light controls', exact: true });
+  const card = demo.getByRole('article');
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
+  await demo.getByRole('combobox', { name: 'Motion' }).selectOption('dynamic');
+  const bounds = await card.boundingBox();
+  if (!bounds) throw new Error('Missing demo card');
+  await page.mouse.move(bounds.x + 1, bounds.y + bounds.height / 2);
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('270.0deg');
+  await demo.getByRole('textbox', { name: 'Project name' }).fill('My project');
+  await expect(demo.getByRole('textbox', { name: 'Project name' })).toHaveValue('My project');
+  await demo.getByRole('button', { name: 'Save project (0)', exact: true }).click();
+  await expect(demo.getByRole('button', { name: 'Save project (1)', exact: true })).toBeVisible();
+  expect(await demo.getByText('This ordinary element has no lighting decoration.', { exact: true }).evaluate(node => node.style.getPropertyValue('--wisp-strength'))).toBe('');
+  const source = await readFile(new URL('./examples/shared-light.example.tsx', import.meta.url), 'utf8');
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText: async (text: string) => { (window as unknown as { copied: string }).copied = text; } },
+  }));
+  await page.getByRole('button', { name: 'Copy One light, your components', exact: true }).click();
+  expect(await page.evaluate(() => (window as unknown as { copied: string }).copied)).toBe(source);
+});
+
+test('style comparison shares a light with opposing recessed and softer matte edges', async ({ page }) => {
+  await page.goto('/docs/styles/');
+  const demo = page.getByRole('group', { name: 'Style comparison', exact: true });
+  await demo.getByRole('combobox', { name: 'Motion' }).selectOption('static');
+  const cards = demo.getByRole('article');
+  await expect(cards).toHaveCount(3);
+  await expect.poll(() => cards.nth(0).evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
+  await expect.poll(() => cards.nth(1).evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('135.0deg');
+  const raised = await cards.nth(0).evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')));
+  await expect.poll(() => cards.nth(2).evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')))).toBeCloseTo(raised * 0.3, 2);
+});
+
+test('existing section anchors remain in the catalog after rewriting the pages', async ({ page }) => {
+  const anchors = {
+    '/docs/': ['choose-your-framework'],
+    '/docs/react/': ['package-installation', 'prepare-the-workspace', 'load-the-stylesheet', 'create-your-first-surface'],
+    '/docs/react/usage/': ['share-one-light', 'keep-your-styles', 'wrap-inputs-you-own', 'connect-existing-components', 'refresh-after-layout-changes'],
+    '/docs/styles/': ['raised', 'recessed', 'matte', 'apply-the-wisp-theme', 'customize-the-highlight'],
+    '/docs/accessibility/': ['choose-an-input-mode', 'preserve-native-interactions', 'understand-rendering-cost'],
+    '/docs/react/api/': ['lighting', 'lighting-surface', 'use-light', 'refresh', 'use-surface', 'rendering-and-cleanup'],
+  };
+  for (const [path, ids] of Object.entries(anchors)) {
+    await page.goto(path);
+    for (const id of ids) await expect(page.locator(`section[id="${id}"]`)).toHaveCount(1);
+  }
 });
