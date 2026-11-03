@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdir, readFile, rm, symlink } from 'node:fs/promises';
+import { mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -88,6 +88,21 @@ execFileSync(
   ],
   { cwd: sandbox, stdio: 'pipe' },
 );
+const consumer = resolve(sandbox, 'consumer.mts');
+await writeFile(consumer, `
+  import '@bolerish/wisp-react/style.css';
+  import '@bolerish/wisp-styles/style.css';
+  import {Lighting} from '@bolerish/wisp-react';
+  import {getSurfaceProps} from '@bolerish/wisp-styles';
+  void Lighting;
+  getSurfaceProps({color:'red'});
+`);
+execFileSync('pnpm', [
+  '--filter', '@bolerish/wisp-react', 'exec', 'tsc', '--ignoreConfig',
+  '--noEmit', '--strict', '--skipLibCheck', '--module', 'nodenext',
+  '--target', 'es2022', consumer,
+], {cwd:root, stdio:'pipe'});
+
 const css = await readFile(
   resolve(sandbox, 'node_modules/@bolerish/wisp-react/dist/assets/stylex.css'),
   'utf8',

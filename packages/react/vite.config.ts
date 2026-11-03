@@ -10,6 +10,7 @@ const sharedStyles: Plugin = {
   },
   generateBundle() {
     this.emitFile({ type: 'asset', fileName: 'assets/stylex.css', source: readFileSync(stylesheet, 'utf8') });
+    this.emitFile({ type: 'asset', fileName: 'style.css.d.ts', source: 'export {};\n' });
   },
 };
 
