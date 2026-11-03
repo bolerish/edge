@@ -8,8 +8,8 @@ it('renders plain host markup without adding a scope wrapper or leaking options'
   const error = vi.spyOn(console, 'error');
   try {
     const html = renderToStaticMarkup(
-      <Lighting tracking="on">
-        <Lighting.Surface as="article" className="card" material="matte" theme="wisp" color="red" intensity={0.4}>
+      <Lighting motion="dynamic">
+        <Lighting.Surface as="article" className="card" edgeStyle="matte" theme="wisp" color="red" intensity={0.4}>
           Card
         </Lighting.Surface>
       </Lighting>,
@@ -18,7 +18,7 @@ it('renders plain host markup without adding a scope wrapper or leaking options'
     expect(html).toContain('card');
     expect(html).toContain('--wisp-highlight:red');
     expect(html).toContain('--wisp-intensity:0.4');
-    expect(html).not.toMatch(/ (material|theme|color|intensity|tracking)=/);
+    expect(html).not.toMatch(/ (edgeStyle|theme|color|intensity|motion)=/);
     expect(html).not.toContain('--wisp-angle:');
     expect(error).not.toHaveBeenCalled();
   } finally {
@@ -28,9 +28,9 @@ it('renders plain host markup without adding a scope wrapper or leaking options'
 it('requires an explicit light owner for a declarative surface', () => {
   expect(() => renderToStaticMarkup(<Lighting.Surface />)).toThrow(/inside Lighting/);
 });
-it('rejects unknown tracking values from JavaScript consumers', () => {
+it('rejects unknown motion values from JavaScript consumers', () => {
   // @ts-expect-error Invalid JavaScript input is intentional.
-  expect(() => renderToStaticMarkup(<Lighting tracking="unknown">Card</Lighting>)).toThrow(RangeError);
+  expect(() => renderToStaticMarkup(<Lighting motion="unknown">Card</Lighting>)).toThrow(RangeError);
 });
 
 // Compile-time consumer contracts: native attributes and refs follow `as`.
@@ -41,4 +41,4 @@ it('rejects unknown tracking values from JavaScript consumers', () => {
 // @ts-expect-error A default div does not accept an href.
 <Lighting.Surface href="/docs/" />;
 // @ts-expect-error The optional Wisp theme has no recessed variant.
-<Lighting.Surface theme="wisp" material="recessed" />;
+<Lighting.Surface theme="wisp" edgeStyle="recessed" />;

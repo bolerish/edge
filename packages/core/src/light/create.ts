@@ -1,4 +1,4 @@
-import type { Material } from '../surface/geometry.js';
+import type { EdgeStyle } from '../surface/geometry.js';
 import { normalizeLightOptions, type LightOptions } from './options.js';
 import { createLightSession } from './session.js';
 import {
@@ -9,12 +9,12 @@ import {
 } from '../surface/output.js';
 
 export interface Registration {
-  update(material: Material): void;
+  update(edgeStyle: EdgeStyle): void;
   destroy(): void;
 }
 export interface LightController {
   mount(document: Document): () => void;
-  register(element: HTMLElement, material: Material): Registration;
+  register(element: HTMLElement, edgeStyle: EdgeStyle): Registration;
   configure(options: LightOptions): void;
   refresh(): void;
 }
@@ -48,7 +48,7 @@ export function createLight(initial: LightOptions = {}): LightController {
       document = target;
       randomDirection = null;
       const connection = createLightSession(target, {
-        getMode: () => options.mode,
+        getMotion: () => options.motion,
         render: (pointer, fixed) => {
           const staticDirection = options.staticDirection === 'random'
             ? (randomDirection ??= Math.random() * FULL_TURN_DEGREES)
@@ -68,22 +68,22 @@ export function createLight(initial: LightOptions = {}): LightController {
         if (entries.size === 0) document = null;
       };
     },
-    register(element, material) {
+    register(element, edgeStyle) {
       if (document && element.ownerDocument !== document)
         throw new Error('Surface belongs to a different document');
       if (owners.has(element)) throw new Error('Surface already has an owner');
       document = element.ownerDocument;
       owners.set(element, owner);
-      const entry = createSurfaceEntry(element, material);
+      const entry = createSurfaceEntry(element, edgeStyle);
       entries.add(entry);
       dirty.add(entry);
       session?.observe(element);
       schedule();
       let removed = false;
       return {
-        update(material) {
-          if (removed || entry.material === material) return;
-          entry.material = material;
+        update(edgeStyle) {
+          if (removed || entry.edgeStyle === edgeStyle) return;
+          entry.edgeStyle = edgeStyle;
           schedule();
         },
         destroy() {
@@ -100,7 +100,7 @@ export function createLight(initial: LightOptions = {}): LightController {
     },
     configure(next) {
       const replacement = normalizeLightOptions(next);
-      if (options.mode !== replacement.mode) session?.clearPointer();
+      if (options.motion !== replacement.motion) session?.clearPointer();
       options = replacement;
       schedule();
     },

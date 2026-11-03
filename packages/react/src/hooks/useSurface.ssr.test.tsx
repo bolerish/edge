@@ -6,7 +6,7 @@ import { useLight, useSurface } from '../index.js';
 function Scene() {
   const light = useLight();
   const surface = useSurface<HTMLButtonElement>(light, {
-    material: 'raised',
+    edgeStyle: 'raised',
     theme: 'wisp',
   });
   return (
@@ -31,14 +31,14 @@ it('renders SSR and SSG markup without browser globals or render warnings', () =
 });
 
 it('selects opt-in theme variants without theming unthemed hosts', () => {
-  function Card({ theme, material }: { theme?: 'wisp' | false; material?: 'raised' | 'matte' }) {
+  function Card({ theme, edgeStyle }: { theme?: 'wisp' | false; edgeStyle?: 'raised' | 'matte' }) {
     const light = useLight();
-    const surface = useSurface(light, { theme, material });
+    const surface = useSurface(light, { theme, edgeStyle });
     return <article {...surface}>Card</article>;
   }
   const plain = renderToStaticMarkup(<Card />);
-  const raised = renderToStaticMarkup(<Card theme="wisp" material="raised" />);
-  const matte = renderToStaticMarkup(<Card theme="wisp" material="matte" />);
+  const raised = renderToStaticMarkup(<Card theme="wisp" edgeStyle="raised" />);
+  const matte = renderToStaticMarkup(<Card theme="wisp" edgeStyle="matte" />);
   expect(raised).not.toBe(plain);
   expect(matte).not.toBe(plain);
   expect(matte).not.toBe(raised);

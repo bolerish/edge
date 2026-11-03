@@ -10,7 +10,7 @@ import '@bolerish/edge/style.css';
 
 function Area() {
   return (
-    <Lighting tracking="on">
+    <Lighting motion="dynamic">
       <Lighting.Surface as="article" theme="wisp" color="#e5edc8">
         Your lit card
       </Lighting.Surface>
@@ -22,7 +22,7 @@ function Area() {
 
 `Lighting` shares one light without adding DOM. Only explicit `Lighting.Surface` descendants respond; nested owners create independent lights. A surface renders a div by default. Use `as` for another HTML tag, and pass normal attributes, events, className, style and refs to that host.
 
-Tracking accepts `on`, `off` or `system` (the default). System respects device and reduced-motion preferences. The documentation demo opts into On. The optional Wisp theme provides Raised and Matte; unthemed recessed surfaces support input wrappers. Set `color` and `intensity` through props; surface intensity multiplies shared light intensity.
+Motion accepts `dynamic`, `static` or `system` (the default). System respects device and reduced-motion preferences. The documentation demo opts into Dynamic. The optional Wisp theme provides Raised and Matte; unthemed recessed surfaces support input wrappers. Set `color` and `intensity` through props; surface intensity multiplies shared light intensity.
 
 For an existing component that already owns its host, `useLight` and `useSurface` remain available. Attach the returned ref, combine className with your own classes and spread the returned style into your inline styles. Use a wrapper around inputs because the decoration uses `::after`.
 
@@ -39,7 +39,7 @@ The site lives in `docs/`. Run `pnpm dev`, then open [documentation](http://loca
 
 ## Rendering and limits
 
-SSR/static rendering and client hydration are supported by the React adapter. Pointer frames do not update React state. System tracking respects reduced motion; On opts into tracking, and Off uses fixed lighting. Lighting does not replace base borders, contrast or keyboard focus.
+SSR/static rendering and client hydration are supported by the React adapter. Pointer frames do not update React state. System motion respects reduced motion; Dynamic follows the pointer, and Static uses fixed lighting. Lighting does not replace base borders, contrast or keyboard focus.
 
 The effect approximates axis-aligned rectangular surfaces. Position-only layout changes may require `light.refresh()` after commit. The declarative owner exposes the same handle through an optional `ref`. Changing gradients still has browser rendering costs; no FPS or speedup is promised. Cross-document portals and rotated/perspective geometry are not supported.
 

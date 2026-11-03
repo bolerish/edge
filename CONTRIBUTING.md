@@ -47,7 +47,7 @@ The browser test runner builds and owns its preview server. `WISP_CHROMIUM_EXECU
 
 Future framework adapters must preserve the engine-owned `--wisp-angle` and `--wisp-strength` inline variables when updating appearance bindings. Avoid replacing the entire inline-style attribute. Framework-neutral primitives alone do not establish a tested Svelte, Solid or Vue integration.
 
-Preserve StrictMode restartability, per-element ownership, SSR-safe imports, native interactions, and read-before-write ordering. A material or options update must work with a stationary pointer. Call explicit `refresh()` after application-controlled position changes that size observers cannot detect.
+Preserve StrictMode restartability, per-element ownership, SSR-safe imports, native interactions, and read-before-write ordering. A edgeStyle or options update must work with a stationary pointer. Call explicit `refresh()` after application-controlled position changes that size observers cannot detect.
 
 Keep changes scoped and independently verifiable. Include relevant tests and public documentation with behavior changes. Package build files whitelist distribution artifacts; avoid adding unreviewed files to package archives.
 

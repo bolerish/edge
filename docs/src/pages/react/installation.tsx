@@ -81,8 +81,8 @@ export const installation: DocPage = {
               unchanged, even inside the same area.
             </li>
             <li>
-              <strong>Tracking:</strong> <code>tracking="on"</code> follows the
-              pointer. Use <code>"off"</code> for a fixed light direction or{' '}
+              <strong>Motion:</strong> <code>motion="dynamic"</code> follows the
+              pointer. Use <code>"static"</code> for a fixed light direction or{' '}
               <code>"system"</code> to follow device and motion preferences.
               System is the library default.
             </li>

@@ -16,11 +16,11 @@ import { SiteShell } from '../ui/SiteShell.js';
 import { InstallCommands } from '../ui/InstallCommands.js';
 import { HeroExample } from './HeroExample.js';
 import {
-  modeDescriptions,
+  motionDescriptions,
   usePreferences,
 } from '../settings/usePreferences.js';
 
-type Material = 'raised' | 'matte';
+type EdgeStyle = 'raised' | 'matte';
 interface Project {
   id: number;
   name: string;
@@ -39,10 +39,9 @@ const projects: readonly Project[] = [
 ];
 
 export function Home() {
-  const { mode, staticDirection } = usePreferences();
-  const tracking = { pointer: 'on', static: 'off' } as const;
+  const { motion, staticDirection } = usePreferences();
   return (
-    <Lighting tracking={tracking[mode]} staticDirection={staticDirection === 'random' ? 'random' : undefined} intensity={0.8}>
+    <Lighting motion={motion} staticDirection={staticDirection === 'random' ? 'random' : undefined} intensity={0.8}>
       <SiteShell section="home" pathname="/">
         <div className="home-hero-layout">
           <section className="home-hero" aria-labelledby="home-title">
@@ -73,7 +72,7 @@ export function Home() {
 }
 
 function Dashboard() {
-  const { material, mode } = usePreferences();
+  const { edgeStyle, motion } = usePreferences();
   const completed = projects.filter(
     (project) => project.status === 'Completed',
   ).length;
@@ -91,31 +90,31 @@ function Dashboard() {
       </header>
       <Paragraph variant="caption" className="dashboard-note">
         Interface preview · Search and project actions are inactive.{' '}
-        <span id="dashboard-mode-description">{modeDescriptions[mode]}</span>
+        <span id="dashboard-motion-description">{motionDescriptions[motion]}</span>
       </Paragraph>
       <div className="summary-grid">
         <Summary
-          material={material}
+          edgeStyle={edgeStyle}
           title="Projects"
           value={projects.length}
           description="Across your workspace"
           testId="surface-card"
         />
         <Summary
-          material={material}
+          edgeStyle={edgeStyle}
           title="In progress"
           value={projects.length - completed}
           description="Currently being worked on"
         />
         <Summary
-          material={material}
+          edgeStyle={edgeStyle}
           title="Completed"
           value={completed}
           description="Finished and ready to use"
         />
       </div>
       <div className="dashboard-panels">
-        <SurfaceCard material={material}>
+        <SurfaceCard edgeStyle={edgeStyle}>
           <CardHeader className="projects-header">
             <CardTitle id="projects-title">Projects</CardTitle>
             <div className="project-actions">
@@ -124,7 +123,7 @@ function Dashboard() {
                   Search projects
                 </Label>
                 <Lighting.Surface
-                  material="recessed"
+                  edgeStyle="recessed"
                   className="dashboard-input"
                   data-testid="surface-input"
                 >
@@ -137,7 +136,7 @@ function Dashboard() {
               </div>
               <Lighting.Surface
                 as="span"
-                material={material}
+                edgeStyle={edgeStyle}
                 className="dashboard-button"
                 data-testid="surface-button"
               >
@@ -178,7 +177,7 @@ function Dashboard() {
             </div>
           </CardContent>
         </SurfaceCard>
-        <SurfaceCard material={material}>
+        <SurfaceCard edgeStyle={edgeStyle}>
           <CardHeader>
             <CardTitle>Recent activity</CardTitle>
             <CardDescription>
@@ -214,20 +213,20 @@ function Dashboard() {
 }
 
 function Summary({
-  material,
+  edgeStyle,
   title,
   value,
   description,
   testId,
 }: {
-  material: Material;
+  edgeStyle: EdgeStyle;
   title: string;
   value: number;
   description: string;
   testId?: string;
 }) {
   return (
-    <SurfaceCard material={material} testId={testId}>
+    <SurfaceCard edgeStyle={edgeStyle} testId={testId}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <p className="summary-value">{value}</p>
@@ -238,17 +237,17 @@ function Summary({
 }
 
 function SurfaceCard({
-  material,
+  edgeStyle,
   testId,
   children,
 }: {
-  material: Material;
+  edgeStyle: EdgeStyle;
   testId?: string;
   children: ReactNode;
 }) {
   return (
     <Lighting.Surface
-      material={material}
+      edgeStyle={edgeStyle}
       className="dashboard-surface"
       data-testid={testId}
     >

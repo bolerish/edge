@@ -106,7 +106,7 @@ it('queues child registrations, coalesces pointer frames and reuses geometry', (
   stop();
 });
 it('restores values and rewrites static output after stop and restart', () => {
-  const light = createLight({ mode: 'static' });
+  const light = createLight({ motion: 'static' });
   const { node } = element();
   node.style.setProperty('--wisp-angle', '22deg', 'important');
   const entry = light.register(node, 'raised');
@@ -125,8 +125,8 @@ it('restores values and rewrites static output after stop and restart', () => {
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('22deg');
   expect(observers.every((observer) => observer.disconnected)).toBe(true);
 });
-it('updates material and options without a new pointer and attaches late surfaces', () => {
-  const light = createLight({ mode: 'static' });
+it('updates edgeStyle and options without a new pointer and attaches late surfaces', () => {
+  const light = createLight({ motion: 'static' });
   const stop = light.mount(document);
   const { node } = element();
   const entry = light.register(node, 'raised');
@@ -135,7 +135,7 @@ it('updates material and options without a new pointer and attaches late surface
   entry.update('recessed');
   flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('135.0deg');
-  light.configure({ mode: 'static', intensity: 0.4 });
+  light.configure({ motion: 'static', intensity: 0.4 });
   flush();
   expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.280');
   entry.destroy();
@@ -194,7 +194,7 @@ it('accepts mouse events on hybrid devices and keeps auto reduced-motion static'
   point();
   flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
-  light.configure({ mode: 'pointer' });
+  light.configure({ motion: 'dynamic' });
   point();
   flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
@@ -234,12 +234,12 @@ it('clears pointer output on window blur and never handles touch as a light', ()
 it('validates options atomically', () => {
   expect(() => createLight({ radius: 0 })).toThrow(RangeError);
   expect(() => createLight({ intensity: Infinity })).toThrow(RangeError);
-  const light = createLight({ mode: 'static' });
+  const light = createLight({ motion: 'static' });
   expect(() => light.configure({ radius: NaN })).toThrow(RangeError);
 });
 
 it('reads all dirty rectangles before writing and skips unchanged output', () => {
-  const light = createLight({ mode: 'static' });
+  const light = createLight({ motion: 'static' });
   const first = element();
   const second = element();
   const events: string[] = [];
@@ -265,15 +265,15 @@ it('reads all dirty rectangles before writing and skips unchanged output', () =>
   expect(events.slice(0, 2)).toEqual(['read', 'read']);
   expect(events.slice(2).every((value) => value === 'write')).toBe(true);
   const count = firstWrite.mock.calls.length;
-  light.configure({ mode: 'static' });
+  light.configure({ motion: 'static' });
   flush();
   expect(firstWrite).toHaveBeenCalledTimes(count);
   a.destroy();
   b.destroy();
   stop();
 });
-it('writes only the changed CSS property when material flips the direction', () => {
-  const light = createLight({ mode: 'static' });
+it('writes only the changed CSS property when edgeStyle flips the direction', () => {
+  const light = createLight({ motion: 'static' });
   const { node } = element();
   const entry = light.register(node, 'raised');
   const stop = light.mount(document);
@@ -295,7 +295,7 @@ it('rejects concurrent mounts and documents without a browser window', () => {
     .toThrow(/browser document/);
 });
 it('ignores an old cleanup after a new session has started', () => {
-  const light = createLight({ mode: 'pointer' });
+  const light = createLight({ motion: 'dynamic' });
   const { node } = element();
   light.register(node, 'raised');
   const previousStop = light.mount(document);
@@ -332,7 +332,7 @@ it('retains the active document when its last surface is removed', () => {
   light.register(other.createElement('div'), 'raised').destroy();
 });
 it('schedules late registrations and leaves removed surfaces untouched', () => {
-  const light = createLight({ mode: 'static' });
+  const light = createLight({ motion: 'static' });
   const stop = light.mount(document);
   flush();
   const { node } = element();
@@ -351,24 +351,24 @@ it('schedules late registrations and leaves removed surfaces untouched', () => {
   replacement.destroy();
   stop();
 });
-it('preserves the pointer for same-mode configuration and clears it on mode changes', () => {
-  const light = createLight({ mode: 'pointer' });
+it('preserves the pointer for same-motion configuration and clears it on motion changes', () => {
+  const light = createLight({ motion: 'dynamic' });
   const { node } = element();
   light.register(node, 'raised');
   const stop = light.mount(document);
   point();
   flush();
-  light.configure({ mode: 'pointer', intensity: 0.4 });
+  light.configure({ motion: 'dynamic', intensity: 0.4 });
   flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
   expect(Number(node.style.getPropertyValue('--wisp-strength'))).toBeGreaterThan(0);
-  light.configure({ mode: 'auto' });
+  light.configure({ motion: 'system' });
   flush();
   expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
   stop();
 });
 it('clears light only when the pointer exits the document', () => {
-  const light = createLight({ mode: 'pointer' });
+  const light = createLight({ motion: 'dynamic' });
   const { node } = element();
   light.register(node, 'raised');
   const stop = light.mount(document);
@@ -386,7 +386,7 @@ it.each([
   [0, 100],
   [100, 0],
 ])('suppresses output for a surface sized %s by %s', (width, height) => {
-  const light = createLight({ mode: 'static' });
+  const light = createLight({ motion: 'static' });
   const { node, measure } = element();
   measure.mockReturnValue(new DOMRect(0, 0, width, height));
   light.register(node, 'raised');
@@ -396,7 +396,7 @@ it.each([
   stop();
 });
 it('suppresses output for detached surfaces', () => {
-  const light = createLight({ mode: 'static' });
+  const light = createLight({ motion: 'static' });
   const { node } = element();
   light.register(node, 'raised');
   node.remove();
@@ -409,14 +409,14 @@ it('suppresses output for detached surfaces', () => {
 
 it('samples a shared static direction once per mount and preserves it on configure', () => {
   const random = vi.spyOn(Math, 'random').mockReturnValueOnce(0.25).mockReturnValueOnce(0.5);
-  const light = createLight({ mode: 'static', staticDirection: 'random' });
+  const light = createLight({ motion: 'static', staticDirection: 'random' });
   const { node } = element();
   light.register(node, 'raised');
   expect(random).not.toHaveBeenCalled();
   const stop = light.mount(document);
   flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
-  light.configure({ mode: 'static', staticDirection: 'random' });
+  light.configure({ motion: 'static', staticDirection: 'random' });
   light.refresh();
   point();
   flush();
@@ -426,7 +426,7 @@ it('samples a shared static direction once per mount and preserves it on configu
   const stopAgain = light.mount(document);
   flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('180.0deg');
-  light.configure({ mode: 'static', staticDirection: 45 });
+  light.configure({ motion: 'static', staticDirection: 45 });
   flush();
   expect(node.style.getPropertyValue('--wisp-angle')).toBe('45.0deg');
   stopAgain();

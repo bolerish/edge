@@ -7,7 +7,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import {
   useLight,
   useSurface,
-  type Material,
+  type EdgeStyle,
   type LightOptions,
   type Light,
 } from '../index.js';
@@ -23,14 +23,14 @@ function flush() {
 }
 function Button({
   light,
-  material = 'raised',
+  edgeStyle = 'raised',
   replace = false,
 }: {
   light: Light;
-  material?: Material;
+  edgeStyle?: EdgeStyle;
   replace?: boolean;
 }) {
-  const surface = useSurface<HTMLButtonElement>(light, { material });
+  const surface = useSurface<HTMLButtonElement>(light, { edgeStyle });
   return (
     <button
       key={String(replace)}
@@ -42,22 +42,22 @@ function Button({
   );
 }
 function App({
-  material = 'raised',
+  edgeStyle = 'raised',
   replace = false,
-  mode = 'static',
+  motion = 'static',
   intensity = 0.75,
   portal = false,
 }: {
-  material?: Material;
+  edgeStyle?: EdgeStyle;
   replace?: boolean;
-  mode?: LightOptions['mode'];
+  motion?: LightOptions['motion'];
   intensity?: number;
   portal?: boolean;
 }) {
-  const light = useLight({ mode, intensity });
+  const light = useLight({ motion, intensity });
   return (
     <>
-      <Button light={light} material={material} replace={replace} />
+      <Button light={light} edgeStyle={edgeStyle} replace={replace} />
       {portal ? createPortal(<Button light={light} />, document.body) : null}
     </>
   );
@@ -118,19 +118,19 @@ it('connects actual core after child refs and survives StrictMode replay', async
   await act(async () => root.render(null));
   expect(frames.size).toBe(0);
 });
-it('updates stationary material and intensity, then replaces the ref target with the latest material', async () => {
+it('updates stationary edgeStyle and intensity, then replaces the ref target with the latest edgeStyle', async () => {
   await act(async () => root.render(<App />));
   flush();
   const original = container.querySelector('button')!;
   await act(async () =>
-    root.render(<App material="recessed" intensity={0.4} />),
+    root.render(<App edgeStyle="recessed" intensity={0.4} />),
   );
   flush();
   expect(container.querySelector('button')).toBe(original);
   expect(original.style.getPropertyValue('--wisp-angle')).toBe('135.0deg');
   expect(original.style.getPropertyValue('--wisp-strength')).toBe('0.280');
   await act(async () =>
-    root.render(<App material="recessed" intensity={0.4} replace />),
+    root.render(<App edgeStyle="recessed" intensity={0.4} replace />),
   );
   flush();
   expect(original.style.getPropertyValue('--wisp-angle')).toBe('');
@@ -142,7 +142,7 @@ it('does not rerender React components during pointer updates and preserves node
   let renders = 0;
   function Counter() {
     renders++;
-    const light = useLight({ mode: 'pointer' });
+    const light = useLight({ motion: 'dynamic' });
     const surface = useSurface<HTMLButtonElement>(light);
     return (
       <button ref={surface.ref} className={surface.className} style={surface.style}>
@@ -179,7 +179,7 @@ it('hydrates server markup and keeps an edited input value and selection', async
   function Field() {
     const light = useLight();
     const surface = useSurface<HTMLLabelElement>(light, {
-      material: 'recessed',
+      edgeStyle: 'recessed',
     });
     const [value, setValue] = useState('hello');
     return (
@@ -215,7 +215,7 @@ it('hydrates server markup and keeps an edited input value and selection', async
 
 it('updates and clears surface appearance without replacing its registration', async () => {
   function Appearance({ color, intensity }: { color?: string; intensity?: number }) {
-    const light = useLight({ mode: 'static' });
+    const light = useLight({ motion: 'static' });
     const surface = useSurface<HTMLButtonElement>(light, { color, intensity });
     return <button {...surface}>Save</button>;
   }
@@ -241,8 +241,8 @@ it('updates and clears surface appearance without replacing its registration', a
 
 it('reconnects an existing surface when its light handle changes', async () => {
   function Scene({ second }: { second: boolean }) {
-    const firstLight = useLight({ mode: 'static', intensity: 0.2 });
-    const secondLight = useLight({ mode: 'static', intensity: 0.8 });
+    const firstLight = useLight({ motion: 'static', intensity: 0.2 });
+    const secondLight = useLight({ motion: 'static', intensity: 0.8 });
     const surface = useSurface<HTMLButtonElement>(second ? secondLight : firstLight);
     return <button {...surface}>Save</button>;
   }
@@ -267,7 +267,7 @@ it('allows a surface hook without an attached host', async () => {
 it('exposes refresh to remeasure a stationary pointer after a position change', async () => {
   let refresh: (() => void) | undefined;
   function Scene() {
-    const light = useLight({ mode: 'pointer', radius: 10 });
+    const light = useLight({ motion: 'dynamic', radius: 10 });
     refresh = light.refresh;
     return <button {...useSurface<HTMLButtonElement>(light)}>Save</button>;
   }

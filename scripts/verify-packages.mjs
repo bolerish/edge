@@ -81,7 +81,7 @@ execFileSync(
   createLight().refresh();
   function Card(){const light=useLight();const surface=useSurface(light,{theme:'wisp'});return React.createElement('article',{className:surface.className,style:surface.style},'Packed card');}
   assert.match(renderToStaticMarkup(React.createElement(Card)),/Packed card/);
-  const scope=React.createElement(Lighting,{tracking:'off'},React.createElement(Lighting.Surface,{as:'article'},'Scoped card'));
+  const scope=React.createElement(Lighting,{motion:'static'},React.createElement(Lighting.Surface,{as:'article'},'Scoped card'));
   assert.match(renderToStaticMarkup(scope),/^<article /);
 
 `,

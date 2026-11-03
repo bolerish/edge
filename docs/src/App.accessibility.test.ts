@@ -7,7 +7,7 @@ const routes = [
   '/docs/',
   '/docs/react/',
   '/docs/react/usage/',
-  '/docs/materials/',
+  '/docs/styles/',
   '/docs/accessibility/',
   '/docs/react/api/',
 ];

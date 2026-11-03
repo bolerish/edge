@@ -2,13 +2,13 @@ import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
 import { CodeBlock } from '../../ui/CodeBlock.js';
 import type { DocPage } from '../types.js';
-export const materials: DocPage = {
-  slug: 'materials',
-  aliases: ['react/materials'],
+export const styles: DocPage = {
+  slug: 'styles',
+  aliases: ['materials', 'react/materials'],
   section: 'Guides',
-  title: 'Materials',
+  title: 'Styles',
   description:
-    'Choose how an edge responds to light. Material response and base component styling are separate decisions.',
+    'Choose how an edge responds to light. Edge style response and base component styling are separate decisions.',
   sections: [
     {
       id: 'raised',
@@ -16,7 +16,7 @@ export const materials: DocPage = {
       content: (
         <P>
           Raised surfaces catch a highlight on the edge facing the light. Use{' '}
-          <code>material: 'raised'</code> for an outward-facing response.
+          <code>edgeStyle: 'raised'</code> for an outward-facing response.
         </P>
       ),
     },
@@ -26,7 +26,7 @@ export const materials: DocPage = {
       content: (
         <P>
           Recessed surfaces reverse the light direction. Use{' '}
-          <code>material: 'recessed'</code> for inset wrappers such as fields.
+          <code>edgeStyle: 'recessed'</code> for inset wrappers such as fields.
           It is available without the Wisp theme.
         </P>
       ),
@@ -37,7 +37,7 @@ export const materials: DocPage = {
       content: (
         <P>
           Matte surfaces use a softer directional response. Use{' '}
-          <code>material: 'matte'</code> when the border should remain quiet.
+          <code>edgeStyle: 'matte'</code> when the border should remain quiet.
         </P>
       ),
     },
@@ -53,12 +53,12 @@ export const materials: DocPage = {
           <CodeBlock
             label="Wisp theme"
             code={
-              "import { getSurfaceProps } from '@bolerish/edge-styles';\n\nconst surface = getSurfaceProps({ material: 'matte', theme: 'wisp' });"
+              "import { getSurfaceProps } from '@bolerish/edge-styles';\n\nconst surface = getSurfaceProps({ edgeStyle: 'matte', theme: 'wisp' });"
             }
           />
           <P>
             Leave the theme unset to retain your existing component appearance.
-            The recessed material is not a Wisp theme choice. The{' '}
+            The recessed style is not a Wisp theme choice. The{' '}
             <Link href="/">dashboard example</Link> uses unthemed materials to
             preserve Bolerish component colors.
           </P>

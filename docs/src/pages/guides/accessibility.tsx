@@ -10,22 +10,22 @@ export const accessibility: DocPage = {
   sections: [
     {
       id: 'choose-an-input-mode',
-      title: 'Choose an input mode',
+      title: 'Choose motion behavior',
       content: (
         <>
           <P>
-            <strong>System</strong> (<code>auto</code>) respects reduced motion. When the primary
+            <strong>System</strong> (<code>system</code>) respects reduced motion. When the primary
             device lacks precise hover, it starts with fixed lighting; observed
-            mouse or pen movement can enable tracking when reduced motion is
+            mouse or pen movement can enable motion when reduced motion is
             off. Touch movement does not drive the light.
           </P>
           <P>
-            <strong>On</strong> (<code>pointer</code>) explicitly enables tracking, including when
+            <strong>Dynamic</strong> (<code>dynamic</code>) explicitly enables motion, including when
             reduced motion is enabled. Offer it as a conscious choice rather
             than silently overriding a preference.
           </P>
           <P>
-            <strong>Off</strong> (<code>static</code>) uses a fixed light direction on each
+            <strong>Static</strong> (<code>static</code>) uses a fixed light direction on each
             surface. Set staticDirection to random to choose one shared direction
             per mount, or pass an angle in degrees. Ordinary rerenders keep it.
           </P>

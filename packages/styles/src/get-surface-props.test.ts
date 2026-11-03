@@ -11,8 +11,8 @@ it('provides host bindings without requiring a framework or DOM', () => {
 });
 it('keeps the base appearance opt-in and selects the requested theme variant', () => {
   const plain = getSurfaceProps().className;
-  const raised = getSurfaceProps({ theme: 'wisp', material: 'raised' }).className;
-  const matte = getSurfaceProps({ theme: 'wisp', material: 'matte' }).className;
+  const raised = getSurfaceProps({ theme: 'wisp', edgeStyle: 'raised' }).className;
+  const matte = getSurfaceProps({ theme: 'wisp', edgeStyle: 'matte' }).className;
   expect(getSurfaceProps({ theme: false }).className).toBe(plain);
   expect(raised).not.toBe(plain);
   expect(matte).not.toBe(plain);

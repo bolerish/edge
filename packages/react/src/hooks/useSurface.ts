@@ -18,23 +18,23 @@ export function useSurface<T extends HTMLElement = HTMLElement>(
   options: SurfaceOptions = {},
 ) {
   const core = getLightController(light);
-  const material = options.material ?? 'raised';
-  const currentMaterial = useRef(material);
+  const edgeStyle = options.edgeStyle ?? 'raised';
+  const currentEdgeStyle = useRef(edgeStyle);
   const registration = useRef<Registration | null>(null);
   const ref: RefCallback<T> = useCallback(
     (element: T | null) => {
       registration.current?.destroy();
       registration.current = element
-        ? core.register(element, currentMaterial.current)
+        ? core.register(element, currentEdgeStyle.current)
         : null;
     },
     [core],
   );
   // Runs before a scheduled frame, including a ref replacement in the same commit.
   useLayoutEffect(() => {
-    currentMaterial.current = material;
-    registration.current?.update(material);
-  }, [material]);
+    currentEdgeStyle.current = edgeStyle;
+    registration.current?.update(edgeStyle);
+  }, [edgeStyle]);
   const props = getSurfaceProps(options);
   const style: CSSProperties & typeof props.style = props.style;
   return { ref, className: props.className, style };

@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
-import type { Material } from '@bolerish/edge-core';
+import type { EdgeStyle } from '@bolerish/edge-core';
 
 interface SurfaceAppearance {
   /** Any CSS color. */
@@ -8,14 +8,14 @@ interface SurfaceAppearance {
   intensity?: number;
 }
 export type SurfaceOptions = SurfaceAppearance & (
-  | { material?: Material; theme?: false }
-  | { material?: 'raised' | 'matte'; theme: 'wisp' }
+  | { edgeStyle?: EdgeStyle; theme?: false }
+  | { edgeStyle?: 'raised' | 'matte'; theme: 'wisp' }
 );
 
 /** Framework-independent class and CSS-variable bindings for one surface. */
 export function getSurfaceProps(options: SurfaceOptions = {}) {
   const theme =
-    options.theme === 'wisp' ? wispStyles[options.material ?? 'raised'] : null;
+    options.theme === 'wisp' ? wispStyles[options.edgeStyle ?? 'raised'] : null;
   const props = stylex.props(surfaceStyles.border, theme);
   const intensity = options.intensity;
   const style = {

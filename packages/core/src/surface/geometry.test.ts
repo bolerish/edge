@@ -47,7 +47,7 @@ it.each([
   ['raised', 315, 0.7],
   ['recessed', 135, 0.7],
   ['matte', 315, 0.21],
-] as const)('provides static lighting for %s', (material, angle, strength) => {
-  expect(getStaticLighting(material).angle).toBe(angle);
-  expect(getStaticLighting(material).strength).toBeCloseTo(strength);
+] as const)('provides static lighting for %s', (edgeStyle, angle, strength) => {
+  expect(getStaticLighting(edgeStyle).angle).toBe(angle);
+  expect(getStaticLighting(edgeStyle).strength).toBeCloseTo(strength);
 });

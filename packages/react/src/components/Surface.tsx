@@ -25,7 +25,7 @@ export function Surface<T extends SurfaceTag = 'div'>(props: SurfaceProps<T>) {
   const surface = useSurface<HTMLElementTagNameMap[T]>(light, props);
   const {
     as = 'div', ref: forwardedRef, className, style,
-    material: _material, theme: _theme, color: _color, intensity: _intensity,
+    edgeStyle: _edgeStyle, theme: _theme, color: _color, intensity: _intensity,
     ...hostProps
   } = props;
   const ref = useMergedRefs(surface.ref, forwardedRef);

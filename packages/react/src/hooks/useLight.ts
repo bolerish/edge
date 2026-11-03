@@ -13,20 +13,20 @@ export interface Light {
 
 /** Owns one shared light. Pointer frames never update React state. */
 export function useLight({
-  mode,
+  motion,
   staticDirection,
   radius,
   intensity,
 }: LightOptions = {}): Light {
   const [state] = useState(() => {
-    const core = createLight({ mode, radius, intensity, staticDirection });
+    const core = createLight({ motion, radius, intensity, staticDirection });
     const handle: Light = { [lightBrand]: core, refresh: core.refresh };
     return { core, handle };
   });
   useEffect(() => state.core.mount(document), [state]);
   useEffect(
-    () => state.core.configure({ mode, radius, intensity, staticDirection }),
-    [state, mode, radius, intensity, staticDirection],
+    () => state.core.configure({ motion, radius, intensity, staticDirection }),
+    [state, motion, radius, intensity, staticDirection],
   );
   return state.handle;
 }

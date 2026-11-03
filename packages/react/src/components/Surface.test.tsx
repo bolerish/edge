@@ -3,7 +3,7 @@ import { act, createRef, StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { Lighting, type Tracking, type Light } from '../index.js';
+import { Lighting, type Motion, type Light } from '../index.js';
 
 let container: HTMLDivElement;
 let root: Root;
@@ -49,7 +49,7 @@ afterEach(async () => {
 it('lights only marked hosts and preserves native props and interactions', async () => {
   const click = vi.fn();
   await act(async () => root.render(
-    <Lighting tracking="off">
+    <Lighting motion="static">
       <Lighting.Surface as="button" className="own-button" style={{ padding: 12 }} onClick={click}>
         Lit
       </Lighting.Surface>
@@ -69,9 +69,9 @@ it('lights only marked hosts and preserves native props and interactions', async
 });
 it('uses the nearest light and leaves outer siblings independent', async () => {
   await act(async () => root.render(
-    <Lighting tracking="off" intensity={0.2}>
+    <Lighting motion="static" intensity={0.2}>
       <Lighting.Surface data-testid="outer" />
-      <Lighting tracking="off" intensity={0.8}>
+      <Lighting motion="static" intensity={0.8}>
         <Lighting.Surface data-testid="inner" />
       </Lighting>
       <Lighting.Surface data-testid="sibling" />
@@ -82,22 +82,22 @@ it('uses the nearest light and leaves outer siblings independent', async () => {
     expect(container.querySelector<HTMLElement>(`[data-testid=${id}]`)!.style.getPropertyValue('--wisp-strength')).toBe('0.140');
   expect(container.querySelector<HTMLElement>('[data-testid=inner]')!.style.getPropertyValue('--wisp-strength')).toBe('0.560');
 });
-it.each(['off', 'on', 'system'] as const)('maps tracking %s under reduced motion', async (tracking: Tracking) => {
+it.each(['static', 'dynamic', 'system'] as const)('maps motion %s under reduced motion', async (motion: Motion) => {
   await act(async () => root.render(
-    <Lighting tracking={tracking}><Lighting.Surface /></Lighting>,
+    <Lighting motion={motion}><Lighting.Surface /></Lighting>,
   ));
   move();
   flush();
   expect(container.firstElementChild!.getAttribute('style'))
-    .toContain(`--wisp-angle: ${tracking === 'on' ? '90.0' : '315.0'}deg`);
+    .toContain(`--wisp-angle: ${motion === 'dynamic' ? '90.0' : '315.0'}deg`);
 });
-it('defaults to system tracking and updates material without replacing the host', async () => {
+it('defaults to system motion and updates edgeStyle without replacing the host', async () => {
   await act(async () => root.render(<Lighting><Lighting.Surface /></Lighting>));
   flush();
   const host = container.querySelector<HTMLElement>(':scope > div')!;
   expect(host.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
   await act(async () => root.render(
-    <Lighting><Lighting.Surface material="recessed" color="red" intensity={0.4} /></Lighting>,
+    <Lighting><Lighting.Surface edgeStyle="recessed" color="red" intensity={0.4} /></Lighting>,
   ));
   flush();
   expect(container.firstElementChild).toBe(host);
@@ -109,13 +109,13 @@ it('composes object refs and releases them when a host is replaced or removed', 
   const button = createRef<HTMLButtonElement>();
   const article = createRef<HTMLElement>();
   await act(async () => root.render(
-    <Lighting tracking="off"><Lighting.Surface as="button" ref={button} /></Lighting>,
+    <Lighting motion="static"><Lighting.Surface as="button" ref={button} /></Lighting>,
   ));
   flush();
   const previous = button.current!;
   expect(previous).toBeInstanceOf(HTMLButtonElement);
   await act(async () => root.render(
-    <Lighting tracking="off"><Lighting.Surface as="article" ref={article} /></Lighting>,
+    <Lighting motion="static"><Lighting.Surface as="article" ref={article} /></Lighting>,
   ));
   flush();
   expect(button.current).toBeNull();
@@ -131,7 +131,7 @@ it('honors React 19 callback-ref cleanup across StrictMode replay', async () => 
     if (element) return cleanup;
   });
   await act(async () => root.render(
-    <StrictMode><Lighting tracking="off"><Lighting.Surface ref={ref} /></Lighting></StrictMode>,
+    <StrictMode><Lighting motion="static"><Lighting.Surface ref={ref} /></Lighting></StrictMode>,
   ));
   flush();
   const attachments = ref.mock.calls.filter(([element]) => element !== null).length;
@@ -150,7 +150,7 @@ it('clears callback refs without cleanup functions', async () => {
 });
 it('keeps same-document portals in the declaring light scope', async () => {
   await act(async () => root.render(
-    <Lighting tracking="off" intensity={0.4}>
+    <Lighting motion="static" intensity={0.4}>
       {createPortal(<Lighting.Surface as="button">Portal</Lighting.Surface>, document.body)}
     </Lighting>,
   ));
@@ -164,7 +164,7 @@ it('keeps same-document portals in the declaring light scope', async () => {
 it('exposes optional refresh for position-only changes and clears the root handle', async () => {
   const light = createRef<Light>();
   await act(async () => root.render(
-    <Lighting tracking="on" ref={light}><Lighting.Surface /></Lighting>,
+    <Lighting motion="dynamic" ref={light}><Lighting.Surface /></Lighting>,
   ));
   move();
   flush();
@@ -182,7 +182,7 @@ it('exposes optional refresh for position-only changes and clears the root handl
 it('unregisters removed surfaces while their light owner and siblings stay mounted', async () => {
   function Scene({ show }: { show: boolean }) {
     return (
-      <Lighting tracking="off">
+      <Lighting motion="static">
         {show ? <Lighting.Surface key="first" data-testid="first" /> : null}
         <Lighting.Surface key="second" data-testid="second" />
       </Lighting>

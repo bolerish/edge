@@ -1,15 +1,15 @@
 import { useSyncExternalStore } from 'react';
 
 export interface SitePreferences {
-  material: 'raised' | 'matte';
-  mode: 'pointer' | 'static';
+  edgeStyle: 'raised' | 'matte';
+  motion: 'dynamic' | 'static';
   staticDirection: 'fixed' | 'random';
   theme: 'light' | 'dark';
 }
 const storageKey = 'wisp:preferences:v1';
 const defaults: Readonly<SitePreferences> = Object.freeze({
-  material: 'raised',
-  mode: 'pointer',
+  edgeStyle: 'raised',
+  motion: 'dynamic',
   staticDirection: 'random',
   theme: 'light',
 });
@@ -18,8 +18,8 @@ let snapshot: Readonly<SitePreferences> = defaults;
 let storedValue: string | null | undefined;
 const listeners = new Set<() => void>();
 
-export const modeDescriptions: Record<SitePreferences['mode'], string> = {
-  pointer: 'Follows your pointer, even when reduced motion is enabled.',
+export const motionDescriptions: Record<SitePreferences['motion'], string> = {
+  dynamic: 'Follows your pointer, even when reduced motion is enabled.',
   static: 'Keeps the light direction fixed.',
 };
 
@@ -68,12 +68,12 @@ function parsePreferences(serialized: string | null): Readonly<SitePreferences> 
     const value: unknown = JSON.parse(serialized ?? 'null');
     if (value === null || typeof value !== 'object') return defaults;
     return Object.freeze({
-      material:
-        'material' in value && value.material === 'matte' ? 'matte' : 'raised',
-      mode:
-        'mode' in value && (value.mode === 'static')
-          ? value.mode
-          : 'pointer',
+      edgeStyle:
+        ('edgeStyle' in value && value.edgeStyle === 'matte') || ('material' in value && value.material === 'matte') ? 'matte' : 'raised',
+      motion:
+        ('motion' in value && value.motion === 'static') || ('mode' in value && value.mode === 'static')
+          ? 'static'
+          : 'dynamic',
       staticDirection: 'staticDirection' in value && value.staticDirection === 'fixed' ? 'fixed' : 'random',
       theme: 'theme' in value && value.theme === 'dark' ? 'dark' : 'light',
     });

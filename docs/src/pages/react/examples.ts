@@ -3,7 +3,7 @@ import '@bolerish/edge/style.css';
 
 function App() {
   return (
-    <Lighting tracking="on">
+    <Lighting motion="dynamic">
       <Lighting.Surface as="article" theme="wisp" style={{ padding: 24 }}>
         Project overview
       </Lighting.Surface>
@@ -15,10 +15,10 @@ export const inputSurface = `import { Lighting } from '@bolerish/edge';
 
 function Search() {
   return (
-    <Lighting tracking="on">
+    <Lighting motion="dynamic">
       <Lighting.Surface
         as="label"
-        material="recessed"
+        edgeStyle="recessed"
         style={{ display: 'grid', gap: 8, padding: 16, borderRadius: 12 }}
       >
         Search <input name="query" />
@@ -29,7 +29,7 @@ function Search() {
 export const hookSurface = `import { useLight, useSurface } from '@bolerish/edge';
 
 function Card() {
-  const light = useLight({ mode: 'pointer' });
+  const light = useLight({ motion: 'dynamic' });
   const surface = useSurface<HTMLElement>(light, { color: 'white' });
   return (
     <article

@@ -3,8 +3,8 @@ import type { Point } from '../surface/geometry.js';
 
 export function createLightSession(
   target: Document,
-  { getMode, render, invalidate }: {
-    getMode(): Required<LightOptions>['mode'];
+  { getMotion, render, invalidate }: {
+    getMotion(): Required<LightOptions>['motion'];
     render(pointer: Point | null, fixed: boolean): void;
     invalidate(): void;
   },
@@ -22,17 +22,17 @@ export function createLightSession(
   function renderFrame() {
     frame = null;
     if (!live) return;
-    const mode = getMode();
+    const motion = getMotion();
     const fixed =
-      mode === 'static' ||
-      (mode === 'auto' && (reduced.matches || (!fine.matches && !pointer)));
+      motion === 'static' ||
+      (motion === 'system' && (reduced.matches || (!fine.matches && !pointer)));
     render(pointer, fixed);
   }
   function move(event: PointerEvent) {
     if (
       event.pointerType === 'touch' ||
-      getMode() === 'static' ||
-      (getMode() === 'auto' && reduced.matches)
+      getMotion() === 'static' ||
+      (getMotion() === 'system' && reduced.matches)
     )
       return;
     pointer = { x: event.clientX, y: event.clientY };

@@ -4,7 +4,7 @@ const routes = [
   '/docs/',
   '/docs/react/',
   '/docs/react/usage/',
-  '/docs/materials/',
+  '/docs/styles/',
   '/docs/accessibility/',
   '/docs/react/api/',
   '/',
@@ -84,7 +84,7 @@ test('materials and modes update without further pointer movement', async ({
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   const light = page.getByRole('combobox', { name: 'Motion', exact: true });
   const surface = page.getByRole('combobox', { name: 'Style', exact: true });
-  await expect(light).toHaveValue('pointer');
+  await expect(light).toHaveValue('dynamic');
   await expect(surface).toHaveValue('raised');
   await light.selectOption('static');
   await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('fixed');
@@ -125,7 +125,7 @@ test('materials and modes update without further pointer movement', async ({
     )
     .toBe('315.0deg');
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await light.selectOption('pointer');
+  await light.selectOption('dynamic');
   await page.keyboard.press('Escape');
   await card.scrollIntoViewIfNeeded();
   const box = await card.boundingBox();
@@ -342,9 +342,9 @@ test('API navigation follows the URL hash after hydration and in-page navigation
 
 test('previous guide URLs preserve their content and API anchors', async ({ page }) => {
   for (const [slug, title] of [
-    ['installation', 'Installation'], ['usage', 'Usage'], ['materials', 'Materials'],
+    ['installation', 'Installation'], ['usage', 'Usage'], ['materials', 'Styles'],
     ['accessibility', 'Accessibility'], ['api', 'API reference'],
-    ['react/materials', 'Materials'], ['react/accessibility', 'Accessibility'],
+    ['react/materials', 'Styles'], ['react/accessibility', 'Accessibility'],
   ] as const) {
     await page.goto(`/docs/${slug}/`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title);
@@ -374,11 +374,11 @@ test('shared guides appear before framework-specific documentation', async ({ pa
   const groups = page.locator('.sidebar .nav-group');
   await expect(groups).toHaveCount(3);
   await expect(groups.nth(0).getByRole('link')).toHaveText(['Getting started']);
-  await expect(groups.nth(1).getByRole('link')).toHaveText(['Materials', 'Accessibility']);
+  await expect(groups.nth(1).getByRole('link')).toHaveText(['Styles', 'Accessibility']);
   await expect(groups.nth(2).getByRole('link')).toHaveText(['Installation', 'Usage', 'API reference']);
-  await groups.nth(1).getByRole('link', { name: 'Materials', exact: true }).click();
-  await expect(page).toHaveURL(/\/docs\/materials\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Materials');
+  await groups.nth(1).getByRole('link', { name: 'Styles', exact: true }).click();
+  await expect(page).toHaveURL(/\/docs\/styles\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Styles');
 });
 
 test('hero compares lighting and package-manager tabs expose matching commands', async ({

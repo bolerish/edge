@@ -8,7 +8,7 @@ export interface Point {
   x: number;
   y: number;
 }
-export type Material = 'raised' | 'recessed' | 'matte';
+export type EdgeStyle = 'raised' | 'recessed' | 'matte';
 
 // CSS conic gradients start at the top; atan2 starts at the right.
 const FULL_TURN_DEGREES = 360;
@@ -20,14 +20,14 @@ const DISTANCE_FALLOFF_EXPONENT = 2;
 const MATTE_STRENGTH_MULTIPLIER = 0.3;
 const STATIC_LIGHT_STRENGTH = 0.7;
 
-export function getStaticLighting(material: Material, direction = DEFAULT_DIRECTION_DEGREES) {
+export function getStaticLighting(edgeStyle: EdgeStyle, direction = DEFAULT_DIRECTION_DEGREES) {
   return {
     angle:
       (direction +
-        (material === 'recessed' ? HALF_TURN_DEGREES : 0)) % FULL_TURN_DEGREES,
+        (edgeStyle === 'recessed' ? HALF_TURN_DEGREES : 0)) % FULL_TURN_DEGREES,
     strength:
       STATIC_LIGHT_STRENGTH *
-      (material === 'matte' ? MATTE_STRENGTH_MULTIPLIER : 1),
+      (edgeStyle === 'matte' ? MATTE_STRENGTH_MULTIPLIER : 1),
   };
 }
 
@@ -35,7 +35,7 @@ export function getLighting(
   rect: Rectangle,
   point: Point,
   radius: number,
-  material: Material,
+  edgeStyle: EdgeStyle,
 ) {
   const dx = point.x - rect.left - rect.width / 2;
   const dy = point.y - rect.top - rect.height / 2;
@@ -51,11 +51,11 @@ export function getLighting(
           CSS_ANGLE_OFFSET_DEGREES) % FULL_TURN_DEGREES;
   return {
     angle:
-      (direction + (material === 'recessed' ? HALF_TURN_DEGREES : 0)) %
+      (direction + (edgeStyle === 'recessed' ? HALF_TURN_DEGREES : 0)) %
       FULL_TURN_DEGREES,
     strength:
       Math.max(0, 1 - edgeDistance / radius) ** DISTANCE_FALLOFF_EXPONENT *
       Math.min(1, centerDistance / CENTER_FADE_RADIUS_PX) *
-      (material === 'matte' ? MATTE_STRENGTH_MULTIPLIER : 1),
+      (edgeStyle === 'matte' ? MATTE_STRENGTH_MULTIPLIER : 1),
   };
 }

@@ -15,8 +15,8 @@ export const api: DocPage = {
         <>
           <P>
             Shares one light with explicitly marked descendants without adding
-            a DOM wrapper. tracking accepts on, off or system (default). On
-            enables pointer tracking, Off keeps fixed lighting, and System
+            a DOM wrapper. motion accepts dynamic, static or system (default). Dynamic
+            follows the pointer, Static keeps fixed lighting, and System
             follows device and reduced-motion preferences. Touch movement is ignored.
           </P>
           <P>
@@ -42,7 +42,7 @@ export const api: DocPage = {
             is preserved. A surface outside Lighting throws an error.
           </P>
           <P>
-            material, theme, color and intensity use the same options as
+            edgeStyle, theme, color and intensity use the same options as
             useSurface below. Input elements need a wrapper such as a label
             because the border decoration uses ::after. For a custom component
             that already owns its host, use the hooks instead.
@@ -71,12 +71,12 @@ export const api: DocPage = {
               <tbody>
                 <tr>
                   <td>
-                    <code>mode</code>
+                    <code>motion</code>
                   </td>
                   <td>
-                    <code>'auto'</code>
+                    <code>'system'</code>
                   </td>
-                  <td>auto, pointer, static</td>
+                  <td>system, dynamic, static</td>
                 </tr>
                 <tr>
                   <td>
@@ -97,7 +97,7 @@ export const api: DocPage = {
           </div>
           <P>
             <code>radius</code> controls dynamic distance attenuation. Static
-            mode uses a fixed per-surface direction and does not fade out
+            motion uses a fixed per-surface direction and does not fade out
             because the surface is far from an arbitrary origin.
           </P>
         </>
@@ -135,7 +135,7 @@ export const api: DocPage = {
               <tbody>
                 <tr>
                   <td>
-                    <code>material</code>
+                    <code>edgeStyle</code>
                   </td>
                   <td>
                     <code>'raised'</code>
@@ -163,11 +163,11 @@ export const api: DocPage = {
             </table>
           </div>
           <P>
-            With <code>theme: 'wisp'</code>, material is limited to raised or
+            With <code>theme: 'wisp'</code>, edgeStyle is limited to raised or
             matte. Set color to any CSS color string. Surface intensity defaults to 1
             and multiplies the shared light intensity; finite values are clamped
             to 0–1 and non-finite values use the default.
-            Material changes update the current registration. An element
+            EdgeStyle changes update the current registration. An element
             cannot belong to two light controllers.
           </P>
         </>
