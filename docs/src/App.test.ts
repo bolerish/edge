@@ -204,7 +204,7 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
   );
 });
 
-test('preview data stays fixed and the CTA opens installation', async ({
+test('preview data stays fixed and getting started leads to React installation', async ({
   page,
 }) => {
   await page.goto('/');
@@ -215,6 +215,9 @@ test('preview data stays fixed and the CTA opens installation', async ({
     'Website refresh', 'Design system', 'Mobile app',
   ]);
   await page.getByRole('link', { name: 'Get started' }).click();
+  await expect(page).toHaveURL(/\/docs\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
+  await page.getByRole('link', { name: 'Start with React', exact: true }).click();
   await expect(page).toHaveURL(/\/docs\/react\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Installation',
@@ -340,4 +343,16 @@ test('previous guide URLs preserve their content and API anchors', async ({ page
   await page.goto('/docs/api/#use-surface');
   await expect(page.locator('.table-of-contents').getByRole('link', { name: 'useSurface(light, options?)', exact: true }))
     .toHaveAttribute('aria-current', 'location');
+});
+
+
+test('framework search uses canonical React guides and contextual labels', async ({ page }) => {
+  await page.goto('/docs/getting-started/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
+  await page.getByRole('button', { name: 'Search documentation' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('textbox', { name: 'Search titles and content' }).fill('React installation');
+  const result = dialog.getByRole('link', { name: /^Installation/ });
+  await expect(result).toContainText('React · Installation');
+  await expect(result).toHaveAttribute('href', '/docs/react/');
 });

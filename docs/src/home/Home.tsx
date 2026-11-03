@@ -48,7 +48,7 @@ export function Home() {
         <Button
           role="link"
           nativeButton={false}
-          render={<a href="/docs/react/" />}
+          render={<a href="/docs/" />}
         >
           Get started <span aria-hidden="true">↗</span>
         </Button>

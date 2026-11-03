@@ -11,13 +11,14 @@ interface SearchDocument {
 }
 const documents: SearchDocument[] = pages.flatMap((page) => {
   const href = getPagePath(page);
+  const pageTitle = [page.section, page.title].filter(Boolean).join(' · ');
   return [
-    { title: page.title, pageTitle: page.title, href, text: `${page.title} ${page.description}`.toLowerCase(), description: page.description },
+    { title: page.title, pageTitle, href, text: `${pageTitle} ${page.description}`.toLowerCase(), description: page.description },
     ...page.sections.map((section) => {
       const description = textContent(section.content).replace(/\s+/g, ' ').trim();
       return {
-        title: section.title, pageTitle: page.title, href: `${href}#${section.id}`,
-        text: `${page.title} ${section.title} ${description}`.toLowerCase(), description,
+        title: section.title, pageTitle, href: `${href}#${section.id}`,
+        text: `${pageTitle} ${section.title} ${description}`.toLowerCase(), description,
       };
     }),
   ];

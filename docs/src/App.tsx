@@ -18,7 +18,7 @@ export function App({ pathname }: { pathname: string }) {
           </Heading>
           <Paragraph>
             This page is not available.{' '}
-            <Link href="/docs/">Return to the introduction</Link> or explore the{' '}
+            <Link href="/docs/">Return to Getting started</Link> or explore the{' '}
             <Link href="/">dashboard example</Link>.
           </Paragraph>
         </article>
