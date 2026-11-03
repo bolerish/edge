@@ -116,6 +116,9 @@ assert(!/from\s*["']@stylexjs\/stylex/.test(library), 'Consumers must not need S
 assert(
   library.startsWith('"use client"') || library.startsWith("'use client'"),
 );
+const { titleFor, pages, learningPath } = await import('../.private/docs-ssr/entry-server.js');
+assert.equal(new Set(learningPath).size, pages.length, 'Reading path covers each page once');
+assert(learningPath.every(page => pages.includes(page)), 'Reading path contains only known pages');
 const site = resolve(root, 'docs/dist');
 const routes = JSON.parse(await readFile(resolve(site, 'routes.json'), 'utf8'));
 assert(
@@ -139,6 +142,8 @@ for (const route of routes) {
     html.includes(`data-path="${route}"`) && html.includes('<h1'),
     `Missing prerendered content: ${route}`,
   );
+  const escapedTitle = titleFor(route).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\"', '&quot;').replaceAll("'", '&#39;');
+  assert(html.includes(`<title>${escapedTitle}</title>`), `Incorrect static title: ${route}`);
   documents.set(route, html);
 }
 for (const [route, html] of documents) {

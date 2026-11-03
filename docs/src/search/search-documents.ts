@@ -33,7 +33,7 @@ export function searchDocuments(query: string) {
 function textContent(node: ReactNode): string {
   if (typeof node === 'string' || typeof node === 'number') return String(node);
   if (Array.isArray(node)) return node.map(textContent).join(' ');
-  if (isValidElement<{ children?: ReactNode; code?: string }>(node))
-    return `${textContent(node.props.children)} ${node.props.code ?? ''}`;
+  if (isValidElement<{ children?: ReactNode; code?: string; title?: string }>(node))
+    return `${textContent(node.props.children)} ${node.props.code ?? ''} ${node.props.title ?? ''}`;
   return '';
 }
