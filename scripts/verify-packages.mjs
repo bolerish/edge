@@ -1,0 +1,95 @@
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { mkdir, readFile, rm, symlink } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = fileURLToPath(new URL('../', import.meta.url));
+const sandbox = resolve(root, '.private/package-check');
+await rm(sandbox, { recursive: true, force: true });
+await mkdir(resolve(sandbox, 'node_modules/@wisp-lighting'), {
+  recursive: true,
+});
+for (const name of ['core', 'react']) {
+  const archive = resolve(sandbox, `${name}.tgz`);
+  execFileSync('pnpm', ['pack', '--out', archive], {
+    cwd: resolve(root, 'packages', name),
+    stdio: 'pipe',
+  });
+  const listing = execFileSync('tar', ['-tzf', archive], { encoding: 'utf8' });
+  assert(
+    !listing.includes('.private/') &&
+      !listing.includes('/tests/') &&
+      !listing.includes('/src/'),
+  );
+  const destination = resolve(sandbox, 'node_modules/@wisp-lighting', name);
+  await mkdir(destination, { recursive: true });
+  execFileSync('tar', [
+    '-xzf',
+    archive,
+    '--strip-components=1',
+    '-C',
+    destination,
+  ]);
+  const manifest = JSON.parse(
+    await readFile(resolve(destination, 'package.json'), 'utf8'),
+  );
+  for (const target of Object.values(manifest.exports)) {
+    if (typeof target === 'string')
+      await readFile(resolve(destination, target));
+    else
+      for (const path of Object.values(target))
+        await readFile(resolve(destination, path));
+  }
+  assert(!JSON.stringify(manifest.dependencies ?? {}).includes('workspace:'));
+  await readFile(resolve(destination, 'dist/LICENSE'));
+}
+await mkdir(resolve(sandbox, 'node_modules/@stylexjs'), { recursive: true });
+for (const name of ['react', 'react-dom', '@stylexjs/stylex']) {
+  await symlink(
+    resolve(root, 'packages/react/node_modules', name),
+    resolve(sandbox, 'node_modules', name),
+    'dir',
+  );
+}
+execFileSync(
+  process.execPath,
+  [
+    '--input-type=module',
+    '-e',
+    `
+  import assert from 'node:assert/strict';
+  import React from 'react';
+  import {renderToStaticMarkup} from 'react-dom/server';
+  import * as stylex from '@stylexjs/stylex';
+  import {createLight} from '@wisp-lighting/core';
+  import {useLight,useSurface} from '@wisp-lighting/react';
+  assert.equal(typeof window,'undefined');
+  createLight().refresh();
+  function Card(){const light=useLight();const surface=useSurface(light,{theme:'wisp'});return React.createElement('article',stylex.props(surface.style),'Packed card');}
+  assert.match(renderToStaticMarkup(React.createElement(Card)),/Packed card/);
+`,
+  ],
+  { cwd: sandbox, stdio: 'pipe' },
+);
+const css = await readFile(
+  resolve(sandbox, 'node_modules/@wisp-lighting/react/dist/assets/stylex.css'),
+  'utf8',
+);
+assert(css.includes('conic-gradient') && css.includes('--wisp-angle'));
+const library = await readFile(
+  resolve(sandbox, 'node_modules/@wisp-lighting/react/dist/index.js'),
+  'utf8',
+);
+assert(
+  library.startsWith('"use client"') || library.startsWith("'use client'"),
+);
+const docs = await readFile(resolve(root, 'apps/docs/dist/index.html'), 'utf8');
+const ids = new Set(
+  [...docs.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]),
+);
+for (const match of docs.matchAll(/href="#([^"]+)"/g))
+  assert(ids.has(match[1]), `Broken documentation link: ${match[1]}`);
+console.log(
+  'Package archives verified: public imports, SSR, declarations, CSS, licenses, docs anchors and private-file exclusion.',
+);

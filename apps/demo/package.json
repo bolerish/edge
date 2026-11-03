@@ -1,0 +1,28 @@
+{
+  "name": "@wisp-lighting/demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test:browser": "playwright test"
+  },
+  "dependencies": {
+    "@wisp-lighting/react": "workspace:^",
+    "react": "catalog:2026-11-03--react-stable",
+    "react-dom": "catalog:2026-11-03--react-stable",
+    "@stylexjs/stylex": "catalog:2026-11-03--stylex-stable"
+  },
+  "devDependencies": {
+    "vite": "catalog:2026-11-03--vite-vitest-stable",
+    "typescript": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:2026-11-03--react-stable",
+    "@types/react-dom": "catalog:2026-11-03--react-stable",
+    "@stylexjs/unplugin": "catalog:2026-11-03--stylex-stable",
+    "unplugin": "catalog:2026-11-03--stylex-stable",
+    "@playwright/test": "catalog:"
+  }
+}
