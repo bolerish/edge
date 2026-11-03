@@ -18,12 +18,12 @@ export const accessibility: DocPage = {
             off. Touch movement does not drive the light.
           </P>
           <P>
-            <strong>Dynamic</strong> (<code>pointer</code>) explicitly enables tracking, including when
+            <strong>On</strong> (<code>pointer</code>) explicitly enables tracking, including when
             reduced motion is enabled. Offer it as a conscious choice rather
             than silently overriding a preference.
           </P>
           <P>
-            <strong>Static</strong> (<code>static</code>) uses a fixed light direction on each
+            <strong>Off</strong> (<code>static</code>) uses a fixed light direction on each
             surface.
           </P>
         </>

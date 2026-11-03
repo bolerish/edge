@@ -80,12 +80,12 @@ test('materials and modes update without further pointer movement', async ({
 }) => {
   await page.goto('/');
   const card = page.getByTestId('surface-card');
-  const light = page.getByRole('combobox', { name: 'Light', exact: true });
-  const surface = page.getByRole('combobox', { name: 'Surface', exact: true });
-  await expect(light).toContainText('Dynamic');
+  const light = page.getByRole('combobox', { name: 'Pointer tracking', exact: true });
+  const surface = page.getByRole('combobox', { name: 'Edge style', exact: true });
+  await expect(light).toContainText('On');
   await expect(surface).toContainText('Raised');
   await light.click();
-  await page.getByRole('option', { name: 'Static', exact: true }).click();
+  await page.getByRole('option', { name: 'Off', exact: true }).click();
   await expect
     .poll(() =>
       card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
@@ -119,7 +119,7 @@ test('materials and modes update without further pointer movement', async ({
     )
     .toBe('315.0deg');
   await light.click();
-  await page.getByRole('option', { name: 'Dynamic', exact: true }).click();
+  await page.getByRole('option', { name: 'On', exact: true }).click();
   await card.scrollIntoViewIfNeeded();
   const box = await card.boundingBox();
   if (!box) throw new Error('Missing card');

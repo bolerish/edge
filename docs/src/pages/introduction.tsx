@@ -67,10 +67,10 @@ export const introduction: DocPage = {
       content: (
         <>
           <P>
-            The documentation demo starts in Dynamic (<code>pointer</code>) mode
-            to show pointer tracking. Choose System (<code>auto</code>) to respect
-            your device and motion preferences, or Static (<code>static</code>)
-            for a fixed light direction.
+            Pointer tracking starts On (<code>pointer</code>) in the documentation
+            demo. Choose System (<code>auto</code>) to follow your device and
+            motion preferences, or Off (<code>static</code>) to keep a fixed
+            light direction.
           </P>
           <P>
             Keep visible borders and keyboard focus without relying on the

@@ -110,7 +110,7 @@ function Dashboard() {
         </div>
         <div className="dashboard-controls">
           <div className="control-group">
-            <span id="material-label">Surface</span>
+            <span id="material-label">Edge style</span>
             <Select
               items={{ raised: 'Raised', matte: 'Matte' }}
               value={material}
@@ -130,9 +130,9 @@ function Dashboard() {
             </Select>
           </div>
           <div className="control-group">
-            <span id="mode-label">Light</span>
+            <span id="mode-label">Pointer tracking</span>
             <Select
-              items={{ static: 'Static', pointer: 'Dynamic', auto: 'System' }}
+              items={{ static: 'Off', pointer: 'On', auto: 'System' }}
               value={mode}
               onValueChange={(value) => {
                 if (value === 'auto' || value === 'pointer' || value === 'static')
@@ -147,8 +147,8 @@ function Dashboard() {
               </SelectTrigger>
               <SelectPopup>
                 <SelectList>
-                  <SelectItem value="static">Static</SelectItem>
-                  <SelectItem value="pointer">Dynamic</SelectItem>
+                  <SelectItem value="static">Off</SelectItem>
+                  <SelectItem value="pointer">On</SelectItem>
                   <SelectItem value="auto">System</SelectItem>
                 </SelectList>
               </SelectPopup>
