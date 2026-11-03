@@ -436,3 +436,18 @@ test('home and docs navigate without reloading or resetting the theme and header
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
   expect(documents).toBe(0);
 });
+
+
+test('scrolling and opening search keep the header in the same horizontal position', async ({ page }) => {
+  await page.goto('/');
+  const brand = page.locator('.wordmark');
+  const initial = await brand.boundingBox();
+  expect(await page.locator('html').evaluate(node => getComputedStyle(node).scrollbarGutter)).toBe('stable');
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect.poll(async () => (await brand.boundingBox())?.x).toBe(initial?.x);
+  await page.getByRole('button', { name: 'Search documentation', exact: true }).click();
+  await expect.poll(async () => (await brand.boundingBox())?.x).toBe(initial?.x);
+  await page.keyboard.press('Escape');
+  await page.getByRole('link', { name: 'Docs', exact: true }).click();
+  await expect.poll(async () => (await brand.boundingBox())?.x).toBe(initial?.x);
+});
