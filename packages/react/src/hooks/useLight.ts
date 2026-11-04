@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   createLight,
   type LightController,
@@ -18,17 +18,19 @@ export function useLight({
   radius,
   intensity,
 }: LightOptions = {}): Light {
-  const [state] = useState(() => {
+  const lightRef = useRef<Light | null>(null);
+  if (lightRef.current === null) {
     const core = createLight({ motion, radius, intensity, staticDirection });
-    const handle: Light = { [lightBrand]: core, refresh: core.refresh };
-    return { core, handle };
-  });
-  useEffect(() => state.core.mount(document), [state]);
+    lightRef.current = { [lightBrand]: core, refresh: core.refresh };
+  }
+  const light = lightRef.current;
+  const core = light[lightBrand];
+  useEffect(() => core.mount(document), [core]);
   useEffect(
-    () => state.core.configure({ motion, radius, intensity, staticDirection }),
-    [state, motion, radius, intensity, staticDirection],
+    () => core.configure({ motion, radius, intensity, staticDirection }),
+    [core, motion, radius, intensity, staticDirection],
   );
-  return state.handle;
+  return light;
 }
 
 /** Internal access keeps controller ownership on the opaque handle. */
