@@ -1,3 +1,4 @@
+import { Link } from '@bolerish/ui/link';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { CodeBlock } from '../../ui/CodeBlock.js';
 import { refreshSurface, hookSurface } from './examples.js';
@@ -21,8 +22,7 @@ export const usage: DocPage = {
           <P>
             Start with <code>Lighting</code> around the area you want to connect, rather than wrapping the whole application. Only its explicit{' '}
             <code>Lighting.Surface</code> descendants respond to that light.
-            Nest another Lighting to give part of the section an independent
-            light; each surface uses its nearest owner.
+            The preview connects Bolerish UI components with hooks to this site’s shared light. The code shows the equivalent declarative setup with your own classes.
           </P>
           <ExamplePreview title={sharedLightExample.title} code={sharedLightExample.code}>
             <sharedLightExample.Component />
@@ -69,7 +69,7 @@ export const usage: DocPage = {
             Put the decoration on a label or div around the input. The border
             uses <code>::after</code>, which is not a reliable drawing surface
             on native input elements. The editable Project name field in the
-            example above uses a label wrapper; its native input keeps its
+            preview above uses a wrapper; its native input keeps its
             value, selection and keyboard behavior. Apply <code>edgeStyle="recessed"</code> to the wrapper.
           </P>
           <Note title="Keep existing decorations">
@@ -87,7 +87,7 @@ export const usage: DocPage = {
             Use <code>useLight</code> and <code>useSurface</code> when a component already owns its host. Create one light in the common parent and pass it to each surface hook to connect several components. The example below connects one host; a custom Card can receive the same bindings if it forwards its ref, className and style to the DOM element. Merge the returned className and style with your component’s own styling, and attach the ref to that host.
           </P>
           <CodeBlock label="Connect an existing host" code={hookSurface} />
-          <P>The Style and Motion pages update this site’s shared settings. Your application controls its own options through <code>edgeStyle</code>, <code>motion</code> and <code>staticDirection</code>; the independent examples on this page keep their own light.</P>
+          <P>The Style and Motion pages update this site’s shared settings. Your application controls its own options through <code>edgeStyle</code>, <code>motion</code> and <code>staticDirection</code>; the shared preview above uses these site settings. See <Link href="/docs/styles/">Style</Link> and <Link href="/docs/motion/">Motion</Link> to change them.</P>
         </>
       ),
     },
