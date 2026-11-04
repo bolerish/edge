@@ -1,3 +1,5 @@
+import { MotionExample } from './motion.example.js';
+import motionSource from './motion.example.tsx?raw';
 import { DecorationSlotExample } from './decoration-slot.example.js';
 import decorationSlotSource from './decoration-slot.example.tsx?raw';
 import { FirstSurfaceExample } from './first-surface.example.js';
@@ -28,3 +30,5 @@ export const decorationSlotExample = {
   Component: DecorationSlotExample,
   code: decorationSlotSource,
 };
+
+export const motionExample = { title: 'Compare motion', Component: MotionExample, code: motionSource };

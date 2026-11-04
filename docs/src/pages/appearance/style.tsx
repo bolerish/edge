@@ -3,12 +3,13 @@ import { Link } from '@bolerish/ui/link';
 import { CodeBlock } from '../../ui/CodeBlock.js';
 import { ExamplePreview } from '../../ui/ExamplePreview.js';
 import { edgeStylesExample } from '../../examples/examples.js';
+import { apiTable, surfaceOptionRows } from './api-options.js';
 import type { DocPage } from '../types.js';
 export const styles: DocPage = {
   slug: 'styles',
   aliases: ['materials', 'react/materials'],
-  section: 'Guides',
-  title: 'Styles',
+  section: 'Appearance',
+  title: 'Style',
   description:
     'Choose how an edge responds to light. Edge style response and base component styling are separate decisions.',
   sections: [
@@ -22,6 +23,7 @@ export const styles: DocPage = {
         </ExamplePreview>
       </>,
     },
+    { id: 'options', title: 'Style options', content: apiTable('Style options', surfaceOptionRows) },
     {
       id: 'raised',
       title: 'Raised',

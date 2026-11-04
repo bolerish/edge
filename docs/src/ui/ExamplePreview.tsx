@@ -1,3 +1,4 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
 import type { ReactNode } from 'react';
 import { CodeBlock } from './CodeBlock.js';
 import './ExamplePreview.css';
@@ -10,11 +11,24 @@ export function ExamplePreview({ title, code, children }: {
 }) {
   return (
     <div className="example-preview" role="group" aria-label={title}>
-      <div className="example-preview-result" role="group" aria-label={`${title} preview`}>
-        {children}
-      </div>
-      <noscript>The example becomes interactive when JavaScript is enabled.</noscript>
-      <CodeBlock label={title} code={code} />
+      <Tabs defaultValue="preview" variant="underline">
+        <TabsList aria-label={`${title} view`}>
+          <TabsTrigger value="preview">Preview</TabsTrigger>
+          <TabsTrigger value="code">Code</TabsTrigger>
+        </TabsList>
+        <TabsContent value="preview" keepMounted>
+          <div className="example-preview-result" role="group" aria-label={`${title} preview`}>
+            {children}
+          </div>
+        </TabsContent>
+        <TabsContent value="code" keepMounted>
+          <CodeBlock label={title} code={code} />
+        </TabsContent>
+      </Tabs>
+      <noscript>
+        <p>The example becomes interactive when JavaScript is enabled.</p>
+        <CodeBlock label={title} code={code} />
+      </noscript>
     </div>
   );
 }

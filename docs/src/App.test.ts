@@ -266,7 +266,9 @@ test('skip link, code scrolling, zoom reflow and high-contrast code stay usable'
   await page.keyboard.press('Enter');
   await expect(page.locator('main')).toBeFocused();
   await page.goto('/docs/react/');
-  const code = page.locator('pre').last();
+  await page.getByRole('group', { name: 'Your first surface', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
+  const code = page.locator('pre:visible').last();
+  await page.keyboard.press('Tab');
   await code.focus();
   await expect(code).toBeFocused();
   expect(
@@ -345,9 +347,9 @@ test('API navigation follows the URL hash after hydration and in-page navigation
 
 test('previous guide URLs preserve their content and API anchors', async ({ page }) => {
   for (const [slug, title] of [
-    ['installation', 'Installation'], ['usage', 'Usage'], ['materials', 'Styles'],
+    ['installation', 'Installation'], ['usage', 'Usage'], ['materials', 'Style'],
     ['accessibility', 'Accessibility'], ['api', 'API reference'],
-    ['react/materials', 'Styles'], ['react/accessibility', 'Accessibility'],
+    ['react/materials', 'Style'], ['react/accessibility', 'Accessibility'],
   ] as const) {
     await page.goto(`/docs/${slug}/`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title);
@@ -375,13 +377,14 @@ test('framework search uses canonical React guides and contextual labels', async
 test('shared guides appear before framework-specific documentation', async ({ page }) => {
   await page.goto('/docs/');
   const groups = page.locator('.sidebar .nav-group');
-  await expect(groups).toHaveCount(3);
+  await expect(groups).toHaveCount(4);
   await expect(groups.nth(0).getByRole('link')).toHaveText(['Getting started']);
-  await expect(groups.nth(1).getByRole('link')).toHaveText(['Styles', 'Accessibility']);
-  await expect(groups.nth(2).getByRole('link')).toHaveText(['Installation', 'Usage', 'API reference']);
-  await groups.nth(1).getByRole('link', { name: 'Styles', exact: true }).click();
+  await expect(groups.nth(1).getByRole('link')).toHaveText(['Style', 'Motion']);
+  await expect(groups.nth(2).getByRole('link')).toHaveText(['Accessibility']);
+  await expect(groups.nth(3).getByRole('link')).toHaveText(['Installation', 'Usage', 'API reference']);
+  await groups.nth(1).getByRole('link', { name: 'Style', exact: true }).click();
   await expect(page).toHaveURL(/\/docs\/styles\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Styles');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Style');
 });
 
 test('hero compares lighting and package-manager tabs expose matching commands', async ({
@@ -411,6 +414,7 @@ test('static random direction is stable across appearance updates', async ({ pag
   await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('random');
   const card = page.getByTestId('hero-surface');
   await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('');
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('315.0deg');
   const angle = await card.evaluate(node => node.style.getPropertyValue('--wisp-angle'));
   await page.getByRole('combobox', { name: 'Style', exact: true }).selectOption('matte');
   await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe(angle);
@@ -511,7 +515,8 @@ test('the reading journey and document titles work without JavaScript', async ({
     ['/docs/', 'Getting started · bolerish/edge'],
     ['/docs/react/', 'React · Installation · bolerish/edge'],
     ['/docs/react/usage/', 'React · Usage · bolerish/edge'],
-    ['/docs/styles/', 'Guides · Styles · bolerish/edge'],
+    ['/docs/styles/', 'Appearance · Style · bolerish/edge'],
+    ['/docs/motion/', 'Appearance · Motion · bolerish/edge'],
     ['/docs/accessibility/', 'Guides · Accessibility · bolerish/edge'],
     ['/docs/react/api/', 'React · API reference · bolerish/edge'],
   ] as const;
@@ -548,6 +553,7 @@ test('shared light demo preserves native controls and displays its executable so
     configurable: true,
     value: { writeText: async (text: string) => { (window as unknown as { copied: string }).copied = text; } },
   }));
+  await page.getByRole('group', { name: 'One light, your components', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
   await page.getByRole('button', { name: 'Copy One light, your components', exact: true }).click();
   expect(await page.evaluate(() => (window as unknown as { copied: string }).copied)).toBe(source);
 });
@@ -646,8 +652,9 @@ test('search matches the shared layout and filters real document categories', as
   await expect(dialog.locator('.search-results a').filter({ hasText: 'React ·' })).toHaveCount(3);
   await query.fill('shadowColor');
   await expect(dialog.locator('a[href="/docs/react/api/#use-surface"]')).toBeVisible();
-  await dialog.getByRole('button', { name: '#Guides', exact: true }).click();
-  await expect(dialog.locator('.search-results a')).toHaveCount(1);
+  await dialog.getByRole('button', { name: '#Appearance', exact: true }).click();
+  await expect(dialog.locator('.search-results a')).toHaveCount(2);
+  await expect(dialog.locator('a[href="/docs/styles/#options"]')).toBeVisible();
   await expect(dialog.locator('a[href="/docs/styles/#customize-the-highlight"]')).toBeVisible();
   await query.fill('no-matching-document-987');
   await expect(dialog.getByRole('status')).toContainText('No documents found');
@@ -659,4 +666,31 @@ test('search matches the shared layout and filters real document categories', as
   const bounds = await dialog.boundingBox();
   expect(bounds!.x).toBeGreaterThanOrEqual(0);
   expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);
+});
+
+test('appearance pages expose topic options and examples retain state across preview and code tabs', async ({ page }) => {
+  await page.goto('/docs/motion/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Motion');
+  const table = page.getByRole('table', { name: 'Motion options', exact: true });
+  for (const name of ['motion', 'staticDirection', 'radius', 'intensity'])
+    await expect(table.getByRole('rowheader', { name, exact: true })).toBeVisible();
+  const example = page.getByRole('group', { name: 'Compare motion', exact: true });
+  await example.getByRole('combobox', { name: 'Motion', exact: true }).selectOption('static');
+  const card = example.getByRole('article');
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
+  await example.getByRole('tab', { name: 'Code', exact: true }).click();
+  await expect(example.getByRole('region', { name: 'Compare motion code', exact: true })).toContainText('staticDirection');
+  await expect(card).toBeHidden();
+  await example.getByRole('tab', { name: 'Preview', exact: true }).click();
+  await expect(example.getByRole('combobox', { name: 'Motion', exact: true })).toHaveValue('static');
+  await example.getByRole('combobox', { name: 'Static direction', exact: true }).selectOption('random');
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('315.0deg');
+  const angle = await card.evaluate(node => node.style.getPropertyValue('--wisp-angle'));
+  await example.getByRole('tab', { name: 'Code', exact: true }).click();
+  await example.getByRole('tab', { name: 'Preview', exact: true }).click();
+  expect(await card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe(angle);
+  await page.goto('/docs/styles/');
+  const styleTable = page.getByRole('table', { name: 'Style options', exact: true });
+  for (const name of ['edgeStyle', 'color', 'borderWidth', 'pseudoElement'])
+    await expect(styleTable.getByRole('rowheader', { name, exact: true })).toBeVisible();
 });

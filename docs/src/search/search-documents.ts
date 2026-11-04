@@ -5,14 +5,14 @@ import { getPagePath } from '../pages/routes.js';
 interface SearchDocument {
   title: string;
   pageTitle: string;
-  category: 'Guides' | 'React';
+  category: 'Appearance' | 'Guides' | 'React';
   href: string;
   text: string;
   description: string;
 }
 const documents: SearchDocument[] = pages.flatMap((page) => {
   const href = getPagePath(page);
-  const category: SearchDocument['category'] = page.section === 'React' ? 'React' : 'Guides';
+  const category: SearchDocument['category'] = page.section === 'Appearance' ? 'Appearance' : page.section === 'React' ? 'React' : 'Guides';
   const pageTitle = [page.section, page.title].filter(Boolean).join(' · ');
   return [
     { title: page.title, pageTitle, category, href, text: `${pageTitle} ${page.description}`.toLowerCase(), description: page.description },

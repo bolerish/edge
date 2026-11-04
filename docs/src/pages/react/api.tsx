@@ -6,7 +6,7 @@ import {
   lightOptionRows,
   surfacePropRows,
   surfaceOptionRows,
-} from './api-options.js';
+} from '../appearance/api-options.js';
 import type { DocPage } from '../types.js';
 
 export const api: DocPage = {

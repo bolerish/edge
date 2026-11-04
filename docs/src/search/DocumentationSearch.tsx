@@ -9,7 +9,7 @@ import { searchDocuments } from './search-documents.js';
 export function DocumentationSearch() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [category, setCategory] = useState<'All' | 'Guides' | 'React'>('All');
+  const [category, setCategory] = useState<'All' | 'Appearance' | 'Guides' | 'React'>('All');
   const searching = query.trim().length > 0 || category !== 'All';
   const results = searching ? searchDocuments(query).filter(result => category === 'All' || result.category === category) : [];
   const changeOpen = (value: boolean) => { setOpen(value); setQuery(''); setCategory('All'); };
@@ -38,7 +38,7 @@ export function DocumentationSearch() {
         <Input aria-label="Search titles and content" placeholder="Search titles and content…" value={query} onChange={(event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)} />
         <div className="search-layout">
           <nav className="search-sections" aria-label="Search sections">
-            {(['All', 'Guides', 'React'] as const).map(section => (
+            {(['All', 'Appearance', 'Guides', 'React'] as const).map(section => (
               <Button key={section} size="sm" variant={category === section ? 'secondary' : 'ghost'}
                 aria-pressed={category === section} onClick={() => setCategory(section)}>
                 #{section}
