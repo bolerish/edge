@@ -1,0 +1,21 @@
+# bolerish/edge
+
+> A little more alive. Connect existing UI components to one shared directional light while keeping their markup, colors and interactions.
+
+The React 19 adapter is @bolerish/edge. Import its stylesheet from @bolerish/edge/style.css. The workspace packages are private and not yet published to npm; follow the Installation page for the repository preview workflow. Dedicated Vue, Svelte and Solid adapters are not implemented.
+
+Lighting creates a shared scope without adding DOM. Only explicit Lighting.Surface descendants respond; nested scopes are independent. Use useLight and useSurface to connect existing hosts, forwarding the returned ref and composing className and style.
+
+The edgeStyle option accepts raised, recessed and matte. The motion option accepts system (the library default), dynamic and static. staticDirection accepts a finite angle in degrees or "random", sampled once per light mount. The documentation site defaults to Dynamic and its Style and Motion controls update site preferences.
+
+Decoration uses ::after by default. Select pseudoElement: "before" when ::after is occupied. Use wrappers for native inputs or hosts using both pseudo-elements. Lighting is decorative and does not replace focus, contrast or validation states. Position-only layout changes can require refresh(); rotated or perspective geometry and cross-document portals are unsupported. SSR and static rendering are supported; interactive tracking requires JavaScript. No performance advantage is claimed.
+
+## Documentation
+
+- [Getting started](/docs/): Core concepts and available integrations.
+- [React installation](/docs/react/): Local setup, stylesheet and first surface.
+- [React usage](/docs/react/usage/): Shared scopes, existing components, input wrappers and geometry refresh.
+- [Style](/docs/styles/): Surface appearance values.
+- [Motion](/docs/motion/): Input behavior, static direction and reduced motion.
+- [Accessibility](/docs/accessibility/): Native controls, focus and forced colors.
+- [React API reference](/docs/react/api/): Complete props, hooks, defaults and cleanup contracts.
