@@ -135,12 +135,12 @@ assert(
     !routes.includes('/playground/'),
 );
 assert.equal(new Set(routes).size, routes.length, 'Documentation routes must be unique');
-const installation = await readFile(
-  resolve(site, 'docs/react/index.html'),
+const usage = await readFile(
+  resolve(site, 'docs/react/usage/index.html'),
   'utf8',
 );
 assert(
-  installation.includes('token keyword'),
+  usage.includes('token keyword'),
   'SSG must include highlighted code tokens',
 );
 const documents = new Map<string, string>();

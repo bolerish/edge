@@ -20,7 +20,7 @@ export function CodeBlock({
   code: string;
   label?: string;
   hideLabel?: boolean;
-  language?: 'tsx' | 'bash';
+  language?: 'tsx' | 'bash' | 'css' | 'text';
 }) {
   const [status, setStatus] = useState<'idle' | 'copied' | 'unavailable'>(
     'idle',

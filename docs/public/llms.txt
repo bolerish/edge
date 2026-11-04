@@ -2,7 +2,7 @@
 
 > A little more alive. Connect existing UI components to one shared directional light while keeping their markup, colors and interactions.
 
-The React 19 adapter is @bolerish/edge. Import its stylesheet from @bolerish/edge/style.css. The workspace packages are private and not yet published to npm; follow the Installation page for the repository preview workflow. Dedicated Vue, Svelte and Solid adapters are not implemented.
+The React 19 adapter is @bolerish/edge. Import its stylesheet from @bolerish/edge/style.css. The workspace packages are private and not yet published to npm; see Getting started for consumer commands and stylesheet setup, and CONTRIBUTING.md in the repository for local development. Dedicated Vue, Svelte and Solid adapters are not implemented.
 
 Lighting creates a shared scope without adding DOM. Only explicit Lighting.Surface descendants respond; nested scopes are independent. Use useLight and useSurface to connect existing hosts, forwarding the returned ref and composing className and style.
 
@@ -12,8 +12,8 @@ Decoration uses ::after by default. Select pseudoElement: "before" when ::after 
 
 ## Documentation
 
-- [Getting started](/docs/): Core concepts and available integrations.
-- [React installation](/docs/react/): Local setup, stylesheet and first surface.
+- [Getting started](/docs/): Shared installation commands, stylesheet setup, AI installation prompt and available integrations.
+- [React installation](/docs/react/): React 19 compatibility and framework-specific setup.
 - [React usage](/docs/react/usage/): Shared scopes, existing components, input wrappers and geometry refresh.
 - [Style](/docs/styles/): Surface appearance values.
 - [Motion](/docs/motion/): Input behavior, static direction and reduced motion.

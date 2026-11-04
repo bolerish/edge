@@ -135,7 +135,7 @@ test('mobile navigation supports Escape and pages stay inside the viewport', asy
 test('copy reports actual clipboard success and gives a fallback on denial', async ({
   page,
 }) => {
-  await page.goto('/docs/react/');
+  await page.goto('/docs/');
   await page.evaluate(() =>
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -151,7 +151,7 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
   await expect(copy).toHaveText('Copied');
   expect(
     await page.evaluate(() => (window as unknown as { copied: string }).copied),
-  ).toBe('pnpm install --frozen-lockfile\npnpm dev');
+  ).toBe('npm install @bolerish/edge');
   await page.evaluate(() =>
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -166,6 +166,34 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
   await expect(page.getByRole('status').first()).toContainText(
     'Copy unavailable',
   );
+});
+
+test('getting started owns shared installation and the AI prompt without demos', async ({ page }) => {
+  await page.goto('/docs/');
+  await expect(page.locator('.example-preview')).toHaveCount(0);
+  const install = page.locator('#installation');
+  for (const [manager, command] of [
+    ['npm', 'npm install @bolerish/edge'], ['pnpm', 'pnpm add @bolerish/edge'],
+    ['Yarn', 'yarn add @bolerish/edge'], ['Bun', 'bun add @bolerish/edge'],
+  ] as const) {
+    await install.getByRole('tab', { name: manager, exact: true }).click();
+    await expect(install.getByRole('region', { name: `${manager} installation code`, exact: true })).toContainText(command);
+  }
+  await install.locator('summary').click();
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText: async (text: string) => { (window as unknown as { copied: string }).copied = text; } },
+  }));
+  await install.getByRole('button', { name: 'Copy AI installation prompt', exact: true }).click();
+  const prompt = await page.evaluate(() => (window as unknown as { copied: string }).copied);
+  expect(prompt).toContain('React 19');
+  expect(prompt).toContain('@bolerish/edge/style.css');
+  expect(prompt).toContain('Do not add a demo page');
+  await expect(page.locator('#stylesheet')).toContainText('@import "@bolerish/edge/style.css";');
+  await page.goto('/docs/react/');
+  await expect(page.locator('.example-preview, .install-commands, pre')).toHaveCount(0);
+  await expect(page.locator('#package-installation a')).toHaveAttribute('href', '/docs/#installation');
+  await expect(page.locator('#load-the-stylesheet a')).toHaveAttribute('href', '/docs/#stylesheet');
 });
 
 test('static direction presets update every shared surface, code and persisted settings', async ({ page }) => {
@@ -222,7 +250,9 @@ test('SSG documents include highlighted code and remain readable without JavaScr
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Installation',
   );
-  await expect(page.locator('.token.keyword').first()).toBeVisible();
+  await expect(page.locator('.example-preview')).toHaveCount(0);
+  await page.locator('.sidebar a[href="/docs/react/usage/"]').click();
+  await expect(page.locator('.token.keyword:visible').first()).toBeVisible();
   await expect(page.locator('pre').last()).toContainText('Lighting.Surface');
   await page.goto('http://127.0.0.1:4183/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
@@ -243,8 +273,8 @@ test('skip link, code scrolling, zoom reflow and high-contrast code stay usable'
   ).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('main')).toBeFocused();
-  await page.goto('/docs/react/');
-  await page.getByRole('group', { name: 'Your first surface', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
+  await page.goto('/docs/react/usage/');
+  await page.getByRole('group', { name: 'One light, your components', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
   const code = page.locator('pre:visible').last();
   await page.keyboard.press('Tab');
   await code.focus();
@@ -291,7 +321,7 @@ test('documentation search finds section content and supports keyboard dismissal
   await page.keyboard.press('Control+k');
   await expect(dialog).toBeVisible();
   await query.fill('installation');
-  await dialog.getByRole('link', { name: /^Installation/ }).click();
+  await dialog.locator('a[href="/docs/react/"]').click();
   await expect(page).toHaveURL(/\/docs\/react\/$/);
 });
 
@@ -334,7 +364,7 @@ test('framework search uses canonical React guides and contextual labels', async
   await page.getByRole('button', { name: 'Search documentation' }).click();
   const dialog = page.getByRole('dialog');
   await dialog.getByRole('textbox', { name: 'Search titles and content' }).fill('React installation');
-  const result = dialog.getByRole('link', { name: /^Installation/ });
+  const result = dialog.locator('a[href="/docs/react/"]');
   await expect(result).toContainText('React · Installation');
   await expect(result).toHaveAttribute('href', '/docs/react/');
 });
@@ -602,7 +632,6 @@ test('decoration slots preserve consumer pseudo-elements and switch without extr
 test('search matches the shared layout and filters real document categories', async ({ page }) => {
   await page.goto('/docs/');
   await expect(page.locator('.example-preview')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: /^Copy / })).toHaveCount(0);
   await page.getByRole('button', { name: 'Search documentation', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Search documentation' });
   await expect(dialog.getByRole('status')).toHaveText('Search documentation or choose a category.');
@@ -677,6 +706,7 @@ test('documentation surfaces share page lighting and keep native links and indep
   expect(await next.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('');
   await card.click();
   await expect(page).toHaveURL(/\/docs\/react\/$/);
+  await page.locator('.sidebar a[href="/docs/"]').click();
   const code = page.locator('.code-block').first();
   await code.scrollIntoViewIfNeeded();
   const codeBounds = await code.boundingBox();
