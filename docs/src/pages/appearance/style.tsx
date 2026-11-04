@@ -3,7 +3,6 @@ import { Link } from '@bolerish/ui/link';
 import { CodeBlock } from '../../ui/CodeBlock.js';
 import { ExamplePreview } from '../../ui/ExamplePreview.js';
 import { edgeStylesExample } from '../../examples/examples.js';
-import { apiTable, surfaceOptionRows } from './api-options.js';
 import type { DocPage } from '../types.js';
 export const styles: DocPage = {
   slug: 'styles',
@@ -23,7 +22,20 @@ export const styles: DocPage = {
         </ExamplePreview>
       </>,
     },
-    { id: 'options', title: 'Style options', content: apiTable('Style options', surfaceOptionRows) },
+    { id: 'options', title: 'Style values', content: <>
+      <div className="table-scroll" role="region" aria-label="Style values table" tabIndex={0}>
+        <table className="api-table">
+          <caption className="visually-hidden">Style values</caption>
+          <thead><tr><th scope="col">Value</th><th scope="col">Behavior</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>raised</code></th><td>Highlights the edge facing the light. Default.</td></tr>
+            <tr><th scope="row"><code>recessed</code></th><td>Reverses the direction for an inset appearance.</td></tr>
+            <tr><th scope="row"><code>matte</code></th><td>Softens the edge response.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <P>For additional settings, see the <Link href="/docs/react/api/#lighting-surface">API reference</Link>.</P>
+    </> },
     {
       id: 'raised',
       title: 'Raised',

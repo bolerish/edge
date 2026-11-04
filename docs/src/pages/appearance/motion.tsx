@@ -2,7 +2,6 @@ import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
 import { ExamplePreview } from '../../ui/ExamplePreview.js';
 import { motionExample } from '../../examples/examples.js';
-import { apiTable, lightOptionRows } from './api-options.js';
 import type { DocPage } from '../types.js';
 
 export const motion: DocPage = {
@@ -19,7 +18,20 @@ export const motion: DocPage = {
         </ExamplePreview>
       </>,
     },
-    { id: 'options', title: 'Motion options', content: apiTable('Motion options', lightOptionRows) },
+    { id: 'options', title: 'Motion values', content: <>
+      <div className="table-scroll" role="region" aria-label="Motion values table" tabIndex={0}>
+        <table className="api-table">
+          <caption className="visually-hidden">Motion values</caption>
+          <thead><tr><th scope="col">Value</th><th scope="col">Behavior</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>system</code></th><td>Respects reduced motion and input preferences. Default.</td></tr>
+            <tr><th scope="row"><code>dynamic</code></th><td>Follows mouse or pen input, including with reduced motion enabled.</td></tr>
+            <tr><th scope="row"><code>static</code></th><td>Keeps a fixed direction; ignores pointer movement.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <P>For additional settings, see the <Link href="/docs/react/api/#lighting">API reference</Link>.</P>
+    </> },
     {
       id: 'system', title: 'System', content: <P>The default respects reduced motion. Without a precise hover device, lighting starts fixed; mouse or pen input can enable tracking when reduced motion is off. Touch movement never drives the light.</P>,
     },

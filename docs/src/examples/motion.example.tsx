@@ -24,16 +24,16 @@ export function MotionExample() {
             </SelectList></SelectPopup>
           </Select>
         </div>
-        <div className="appearance-control">
+        {motion === 'static' ? <div className="appearance-control">
           <span id="example-direction-label">Static direction</span>
-          <Select value={direction} items={directions} disabled={motion !== 'static'}
+          <Select value={direction} items={directions}
             onValueChange={value => { if (value === 'fixed' || value === 'random') setDirection(value); }}>
             <SelectTrigger aria-labelledby="example-direction-label"><SelectValue /></SelectTrigger>
             <SelectPopup><SelectList>
               {Object.entries(directions).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}
             </SelectList></SelectPopup>
           </Select>
-        </div>
+        </div> : null}
       </div>
       <MotionCard motion={motion} staticDirection={direction === 'random' ? 'random' : 315} />
     </div>

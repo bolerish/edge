@@ -665,8 +665,7 @@ test('search matches the shared layout and filters real document categories', as
   await query.fill('shadowColor');
   await expect(dialog.locator('a[href="/docs/react/api/#use-surface"]')).toBeVisible();
   await dialog.getByRole('button', { name: '#Appearance', exact: true }).click();
-  await expect(dialog.locator('.search-results a')).toHaveCount(2);
-  await expect(dialog.locator('a[href="/docs/styles/#options"]')).toBeVisible();
+  await expect(dialog.locator('.search-results a')).toHaveCount(1);
   await expect(dialog.locator('a[href="/docs/styles/#customize-the-highlight"]')).toBeVisible();
   await query.fill('no-matching-document-987');
   await expect(dialog.getByRole('status')).toContainText('No documents found');
@@ -683,10 +682,12 @@ test('search matches the shared layout and filters real document categories', as
 test('appearance pages expose topic options and examples retain state across preview and code tabs', async ({ page }) => {
   await page.goto('/docs/motion/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Motion');
-  const table = page.getByRole('table', { name: 'Motion options', exact: true });
-  for (const name of ['motion', 'staticDirection', 'radius', 'intensity'])
+  const table = page.getByRole('table', { name: 'Motion values', exact: true });
+  for (const name of ['system', 'dynamic', 'static'])
     await expect(table.getByRole('rowheader', { name, exact: true })).toBeVisible();
   const example = page.getByRole('group', { name: 'Compare motion', exact: true });
+  await expect(example.getByRole('combobox', { name: 'Static direction', exact: true })).toHaveCount(0);
+  await expect(table.getByRole('rowheader', { name: 'radius', exact: true })).toHaveCount(0);
   await example.getByRole('combobox', { name: 'Motion', exact: true }).click();
   await page.getByRole('option', { name: 'Static', exact: true }).click();
   const card = example.getByRole('article');
@@ -704,8 +705,9 @@ test('appearance pages expose topic options and examples retain state across pre
   await example.getByRole('tab', { name: 'Preview', exact: true }).click();
   expect(await card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe(angle);
   await page.goto('/docs/styles/');
-  const styleTable = page.getByRole('table', { name: 'Style options', exact: true });
-  for (const name of ['edgeStyle', 'color', 'borderWidth', 'pseudoElement'])
+  const styleTable = page.getByRole('table', { name: 'Style values', exact: true });
+  await expect(styleTable.getByRole('rowheader', { name: 'color', exact: true })).toHaveCount(0);
+  for (const name of ['raised', 'recessed', 'matte'])
     await expect(styleTable.getByRole('rowheader', { name, exact: true })).toBeVisible();
 });
 
