@@ -627,3 +627,36 @@ test('decoration slots preserve consumer pseudo-elements and switch without extr
   expect(await host.evaluate(node => getComputedStyle(node, '::before').opacity)).toBe('0');
   expect(await ownAfter.evaluate(node => getComputedStyle(node, '::after').content)).toBe('"Saved"');
 });
+
+test('search matches the shared layout and filters real document categories', async ({ page }) => {
+  await page.goto('/docs/');
+  await expect(page.locator('.example-preview')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^Copy / })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Search documentation', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Search documentation' });
+  await expect(dialog.getByRole('status')).toHaveText('Search documentation or choose a category.');
+  await expect(dialog.locator('.search-results a')).toHaveCount(0);
+  const query = dialog.getByRole('textbox', { name: 'Search titles and content' });
+  await expect(query).toBeFocused();
+  const inputBox = await query.boundingBox();
+  const categoriesBox = await dialog.getByRole('navigation', { name: 'Search sections' }).boundingBox();
+  expect(categoriesBox!.y).toBeGreaterThan(inputBox!.y + inputBox!.height);
+  await dialog.getByRole('button', { name: '#React', exact: true }).click();
+  await expect(dialog.locator('.search-results a')).toHaveCount(3);
+  await expect(dialog.locator('.search-results a').filter({ hasText: 'React ·' })).toHaveCount(3);
+  await query.fill('shadowColor');
+  await expect(dialog.locator('a[href="/docs/react/api/#use-surface"]')).toBeVisible();
+  await dialog.getByRole('button', { name: '#Guides', exact: true }).click();
+  await expect(dialog.locator('.search-results a')).toHaveCount(1);
+  await expect(dialog.locator('a[href="/docs/styles/#customize-the-highlight"]')).toBeVisible();
+  await query.fill('no-matching-document-987');
+  await expect(dialog.getByRole('status')).toContainText('No documents found');
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Search documentation', exact: true }).click();
+  await expect(dialog.getByRole('button', { name: '#All', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(query).toHaveValue('');
+  await page.setViewportSize({ width: 390, height: 844 });
+  const bounds = await dialog.boundingBox();
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(390);
+});

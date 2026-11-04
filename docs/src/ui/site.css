@@ -378,7 +378,13 @@ pre:focus-visible,
 .preferences label { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 12px; font-size: 13px; }
 .preferences select { width: 100%; min-width: 0; }
 .preference-description { font-size: 12px; color: var(--site-muted); line-height: 1.6; }
-.search-dialog { width: min(760px, calc(100vw - 32px)); max-width: min(760px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); display: grid; gap: 16px; }
+.search-dialog { width: min(760px, calc(100vw - 32px)); max-width: min(760px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
+.search-dialog > input { width: 100%; flex-shrink: 0; }
+.search-layout { display: grid; gap: 16px; min-height: 0; }
+.search-sections { display: flex; flex-wrap: wrap; gap: 6px; }
+.search-sections button { border-radius: 999px; }
+.search-matches { min-width: 0; }
+.search-matches .search-count { display: block; margin: 0 12px 8px; }
 .search-count { font-size: 12px; color: var(--site-muted); margin: 0; }
 .search-results { overflow-y: auto; max-height: min(50dvh, 440px); min-height: 80px; }
 .search-results a { display: grid; gap: 4px; padding: 12px; border-radius: 6px; text-decoration: none; color: var(--site-foreground); }
