@@ -1,3 +1,4 @@
+import { DocumentSurface } from '../ui/DocumentSurface.js';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import type { DocPage } from './types.js';
 import './getting-started.css';
@@ -29,7 +30,7 @@ export const gettingStarted: DocPage = {
           </P>
           <ul className="framework-cards" aria-label="Framework integrations">
             <li>
-              <a className="framework-card" href="/docs/react/">
+              <DocumentSurface as="a" className="framework-card" href="/docs/react/">
                 <span className="framework-card-heading">
                   <strong>React</strong>
                   <span className="framework-card-status">Available</span>
@@ -40,11 +41,11 @@ export const gettingStarted: DocPage = {
                 <span className="framework-card-action">
                   Start with React <span aria-hidden="true">↗</span>
                 </span>
-              </a>
+              </DocumentSurface>
             </li>
             {['Vue', 'Svelte', 'Solid'].map((framework) => (
               <li key={framework}>
-                <div className="framework-card framework-card-unavailable">
+                <DocumentSurface className="framework-card framework-card-unavailable">
                   <span className="framework-card-heading">
                     <strong>{framework}</strong>
                     <span className="framework-card-status">Coming soon</span>
@@ -52,7 +53,7 @@ export const gettingStarted: DocPage = {
                   <span className="framework-card-description">
                     A dedicated integration is not available yet.
                   </span>
-                </div>
+                </DocumentSurface>
               </li>
             ))}
           </ul>

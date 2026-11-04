@@ -413,3 +413,5 @@ pre:focus-visible,
 .doc-note > strong { display: block; margin-bottom: 8px; }
 .doc-note p { margin: 0; }
 .api-table caption { text-align: left; }
+
+.reading-navigation a { border: 1px solid var(--site-border); border-radius: 8px; padding: 16px; }

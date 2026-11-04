@@ -1,3 +1,9 @@
+import { useLight } from '@bolerish/edge';
+import { DocumentLightContext } from './ui/document-light-context.js';
+import { DocumentSurface } from './ui/DocumentSurface.js';
+import type { LightOptions } from '@bolerish/edge';
+import type { ReactNode } from 'react';
+import { usePreferences } from './settings/usePreferences.js';
 import { Heading } from '@bolerish/ui/heading';
 import { Paragraph } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
@@ -7,6 +13,7 @@ import { Home } from './home/Home.js';
 import { SiteShell, docsNavigation } from './ui/SiteShell.js';
 
 export function App({ pathname }: { pathname: string }) {
+  const { motion, staticDirection } = usePreferences();
   const path = normalizePath(pathname);
   if (path === '/') return <Home />;
   const page = findPage(path);
@@ -27,6 +34,7 @@ export function App({ pathname }: { pathname: string }) {
     );
   const { previous, next } = getReadingNeighbors(page);
   return (
+    <DocumentLighting motion={motion} staticDirection={staticDirection === 'random' ? 'random' : undefined}>
     <SiteShell
       section="docs"
       pathname={getPagePath(page)}
@@ -47,11 +55,17 @@ export function App({ pathname }: { pathname: string }) {
           </section>
         ))}
         <nav className="reading-navigation" aria-label="Continue reading">
-          {previous ? <a href={getPagePath(previous)} rel="prev"><small>Previous</small><span>{previous.title}</span></a> : <span />}
-          {next ? <a href={getPagePath(next)} rel="next"><small>Next</small><span>{next.title}</span></a> : null}
+          {previous ? <DocumentSurface as="a" href={getPagePath(previous)} rel="prev"><small>Previous</small><span>{previous.title}</span></DocumentSurface> : <span />}
+          {next ? <DocumentSurface as="a" href={getPagePath(next)} rel="next"><small>Next</small><span>{next.title}</span></DocumentSurface> : null}
         </nav>
         <footer className="page-footer">bolerish/edge{page.section ? ` · ${page.section}` : ''}</footer>
       </article>
     </SiteShell>
+    </DocumentLighting>
   );
+}
+
+function DocumentLighting({ children, ...options }: LightOptions & { children: ReactNode }) {
+  const light = useLight(options);
+  return <DocumentLightContext value={light}>{children}</DocumentLightContext>;
 }

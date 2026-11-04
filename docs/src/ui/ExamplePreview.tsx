@@ -1,3 +1,4 @@
+import { DocumentSurface } from './DocumentSurface.js';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
 import type { ReactNode } from 'react';
 import { CodeBlock } from './CodeBlock.js';
@@ -17,9 +18,9 @@ export function ExamplePreview({ title, code, children }: {
           <TabsTrigger value="code">Code</TabsTrigger>
         </TabsList>
         <TabsContent value="preview" keepMounted>
-          <div className="example-preview-result" role="group" aria-label={`${title} preview`}>
+          <DocumentSurface className="example-preview-result" role="group" aria-label={`${title} preview`}>
             {children}
-          </div>
+          </DocumentSurface>
         </TabsContent>
         <TabsContent value="code" keepMounted>
           <CodeBlock label={title} code={code} />

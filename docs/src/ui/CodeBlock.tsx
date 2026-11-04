@@ -1,3 +1,4 @@
+import { DocumentSurface } from './DocumentSurface.js';
 import { Highlight } from 'prism-react-renderer';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx.js';
@@ -33,7 +34,7 @@ export function CodeBlock({
     }
   }
   return (
-    <div className="code-block">
+    <DocumentSurface className="code-block">
       <div className="code-toolbar">
         <span className={hideLabel ? 'visually-hidden' : undefined}>{label}</span>
         <Button
@@ -75,6 +76,6 @@ export function CodeBlock({
             ? 'Copy unavailable. Select the code to copy it manually.'
             : ''}
       </span>
-    </div>
+    </DocumentSurface>
   );
 }

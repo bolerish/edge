@@ -694,3 +694,26 @@ test('appearance pages expose topic options and examples retain state across pre
   for (const name of ['edgeStyle', 'color', 'borderWidth', 'pseudoElement'])
     await expect(styleTable.getByRole('rowheader', { name, exact: true })).toBeVisible();
 });
+
+test('documentation surfaces share page lighting and keep native links and independent demos', async ({ page }) => {
+  await page.goto('/docs/');
+  const card = page.getByRole('link', { name: /Start with React/ });
+  await card.scrollIntoViewIfNeeded();
+  const bounds = await card.boundingBox();
+  if (!bounds) throw new Error('Missing framework card');
+  await page.mouse.move(bounds.x + 2, bounds.y + bounds.height / 2);
+  await expect.poll(() => card.evaluate(node => Number.parseFloat(node.style.getPropertyValue('--wisp-angle')))).toBeCloseTo(270, 0);
+  const next = page.locator('.reading-navigation [rel="next"]');
+  expect(await next.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('');
+  await card.click();
+  await expect(page).toHaveURL(/\/docs\/react\/$/);
+  const code = page.locator('.code-block').first();
+  await code.scrollIntoViewIfNeeded();
+  const codeBounds = await code.boundingBox();
+  if (!codeBounds) throw new Error('Missing code block');
+  await page.mouse.move(codeBounds.x + 2, codeBounds.y + codeBounds.height / 2);
+  await expect.poll(() => code.evaluate(node => Number.parseFloat(node.style.getPropertyValue('--wisp-angle')))).toBeCloseTo(270, 0);
+  expect(await code.evaluate(node => getComputedStyle(node, '::after').pointerEvents)).toBe('none');
+  await page.emulateMedia({ forcedColors: 'active' });
+  expect(await code.evaluate(node => getComputedStyle(node, '::after').opacity)).toBe('0');
+});
