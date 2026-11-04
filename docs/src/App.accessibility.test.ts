@@ -20,13 +20,15 @@ for (const viewport of [
       test.setTimeout(120000);
       await page.setViewportSize(viewport);
       await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.addInitScript((theme) => {
+        localStorage.setItem('wisp:preferences:v1', JSON.stringify({ theme }));
+      }, theme);
       const reports = [];
       for (const route of routes) {
         await page.goto(route);
-        if (theme === 'dark' && await page.getByRole('button', { name: 'Switch to dark theme' }).isVisible())
-          await page
-            .getByRole('button', { name: 'Switch to dark theme' })
-            .click();
+        await expect(page.getByRole('button', {
+          name: theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+        })).toBeVisible();
         const result = await new AxeBuilder({ page })
           .withTags([
             'wcag2a',
@@ -106,10 +108,9 @@ for (const viewport of [
       ).toEqual([]);
       if (viewport.width === 1440) {
         await page.goto('/');
-        if (theme === 'dark' && await page.getByRole('button', { name: 'Switch to dark theme' }).isVisible())
-          await page
-            .getByRole('button', { name: 'Switch to dark theme' })
-            .click();
+        await expect(page.getByRole('button', {
+          name: theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+        })).toBeVisible();
         await page.screenshot({
           path: `../.private/home-${theme}.png`,
           fullPage: true,

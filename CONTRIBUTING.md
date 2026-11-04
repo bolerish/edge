@@ -44,6 +44,22 @@ pnpm check
 
 Repository scripts use `.ts` and run directly on the pinned Node version. Node strips erasable types but does not check them; `pnpm typecheck:scripts` checks all three scripts against the actual documentation server exports. It is included in `pnpm typecheck` and `pnpm check`.
 
+For Firefox and WebKit checks, a project-local browser cache avoids permission problems with a shared cache. Run these commands from the repository root; leave `WISP_CHROMIUM_EXECUTABLE` unset for these engines:
+
+```sh
+export PLAYWRIGHT_BROWSERS_PATH="$PWD/.private/playwright-browsers"
+pnpm --filter @bolerish/edge-docs exec playwright install firefox webkit
+pnpm --filter @bolerish/edge-docs test:browser --browser=firefox
+pnpm --filter @bolerish/edge-docs test:browser --browser=webkit
+```
+
+On macOS 27, Playwright Firefox 157 can fail with `Could not find profile folder` while looking up the shared app-data directory ([upstream issue](https://github.com/microsoft/playwright/issues/42768)). Use a separate app-data location for that command; this does not change your home directory or browser profile:
+
+```sh
+mkdir -p .private/firefox-home
+CFFIXED_USER_HOME="$PWD/.private/firefox-home" pnpm --filter @bolerish/edge-docs test:browser --browser=firefox
+```
+
 The browser test runner builds and owns its preview server. `WISP_CHROMIUM_EXECUTABLE` optionally selects an existing compatible Chromium installation. Standard runs use Playwright's installed browser. The complete check builds packages and the documentation site, checks types and tests, then validates package archives.
 
 `pnpm dev` builds libraries first and starts their watchers with the documentation site. Run a complete build after changing public TypeScript declarations. `pnpm dev:docs` is an alias for the same site and library watchers. Do not bypass built package exports with application source aliases.

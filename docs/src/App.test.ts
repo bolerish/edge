@@ -46,18 +46,19 @@ test('one light changes preview borders while project actions stay inactive', as
   await card.scrollIntoViewIfNeeded();
   const box = await card.boundingBox();
   if (!box) throw new Error('Missing card');
+  // Pointer coordinates may be rounded while layout boxes retain subpixels.
   await page.mouse.move(box.x + 4, box.y + box.height / 2);
   await expect
     .poll(() =>
-      card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
+      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
     )
-    .toBe('270.0deg');
+    .toBeCloseTo(270, 0);
   await page.mouse.move(box.x + box.width - 4, box.y + box.height / 2);
   await expect
     .poll(() =>
-      card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
+      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
     )
-    .toBe('90.0deg');
+    .toBeCloseTo(90, 0);
   expect(
     await card.evaluate(
       (node) => getComputedStyle(node, '::after').backgroundImage,
@@ -134,9 +135,9 @@ test('materials and modes update without further pointer movement', async ({
   await page.mouse.move(box.x + 2, box.y + box.height / 2);
   await expect
     .poll(() =>
-      card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
+      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
     )
-    .toBe('270.0deg');
+    .toBeCloseTo(270, 0);
   await page.emulateMedia({ forcedColors: 'active' });
   expect(
     await card.evaluate((node) => getComputedStyle(node, '::after').opacity),
@@ -254,10 +255,11 @@ test('SSG documents include highlighted code and remain readable without JavaScr
 });
 
 test('skip link, code scrolling, zoom reflow and high-contrast code stay usable', async ({
-  page,
+  page, browserName,
 }) => {
   await page.goto('/');
-  await page.keyboard.press('Tab');
+  // macOS WebKit uses Option+Tab to include links in keyboard navigation.
+  await page.keyboard.press(browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab');
   await expect(
     page.getByRole('link', { name: 'Skip to content' }),
   ).toBeFocused();
@@ -535,7 +537,7 @@ test('shared light demo preserves native controls and displays its executable so
   const bounds = await card.boundingBox();
   if (!bounds) throw new Error('Missing demo card');
   await page.mouse.move(bounds.x + 1, bounds.y + bounds.height / 2);
-  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('270.0deg');
+  await expect.poll(() => card.evaluate(node => Number.parseFloat(node.style.getPropertyValue('--wisp-angle')))).toBeCloseTo(270, 0);
   await demo.getByRole('textbox', { name: 'Project name' }).fill('My project');
   await expect(demo.getByRole('textbox', { name: 'Project name' })).toHaveValue('My project');
   await demo.getByRole('button', { name: 'Save project (0)', exact: true }).click();
