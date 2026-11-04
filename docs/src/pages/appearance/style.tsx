@@ -17,7 +17,7 @@ export const styles: DocPage = {
       id: 'compare-styles',
       title: 'Compare the edge response',
       content: <>
-        <P>Choose the edge response independently of your colors and layout. This React example places all three styles under one light. Use Static to compare the direction without moving the pointer, or Dynamic to explore the edges.</P>
+        <P>Choose Raised, Recessed or Matte to change how the card responds to the shared light. Move your pointer around it to compare the edge response. The card keeps its Bolerish UI appearance.</P>
         <ExamplePreview title={edgeStylesExample.title} code={edgeStylesExample.code}>
           <edgeStylesExample.Component />
         </ExamplePreview>

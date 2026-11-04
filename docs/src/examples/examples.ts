@@ -1,3 +1,4 @@
+import { exampleSource } from './example-source.js';
 import { MotionExample } from './motion.example.js';
 import motionSource from './motion.example.tsx?raw';
 import { DecorationSlotExample } from './decoration-slot.example.js';
@@ -22,7 +23,7 @@ export const sharedLightExample = {
 export const edgeStylesExample = {
   title: 'Compare edge styles',
   Component: EdgeStylesExample,
-  code: edgeStylesSource,
+  code: exampleSource(edgeStylesSource, ['styles', 'usage']),
 };
 
 export const decorationSlotExample = {
@@ -31,4 +32,4 @@ export const decorationSlotExample = {
   code: decorationSlotSource,
 };
 
-export const motionExample = { title: 'Compare motion', Component: MotionExample, code: motionSource };
+export const motionExample = { title: 'Compare motion', Component: MotionExample, code: exampleSource(motionSource, ['usage']) };

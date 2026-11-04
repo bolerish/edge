@@ -558,16 +558,28 @@ test('shared light demo preserves native controls and displays its executable so
   expect(await page.evaluate(() => (window as unknown as { copied: string }).copied)).toBe(source);
 });
 
-test('style comparison shares a light with opposing recessed and softer matte edges', async ({ page }) => {
+test('style example changes only edge style and retains Bolerish UI colors', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/docs/styles/');
   const demo = page.getByRole('group', { name: 'Style comparison', exact: true });
-  await demo.getByRole('combobox', { name: 'Motion' }).selectOption('static');
-  const cards = demo.getByRole('article');
-  await expect(cards).toHaveCount(3);
-  await expect.poll(() => cards.nth(0).evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
-  await expect.poll(() => cards.nth(1).evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('135.0deg');
-  const raised = await cards.nth(0).evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')));
-  await expect.poll(() => cards.nth(2).evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')))).toBeCloseTo(raised * 0.3, 2);
+  await expect(demo.getByRole('combobox', { name: 'Motion' })).toHaveCount(0);
+  const card = demo.getByRole('article');
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
+  const initialColor = await card.evaluate(node => getComputedStyle(node).backgroundColor);
+  await demo.getByRole('combobox', { name: 'Style', exact: true }).click();
+  await page.getByRole('option', { name: 'Recessed', exact: true }).click();
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('135.0deg');
+  const strength = await card.evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')));
+  await demo.getByRole('combobox', { name: 'Style', exact: true }).click();
+  await page.getByRole('option', { name: 'Matte', exact: true }).click();
+  await expect.poll(() => card.evaluate(node => Number(node.style.getPropertyValue('--wisp-strength')))).toBeCloseTo(strength * 0.3, 2);
+  expect(await card.evaluate(node => getComputedStyle(node).backgroundColor)).toBe(initialColor);
+  await page.getByRole('group', { name: 'Compare edge styles', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
+  const source = page.getByRole('region', { name: 'Compare edge styles code', exact: true });
+  await expect(source).toContainText('const edgeStyles');
+  await expect(source).not.toContainText('useState');
+  await expect(source).not.toContainText('SelectTrigger');
+  await expect(source).not.toContainText('#262d20');
 });
 
 test('component and hook tables expose complete searchable options', async ({ page }) => {
@@ -675,15 +687,17 @@ test('appearance pages expose topic options and examples retain state across pre
   for (const name of ['motion', 'staticDirection', 'radius', 'intensity'])
     await expect(table.getByRole('rowheader', { name, exact: true })).toBeVisible();
   const example = page.getByRole('group', { name: 'Compare motion', exact: true });
-  await example.getByRole('combobox', { name: 'Motion', exact: true }).selectOption('static');
+  await example.getByRole('combobox', { name: 'Motion', exact: true }).click();
+  await page.getByRole('option', { name: 'Static', exact: true }).click();
   const card = example.getByRole('article');
   await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
   await example.getByRole('tab', { name: 'Code', exact: true }).click();
   await expect(example.getByRole('region', { name: 'Compare motion code', exact: true })).toContainText('staticDirection');
   await expect(card).toBeHidden();
   await example.getByRole('tab', { name: 'Preview', exact: true }).click();
-  await expect(example.getByRole('combobox', { name: 'Motion', exact: true })).toHaveValue('static');
-  await example.getByRole('combobox', { name: 'Static direction', exact: true }).selectOption('random');
+  await expect(example.getByRole('combobox', { name: 'Motion', exact: true })).toContainText('Static');
+  await example.getByRole('combobox', { name: 'Static direction', exact: true }).click();
+  await page.getByRole('option', { name: 'Random per mount', exact: true }).click();
   await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('315.0deg');
   const angle = await card.evaluate(node => node.style.getPropertyValue('--wisp-angle'));
   await example.getByRole('tab', { name: 'Code', exact: true }).click();
