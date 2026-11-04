@@ -46,11 +46,11 @@ it('selects opt-in theme variants without theming unthemed hosts', () => {
   expect(renderToStaticMarkup(<Card theme="wisp" />)).toBe(raised);
   expect(renderToStaticMarkup(<Card theme={false} />)).toBe(plain);
 });
-it('rejects a light handle not created by useLight', () => {
+it.each([{}, null, undefined])('rejects an invalid light handle %s', (handle) => {
   function Invalid() {
     // Untyped consumers can pass an arbitrary object at runtime.
     // @ts-expect-error Invalid handle is intentional.
-    useSurface({ refresh() {} });
+    useSurface(handle);
     return null;
   }
   expect(() => renderToStaticMarkup(<Invalid />)).toThrow(/returned by useLight/);

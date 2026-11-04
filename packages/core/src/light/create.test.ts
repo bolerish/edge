@@ -5,7 +5,7 @@ import { createLight } from './create.js';
 let frames: Map<number, FrameRequestCallback>;
 let frameId: number;
 let queries: MediaQueryList[];
-let observers: Array<{ fire(): void; disconnected: boolean }>;
+let observers: Array<{ fire(): void; disconnected: boolean; targets: Set<Element> }>;
 function flush() {
   const batch = [...frames.values()];
   frames.clear();
@@ -65,13 +65,13 @@ beforeEach(() => {
   vi.stubGlobal(
     'ResizeObserver',
     class {
-      state: { fire(): void; disconnected: boolean };
+      state: { fire(): void; disconnected: boolean; targets: Set<Element> };
       constructor(callback: ResizeObserverCallback) {
-        this.state = { fire: () => callback([], this), disconnected: false };
+        this.state = { fire: () => callback([], this), disconnected: false, targets: new Set() };
         observers.push(this.state);
       }
-      observe() {}
-      unobserve() {}
+      observe(target: Element) { this.state.targets.add(target); }
+      unobserve(target: Element) { this.state.targets.delete(target); }
       disconnect() {
         this.state.disconnected = true;
       }
@@ -301,6 +301,7 @@ it('ignores an old cleanup after a new session has started', () => {
   const previousStop = light.mount(document);
   previousStop();
   const stop = light.mount(document);
+  flush();
   previousStop();
   point();
   flush();
@@ -497,4 +498,54 @@ it('aligns decoration to asymmetric host borders and restores owned inset variab
   expect(node.style.getPropertyValue('--wisp-inset-top')).toBe('7px');
   expect(node.style.getPropertyValue('--wisp-inset-right')).toBe('');
   stop();
+});
+
+it('observes existing and late surfaces, and releases removed observation targets', () => {
+  const light = createLight({ motion: 'static' });
+  const first = element();
+  const registration = light.register(first.node, 'raised');
+  const stop = light.mount(document);
+  flush();
+  const observer = observers[0]!;
+  expect(observer.targets.has(first.node)).toBe(true);
+  const late = element();
+  const lateRegistration = light.register(late.node, 'raised');
+  expect(observer.targets.has(late.node)).toBe(true);
+  flush();
+  first.measure.mockClear();
+  late.measure.mockClear();
+  observer.fire();
+  flush();
+  expect(first.measure).toHaveBeenCalledOnce();
+  expect(late.measure).toHaveBeenCalledOnce();
+  registration.destroy();
+  expect(observer.targets.has(first.node)).toBe(false);
+  expect(observer.targets.has(late.node)).toBe(true);
+  lateRegistration.destroy();
+  stop();
+  expect(observer.disconnected).toBe(true);
+});
+it('does not schedule empty or unrelated scroll refreshes', () => {
+  const light = createLight();
+  const stop = light.mount(document);
+  expect(frames.size).toBe(0);
+  light.refresh();
+  expect(frames.size).toBe(0);
+  light.register(element().node, 'raised');
+  flush();
+  const unrelated = document.createElement('div');
+  document.body.append(unrelated);
+  unrelated.dispatchEvent(new Event('scroll'));
+  expect(frames.size).toBe(0);
+  stop();
+});
+it('retains an unmounted document until every registered surface is released', () => {
+  const light = createLight();
+  const first = light.register(element().node, 'raised');
+  const second = light.register(element().node, 'raised');
+  first.destroy();
+  const other = document.implementation.createHTMLDocument();
+  expect(() => light.register(other.createElement('div'), 'raised')).toThrow(/different document/);
+  second.destroy();
+  light.register(other.createElement('div'), 'raised').destroy();
 });
