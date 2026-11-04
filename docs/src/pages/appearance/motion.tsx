@@ -39,7 +39,7 @@ export const motion: DocPage = {
       id: 'dynamic', title: 'Dynamic', content: <P>Continuously follows mouse or pen input, even when reduced motion is enabled. Offer it as an explicit user choice. Before pointer input, the dynamic effect is hidden.</P>,
     },
     {
-      id: 'static', title: 'Static', content: <P>Keeps a fixed direction. Use a finite angle in degrees, or random to choose one shared direction per mount. Rerenders and appearance updates keep that direction; remount the light to sample a new one.</P>,
+      id: 'static', title: 'Static', content: <P>Keeps a fixed direction. The selector offers 0°, 90°, 180°, 270° and 315°, plus Random per mount. In your code, use any finite angle in degrees, or <code>"random"</code> to choose one shared direction per mount. Rerenders and appearance updates keep that direction; remount the light to sample a new one.</P>,
     },
     {
       id: 'accessibility', title: 'Respect user preferences', content: <P>Keep focus, selection and validation visible independently of lighting. See <Link href="/docs/accessibility/">Accessibility</Link> for input and forced-colors behavior.</P>,

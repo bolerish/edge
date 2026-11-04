@@ -168,6 +168,24 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
   );
 });
 
+test('static direction presets update every shared surface, code and persisted settings', async ({ page }) => {
+  await page.goto('/docs/motion/');
+  await page.getByRole('combobox', { name: 'Motion', exact: true }).click();
+  await page.getByRole('option', { name: 'Static', exact: true }).click();
+  const example = page.getByRole('group', { name: 'Compare motion', exact: true });
+  for (const angle of [0, 90, 180, 270, 315]) {
+    await example.getByRole('combobox', { name: 'Static direction', exact: true }).click();
+    await page.getByRole('option', { name: `${angle}°`, exact: true }).click();
+    for (const target of [example.getByRole('article'), page.locator('.example-preview-result')])
+      await expect.poll(() => target.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe(`${angle.toFixed(1)}deg`);
+    await example.getByRole('tab', { name: 'Code', exact: true }).click();
+    await expect(example.getByRole('region', { name: 'Compare motion code', exact: true })).toContainText(`staticDirection: ${angle}`);
+    await example.getByRole('tab', { name: 'Preview', exact: true }).click();
+  }
+  await page.reload();
+  await expect(example.getByRole('combobox', { name: 'Static direction', exact: true })).toContainText('315°');
+});
+
 test('preview data stays fixed and getting started leads to React installation', async ({
   page,
 }) => {

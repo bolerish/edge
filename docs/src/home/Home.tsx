@@ -41,7 +41,7 @@ const projects: readonly Project[] = [
 export function Home() {
   const { motion, staticDirection } = usePreferences();
   return (
-    <Lighting motion={motion} staticDirection={staticDirection === 'random' ? 'random' : undefined} intensity={0.8}>
+    <Lighting motion={motion} staticDirection={staticDirection} intensity={0.8}>
       <SiteShell section="home" pathname="/">
         <div className="home-hero-layout">
           <section className="home-hero" aria-labelledby="home-title">

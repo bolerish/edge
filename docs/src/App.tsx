@@ -34,7 +34,7 @@ export function App({ pathname }: { pathname: string }) {
     );
   const { previous, next } = getReadingNeighbors(page);
   return (
-    <DocumentLighting motion={motion} staticDirection={staticDirection === 'random' ? 'random' : undefined}>
+    <DocumentLighting motion={motion} staticDirection={staticDirection}>
     <SiteShell
       section="docs"
       pathname={getPagePath(page)}

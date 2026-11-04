@@ -8,7 +8,7 @@ import '@bolerish/edge/style.css';
 import './appearance-examples.css';
 
 const motions = { system: 'System', dynamic: 'Dynamic', static: 'Static' };
-const directions = { fixed: '315°', random: 'Random per mount' };
+const directions = { random: 'Random per mount', '0': '0°', '90': '90°', '180': '180°', '270': '270°', '315': '315°' };
 export function MotionExample() {
   const { motion, staticDirection: direction } = usePreferences();
   return (
@@ -27,8 +27,12 @@ export function MotionExample() {
         </div>
         {motion === 'static' ? <div className="appearance-control">
           <span id="example-direction-label">Static direction</span>
-          <Select value={direction} items={directions}
-            onValueChange={value => { if (value === 'fixed' || value === 'random') updatePreferences({ staticDirection: value }); }}>
+          <Select value={String(direction)} items={directions}
+            onValueChange={value => { if (value === 'random') updatePreferences({ staticDirection: value });
+              else {
+                const angle = Number(value);
+                if (angle === 0 || angle === 90 || angle === 180 || angle === 270 || angle === 315) updatePreferences({ staticDirection: angle });
+              } }}>
             <SelectTrigger aria-labelledby="example-direction-label"><SelectValue /></SelectTrigger>
             <SelectPopup><SelectList>
               {Object.entries(directions).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}

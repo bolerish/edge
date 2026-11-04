@@ -3,7 +3,7 @@ import { useSyncExternalStore } from 'react';
 export interface SitePreferences {
   edgeStyle: 'raised' | 'recessed' | 'matte';
   motion: 'system' | 'dynamic' | 'static';
-  staticDirection: 'fixed' | 'random';
+  staticDirection: 0 | 90 | 180 | 270 | 315 | 'random';
   theme: 'light' | 'dark';
 }
 const storageKey = 'wisp:preferences:v1';
@@ -75,10 +75,16 @@ function parsePreferences(serialized: string | null): Readonly<SitePreferences> 
         ('motion' in value && value.motion === 'static') || ('mode' in value && value.mode === 'static')
           ? 'static'
           : 'motion' in value && value.motion === 'system' ? 'system' : 'dynamic',
-      staticDirection: 'staticDirection' in value && value.staticDirection === 'fixed' ? 'fixed' : 'random',
+      staticDirection: 'staticDirection' in value ? parseStaticDirection(value.staticDirection) : 'random',
       theme: 'theme' in value && value.theme === 'dark' ? 'dark' : 'light',
     });
   } catch {
     return defaults;
   }
+}
+
+function parseStaticDirection(value: unknown): SitePreferences['staticDirection'] {
+  if (value === 'fixed') return 315;
+  if (value === 0 || value === 90 || value === 180 || value === 270 || value === 315) return value;
+  return 'random';
 }

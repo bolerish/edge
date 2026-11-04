@@ -12,7 +12,7 @@ export function ExamplePreview({ title, code, children }: {
   children: ReactNode;
 }) {
   const { edgeStyle, motion, staticDirection } = usePreferences();
-  const displayedCode = code.replaceAll('__EDGE_STYLE__', JSON.stringify(edgeStyle)).replaceAll('__MOTION__', JSON.stringify(motion)).replaceAll('__STATIC_DIRECTION__', staticDirection === 'random' ? '"random"' : '315');
+  const displayedCode = code.replaceAll('__EDGE_STYLE__', JSON.stringify(edgeStyle)).replaceAll('__MOTION__', JSON.stringify(motion)).replaceAll('__STATIC_DIRECTION__', JSON.stringify(staticDirection));
   return (
     <div className="example-preview" role="group" aria-label={title}>
       <Tabs defaultValue="preview" variant="underline">
