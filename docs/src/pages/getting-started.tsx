@@ -1,6 +1,4 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
-import { ExamplePreview } from '../ui/ExamplePreview.js';
-import { sharedLightExample } from '../examples/examples.js';
 import type { DocPage } from './types.js';
 import './getting-started.css';
 
@@ -15,11 +13,8 @@ export const gettingStarted: DocPage = {
       id: 'one-shared-light',
       title: 'One shared light for your UI',
       content: <>
-        <P>Wrap the area that shares a light, then mark the elements that should respond. In this React example, a card, button and input wrapper share one light. Other elements keep their appearance.</P>
-        <ExamplePreview title={sharedLightExample.title} code={sharedLightExample.code}>
-          <sharedLightExample.Component />
-        </ExamplePreview>
-        <P>Try the button and edit the project name. Lighting decorates their edges while the controls keep their own behavior. Choose your framework below to set up the example.</P>
+        <P>Choose an area that shares a light, then select the elements that should respond. Each element keeps its markup, colors and interactions. Other elements in the area remain unchanged.</P>
+        <P>Use one light across a section, or give a smaller area an independent light. Choose your framework below for installation and your first example.</P>
       </>,
     },
     {
