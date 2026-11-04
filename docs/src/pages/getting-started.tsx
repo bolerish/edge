@@ -7,13 +7,13 @@ export const gettingStarted: DocPage = {
   aliases: ['getting-started'],
   title: 'Getting started',
   description:
-    'Your components own their markup, colors and interactions. Edge adds shared directional lighting to the elements you choose, whether in one card or across a page.',
+    'Give your UI a subtle response to the pointer. Connect the elements you choose while keeping your own markup, colors and interactions.',
   sections: [
     {
       id: 'one-shared-light',
-      title: 'One shared light for your UI',
+      title: 'A little more alive.',
       content: <>
-        <P>Choose an area that shares a light, then select the elements that should respond. Each element keeps its markup, colors and interactions. Other elements in the area remain unchanged.</P>
+        <P>Add a subtle highlight that responds as the pointer moves around your UI. Choose an area that shares a light, then select the elements that should respond. Your components keep their markup, colors and interactions.</P>
         <P>Use one light across a section, or give a smaller area an independent light. Choose your framework below for installation and your first example.</P>
       </>,
     },

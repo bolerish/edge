@@ -248,7 +248,7 @@ test('SSG documents include highlighted code and remain readable without JavaScr
   await expect(page.locator('pre').last()).toContainText('Lighting.Surface');
   await page.goto('http://127.0.0.1:4183/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'Light that reveals your interface.',
+    'A little more alive.',
   );
   await expect(page.getByRole('rowheader')).toHaveCount(3);
   await context.close();
@@ -434,7 +434,7 @@ test('home and docs navigate without reloading or resetting the theme and header
   expect(await page.evaluate(() => (window as unknown as { navigationMarker: boolean }).navigationMarker)).toBe(true);
   expect((await brand.boundingBox())?.x).toBe(before?.x);
   await page.goBack();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Light that reveals your interface.');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('A little more alive.');
   await page.goForward();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
   expect(documents).toBe(0);

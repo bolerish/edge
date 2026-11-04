@@ -46,11 +46,11 @@ export function Home() {
         <div className="home-hero-layout">
           <section className="home-hero" aria-labelledby="home-title">
             <Heading id="home-title" level={1} size="page">
-              Light that reveals your interface.
+              A little more alive.
             </Heading>
             <Paragraph variant="description">
-              Directional lighting for the components you own. One shared light,
-              with your colors and interactions.
+              Subtle highlights that follow your pointer. Your components,
+              colors and interactions stay yours.
             </Paragraph>
             <Button
               role="link"
