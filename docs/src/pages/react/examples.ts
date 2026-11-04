@@ -1,8 +1,8 @@
 export const hookSurface = `import { useLight, useSurface } from '@bolerish/edge';
 
 function Card() {
-  const light = useLight({ motion: 'dynamic' });
-  const surface = useSurface<HTMLElement>(light, { color: 'white' });
+  const light = useLight();
+  const surface = useSurface<HTMLElement>(light);
   return (
     <article
       ref={surface.ref}

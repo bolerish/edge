@@ -19,7 +19,7 @@ export const usage: DocPage = {
       content: (
         <>
           <P>
-            Wrap a section in <code>Lighting</code>. Only its explicit{' '}
+            Start with <code>Lighting</code> around the area you want to connect, rather than wrapping the whole application. Only its explicit{' '}
             <code>Lighting.Surface</code> descendants respond to that light.
             Nest another Lighting to give part of the section an independent
             light; each surface uses its nearest owner.
@@ -42,12 +42,12 @@ export const usage: DocPage = {
         <>
           <P>
             Pass className and style directly to <code>Lighting.Surface</code>.
-            Your styles compose with the lighting decoration:
+            Your styles compose with the lighting decoration. Set <code>edgeStyle</code> on a surface and <code>motion</code> on its shared light:
           </P>
           <CodeBlock
             label="Style composition"
             code={
-              '<Lighting.Surface as="article" className="card" style={{ padding: 24 }}>\n  Your content\n</Lighting.Surface>'
+              '<Lighting.Surface as="article" className="card" edgeStyle="raised">\n  Your content\n</Lighting.Surface>'
             }
           />
           <ExamplePreview title={decorationSlotExample.title} code={decorationSlotExample.code}>
@@ -55,7 +55,7 @@ export const usage: DocPage = {
           </ExamplePreview>
           <P>
             The scope adds no wrapper. Each surface renders one host and reserves its{' '}
-            <code>::after</code> for its border decoration by default. Choose <code>pseudoElement="before"</code> when your component already uses that slot.
+            <code>::after</code> for its border decoration by default. Choose <code>pseudoElement="before"</code> when your component already uses <code>::after</code>.
           </P>
         </>
       ),
@@ -70,7 +70,7 @@ export const usage: DocPage = {
             uses <code>::after</code>, which is not a reliable drawing surface
             on native input elements. The editable Project name field in the
             example above uses a label wrapper; its native input keeps its
-            value, selection and keyboard behavior:
+            value, selection and keyboard behavior. Apply <code>edgeStyle="recessed"</code> to the wrapper.
           </P>
           <Note title="Keep existing decorations">
             <P>Use <code>pseudoElement="before"</code> if only <code>::after</code> is occupied. If both pseudo-elements are occupied, apply lighting to a wrapper. Native inputs also need a wrapper. Match its radius to the visible control.</P>
@@ -84,11 +84,10 @@ export const usage: DocPage = {
       content: (
         <>
           <P>
-            Use useLight and useSurface when an existing component should own
-            the registered host. Merge the returned className and style with
-            your component’s own styling, and attach the ref to that host.
+            Use <code>useLight</code> and <code>useSurface</code> when a component already owns its host. Create one light in the common parent and pass it to each surface hook to connect several components. The example below connects one host; a custom Card can receive the same bindings if it forwards its ref, className and style to the DOM element. Merge the returned className and style with your component’s own styling, and attach the ref to that host.
           </P>
-          <CodeBlock label="Hook escape hatch" code={hookSurface} />
+          <CodeBlock label="Connect an existing host" code={hookSurface} />
+          <P>The Style and Motion pages update this site’s shared settings. Your application controls its own options through <code>edgeStyle</code>, <code>motion</code> and <code>staticDirection</code>; the independent examples on this page keep their own light.</P>
         </>
       ),
     },
