@@ -20,7 +20,7 @@ import {
   usePreferences,
 } from '../settings/usePreferences.js';
 
-type EdgeStyle = 'raised' | 'matte';
+type EdgeStyle = 'raised' | 'recessed' | 'matte';
 interface Project {
   id: number;
   name: string;

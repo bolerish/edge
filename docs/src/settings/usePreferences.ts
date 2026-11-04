@@ -1,8 +1,8 @@
 import { useSyncExternalStore } from 'react';
 
 export interface SitePreferences {
-  edgeStyle: 'raised' | 'matte';
-  motion: 'dynamic' | 'static';
+  edgeStyle: 'raised' | 'recessed' | 'matte';
+  motion: 'system' | 'dynamic' | 'static';
   staticDirection: 'fixed' | 'random';
   theme: 'light' | 'dark';
 }
@@ -19,6 +19,7 @@ let storedValue: string | null | undefined;
 const listeners = new Set<() => void>();
 
 export const motionDescriptions: Record<SitePreferences['motion'], string> = {
+  system: 'Respects motion and input preferences.',
   dynamic: 'Follows your pointer, even when reduced motion is enabled.',
   static: 'Keeps the light direction fixed.',
 };
@@ -69,11 +70,11 @@ function parsePreferences(serialized: string | null): Readonly<SitePreferences> 
     if (value === null || typeof value !== 'object') return defaults;
     return Object.freeze({
       edgeStyle:
-        ('edgeStyle' in value && value.edgeStyle === 'matte') || ('material' in value && value.material === 'matte') ? 'matte' : 'raised',
+        'edgeStyle' in value && value.edgeStyle === 'recessed' ? 'recessed' : ('edgeStyle' in value && value.edgeStyle === 'matte') || ('material' in value && value.material === 'matte') ? 'matte' : 'raised',
       motion:
         ('motion' in value && value.motion === 'static') || ('mode' in value && value.mode === 'static')
           ? 'static'
-          : 'dynamic',
+          : 'motion' in value && value.motion === 'system' ? 'system' : 'dynamic',
       staticDirection: 'staticDirection' in value && value.staticDirection === 'fixed' ? 'fixed' : 'random',
       theme: 'theme' in value && value.theme === 'dark' ? 'dark' : 'light',
     });

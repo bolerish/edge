@@ -7,7 +7,6 @@ import { useLocationHash } from './useLocationHash.js';
 import { MoonIcon } from '@phosphor-icons/react/Moon';
 import { SunIcon } from '@phosphor-icons/react/Sun';
 import { DocumentationSearch } from '../search/DocumentationSearch.js';
-import { SettingsPopover } from '../settings/SettingsPopover.js';
 import { updatePreferences, usePreferences } from '../settings/usePreferences.js';
 
 export interface NavigationGroup {
@@ -98,7 +97,6 @@ export function SiteShell({
         </nav>
         <div className="header-actions">
           <DocumentationSearch />
-          <SettingsPopover />
           <Button
             size="icon"
             variant="ghost"

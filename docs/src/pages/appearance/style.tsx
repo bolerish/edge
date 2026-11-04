@@ -16,7 +16,7 @@ export const styles: DocPage = {
       id: 'compare-styles',
       title: 'Compare the edge response',
       content: <>
-        <P>Choose Raised, Recessed or Matte to change how the card responds to the shared light. Move your pointer around it to compare the edge response. The card keeps its Bolerish UI appearance.</P>
+        <P>Choose Raised, Recessed or Matte to change how the card responds to the shared light. Move your pointer around it to compare the edge response. Your selection also updates the cards, code blocks and navigation surfaces across this site.</P>
         <ExamplePreview title={edgeStylesExample.title} code={edgeStylesExample.code}>
           <edgeStylesExample.Component />
         </ExamplePreview>

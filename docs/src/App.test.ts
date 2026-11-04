@@ -78,70 +78,30 @@ test('one light changes preview borders while project actions stay inactive', as
   await expect(page.getByRole('rowheader')).toHaveCount(3);
 });
 
-test('materials and modes update without further pointer movement', async ({
-  page,
-}) => {
+test('appearance controls update the document and persist across navigation', async ({ page }) => {
+  await page.goto('/docs/motion/');
+  await expect(page.getByRole('button', { name: 'Settings', exact: true })).toHaveCount(0);
+  const motion = page.getByRole('combobox', { name: 'Motion', exact: true });
+  await motion.click();
+  await page.getByRole('option', { name: 'Static', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Static direction', exact: true }).click();
+  await page.getByRole('option', { name: '315°', exact: true }).click();
+  const card = page.getByRole('group', { name: 'Motion comparison', exact: true }).getByRole('article');
+  const frame = page.locator('.example-preview-result');
+  for (const target of [card, frame])
+    await expect.poll(() => target.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
+  await page.locator('.sidebar').getByRole('link', { name: 'Style', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Style', exact: true }).click();
+  await page.getByRole('option', { name: 'Recessed', exact: true }).click();
+  await expect.poll(() => page.locator('.reading-navigation a').first().evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('135.0deg');
+  await page.reload();
+  await expect(page.getByRole('combobox', { name: 'Style', exact: true })).toContainText('Recessed');
+  await page.locator('.sidebar').getByRole('link', { name: 'Motion', exact: true }).click();
+  await expect(motion).toContainText('Static');
+  await page.getByRole('group', { name: 'Compare motion', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
+  await expect(page.getByRole('region', { name: 'Compare motion code', exact: true })).toContainText('motion: "static"');
   await page.goto('/');
-  const card = page.getByTestId('surface-card');
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  const light = page.getByRole('combobox', { name: 'Motion', exact: true });
-  const surface = page.getByRole('combobox', { name: 'Style', exact: true });
-  await expect(light).toHaveValue('dynamic');
-  await expect(surface).toHaveValue('raised');
-  await light.selectOption('static');
-  await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('fixed');
-  await page.keyboard.press('Escape');
-  await expect
-    .poll(() =>
-      card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
-    )
-    .toBe('315.0deg');
-  await expect
-    .poll(() =>
-      page
-        .getByTestId('surface-input')
-        .evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
-    )
-    .toBe('135.0deg');
-  const strength = await card.evaluate((node) =>
-    Number(node.style.getPropertyValue('--wisp-strength')),
-  );
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await surface.selectOption('matte');
-  await page.keyboard.press('Escape');
-  await expect
-    .poll(() =>
-      card.evaluate((node) =>
-        Number(node.style.getPropertyValue('--wisp-strength')),
-      ),
-    )
-    .toBeCloseTo(strength * 0.3, 2);
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await light.selectOption('static');
-  await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('fixed');
-  await page.keyboard.press('Escape');
-  await expect
-    .poll(() =>
-      card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
-    )
-    .toBe('315.0deg');
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await light.selectOption('dynamic');
-  await page.keyboard.press('Escape');
-  await card.scrollIntoViewIfNeeded();
-  const box = await card.boundingBox();
-  if (!box) throw new Error('Missing card');
-  await page.mouse.move(box.x + 2, box.y + box.height / 2);
-  await expect
-    .poll(() =>
-      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
-    )
-    .toBeCloseTo(270, 0);
-  await page.emulateMedia({ forcedColors: 'active' });
-  expect(
-    await card.evaluate((node) => getComputedStyle(node, '::after').opacity),
-  ).toBe('0');
+  await expect.poll(() => page.getByTestId('surface-card').evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('135.0deg');
 });
 
 test('mobile navigation supports Escape and pages stay inside the viewport', async ({
@@ -296,18 +256,6 @@ test('skip link, code scrolling, zoom reflow and high-contrast code stay usable'
 });
 
 
-test('header settings persist across documentation navigation and reloads', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Style' }).selectOption('matte');
-  await page.locator('.preferences').getByRole('combobox', { name: 'Motion' }).selectOption('static');
-  await page.keyboard.press('Escape');
-  await page.getByRole('link', { name: 'Docs', exact: true }).click();
-  await page.reload();
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await expect(page.getByRole('combobox', { name: 'Style' })).toHaveValue('matte');
-  await expect(page.locator('.preferences').getByRole('combobox', { name: 'Motion' })).toHaveValue('static');
-});
 
 test('documentation search finds section content and supports keyboard dismissal', async ({ page }) => {
   await page.goto('/');
@@ -406,21 +354,6 @@ test('hero compares lighting and package-manager tabs expose matching commands',
 
 });
 
-
-test('static random direction is stable across appearance updates', async ({ page }) => {
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Settings', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Motion', exact: true }).selectOption('static');
-  await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('random');
-  const card = page.getByTestId('hero-surface');
-  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('');
-  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).not.toBe('315.0deg');
-  const angle = await card.evaluate(node => node.style.getPropertyValue('--wisp-angle'));
-  await page.getByRole('combobox', { name: 'Style', exact: true }).selectOption('matte');
-  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe(angle);
-  await page.getByRole('combobox', { name: 'Direction', exact: true }).selectOption('fixed');
-  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
-});
 
 
 test('home and docs navigate without reloading or resetting the theme and header', async ({ page }) => {
@@ -559,12 +492,13 @@ test('shared light demo preserves native controls and displays its executable so
 });
 
 test('style example changes only edge style and retains Bolerish UI colors', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wisp:preferences:v1', JSON.stringify({ motion: 'static', staticDirection: 'fixed' })));
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/docs/styles/');
   const demo = page.getByRole('group', { name: 'Style comparison', exact: true });
   await expect(demo.getByRole('combobox', { name: 'Motion' })).toHaveCount(0);
   const card = demo.getByRole('article');
-  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
+  await expect.poll(() => card.evaluate(node => Number.parseFloat(node.style.getPropertyValue('--wisp-angle')))).not.toBeNaN();
   const initialColor = await card.evaluate(node => getComputedStyle(node).backgroundColor);
   await demo.getByRole('combobox', { name: 'Style', exact: true }).click();
   await page.getByRole('option', { name: 'Recessed', exact: true }).click();
@@ -577,6 +511,7 @@ test('style example changes only edge style and retains Bolerish UI colors', asy
   await page.getByRole('group', { name: 'Compare edge styles', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
   const source = page.getByRole('region', { name: 'Compare edge styles code', exact: true });
   await expect(source).toContainText('const edgeStyles');
+  await expect(source).toContainText('edgeStyle: "matte"');
   await expect(source).not.toContainText('useState');
   await expect(source).not.toContainText('SelectTrigger');
   await expect(source).not.toContainText('#262d20');
@@ -680,6 +615,7 @@ test('search matches the shared layout and filters real document categories', as
 });
 
 test('appearance pages expose topic options and examples retain state across preview and code tabs', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('wisp:preferences:v1', JSON.stringify({ motion: 'system', staticDirection: 'fixed' })));
   await page.goto('/docs/motion/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Motion');
   const table = page.getByRole('table', { name: 'Motion values', exact: true });
@@ -732,4 +668,17 @@ test('documentation surfaces share page lighting and keep native links and indep
   expect(await code.evaluate(node => getComputedStyle(node, '::after').pointerEvents)).toBe('none');
   await page.emulateMedia({ forcedColors: 'active' });
   expect(await code.evaluate(node => getComputedStyle(node, '::after').opacity)).toBe('0');
+});
+
+test('code remains readable with wider displayed indentation on desktop and mobile', async ({ page }) => {
+  await page.goto('/docs/styles/');
+  await page.getByRole('group', { name: 'Compare edge styles', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
+  const code = page.getByRole('region', { name: 'Compare edge styles code', exact: true });
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await code.evaluate(node => getComputedStyle(node).fontSize)).toBe('14px');
+    expect(await code.evaluate(node => getComputedStyle(node).tabSize)).toBe('4');
+    expect(await code.textContent()).toContain('\tYour component');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
 });

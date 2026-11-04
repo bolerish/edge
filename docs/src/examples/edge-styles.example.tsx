@@ -1,27 +1,27 @@
-import { useState } from 'react';
-import { useLight, useSurface, type EdgeStyle } from '@bolerish/edge';
+import { use } from 'react';
+import { DocumentLightContext } from '../ui/document-light-context.js';
+import { usePreferences, updatePreferences } from '../settings/usePreferences.js';
+import { useSurface, type EdgeStyle } from '@bolerish/edge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@bolerish/ui/card';
 import { Select, SelectItem, SelectList, SelectPopup, SelectTrigger, SelectValue } from '@bolerish/ui/select';
 import '@bolerish/edge/style.css';
 import './appearance-examples.css';
 
-// docs:start styles
 const edgeStyles = [
   { value: 'raised', label: 'Raised' },
   { value: 'recessed', label: 'Recessed' },
   { value: 'matte', label: 'Matte' },
 ] as const;
-// docs:end styles
 
 export function EdgeStylesExample() {
-  const [edgeStyle, setEdgeStyle] = useState<EdgeStyle>('raised');
+  const { edgeStyle } = usePreferences();
   return (
     <div role="group" aria-label="Style comparison">
       <div className="appearance-controls">
         <div className="appearance-control">
           <span id="example-style-label">Style</span>
           <Select value={edgeStyle} items={Object.fromEntries(edgeStyles.map(style => [style.value, style.label]))}
-            onValueChange={value => { if (value === 'raised' || value === 'recessed' || value === 'matte') setEdgeStyle(value); }}>
+            onValueChange={value => { if (value === 'raised' || value === 'recessed' || value === 'matte') updatePreferences({ edgeStyle: value }); }}>
             <SelectTrigger aria-labelledby="example-style-label"><SelectValue /></SelectTrigger>
             <SelectPopup><SelectList>
               {edgeStyles.map(style => <SelectItem key={style.value} value={style.value}>{style.label}</SelectItem>)}
@@ -33,9 +33,9 @@ export function EdgeStylesExample() {
     </div>
   );
 }
-// docs:start usage
 function StyleCard({ edgeStyle }: { edgeStyle: EdgeStyle }) {
-  const light = useLight();
+  const light = use(DocumentLightContext);
+  if (!light) throw new Error('Appearance examples require document lighting');
   const surface = useSurface<HTMLDivElement>(light, { edgeStyle });
   return (
     <Card role="article" ref={surface.ref} className={surface.className} style={surface.style}>
@@ -47,4 +47,3 @@ function StyleCard({ edgeStyle }: { edgeStyle: EdgeStyle }) {
     </Card>
   );
 }
-// docs:end usage

@@ -12,7 +12,7 @@ export const motion: DocPage = {
   sections: [
     {
       id: 'compare-motion', title: 'Choose motion behavior', content: <>
-        <P>Try System, Dynamic and Static below. Motion controls the shared light; each surface keeps its own style and colors.</P>
+        <P>Try System, Dynamic and Static below. Your selection updates the shared light across this site, including this card. Each surface keeps its colors and layout.</P>
         <ExamplePreview title={motionExample.title} code={motionExample.code}>
           <motionExample.Component />
         </ExamplePreview>

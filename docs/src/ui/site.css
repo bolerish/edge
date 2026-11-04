@@ -198,8 +198,8 @@ pre {
   padding: 18px 20px;
   overflow: auto;
   line-height: 1.8;
-  tab-size: 2;
-  font-size: 13px;
+  tab-size: 4;
+  font-size: 14px;
 }
 pre code {
   white-space: pre;
@@ -322,7 +322,7 @@ pre code {
   }
   pre {
     padding: 16px;
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -373,11 +373,6 @@ pre:focus-visible,
 .header-actions > .documentation-search { width: 230px; flex-shrink: 0; }
 .documentation-search-trigger { width: 100%; justify-content: flex-start; padding-inline: 12px; font-weight: 400; color: var(--site-muted); border: 0; }
 .header-actions svg { width: 20px; height: 20px; flex-shrink: 0; }
-.preferences-popover { width: 332px; max-width: calc(100vw - 32px); }
-.preferences { display: grid; gap: 16px; width: 100%; }
-.preferences label { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; gap: 12px; font-size: 13px; }
-.preferences select { width: 100%; min-width: 0; }
-.preference-description { font-size: 12px; color: var(--site-muted); line-height: 1.6; }
 .search-dialog { width: min(760px, calc(100vw - 32px)); max-width: min(760px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
 .search-dialog > input { width: 100%; flex-shrink: 0; }
 .search-layout { display: grid; gap: 16px; min-height: 0; }

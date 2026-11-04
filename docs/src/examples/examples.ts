@@ -1,6 +1,4 @@
-import { exampleSource } from './example-source.js';
 import { MotionExample } from './motion.example.js';
-import motionSource from './motion.example.tsx?raw';
 import { DecorationSlotExample } from './decoration-slot.example.js';
 import decorationSlotSource from './decoration-slot.example.tsx?raw';
 import { FirstSurfaceExample } from './first-surface.example.js';
@@ -8,7 +6,6 @@ import firstSurfaceSource from './first-surface.example.tsx?raw';
 import { SharedLightExample } from './shared-light.example.js';
 import sharedLightSource from './shared-light.example.tsx?raw';
 import { EdgeStylesExample } from './edge-styles.example.js';
-import edgeStylesSource from './edge-styles.example.tsx?raw';
 
 export const firstSurfaceExample = {
   title: 'Your first surface',
@@ -23,7 +20,14 @@ export const sharedLightExample = {
 export const edgeStylesExample = {
   title: 'Compare edge styles',
   Component: EdgeStylesExample,
-  code: exampleSource(edgeStylesSource, ['styles', 'usage']),
+  code: `const edgeStyles = ['raised', 'recessed', 'matte'];
+
+const light = useLight();
+const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
+
+<Card ref={surface.ref} className={surface.className} style={surface.style}>
+  Your component
+</Card>`,
 };
 
 export const decorationSlotExample = {
@@ -32,4 +36,9 @@ export const decorationSlotExample = {
   code: decorationSlotSource,
 };
 
-export const motionExample = { title: 'Compare motion', Component: MotionExample, code: exampleSource(motionSource, ['usage']) };
+export const motionExample = { title: 'Compare motion', Component: MotionExample, code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__ });
+const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
+
+<Card ref={surface.ref} className={surface.className} style={surface.style}>
+  Your component
+</Card>` };
