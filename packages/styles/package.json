@@ -17,7 +17,7 @@
     },
     "./style.css": {
       "types": "./dist/style.css.d.ts",
-      "default": "./dist/assets/stylex.css"
+      "default": "./dist/assets/edge.css"
     }
   },
   "scripts": {
@@ -31,9 +31,6 @@
     "@bolerish/edge-core": "workspace:^"
   },
   "devDependencies": {
-    "@stylexjs/stylex": "catalog:2026-11-03--stylex-stable",
-    "@stylexjs/unplugin": "catalog:2026-11-03--stylex-stable",
-    "unplugin": "catalog:2026-11-03--stylex-stable",
     "vite": "catalog:2026-11-03--vite-vitest-stable",
     "vitest": "catalog:2026-11-03--vite-vitest-stable",
     "typescript": "catalog:",

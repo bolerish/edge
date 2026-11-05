@@ -24,11 +24,6 @@ catalogs:
   2026-11-03--vite-vitest-stable:
     vite: 8.3.5
     vitest: 5.1.0
-  2026-11-03--stylex-stable:
-    '@stylexjs/stylex': 0.19.1
-    '@stylexjs/unplugin': 0.19.1
-    unplugin: 2.3.11
-
   2026-11-03--bolerish-stable:
     '@bolerish/ui': 0.18.1
 

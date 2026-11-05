@@ -17,7 +17,7 @@
     },
     "./style.css": {
       "types": "./dist/style.css.d.ts",
-      "default": "./dist/assets/stylex.css"
+      "default": "./dist/assets/edge.css"
     }
   },
   "scripts": {

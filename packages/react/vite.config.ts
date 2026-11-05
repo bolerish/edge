@@ -4,12 +4,12 @@ import { defineConfig, type Plugin } from 'vite';
 
 const stylesheet = fileURLToPath(import.meta.resolve('@bolerish/edge-styles/style.css'));
 const sharedStyles: Plugin = {
-  name: 'wisp-shared-styles',
+  name: 'edge-shared-styles',
   buildStart() {
     this.addWatchFile(stylesheet);
   },
   generateBundle() {
-    this.emitFile({ type: 'asset', fileName: 'assets/stylex.css', source: readFileSync(stylesheet, 'utf8') });
+    this.emitFile({ type: 'asset', fileName: 'assets/edge.css', source: readFileSync(stylesheet, 'utf8') });
     this.emitFile({ type: 'asset', fileName: 'style.css.d.ts', source: 'export {};\n' });
   },
 };
