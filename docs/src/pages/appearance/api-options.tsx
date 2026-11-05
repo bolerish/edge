@@ -48,12 +48,7 @@ const surfaceOptions = {
   edgeStyle: {
     type: "'raised' | 'recessed' | 'matte'",
     defaultValue: "'raised'",
-    description: 'How the edge responds to light. With the Wisp theme, only raised and matte are supported; recessed is available without a theme.',
-  },
-  theme: {
-    type: "'wisp' | false",
-    defaultValue: 'Unset',
-    description: 'Wisp adds a dark base appearance. Leave unset or use false to retain your own component appearance.',
+    description: 'How the edge responds to light. All three styles preserve your component appearance.',
   },
   color: {
     type: 'string',

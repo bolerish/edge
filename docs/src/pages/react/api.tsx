@@ -124,12 +124,11 @@ export const api: DocPage = {
         <>
           <P>
             Connect one existing HTML host to a light. Attach the returned
-            <code> ref</code> and merge <code>className</code> and
-            <code> style</code> with your own styles.
+            <code> ref</code>. Edge applies and removes its own decoration; keep your existing className and style props.
           </P>
           <CodeBlock
             label="useSurface signature"
-            code={'const { ref, className, style } = useSurface<HTMLElement>(light, options);'}
+            code={'const ref = useSurface<HTMLElement>(light, options);'}
           />
           {apiTable('useSurface options', surfaceOptionRows)}
           <div role="note" aria-label="One owner per element" className="doc-note">
@@ -141,9 +140,7 @@ export const api: DocPage = {
           </div>
           <P>
             <code>edgeStyle</code> changes update the existing registration.
-            With <code>theme="wisp"</code>, only <code>raised</code> and
-            <code> matte</code> are supported. Leave the theme unset to use
-            <code> recessed</code> or keep your existing appearance.
+            Appearance options update without replacing the host. Hook decoration is attached on the client; its server markup contains only your own styles. Use Lighting.Surface when you need the decorative CSS in server output too.
           </P>
         </>
       ),

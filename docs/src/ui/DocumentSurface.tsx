@@ -11,11 +11,9 @@ export function DocumentSurface(props: Props) {
 function LitSurface({ light, ...props }: Props & { light: Light }) {
   const { edgeStyle } = usePreferences();
   const surface = useSurface(light, { edgeStyle, color: 'var(--site-foreground)', shadowColor: 'transparent' });
-  const { className, style, ...host } = hostProps(props);
+  const host = hostProps(props);
   return createElement(props.as ?? 'div', {
-    ...host, ref: surface.ref,
-    className: [surface.className, className].filter(Boolean).join(' '),
-    style: { ...surface.style, ...style },
+    ...host, ref: surface,
   });
 }
 function hostProps({ as: _as, ...props }: Props) { return props; }

@@ -50,7 +50,7 @@ function MotionCard() {
   const { edgeStyle } = usePreferences();
   const surface = useSurface<HTMLDivElement>(light, { edgeStyle });
   return (
-    <Card role="article" ref={surface.ref} className={surface.className} style={surface.style}>
+    <Card role="article" ref={surface}>
       <CardHeader>
         <CardTitle>Follow your pointer</CardTitle>
         <CardDescription>Choose how this card responds to movement.</CardDescription>

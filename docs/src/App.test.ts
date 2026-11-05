@@ -581,7 +581,7 @@ test('component and hook tables expose complete searchable options', async ({ pa
   }
   for (const caption of ['Lighting.Surface props', 'useSurface options']) {
     const table = page.getByRole('table', { name: caption, exact: true });
-    for (const option of ['edgeStyle', 'theme', 'color', 'shadowColor', 'borderWidth', 'intensity', 'pseudoElement'])
+    for (const option of ['edgeStyle', 'color', 'shadowColor', 'borderWidth', 'intensity', 'pseudoElement'])
       await expect(table.getByRole('rowheader', { name: option, exact: true })).toBeVisible();
   }
   await page.getByRole('button', { name: 'Search documentation', exact: true }).click();

@@ -25,7 +25,7 @@ export const edgeStylesExample = {
   code: `const light = useLight();
 const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 
-<Card ref={surface.ref} className={surface.className} style={surface.style}>
+<Card ref={surface}>
   Your component
 </Card>`,
 };
@@ -45,6 +45,6 @@ export const decorationSlotExample = {
 export const motionExample = { title: 'Compare motion', Component: MotionExample, code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__ });
 const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 
-<Card ref={surface.ref} className={surface.className} style={surface.style}>
+<Card ref={surface}>
   Your component
 </Card>` };

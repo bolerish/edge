@@ -1,6 +1,5 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
-import { CodeBlock } from '../../ui/CodeBlock.js';
 import { ExamplePreview } from '../../ui/ExamplePreview.js';
 import { edgeStylesExample } from '../../examples/examples.js';
 import type { DocPage } from '../types.js';
@@ -53,7 +52,6 @@ export const styles: DocPage = {
         <P>
           Recessed surfaces reverse the light direction. Use{' '}
           <code>edgeStyle: 'recessed'</code> for inset wrappers such as fields.
-          It is available without the Wisp theme.
         </P>
       ),
     },
@@ -68,34 +66,12 @@ export const styles: DocPage = {
       ),
     },
     {
-      id: 'apply-the-wisp-theme',
-      title: 'Apply the Wisp theme',
-      content: (
-        <>
-          <P>
-            Add <code>theme: 'wisp'</code> for the library’s dark base surface.
-            The theme supports Raised and Matte:
-          </P>
-          <CodeBlock
-            label="Wisp theme"
-            code={
-              '<Lighting.Surface edgeStyle="matte" theme="wisp">\n  Your content\n</Lighting.Surface>'
-            }
-          />
-          <P>
-            Leave the theme unset to retain your existing component appearance.
-            The recessed style is not a Wisp theme choice. The{' '}
-            <Link href="/">dashboard example</Link> uses unthemed materials to
-            preserve Bolerish component colors.
-          </P>
-        </>
-      ),
-    },
-    {
       id: 'customize-the-highlight',
       title: 'Customize the highlight',
       content: (
         <>
+          <span id="apply-the-wisp-theme" />
+          <P>Edge preserves your component’s background, text color, radius and layout. Choose raised, recessed or matte for the decorative response.</P>
           <P>
             Set <code>color</code> and <code>intensity</code> on a surface
             to customize the highlight.

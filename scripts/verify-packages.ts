@@ -84,7 +84,7 @@ execFileSync(
   import {Lighting,useLight,useSurface} from '@bolerish/edge';
   assert.equal(typeof window,'undefined');
   createLight().refresh();
-  function Card(){const light=useLight();const surface=useSurface(light,{theme:'wisp'});return React.createElement('article',{className:surface.className,style:surface.style},'Packed card');}
+  function Card(){const light=useLight();const surface=useSurface(light);assert.equal(typeof surface,'function');return React.createElement('article',{ref:surface},'Packed card');}
   assert.match(renderToStaticMarkup(React.createElement(Card)),/Packed card/);
   const scope=React.createElement(Lighting,{motion:'static'},React.createElement(Lighting.Surface,{as:'article'},'Scoped card'));
   assert.match(renderToStaticMarkup(scope),/^<article /);
@@ -93,13 +93,18 @@ execFileSync(
   ],
   { cwd: sandbox, stdio: 'pipe' },
 );
+await mkdir(resolve(sandbox, 'node_modules/@types'), { recursive: true });
+await symlink(resolve(root, 'packages/react/node_modules/@types/react'), resolve(sandbox, 'node_modules/@types/react'), 'dir');
 const consumer = resolve(sandbox, 'consumer.mts');
 await writeFile(consumer, `
   import '@bolerish/edge/style.css';
   import '@bolerish/edge-styles/style.css';
-  import {Lighting, type SurfaceProps} from '@bolerish/edge';
+  import {Lighting, useLight, useSurface, type SurfaceProps} from '@bolerish/edge';
+  import type {RefCallback} from 'react';
   import {getSurfaceProps} from '@bolerish/edge-styles';
   void Lighting;
+  function ExistingHost(){const ref: RefCallback<HTMLButtonElement> = useSurface<HTMLButtonElement>(useLight()); return ref;}
+  void ExistingHost;
   const surface: SurfaceProps = {pseudoElement:'before'};
   void surface;
   getSurfaceProps({color:'red',pseudoElement:'before'});

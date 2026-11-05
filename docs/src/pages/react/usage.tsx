@@ -36,10 +36,10 @@ export const usage: DocPage = {
     },
     {
       id: 'connect-existing-components', title: 'Connect an existing component', content: <>
-        <P>Use <code>useLight</code> and <code>useSurface</code> for components that forward ref, className and style to their DOM host. Create the light in a common parent to connect several components, then pass it to each surface hook. Compose the returned bindings with your existing ones.</P>
+        <P>Use <code>useLight</code> and <code>useSurface</code> for components that forward a ref to their DOM host. Create the light in a common parent to connect several components, then pass it to each surface hook. Pass the returned ref to the host. Your className and style stay unchanged; Edge manages the effect.</P>
         <CodeBlock label="Connect an existing host" code={hookSurface} />
         <span id="refresh-after-layout-changes" />
-        <P>For position changes or decoration conflicts, see the common <Link href="/docs/integration/">Integration guide</Link>. Lifecycle and handle details are in the <Link href="/docs/react/api/">API reference</Link>.</P>
+        <P>The hook attaches decoration after hydration; Lighting.Surface also includes its decorative CSS in server output. For position changes or decoration conflicts, see the common <Link href="/docs/integration/">Integration guide</Link>. Lifecycle and handle details are in the <Link href="/docs/react/api/">API reference</Link>.</P>
       </>,
     },
   ],

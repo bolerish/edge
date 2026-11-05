@@ -4,7 +4,7 @@
 
 The React 19 adapter is @bolerish/edge. Import its stylesheet from @bolerish/edge/style.css. The workspace packages are private and not yet published to npm; see Installation for consumer commands and stylesheet setup, and CONTRIBUTING.md in the repository for local development. Dedicated Vue, Svelte and Solid adapters are not implemented.
 
-Lighting creates a shared scope without adding DOM. Only explicit Lighting.Surface descendants respond; nested scopes are independent. Use useLight and useSurface to connect existing hosts, forwarding the returned ref and composing className and style.
+Lighting creates a shared scope without adding DOM. Only explicit Lighting.Surface descendants respond; nested scopes are independent. Use useLight and useSurface to connect existing hosts, passing the callback ref returned by useSurface to the host. Keep your existing className and style; Edge owns its decorative bindings. Hooks add decoration after hydration; Lighting.Surface also emits decorative styles during SSR.
 
 The edgeStyle option accepts raised, recessed and matte. The motion option accepts system (the library default), dynamic and static. staticDirection accepts a finite angle in degrees or "random", sampled once per light mount. The documentation site defaults to Dynamic and its Style and Motion controls update site preferences.
 

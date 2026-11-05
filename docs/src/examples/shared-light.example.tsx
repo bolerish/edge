@@ -18,16 +18,16 @@ export function SharedLightExample() {
   const [saved, setSaved] = useState(0);
   return (
     <div role="group" aria-label="Shared light controls" className="shared-light-example">
-      <Card ref={card.ref} className={card.className} style={card.style} role="article">
+      <Card ref={card} role="article">
         <CardHeader><CardTitle>Project overview</CardTitle></CardHeader>
         <CardContent>One light connects this card, the button and the input wrapper.</CardContent>
       </Card>
       <div className="shared-light-example-controls">
-        <div ref={field.ref} className={`${field.className} shared-light-example-field`} style={field.style}>
+        <div ref={field} className="shared-light-example-field">
           <Label htmlFor="usage-project-name">Project name</Label>
           <Input id="usage-project-name" name="project-name" defaultValue="Website refresh" />
         </div>
-        <Button ref={button.ref} className={button.className} style={button.style}
+        <Button ref={button}
           onClick={() => setSaved(count => count + 1)}>Save project ({saved})</Button>
       </div>
       <p>This ordinary element has no lighting decoration.</p>

@@ -38,7 +38,7 @@ function StyleCard({ edgeStyle }: { edgeStyle: EdgeStyle }) {
   if (!light) throw new Error('Appearance examples require document lighting');
   const surface = useSurface<HTMLDivElement>(light, { edgeStyle });
   return (
-    <Card role="article" ref={surface.ref} className={surface.className} style={surface.style}>
+    <Card role="article" ref={surface}>
       <CardHeader>
         <CardTitle>{edgeStyles.find(style => style.value === edgeStyle)?.label}</CardTitle>
         <CardDescription>A border that responds to your pointer.</CardDescription>
