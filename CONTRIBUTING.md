@@ -51,4 +51,4 @@ Keep the three library versions aligned; the root and docs remain private. Run `
 
 Publish only when authorized, in order: `core.tgz`, `styles.tgz`, `react.tgz`. Manifests target the public npm registry with the `latest` tag. Confirm registry availability before deploying installation instructions.
 
-Deploy `docs/dist` at the domain root with directory `index.html` resolution, trailing-slash handling and a real 404 for unknown paths. Do not deploy `.private/docs-ssr`. Hosting and domain configuration must be selected before deployment.
+Deploy `docs/dist` at the domain root with directory `index.html` resolution, trailing-slash handling and a real 404 for unknown paths. Do not deploy `.private/docs-ssr`. Production uses Cloudflare Pages (`bolerish-edge`) at `edge.bolerish.com`. Run `pnpm deploy:docs` after authenticating with Wrangler.

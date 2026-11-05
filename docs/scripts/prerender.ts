@@ -28,6 +28,14 @@ for (const path of publicPaths) {
   await mkdir(directory, { recursive: true });
   await writeFile(resolve(directory, 'index.html'), output);
 }
+const notFound = render('/404/');
+await writeFile(
+  resolve(destination, '404.html'),
+  template
+    .replace('<!--app-html-->', notFound.html)
+    .replace('id="root"', 'id="root" data-path="/404/"')
+    .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(notFound.title)}</title>`),
+);
 console.log(`Prerendered ${publicPaths.length} public pages.`);
 
 await writeFile(

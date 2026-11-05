@@ -152,6 +152,9 @@ assert.equal(new Set(learningPath).size, pages.length, 'Reading path covers each
 assert(learningPath.every(page => pages.includes(page)), 'Reading path contains only known pages');
 const site = resolve(root, 'docs/dist');
 const routes: string[] = JSON.parse(await readFile(resolve(site, 'routes.json'), 'utf8'));
+const notFound = await readFile(resolve(site, '404.html'), 'utf8');
+assert(notFound.includes('Page not found') && notFound.includes('data-path="/404/"'));
+
 assert(
   routes.includes('/docs/') &&
     routes.includes('/') &&
