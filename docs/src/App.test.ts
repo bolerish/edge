@@ -146,7 +146,7 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
       },
     }),
   );
-  const copy = page.getByRole('button', { name: /^Copy / }).first();
+  const copy = page.getByRole('button', { name: 'Copy npm installation', exact: true });
   await copy.click();
   await expect(copy).toHaveText('Copied');
   expect(
@@ -179,16 +179,27 @@ test('getting started owns shared installation and the AI prompt without demos',
     await install.getByRole('tab', { name: manager, exact: true }).click();
     await expect(install.getByRole('region', { name: `${manager} installation code`, exact: true })).toContainText(command);
   }
-  await install.locator('summary').click();
+  await expect(install.locator('details')).toHaveCount(0);
+  await expect(install.getByRole('tab', { name: 'AI', exact: true })).toHaveCount(0);
   await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {
     configurable: true,
     value: { writeText: async (text: string) => { (window as unknown as { copied: string }).copied = text; } },
   }));
-  await install.getByRole('button', { name: 'Copy AI installation prompt', exact: true }).click();
+  await install.getByRole('button', { name: 'Copy prompt', exact: true }).click();
+  await expect(install.getByRole('button', { name: 'Copied', exact: true })).toBeVisible();
   const prompt = await page.evaluate(() => (window as unknown as { copied: string }).copied);
   expect(prompt).toContain('React 19');
   expect(prompt).toContain('@bolerish/edge/style.css');
   expect(prompt).toContain('Do not add a demo page');
+  await expect(install.getByRole('button', { name: 'Copy prompt', exact: true })).toBeVisible();
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText: async () => { throw new Error('Denied'); } },
+  }));
+  await install.getByRole('button', { name: 'Copy prompt', exact: true }).click();
+  await expect(install.getByRole('status').last()).toContainText('Copy unavailable');
+  await expect(install.locator('pre[aria-label="Installation prompt"]')).toContainText(prompt);
+
   await expect(page.locator('#stylesheet')).toContainText('@import "@bolerish/edge/style.css";');
   await expect(page.getByRole('list', { name: 'Framework integrations' })).toHaveCount(0);
   await page.goto('/docs/react/');

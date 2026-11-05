@@ -26,17 +26,7 @@ export const gettingStarted: DocPage = {
         <P>Add Edge to your existing project with your package manager. The commands below target the React adapter; it requires React 19. Other framework adapters are not available yet.</P>
         <InstallCommands />
         <P>The package is not yet on the public npm registry. These are the consumer installation commands for its release; repository development setup is documented in CONTRIBUTING.md.</P>
-        <details>
-          <summary>Install with an AI assistant</summary>
-          <CodeBlock label="AI installation prompt" language="text" code={`Set up @bolerish/edge in this existing React project.
 
-1. Inspect package.json, the lockfile and the app entry or root layout. Use the project's existing package manager. Edge requires React 19; report an incompatible version instead of upgrading React automatically.
-2. Add @bolerish/edge with npm install, pnpm add, yarn add or bun add. If the registry reports that the package is unavailable, report the error and stop; do not substitute another package.
-3. Load @bolerish/edge/style.css once: import it in the app entry/root layout, or use @import "@bolerish/edge/style.css" in the global CSS if the build tool resolves package CSS imports. Preserve reset and override ordering. Do not add StyleX configuration or a CSS-injecting provider.
-4. Use Lighting and Lighting.Surface from @bolerish/edge for the specific existing area I choose. Lighting adds no DOM; only explicit surfaces receive decoration. Keep my markup, colors, events and focus styles. Use useLight/useSurface when a component already owns its host, composing its ref, className and style.
-5. Keep the default motion="system" unless I request another mode. Wrap native inputs; use pseudoElement="before" if the host already uses ::after, and a wrapper if both pseudo-elements are occupied.
-6. Run the project's relevant checks and summarize the changed files. Do not add a demo page or replace existing UI.`} />
-        </details>
       </>,
     },
     {
