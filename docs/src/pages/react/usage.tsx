@@ -1,7 +1,6 @@
 import { Link } from '@bolerish/ui/link';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { CodeBlock } from '../../ui/CodeBlock.js';
-import { hookSurface } from './examples.js';
 import { sharedLightExample } from '../../examples/examples.js';
 import { ExamplePreview } from '../../ui/ExamplePreview.js';
 import type { DocPage } from '../types.js';
@@ -22,7 +21,6 @@ export const usage: DocPage = {
         <ExamplePreview title={sharedLightExample.title} code={sharedLightExample.code}>
           <sharedLightExample.Component />
         </ExamplePreview>
-        <P>Use the hooks below when an existing component already owns its host.</P>
       </>,
     },
     {
@@ -36,10 +34,9 @@ export const usage: DocPage = {
     },
     {
       id: 'connect-existing-components', title: 'Connect an existing component', content: <>
-        <P>Use <code>useLight</code> and <code>useSurface</code> for components that forward a ref to their DOM host. Create the light in a common parent to connect several components, then pass it to each surface hook. Pass the returned ref to the host. Your className and style stay unchanged; Edge manages the effect.</P>
-        <CodeBlock label="Connect an existing host" code={hookSurface} />
+        <P>The component API above is the default way to use Edge. If a Card or Button already owns its DOM element, use the <Link href="/docs/react/api/#use-surface">ref-based integration in the API reference</Link>. Create one light in the common parent and connect each existing component to that light.</P>
         <span id="refresh-after-layout-changes" />
-        <P>The hook attaches decoration after hydration; Lighting.Surface also includes its decorative CSS in server output. For position changes or decoration conflicts, see the common <Link href="/docs/integration/">Integration guide</Link>. Lifecycle and handle details are in the <Link href="/docs/react/api/">API reference</Link>.</P>
+        <P>For layout changes or decoration conflicts, see <Link href="/docs/integration/">Integration</Link>.</P>
       </>,
     },
   ],

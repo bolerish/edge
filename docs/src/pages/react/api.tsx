@@ -130,6 +130,15 @@ export const api: DocPage = {
             label="useSurface signature"
             code={'const ref = useSurface<HTMLElement>(light, options);'}
           />
+          <CodeBlock label="Share one light with existing components" code={`function Area() {
+  const light = useLight();
+  return <><ExistingCard light={light} /><ExistingCard light={light} /></>;
+}
+
+function ExistingCard({ light }: { light: Light }) {
+  const ref = useSurface<HTMLDivElement>(light);
+  return <Card ref={ref}>Your existing component</Card>;
+}`} />
           {apiTable('useSurface options', surfaceOptionRows)}
           <div role="note" aria-label="One owner per element" className="doc-note">
             <P>

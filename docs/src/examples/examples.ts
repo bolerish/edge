@@ -7,7 +7,7 @@ export const sharedLightExample = {
   title: 'One light, your components',
   Component: SharedLightExample,
   code: `<Lighting>
-  <Lighting.Surface as="article" className="card">
+  <Lighting.Surface as="article">
     Project overview
   </Lighting.Surface>
   <Lighting.Surface as="button" type="button" onClick={saveProject}>

@@ -254,7 +254,7 @@ test('SSG documents include highlighted code and remain readable without JavaScr
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'Usage',
   );
-  await expect(page.locator('.token.keyword:visible').first()).toBeVisible();
+  await expect(page.locator('.token.tag:visible').first()).toBeVisible();
   await expect(page.locator('pre').first()).toContainText('Lighting.Surface');
   await page.goto('http://127.0.0.1:4183/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
@@ -287,7 +287,7 @@ test('skip link, code scrolling, zoom reflow and high-contrast code stay usable'
   await page.emulateMedia({ forcedColors: 'active' });
   expect(
     await page
-      .locator('.token.keyword')
+      .locator('.token.tag')
       .first()
       .evaluate((node) => getComputedStyle(node).color),
   ).not.toBe('transparent');
@@ -785,4 +785,19 @@ test('surface style changes remeasure host border offsets with a stationary poin
   await expect(card).toHaveAttribute('data-identity', 'original');
   await expect.poll(() => card.evaluate(node => ['top', 'right', 'bottom', 'left'].map(side => node.style.getPropertyValue(`--wisp-inset-${side}`))))
     .toEqual(['-2px', '-3px', '-4px', '-5px']);
+});
+
+test('React Usage teaches components and links advanced hooks to the API', async ({ page }) => {
+  await page.goto('/docs/react/usage/');
+  await expect(page.getByRole('region', { name: 'Connect an existing host code', exact: true })).toHaveCount(0);
+  await expect(page.locator('#connect-existing-components a').first()).toHaveAttribute('href', '/docs/react/api/#use-surface');
+  const example = page.getByRole('group', { name: 'One light, your components', exact: true });
+  await example.getByRole('tab', { name: 'Code', exact: true }).click();
+  const code = example.getByRole('region', { name: 'One light, your components code', exact: true });
+  await expect(code).toContainText('<Lighting>');
+  await expect(code).toContainText('<Lighting.Surface');
+  await expect(code).not.toContainText('useLight');
+  await expect(code).not.toContainText('className');
+  await page.locator('#connect-existing-components a').first().click();
+  await expect(page.getByRole('region', { name: 'Share one light with existing components code', exact: true })).toContainText('<ExistingCard light={light} />');
 });

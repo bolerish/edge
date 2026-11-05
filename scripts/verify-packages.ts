@@ -145,7 +145,7 @@ const usage = await readFile(
   'utf8',
 );
 assert(
-  usage.includes('token keyword'),
+  usage.includes('token tag'),
   'SSG must include highlighted code tokens',
 );
 const documents = new Map<string, string>();
