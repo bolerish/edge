@@ -1,8 +1,10 @@
 # Edge
 
-Directional border lighting for the React components you own. Share one light across cards, buttons, input wrappers and same-document portals. Compose the UI with React and your preferred styling tool; Edge handles pointer scheduling, geometry and decorative border output.
+A little more alive. Connect your React components to one shared directional light.
 
-Edge supports React 19. Svelte, Solid and Vue adapters are not implemented yet. The DOM engine and plain CSS surface bindings are framework-independent.
+## Quick start
+
+Requires React 19.
 
 ```sh
 npm install @bolerish/edge
@@ -12,49 +14,32 @@ npm install @bolerish/edge
 import { Lighting } from '@bolerish/edge';
 import '@bolerish/edge/style.css';
 
-function Area() {
+export function Area() {
   return (
-    <Lighting motion="dynamic">
-      <Lighting.Surface as="article">
-        Your lit card
-      </Lighting.Surface>
-      <article>This element keeps its own appearance.</article>
+    <Lighting>
+      <Lighting.Surface as="article">Your card</Lighting.Surface>
+      <Lighting.Surface as="button" type="button">Save</Lighting.Surface>
     </Lighting>
   );
 }
 ```
 
-`Lighting` shares one light without adding DOM. Only explicit `Lighting.Surface` descendants respond; nested owners create independent lights. A surface renders a div by default. Use `as` for another HTML tag, and pass normal attributes, events, className, style and refs to that host.
+Load the stylesheet once, before application and utility styles; a separate reset may load first. Edge preserves your background, text, padding and base borders. Highlights use the host’s text color and border radius by default.
 
-Import `@bolerish/edge/style.css` once, before application and utility styles; a separate reset may load first. No styling compiler or style-injection provider is required.
+`Lighting` adds no DOM. Only explicit surfaces respond; nested scopes are independent. Choose `edgeStyle="raised"`, `"recessed"` or `"matte"`. Motion accepts `"dynamic"`, `"static"` or `"system"` (the default, respecting reduced motion). Use `useLight` and the callback ref returned by `useSurface` to connect existing hosts.
 
-The highlight follows each component’s own text color by default; its radius follows the host border-radius. Background, padding and base borders stay yours.
+## Compatibility
 
-Motion accepts `dynamic`, `static` or `system` (the default). System respects device and reduced-motion preferences. The documentation demo opts into Dynamic. Choose raised, recessed or matte without changing your component’s base appearance. Set `color` and `intensity` through props; surface intensity multiplies shared light intensity.
+SSR, static rendering and hydration are supported. Hook decoration attaches on the client; `Lighting.Surface` also emits decorative classes during SSR. Dedicated Vue, Svelte and Solid adapters are not available.
 
-For an existing component that already owns its host, `useLight` and `useSurface` remain available. Pass the callback ref returned by useSurface to your host; keep your existing className and style props. Edge applies and removes its own decoration. Hook decoration attaches on the client after hydration; Lighting.Surface also emits decorative classes and options in server markup. The decoration uses `::after` by default. Set `pseudoElement: 'before'` (or `<Lighting.Surface pseudoElement="before">`) to preserve an existing `::after`. Use a wrapper around native inputs or components that already use both pseudo-elements.
+Decoration uses `::after`; choose `pseudoElement="before"` if needed. Native inputs and hosts using both pseudo-elements need a wrapper. Keep native focus indicators and sufficient contrast.
 
-## Development
+Position or border-thickness changes without a size notification may require `light.refresh()`. Rotated or perspective geometry and cross-document portals are unsupported.
 
-Use the versions in `.node-version` and `package.json`.
+## Documentation and development
 
-```sh
-pnpm install --frozen-lockfile
-pnpm dev
-```
+See the [documentation source](docs/src/pages) for usage and API details, and [CONTRIBUTING.md](CONTRIBUTING.md) for local setup and checks.
 
-The site lives in `docs/`. Run `pnpm dev`, then open [documentation](http://localhost:4173/docs/) or the [dashboard example](http://localhost:4173/). Both use Bolerish UI; the dashboard connects real cards, fields and buttons to one light. Documentation and syntax-highlighted code are generated as static HTML. See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and package boundaries.
+Packages: `@bolerish/edge` (React), `@bolerish/edge-core` (DOM engine), and `@bolerish/edge-styles` (plain CSS and appearance bindings).
 
-## Rendering and limits
-
-SSR/static rendering and client hydration are supported by the React adapter. Pointer frames do not update React state. System motion respects reduced motion; Dynamic follows the pointer, and Static uses fixed lighting. Lighting does not replace base borders, contrast or keyboard focus.
-
-The effect approximates axis-aligned rectangular surfaces. Position changes or host border-thickness changes without a size notification may require `light.refresh()` after commit. The declarative owner exposes the same handle through an optional `ref`. Changing gradients still has browser rendering costs; no FPS or speedup is promised. Cross-document portals and rotated/perspective geometry are not supported.
-
-MIT licensed.
-
-## Package boundaries
-
-- `@bolerish/edge-core`: framework-independent DOM engine and geometry.
-- `@bolerish/edge-styles`: framework-independent `getSurfaceProps()` and plain CSS; no React runtime required.
-- `@bolerish/edge`: declarative React components and low-level hooks. It re-exports the shared CSS at its existing `style.css` path.
+[MIT](LICENSE).
