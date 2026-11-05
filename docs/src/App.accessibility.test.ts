@@ -5,6 +5,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 const routes = [
   '/',
   '/docs/',
+  '/docs/usage/',
   '/docs/react/',
   '/docs/react/usage/',
   '/docs/styles/',

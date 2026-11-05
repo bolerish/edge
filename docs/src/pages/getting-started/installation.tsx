@@ -30,7 +30,7 @@ export const installation: DocPage = {
     },
     {
       id: 'next-steps', title: 'Start using Edge',
-      content: <P>Continue to <Link href="/docs/react/usage/">React Usage</Link> to connect your components.</P>,
+      content: <P>Continue to <Link href="/docs/usage/">Usage</Link> to choose an area and its surfaces, then connect them with <Link href="/docs/react/usage/">React Integration</Link>.</P>,
     },
   ],
 };

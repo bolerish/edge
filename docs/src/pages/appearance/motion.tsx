@@ -6,7 +6,7 @@ import type { DocPage } from '../types.js';
 
 export const motion: DocPage = {
   slug: 'motion',
-  section: 'Appearance',
+  section: 'Styles',
   title: 'Motion',
   description: 'Choose whether lighting follows your pointer or stays in a fixed direction. Configure motion once for every surface sharing the light.',
   sections: [

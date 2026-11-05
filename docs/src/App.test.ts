@@ -203,7 +203,7 @@ test('getting started owns shared installation and the AI prompt without demos',
   await expect(page.locator('#stylesheet')).toContainText('@import "@bolerish/edge/style.css";');
   await expect(page.getByRole('list', { name: 'Framework integrations' })).toHaveCount(0);
   await page.goto('/docs/react/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Usage');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Integration');
 });
 
 test('static direction presets update every shared surface, code and persisted settings', async ({ page }) => {
@@ -237,10 +237,10 @@ test('preview data stays fixed and getting started leads directly to React usage
   await page.getByRole('link', { name: 'Get started' }).click();
   await expect(page).toHaveURL(/\/docs\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Introduction');
-  await page.getByRole('link', { name: 'React Usage', exact: true }).focus();
+  await page.getByRole('link', { name: 'React Integration', exact: true }).focus();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/docs\/react\/usage\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Usage');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Integration');
 });
 
 test('SSG documents include highlighted code and remain readable without JavaScript', async ({
@@ -249,10 +249,10 @@ test('SSG documents include highlighted code and remain readable without JavaScr
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4183/docs/');
-  await page.getByRole('link', { name: 'React Usage', exact: true }).click();
+  await page.getByRole('link', { name: 'React Integration', exact: true }).click();
   await expect(page).toHaveURL('http://127.0.0.1:4183/docs/react/usage/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'Usage',
+    'Integration',
   );
   await expect(page.locator('.token.tag:visible').first()).toBeVisible();
   await expect(page.locator('pre').first()).toContainText('Lighting.Surface');
@@ -365,9 +365,9 @@ test('framework search uses canonical React guides and contextual labels', async
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Introduction');
   await page.getByRole('button', { name: 'Search documentation' }).click();
   const dialog = page.getByRole('dialog');
-  await dialog.getByRole('textbox', { name: 'Search titles and content' }).fill('React Usage');
+  await dialog.getByRole('textbox', { name: 'Search titles and content' }).fill('React Integration');
   const result = dialog.locator('a[href="/docs/react/usage/"]');
-  await expect(result).toContainText('React · Usage');
+  await expect(result).toContainText('React · Integration');
   await expect(result).toHaveAttribute('href', '/docs/react/usage/');
 });
 
@@ -375,12 +375,15 @@ test('framework search uses canonical React guides and contextual labels', async
 test('shared guides appear before framework-specific documentation', async ({ page }) => {
   await page.goto('/docs/');
   const groups = page.locator('.sidebar .nav-group');
-  await expect(groups).toHaveCount(4);
+  await expect(groups).toHaveCount(5);
   await expect(groups.nth(0).getByRole('link')).toHaveText(['Introduction', 'Installation']);
-  await expect(groups.nth(1).getByRole('link')).toHaveText(['Style', 'Motion']);
-  await expect(groups.nth(2).getByRole('link')).toHaveText(['Accessibility', 'Integration']);
-  await expect(groups.nth(3).getByRole('link')).toHaveText(['Usage', 'API reference']);
-  await groups.nth(1).getByRole('link', { name: 'Style', exact: true }).click();
+  await expect(groups.nth(1).getByRole('link')).toHaveText(['Usage']);
+  await expect(groups.nth(1).locator('h2, h3')).toHaveCount(0);
+  await expect(groups.nth(2)).toContainText('Styles');
+  await expect(groups.nth(2).getByRole('link')).toHaveText(['Style', 'Motion']);
+  await expect(groups.nth(3).getByRole('link')).toHaveText(['Integration', 'Accessibility']);
+  await expect(groups.nth(4).getByRole('link')).toHaveText(['Integration', 'API reference']);
+  await groups.nth(2).getByRole('link', { name: 'Style', exact: true }).click();
   await expect(page).toHaveURL(/\/docs\/styles\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Style');
 });
@@ -497,9 +500,10 @@ test('the reading journey and document titles work without JavaScript', async ({
   const journey = [
     ['/docs/', 'Getting started · Introduction · bolerish/edge'],
     ['/docs/installation/', 'Getting started · Installation · bolerish/edge'],
-    ['/docs/react/usage/', 'React · Usage · bolerish/edge'],
-    ['/docs/styles/', 'Appearance · Style · bolerish/edge'],
-    ['/docs/motion/', 'Appearance · Motion · bolerish/edge'],
+    ['/docs/usage/', 'Usage · bolerish/edge'],
+    ['/docs/react/usage/', 'React · Integration · bolerish/edge'],
+    ['/docs/styles/', 'Styles · Style · bolerish/edge'],
+    ['/docs/motion/', 'Styles · Motion · bolerish/edge'],
     ['/docs/integration/', 'Guides · Integration · bolerish/edge'],
     ['/docs/accessibility/', 'Guides · Accessibility · bolerish/edge'],
     ['/docs/react/api/', 'React · API reference · bolerish/edge'],
@@ -556,10 +560,7 @@ test('style example changes only edge style and retains Bolerish UI colors', asy
   await page.goto('/docs/styles/');
   const demo = page.getByRole('group', { name: 'Style comparison', exact: true });
   await expect(demo.getByRole('combobox', { name: 'Motion' })).toHaveCount(0);
-  const cards = demo.getByRole('article');
-  await expect(cards).toHaveCount(2);
-  const card = cards.first();
-  await expect.poll(() => cards.nth(1).evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
+  const card = demo.getByRole('article');
   await expect.poll(() => card.evaluate(node => Number.parseFloat(node.style.getPropertyValue('--wisp-angle')))).not.toBeNaN();
   const initialColor = await card.evaluate(node => getComputedStyle(node).backgroundColor);
   await demo.getByRole('combobox', { name: 'Style', exact: true }).click();
@@ -606,6 +607,7 @@ test('existing section anchors remain in the catalog after rewriting the pages',
   const anchors = {
     '/docs/': ['choose-your-framework'],
     '/docs/react/': ['package-installation', 'prepare-the-workspace', 'load-the-stylesheet', 'create-your-first-surface'],
+    '/docs/usage/': ['share-one-light', 'keep-your-styles', 'connect-existing-components', 'package-installation', 'prepare-the-workspace', 'load-the-stylesheet', 'create-your-first-surface', 'wrap-inputs-you-own', 'refresh-after-layout-changes'],
     '/docs/react/usage/': ['share-one-light', 'keep-your-styles', 'wrap-inputs-you-own', 'connect-existing-components', 'refresh-after-layout-changes'],
     '/docs/styles/': ['raised', 'recessed', 'matte', 'apply-the-wisp-theme', 'customize-the-highlight'],
     '/docs/accessibility/': ['choose-an-input-mode', 'preserve-native-interactions', 'understand-rendering-cost'],
@@ -666,6 +668,9 @@ test('search matches the shared layout and filters real document categories', as
   await dialog.getByRole('button', { name: '#Getting started', exact: true }).click();
   await expect(dialog.locator('.search-results a')).toHaveCount(2);
   await expect(dialog.locator('.search-results a').filter({ hasText: 'Getting started ·' })).toHaveCount(2);
+  await dialog.getByRole('button', { name: '#Usage', exact: true }).click();
+  await expect(dialog.locator('.search-results a')).toHaveCount(1);
+  await expect(dialog.locator('a[href="/docs/usage/"]')).toBeVisible();
   await dialog.getByRole('button', { name: '#Guides', exact: true }).click();
   await expect(dialog.locator('.search-results a')).toHaveCount(2);
   await expect(dialog.locator('.search-results a').filter({ hasText: 'Getting started ·' })).toHaveCount(0);
@@ -674,7 +679,7 @@ test('search matches the shared layout and filters real document categories', as
   await expect(dialog.locator('.search-results a').filter({ hasText: 'React ·' })).toHaveCount(2);
   await query.fill('shadowColor');
   await expect(dialog.locator('a[href="/docs/react/api/#use-surface"]')).toBeVisible();
-  await dialog.getByRole('button', { name: '#Appearance', exact: true }).click();
+  await dialog.getByRole('button', { name: '#Styles', exact: true }).click();
   await expect(dialog.locator('.search-results a')).toHaveCount(1);
   await expect(dialog.locator('a[href="/docs/styles/#customize-the-highlight"]')).toBeVisible();
   await query.fill('no-matching-document-987');
@@ -795,7 +800,7 @@ test('surface style changes remeasure host border offsets with a stationary poin
     .toEqual(['-2px', '-3px', '-4px', '-5px']);
 });
 
-test('React Usage teaches components and links advanced hooks to the API', async ({ page }) => {
+test('React Integration teaches components and links advanced hooks to the API', async ({ page }) => {
   await page.goto('/docs/react/usage/');
   await expect(page.getByRole('region', { name: 'Connect an existing host code', exact: true })).toHaveCount(0);
   await expect(page.locator('#connect-existing-components a').first()).toHaveAttribute('href', '/docs/react/api/#use-surface');
@@ -834,4 +839,20 @@ test('plain CSS follows host color and radius while preserving its layout and ba
   expect(appearance.decorationColor).toBe(appearance.color);
   expect(appearance.highlight).toContain(appearance.color);
   expect(appearance.pointer).toBe('none');
+});
+
+
+test('common Usage teaches shared concepts and leads to the React adapter', async ({ page }) => {
+  await page.goto('/docs/installation/');
+  await page.getByRole('navigation', { name: 'Continue reading' }).locator('[rel="next"]').click();
+  await expect(page).toHaveURL(/\/docs\/usage\/$/);
+  const document = page.locator('.document');
+  await expect(document.getByRole('heading', { level: 1 })).toHaveText('Usage');
+  await expect(document).not.toContainText('Lighting.Surface');
+  await expect(document.locator('.example-preview, pre')).toHaveCount(0);
+  await expect(document).toContainText('currently available adapter');
+  await document.getByRole('link', { name: 'React Integration', exact: true }).click();
+  await expect(page).toHaveURL(/\/docs\/react\/usage\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Integration');
+  await expect(page.getByRole('group', { name: 'Shared light example', exact: true }).getByRole('article')).toHaveCount(2);
 });

@@ -6,7 +6,7 @@ import type { DocPage } from '../types.js';
 export const styles: DocPage = {
   slug: 'styles',
   aliases: ['materials', 'react/materials'],
-  section: 'Appearance',
+  section: 'Styles',
   title: 'Style',
   description:
     'Choose how an edge responds to light. Edge style response and base component styling are separate decisions.',
