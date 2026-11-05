@@ -1,9 +1,8 @@
-import { DocumentSurface } from '../ui/DocumentSurface.js';
+import { Link } from '@bolerish/ui/link';
 import { InstallCommands } from '../ui/InstallCommands.js';
 import { CodeBlock } from '../ui/CodeBlock.js';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import type { DocPage } from './types.js';
-import './getting-started.css';
 
 export const gettingStarted: DocPage = {
   slug: '',
@@ -17,7 +16,7 @@ export const gettingStarted: DocPage = {
       title: 'A little more alive.',
       content: <>
         <P>Add a subtle highlight that responds as the pointer moves around your UI. Choose an area that shares a light, then select the elements that should respond. Your components keep their markup, colors and interactions.</P>
-        <P>Use one light across a section, or give a smaller area an independent light. Install the package and load its stylesheet once, then choose your framework for its setup.</P>
+        <P>Use one light across a section, or give a smaller area an independent light. Install the package and load its stylesheet once, then continue to the React usage guide.</P>
       </>,
     },
     {
@@ -52,43 +51,8 @@ export const gettingStarted: DocPage = {
     },
     {
       id: 'choose-your-framework',
-      title: 'Choose your framework',
-      content: (
-        <>
-          <P>
-            Choose an integration for framework-specific setup and usage.
-          </P>
-          <ul className="framework-cards" aria-label="Framework integrations">
-            <li>
-              <DocumentSurface as="a" className="framework-card" href="/docs/react/">
-                <span className="framework-card-heading">
-                  <strong>React</strong>
-                  <span className="framework-card-status">Available</span>
-                </span>
-                <span className="framework-card-description">
-                  Set up the stylesheet and add lighting with components or hooks.
-                </span>
-                <span className="framework-card-action">
-                  Start with React <span aria-hidden="true">↗</span>
-                </span>
-              </DocumentSurface>
-            </li>
-            {['Vue', 'Svelte', 'Solid'].map((framework) => (
-              <li key={framework}>
-                <DocumentSurface className="framework-card framework-card-unavailable">
-                  <span className="framework-card-heading">
-                    <strong>{framework}</strong>
-                    <span className="framework-card-status">Coming soon</span>
-                  </span>
-                  <span className="framework-card-description">
-                    A dedicated integration is not available yet.
-                  </span>
-                </DocumentSurface>
-              </li>
-            ))}
-          </ul>
-        </>
-      ),
+      title: 'Start using Edge',
+      content: <P>No additional React setup is required after installation and stylesheet loading. Continue to <Link href="/docs/react/usage/">React Usage</Link> to connect your components, or look up options in the <Link href="/docs/react/api/">React API reference</Link>.</P>,
     },
   ],
 };

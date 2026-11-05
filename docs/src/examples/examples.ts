@@ -35,9 +35,9 @@ const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 export const decorationSlotExample = {
   title: 'Keep existing pseudo-elements',
   Component: DecorationSlotExample,
-  code: `<Lighting.Surface pseudoElement="before" className="existing-after">
-  Your component keeps its ::after decoration.
-</Lighting.Surface>`,
+  code: `const surface = getSurfaceProps({ pseudoElement: 'before' });
+// Compose surface.className and surface.style with your existing host.
+// The host's ::after remains available for its own decoration.`,
 };
 
 export const motionExample = { title: 'Compare motion', Component: MotionExample, code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__ });

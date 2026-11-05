@@ -12,9 +12,9 @@ Decoration uses ::after by default. Select pseudoElement: "before" when ::after 
 
 ## Documentation
 
-- [Getting started](/docs/): Shared installation commands, stylesheet setup, AI installation prompt and available integrations.
-- [React installation](/docs/react/): React 19 compatibility and framework-specific setup.
-- [React usage](/docs/react/usage/): Shared scopes, existing components, input wrappers and geometry refresh.
+- [Getting started](/docs/): Shared installation commands, stylesheet setup, AI installation prompt and a direct link to usage.
+- [Integration](/docs/integration/): Shared input-wrapper, decoration and layout constraints.
+- [React usage](/docs/react/usage/): React components, hooks and existing-host bindings.
 - [Style](/docs/styles/): Surface appearance values.
 - [Motion](/docs/motion/): Input behavior, static direction and reduced motion.
 - [Accessibility](/docs/accessibility/): Native controls, focus and forced colors.
