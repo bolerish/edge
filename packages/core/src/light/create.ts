@@ -90,6 +90,7 @@ export function createLight(initial: LightOptions = {}): LightController {
         update(edgeStyle) {
           if (removed || entry.edgeStyle === edgeStyle) return;
           entry.edgeStyle = edgeStyle;
+          dirty.add(entry);
           schedule();
         },
         destroy() {

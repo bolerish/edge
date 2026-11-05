@@ -549,3 +549,20 @@ it('retains an unmounted document until every registered surface is released', (
   second.destroy();
   light.register(other.createElement('div'), 'raised').destroy();
 });
+
+it('remeasures host borders when surface style changes without a resize event', () => {
+  const light = createLight({ motion: 'static' });
+  const stop = light.mount(document);
+  const { node } = element();
+  node.style.borderStyle = 'solid';
+  node.style.borderWidth = '1px';
+  const entry = light.register(node, 'raised');
+  flush();
+  expect(node.style.getPropertyValue('--wisp-inset-top')).toBe('-1px');
+  node.style.borderWidth = '2px 3px 4px 5px';
+  entry.update('matte');
+  flush();
+  expect(['top', 'right', 'bottom', 'left'].map(side => node.style.getPropertyValue(`--wisp-inset-${side}`)))
+    .toEqual(['-2px', '-3px', '-4px', '-5px']);
+  stop();
+});
