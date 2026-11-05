@@ -2,7 +2,7 @@
 
 Directional border lighting for the React components you own. Share one light across cards, buttons, input wrappers and same-document portals. Compose the UI with React and your preferred styling tool; Wisp handles pointer scheduling, geometry and decorative border output.
 
-This is an unreleased React MVP. All workspace packages are private. Svelte, Solid and Vue adapters are not implemented yet. The DOM engine and compiled surface bindings are framework-independent.
+This is an unreleased React MVP. All workspace packages are private. Svelte, Solid and Vue adapters are not implemented yet. The DOM engine and plain CSS surface bindings are framework-independent.
 
 ```tsx
 import { Lighting } from '@bolerish/edge';
@@ -11,7 +11,7 @@ import '@bolerish/edge/style.css';
 function Area() {
   return (
     <Lighting motion="dynamic">
-      <Lighting.Surface as="article" color="#e5edc8">
+      <Lighting.Surface as="article">
         Your lit card
       </Lighting.Surface>
       <article>This element keeps its own appearance.</article>
@@ -21,6 +21,8 @@ function Area() {
 ```
 
 `Lighting` shares one light without adding DOM. Only explicit `Lighting.Surface` descendants respond; nested owners create independent lights. A surface renders a div by default. Use `as` for another HTML tag, and pass normal attributes, events, className, style and refs to that host.
+
+The highlight follows your component’s text color by default; its radius follows the host border-radius. Background, padding and base borders stay yours.
 
 Motion accepts `dynamic`, `static` or `system` (the default). System respects device and reduced-motion preferences. The documentation demo opts into Dynamic. Choose raised, recessed or matte without changing your component’s base appearance. Set `color` and `intensity` through props; surface intensity multiplies shared light intensity.
 
@@ -48,5 +50,5 @@ MIT licensed.
 ## Package boundaries
 
 - `@bolerish/edge-core`: framework-independent DOM engine and geometry.
-- `@bolerish/edge-styles`: framework-independent `getSurfaceProps()` and compiled CSS; no React runtime required.
+- `@bolerish/edge-styles`: framework-independent `getSurfaceProps()` and plain CSS; no React runtime required.
 - `@bolerish/edge`: declarative React components and low-level hooks. It re-exports the shared CSS at its existing `style.css` path.

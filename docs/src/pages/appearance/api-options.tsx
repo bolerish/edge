@@ -52,8 +52,8 @@ const surfaceOptions = {
   },
   color: {
     type: 'string',
-    defaultValue: '#e5edc8',
-    description: 'Highlight color. Accepts any CSS color string, including a CSS variable.',
+    defaultValue: 'currentColor',
+    description: 'Highlight color. Follows the host text color by default. Accepts any CSS color string, including a CSS variable.',
   },
   shadowColor: {
     type: 'string',

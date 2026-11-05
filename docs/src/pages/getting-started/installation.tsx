@@ -24,10 +24,10 @@ export const installation: DocPage = {
       id: 'stylesheet',
       title: 'Load the stylesheet',
       content: <>
-        <P>Load the compiled styles once, after your reset and before application overrides. Choose either your application entry or a global CSS file.</P>
+        <P>Load the styles once, before your application and utility styles so their positioning rules can override Edge’s defaults. A separate reset can load first. Choose either your application entry or a global CSS file.</P>
         <CodeBlock label="Application entry" code={"import '@bolerish/edge/style.css';"} />
         <CodeBlock label="Global CSS alternative" language="css" code={'@import "@bolerish/edge/style.css";'} />
-        <P>The CSS alternative requires a build tool that resolves package imports. Edge does not require StyleX setup or a style-injection provider.</P>
+        <P>The CSS alternative requires a build tool that resolves package imports. Edge ships plain CSS; no styling compiler or style-injection provider is needed.</P>
       </>,
     },
     {

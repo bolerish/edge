@@ -801,3 +801,29 @@ test('React Usage teaches components and links advanced hooks to the API', async
   await page.locator('#connect-existing-components a').first().click();
   await expect(page.getByRole('region', { name: 'Share one light with existing components code', exact: true })).toContainText('<ExistingCard light={light} />');
 });
+
+test('plain CSS follows host color and radius while preserving its layout and background', async ({ page }) => {
+  await page.goto('/docs/integration/');
+  const host = page.locator('.edge-example-before');
+  await page.addStyleTag({ content: '@layer consumer-layout { .edge-consumer-layout { position: absolute; } }' });
+  await host.evaluate(node => {
+    node.classList.add('edge-consumer-layout');
+    node.style.color = 'rgb(12, 123, 234)';
+    node.style.backgroundColor = 'rgb(245, 240, 235)';
+    node.style.borderRadius = '23px';
+  });
+  const appearance = await host.evaluate(node => {
+    const own = getComputedStyle(node);
+    const decoration = getComputedStyle(node, '::after');
+    return { color: own.color, background: own.backgroundColor, position: own.position,
+      radius: decoration.borderRadius, highlight: decoration.backgroundImage,
+      decorationColor: decoration.color, pointer: decoration.pointerEvents };
+  });
+  expect(appearance.color).toBe('rgb(12, 123, 234)');
+  expect(appearance.background).toBe('rgb(245, 240, 235)');
+  expect(appearance.position).toBe('absolute');
+  expect(appearance.radius).toBe('23px');
+  expect(appearance.decorationColor).toBe(appearance.color);
+  expect(appearance.highlight).toContain(appearance.color);
+  expect(appearance.pointer).toBe('none');
+});

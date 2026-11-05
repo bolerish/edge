@@ -116,15 +116,18 @@ execFileSync('pnpm', [
 ], {cwd:root, stdio:'pipe'});
 
 const css = await readFile(
-  resolve(sandbox, 'node_modules/@bolerish/edge/dist/assets/stylex.css'),
+  resolve(sandbox, 'node_modules/@bolerish/edge/dist/assets/edge.css'),
   'utf8',
 );
 assert(css.includes('conic-gradient') && css.includes('--wisp-angle'));
+assert(css.includes('var(--wisp-highlight, currentColor)'));
+const styleLibrary = await readFile(resolve(sandbox, 'node_modules/@bolerish/edge-styles/dist/index.js'), 'utf8');
+assert(!/stylex|styleq/i.test(styleLibrary), 'The styles bundle must not include StyleX or styleq');
 const library = await readFile(
   resolve(sandbox, 'node_modules/@bolerish/edge/dist/index.js'),
   'utf8',
 );
-assert(!/from\s*["']@stylexjs\/stylex/.test(library), 'Consumers must not need StyleX');
+assert(!/stylex|styleq/i.test(library), 'The React bundle must not include StyleX or styleq');
 assert(
   library.startsWith('"use client"') || library.startsWith("'use client'"),
 );

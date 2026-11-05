@@ -6,6 +6,8 @@ The React 19 adapter is @bolerish/edge. Import its stylesheet from @bolerish/edg
 
 Lighting creates a shared scope without adding DOM. Only explicit Lighting.Surface descendants respond; nested scopes are independent. Use useLight and useSurface to connect existing hosts, passing the callback ref returned by useSurface to the host. Keep your existing className and style; Edge owns its decorative bindings. Hooks add decoration after hydration; Lighting.Surface also emits decorative styles during SSR.
 
+Edge ships plain CSS. Highlights use currentColor and inherit border-radius by default; Edge preserves background, padding and base borders.
+
 The edgeStyle option accepts raised, recessed and matte. The motion option accepts system (the library default), dynamic and static. staticDirection accepts a finite angle in degrees or "random", sampled once per light mount. The documentation site defaults to Dynamic and its Style and Motion controls update site preferences.
 
 Decoration uses ::after by default. Select pseudoElement: "before" when ::after is occupied. Use wrappers for native inputs or hosts using both pseudo-elements. Lighting is decorative and does not replace focus, contrast or validation states. Position-only layout changes can require refresh(); rotated or perspective geometry and cross-document portals are unsupported. SSR and static rendering are supported; interactive tracking requires JavaScript. No performance advantage is claimed.

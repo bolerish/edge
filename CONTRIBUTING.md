@@ -5,7 +5,7 @@ Use the pinned Node and pnpm versions, then install with `pnpm install --frozen-
 ## Packages
 
 - `packages/core`: framework-independent DOM controller and pure geometry. No React or StyleX imports.
-- `packages/styles`: framework-independent surface bindings and internally compiled StyleX styles. No React dependency.
+- `packages/styles`: framework-independent surface bindings and plain CSS. No React dependency.
 - `packages/react`: React lifetime integration; consumes the common engine and style bindings.
 - `docs`: public documentation, homepage dashboard and browser integration tests. Documentation routes are prerendered during the site build.
 
@@ -15,7 +15,7 @@ Group code by each package's responsibilities, rather than requiring identical f
 
 - `core/src/light/` owns shared-light creation, options, browser subscriptions and frame scheduling.
 - `core/src/surface/` owns surface geometry, decorative output and restoration.
-- `react/src/components/` owns the declarative Lighting scope, explicit hosts and their context. Keep component definitions at module scope. `react/src/hooks/` owns React lifetime adapters. Keep each hook's tests beside its implementation. Shared CSS-in-JS declarations live with their framework-independent bindings in `styles/src/`.
+- `react/src/components/` owns the declarative Lighting scope, explicit hosts and their context. Keep component definitions at module scope. `react/src/hooks/` owns React lifetime adapters. Keep each hook's tests beside its implementation. Effect CSS lives beside its framework-independent bindings in `styles/src/edge.css`.
 - Keep the root `index.ts` as the public barrel. Internal modules import their implementation dependencies directly; do not add internal barrels just to hide paths.
 - Introduce another folder when it represents a distinct, named responsibility. Do not pre-create empty `components/`, `types/` or `lib/` folders.
 - Keep code with its domain owner even when another module imports it. Extract shared utilities only when multiple contexts need genuinely domain-independent behavior.
@@ -74,8 +74,8 @@ Keep changes scoped and independently verifiable. Include relevant tests and pub
 
 Run `pnpm test:mutation` from the repository root. It builds package dependencies and runs Stryker against core implementation files, common style bindings and React hooks. Run only one package with `pnpm --filter @bolerish/edge-core test:mutation` or `pnpm --filter @bolerish/edge test:mutation` after building dependencies.
 
-Mutation testing supplements the adjacent Vitest tests: Stryker changes production code and checks whether those tests fail. Package unit tests import source through their source barrels; common-style tests use the StyleX compiler. React tests consume the built common style package, while Stryker tests its source separately. Packed-package checks independently exercise the published import paths.
+Mutation testing supplements the adjacent Vitest tests: Stryker changes production code and checks whether those tests fail. Package unit tests import source through their source barrels; common-style tests check the plain CSS binding options. React tests consume the built common style package, while Stryker tests its source separately. Packed-package checks independently exercise the published import paths.
 
-Reports are local to `.private/mutation/core/`, `.private/mutation/styles/` and `.private/mutation/react/` (`index.html` and `report.json`). Review surviving and uncovered mutants for missing behavioral assertions; a completed run does not mean all mutants were detected. No score threshold is enforced until the remaining mutants have been reviewed. Excluded files are tests and the export-only package barrels. The static StyleX declaration section is explicitly excluded because mutation instrumentation makes compile-time style expressions dynamic; browser integration tests cover decorative output.
+Reports are local to `.private/mutation/core/`, `.private/mutation/styles/` and `.private/mutation/react/` (`index.html` and `report.json`). Review surviving and uncovered mutants for missing behavioral assertions; a completed run does not mean all mutants were detected. No score threshold is enforced until the remaining mutants have been reviewed. Excluded files are tests and the export-only package barrels. CSS is exercised by browser integration tests; JavaScript binding logic participates in mutation testing.
 
 The Stryker sandbox preprocessor requires the JavaScript TypeScript compiler API. A scoped pnpm package extension supplies TypeScript 6 only to Stryker; the project build and type checks continue to use the pinned TypeScript 7 compiler. Stryker's [Vitest runner](https://stryker-mutator.io/docs/stryker-js/vitest-runner/) runs the existing tests with per-test mutation coverage.
