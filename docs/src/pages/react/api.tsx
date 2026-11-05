@@ -1,3 +1,4 @@
+import { Link } from '@bolerish/ui/link';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { CodeBlock } from '../../ui/CodeBlock.js';
 import {
@@ -60,9 +61,7 @@ export const api: DocPage = {
             <P>
               Place every <code>Lighting.Surface</code> inside a
               <code> Lighting</code> owner; rendering it outside one throws an
-              error. The decoration reserves <code>::after</code> by default; choose <code>pseudoElement="before"</code> to use the other slot. If both slots are occupied, use a wrapper. Wrap an input
-              or a component that already uses this pseudo-element instead of
-              attaching the effect to that same host.
+              error. For native inputs and occupied pseudo-elements, see <Link href="/docs/integration/">Integration</Link>.
             </P>
           </div>
           <P>
@@ -105,7 +104,7 @@ export const api: DocPage = {
         <>
           <P>
             Call <code>light.refresh()</code> after your application moves an
-            element without changing its size. It remeasures geometry on the
+            element or changes its host border thickness without a size notification. It remeasures geometry on the
             next frame, including while the pointer is stationary.
           </P>
           <CodeBlock label="refresh signature" code={`interface Light {
@@ -164,8 +163,7 @@ export const api: DocPage = {
           <P>
             The React adapter requires React 19. Tests cover React’s server
             renderer and hydration APIs; they do not establish integration with
-            every SSR framework. Svelte, Solid and Vue adapters are not available
-            yet, while the DOM engine and style bindings are framework-independent.
+            every SSR framework.
           </P>
         </>
       ),

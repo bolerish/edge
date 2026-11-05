@@ -2,17 +2,20 @@ import { isValidElement, type ReactNode } from 'react';
 import { pages } from '../pages/index.js';
 import { getPagePath } from '../pages/routes.js';
 
+export const searchCategories = ['Getting started', 'Appearance', 'Guides', 'React'] as const;
+export type SearchCategory = typeof searchCategories[number];
+
 interface SearchDocument {
   title: string;
   pageTitle: string;
-  category: 'Appearance' | 'Guides' | 'React';
+  category: SearchCategory;
   href: string;
   text: string;
   description: string;
 }
 const documents: SearchDocument[] = pages.flatMap((page) => {
   const href = getPagePath(page);
-  const category: SearchDocument['category'] = page.section === 'Appearance' ? 'Appearance' : page.section === 'React' ? 'React' : 'Guides';
+  const category: SearchDocument['category'] = page.section === 'Getting started' ? 'Getting started' : page.section === 'Appearance' ? 'Appearance' : page.section === 'React' ? 'React' : 'Guides';
   const pageTitle = [page.section, page.title].filter(Boolean).join(' · ');
   return [
     { title: page.title, pageTitle, category, href, text: `${pageTitle} ${page.description}`.toLowerCase(), description: page.description },

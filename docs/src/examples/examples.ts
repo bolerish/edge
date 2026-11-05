@@ -22,9 +22,7 @@ export const sharedLightExample = {
 export const edgeStylesExample = {
   title: 'Compare edge styles',
   Component: EdgeStylesExample,
-  code: `const edgeStyles = ['raised', 'recessed', 'matte'];
-
-const light = useLight();
+  code: `const light = useLight();
 const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 
 <Card ref={surface.ref} className={surface.className} style={surface.style}>
@@ -35,9 +33,13 @@ const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 export const decorationSlotExample = {
   title: 'Keep existing pseudo-elements',
   Component: DecorationSlotExample,
-  code: `const surface = getSurfaceProps({ pseudoElement: 'before' });
-// Compose surface.className and surface.style with your existing host.
-// The host's ::after remains available for its own decoration.`,
+  code: `import { Lighting } from '@bolerish/edge';
+
+<Lighting>
+  <Lighting.Surface as="article" pseudoElement="before" className="existing-after">
+    Your existing ::after stays intact.
+  </Lighting.Surface>
+</Lighting>`,
 };
 
 export const motionExample = { title: 'Compare motion', Component: MotionExample, code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__ });

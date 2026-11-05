@@ -13,6 +13,7 @@ export const integration: DocPage = {
     {
       id: 'existing-decorations', title: 'Keep existing decorations', content: <>
         <P>Edge draws its border decoration in <code>::after</code> by default. Choose <code>pseudoElement: 'before'</code> when your component already uses <code>::after</code>. If both slots are occupied, apply Edge to a wrapper. This is a CSS constraint, independent of your framework.</P>
+        <P>The React example below uses the same decoration-slot option exposed by the shared style bindings.</P>
         <ExamplePreview title={decorationSlotExample.title} code={decorationSlotExample.code}>
           <decorationSlotExample.Component />
         </ExamplePreview>
@@ -23,7 +24,7 @@ export const integration: DocPage = {
     },
     {
       id: 'refresh-after-layout-changes', title: 'Refresh after layout changes', content: <>
-        <P>Size changes, nested scrolling, viewport resizing, font loading and resource loads invalidate cached geometry automatically. When your application moves a surface without changing its size, call <code>light.refresh()</code> after the new layout is applied. This also schedules an update while the pointer is stationary.</P>
+        <P>Size changes, nested scrolling, viewport resizing, font loading and resource loads invalidate cached geometry automatically. When your application moves a surface or changes its host border thickness without a size notification, call <code>light.refresh()</code> after the new layout is applied. This also schedules an update while the pointer is stationary.</P>
         <P>See the <Link href="/docs/react/api/#refresh">React API reference</Link> for the adapter-specific call.</P>
       </>,
     },

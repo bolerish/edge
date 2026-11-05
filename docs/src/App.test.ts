@@ -564,7 +564,8 @@ test('style example changes only edge style and retains Bolerish UI colors', asy
   expect(await card.evaluate(node => getComputedStyle(node).backgroundColor)).toBe(initialColor);
   await page.getByRole('group', { name: 'Compare edge styles', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
   const source = page.getByRole('region', { name: 'Compare edge styles code', exact: true });
-  await expect(source).toContainText('const edgeStyles');
+  await expect(source).toContainText('const light = useLight()');
+  await expect(source).not.toContainText('const edgeStyles');
   await expect(source).toContainText('edgeStyle: "matte"');
   await expect(source).not.toContainText('useState');
   await expect(source).not.toContainText('SelectTrigger');
@@ -610,6 +611,13 @@ test('existing section anchors remain in the catalog after rewriting the pages',
 
 test('decoration slots preserve consumer pseudo-elements and switch without extra DOM', async ({ page }) => {
   await page.goto('/docs/integration/');
+  const example = page.getByRole('group', { name: 'Keep existing pseudo-elements', exact: true });
+  await example.getByRole('tab', { name: 'Code', exact: true }).click();
+  const code = example.getByRole('region', { name: 'Keep existing pseudo-elements code', exact: true });
+  await expect(code).toContainText("import { Lighting } from '@bolerish/edge'");
+  await expect(code).toContainText('pseudoElement="before"');
+  await expect(code).not.toContainText('getSurfaceProps');
+  await example.getByRole('tab', { name: 'Preview', exact: true }).click();
   const ownAfter = page.locator('.edge-example-after');
   const ownBefore = page.locator('.edge-example-before');
   expect(await ownAfter.evaluate(node => getComputedStyle(node, '::after').content)).toBe('"Saved"');
@@ -647,6 +655,12 @@ test('search matches the shared layout and filters real document categories', as
   const inputBox = await query.boundingBox();
   const categoriesBox = await dialog.getByRole('navigation', { name: 'Search sections' }).boundingBox();
   expect(categoriesBox!.y).toBeGreaterThan(inputBox!.y + inputBox!.height);
+  await dialog.getByRole('button', { name: '#Getting started', exact: true }).click();
+  await expect(dialog.locator('.search-results a')).toHaveCount(2);
+  await expect(dialog.locator('.search-results a').filter({ hasText: 'Getting started ·' })).toHaveCount(2);
+  await dialog.getByRole('button', { name: '#Guides', exact: true }).click();
+  await expect(dialog.locator('.search-results a')).toHaveCount(2);
+  await expect(dialog.locator('.search-results a').filter({ hasText: 'Getting started ·' })).toHaveCount(0);
   await dialog.getByRole('button', { name: '#React', exact: true }).click();
   await expect(dialog.locator('.search-results a')).toHaveCount(2);
   await expect(dialog.locator('.search-results a').filter({ hasText: 'React ·' })).toHaveCount(2);
@@ -753,4 +767,22 @@ test('usage and integration previews align on desktop and stack without overflow
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     }
   }
+});
+
+test('surface style changes remeasure host border offsets with a stationary pointer', async ({ page }) => {
+  await page.goto('/docs/styles/');
+  const card = page.getByRole('group', { name: 'Style comparison', exact: true }).getByRole('article');
+  await card.evaluate(node => {
+    Object.assign(node.style, { boxSizing: 'content-box', width: '200px', height: '120px', borderStyle: 'solid', borderWidth: '1px' });
+    node.dataset.identity = 'original';
+  });
+  await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-inset-top'))).toBe('-1px');
+  const contentWidth = await card.evaluate(node => node.clientWidth);
+  await card.evaluate(node => { node.style.borderWidth = '2px 3px 4px 5px'; });
+  expect(await card.evaluate(node => node.clientWidth)).toBe(contentWidth);
+  await page.getByRole('combobox', { name: 'Style', exact: true }).click();
+  await page.getByRole('option', { name: 'Matte', exact: true }).click();
+  await expect(card).toHaveAttribute('data-identity', 'original');
+  await expect.poll(() => card.evaluate(node => ['top', 'right', 'bottom', 'left'].map(side => node.style.getPropertyValue(`--wisp-inset-${side}`))))
+    .toEqual(['-2px', '-3px', '-4px', '-5px']);
 });
