@@ -16,8 +16,6 @@ export const installation: DocPage = {
       content: <>
         <P>Add Edge to your existing project with your package manager. The commands below target the React adapter; it requires React 19. Other framework adapters are not available yet.</P>
         <InstallCommands />
-        <P>The package is not yet on the public npm registry. These are the consumer installation commands for its release; repository development setup is documented in CONTRIBUTING.md.</P>
-
       </>,
     },
     {

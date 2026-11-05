@@ -2,7 +2,11 @@
 
 Directional border lighting for the React components you own. Share one light across cards, buttons, input wrappers and same-document portals. Compose the UI with React and your preferred styling tool; Edge handles pointer scheduling, geometry and decorative border output.
 
-This is an unreleased React MVP. All workspace packages are private. Svelte, Solid and Vue adapters are not implemented yet. The DOM engine and plain CSS surface bindings are framework-independent.
+Edge supports React 19. Svelte, Solid and Vue adapters are not implemented yet. The DOM engine and plain CSS surface bindings are framework-independent.
+
+```sh
+npm install @bolerish/edge
+```
 
 ```tsx
 import { Lighting } from '@bolerish/edge';

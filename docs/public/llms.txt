@@ -2,7 +2,7 @@
 
 > A little more alive. Connect existing UI components to one shared directional light while keeping their markup, colors and interactions.
 
-The React 19 adapter is @bolerish/edge. Import @bolerish/edge/style.css once, before application and utility styles; a separate reset may load first. No styling compiler or style-injection provider is required. The workspace packages are private and not yet published to npm; see Installation for consumer commands and stylesheet setup, and CONTRIBUTING.md in the repository for local development. Dedicated Vue, Svelte and Solid adapters are not implemented.
+The React 19 adapter is @bolerish/edge. Import @bolerish/edge/style.css once, before application and utility styles; a separate reset may load first. No styling compiler or style-injection provider is required. See Installation for consumer commands and stylesheet setup, and CONTRIBUTING.md in the repository for local development. Dedicated Vue, Svelte and Solid adapters are not implemented.
 
 Lighting creates a shared scope without adding DOM. Only explicit Lighting.Surface descendants respond; nested scopes are independent. Use useLight and useSurface to connect existing hosts, passing the callback ref returned by useSurface to the host. Keep your existing className and style; Edge owns its decorative bindings. Hooks add decoration after hydration; Lighting.Surface also emits decorative styles during SSR.
 
