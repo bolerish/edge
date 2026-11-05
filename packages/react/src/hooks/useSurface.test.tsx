@@ -34,8 +34,7 @@ function Button({
   return (
     <button
       key={String(replace)}
-      ref={surface.ref}
-      className={surface.className} style={surface.style}
+      ref={surface}
     >
       Save
     </button>
@@ -145,7 +144,7 @@ it('does not rerender React components during pointer updates and preserves node
     const light = useLight({ motion: 'dynamic' });
     const surface = useSurface<HTMLButtonElement>(light);
     return (
-      <button ref={surface.ref} className={surface.className} style={surface.style}>
+      <button ref={surface}>
         Save
       </button>
     );
@@ -183,7 +182,7 @@ it('hydrates server markup and keeps an edited input value and selection', async
     });
     const [value, setValue] = useState('hello');
     return (
-      <label ref={surface.ref} className={surface.className} style={surface.style}>
+      <label ref={surface}>
         Query
         <input
           value={value}
@@ -217,7 +216,7 @@ it('updates and clears surface appearance without replacing its registration', a
   function Appearance({ color, intensity }: { color?: string; intensity?: number }) {
     const light = useLight({ motion: 'static' });
     const surface = useSurface<HTMLButtonElement>(light, { color, intensity });
-    return <button {...surface}>Save</button>;
+    return <button ref={surface}>Save</button>;
   }
   await act(async () => root.render(<Appearance color="red" intensity={0.4} />));
   flush();
@@ -244,7 +243,7 @@ it('reconnects an existing surface when its light handle changes', async () => {
     const firstLight = useLight({ motion: 'static', intensity: 0.2 });
     const secondLight = useLight({ motion: 'static', intensity: 0.8 });
     const surface = useSurface<HTMLButtonElement>(second ? secondLight : firstLight);
-    return <button {...surface}>Save</button>;
+    return <button ref={surface}>Save</button>;
   }
   await act(async () => root.render(<Scene second={false} />));
   flush();
@@ -269,7 +268,7 @@ it('exposes refresh to remeasure a stationary pointer after a position change', 
   function Scene() {
     const light = useLight({ motion: 'dynamic', radius: 10 });
     refresh = light.refresh;
-    return <button {...useSurface<HTMLButtonElement>(light)}>Save</button>;
+    return <button ref={useSurface<HTMLButtonElement>(light)}>Save</button>;
   }
   await act(async () => root.render(<Scene />));
   document.dispatchEvent(Object.assign(new Event('pointermove'), {
@@ -283,4 +282,58 @@ it('exposes refresh to remeasure a stationary pointer after a position change', 
   refresh!();
   flush();
   expect(Number(button.style.getPropertyValue('--wisp-strength'))).toBeGreaterThan(0);
+});
+
+it('keeps native classes/styles through rerenders and releases only the effect on detach', async () => {
+  function Scene({ enabled, variant, color }: { enabled: boolean; variant: string; color?: string }) {
+    const light = useLight({ motion: 'static' });
+    const ref = useSurface<HTMLButtonElement>(light, { color });
+    return <button ref={enabled ? ref : undefined} className={variant} style={{ padding: variant === 'first' ? 12 : 24 }}>Save</button>;
+  }
+  await act(async () => root.render(<Scene enabled variant="first" color="red" />));
+  flush();
+  const button = container.querySelector('button')!;
+  const initialClasses = button.className;
+  await act(async () => root.render(<Scene enabled variant="second" color="blue" />));
+  expect(container.querySelector('button')).toBe(button);
+  expect(button.classList.contains('second')).toBe(true);
+  expect(button.classList.contains('first')).toBe(false);
+  expect(button.className.split(' ').length).toBe(initialClasses.split(' ').length);
+  expect(button.style.padding).toBe('24px');
+  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('blue');
+  await act(async () => root.render(<Scene enabled={false} variant="second" />));
+  expect(button.className).toBe('second');
+  expect(button.style.padding).toBe('24px');
+  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('');
+  expect(button.style.getPropertyValue('--wisp-angle')).toBe('');
+  await act(async () => root.render(<Scene enabled variant="second" />));
+  flush();
+  expect(button.className).not.toBe('second');
+  expect(button.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
+});
+
+it('decorates a late child and preserves its independent class updates', async () => {
+  function Child({ surface }: { surface: ReturnType<typeof useSurface<HTMLButtonElement>> }) {
+    const [shown, setShown] = useState(false);
+    const [active, setActive] = useState(false);
+    return <>
+      <button onClick={() => setShown(true)}>Show host</button>
+      {shown ? <button ref={surface} className={active ? 'active' : 'idle'} onClick={() => setActive(true)}>Host</button> : null}
+    </>;
+  }
+  function Scene() {
+    const light = useLight({ motion: 'static' });
+    const surface = useSurface<HTMLButtonElement>(light, { color: 'red' });
+    return <Child surface={surface} />;
+  }
+  await act(async () => root.render(<Scene />));
+  await act(async () => container.querySelector('button')!.click());
+  flush();
+  const host = container.querySelectorAll('button')[1]!;
+  expect(host.style.getPropertyValue('--wisp-highlight')).toBe('red');
+  const classes = host.className.split(' ').length;
+  await act(async () => host.click());
+  expect(host.classList.contains('active')).toBe(true);
+  expect(host.classList.contains('idle')).toBe(false);
+  expect(host.className.split(' ').length).toBe(classes);
 });

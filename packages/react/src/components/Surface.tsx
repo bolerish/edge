@@ -8,7 +8,8 @@ import {
   type Ref,
   type RefCallback,
 } from 'react';
-import { useSurface, type SurfaceOptions } from '../hooks/useSurface.js';
+import { getSurfaceProps, type SurfaceOptions } from '@bolerish/edge-styles';
+import { useSurfaceRegistration } from '../hooks/useSurfaceRegistration.js';
 import { LightContext } from './light-context.js';
 
 export type SurfaceTag = Extract<keyof HTMLElementTagNameMap, keyof JSX.IntrinsicElements>;
@@ -22,13 +23,14 @@ export type SurfaceProps<T extends SurfaceTag = 'div'> = SurfaceOptions &
 export function Surface<T extends SurfaceTag = 'div'>(props: SurfaceProps<T>) {
   const light = use(LightContext);
   if (!light) throw new Error('Lighting.Surface must be inside Lighting');
-  const surface = useSurface<HTMLElementTagNameMap[T]>(light, props);
+  const surface = getSurfaceProps(props);
+  const registrationRef = useSurfaceRegistration<HTMLElementTagNameMap[T]>(light, props.edgeStyle ?? 'raised');
   const {
     as = 'div', ref: forwardedRef, className, style,
-    pseudoElement: _pseudoElement, edgeStyle: _edgeStyle, theme: _theme, color: _color, intensity: _intensity, shadowColor: _shadowColor, borderWidth: _borderWidth,
+    pseudoElement: _pseudoElement, edgeStyle: _edgeStyle, color: _color, intensity: _intensity, shadowColor: _shadowColor, borderWidth: _borderWidth,
     ...hostProps
   } = props;
-  const ref = useMergedRefs(surface.ref, forwardedRef);
+  const ref = useMergedRefs(registrationRef, forwardedRef);
   const attributes: HTMLAttributes<HTMLElement> = {
     ...hostProps,
     className: [surface.className, className].filter(Boolean).join(' '),

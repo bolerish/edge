@@ -1,41 +1,27 @@
-import {
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  type CSSProperties,
-  type RefCallback,
-} from 'react';
-import type { Registration } from '@bolerish/edge-core';
-import { getLightController, type Light } from './useLight.js';
-
+import { useCallback, useLayoutEffect, useRef, type RefCallback } from 'react';
 import { getSurfaceProps, type SurfaceOptions } from '@bolerish/edge-styles';
+import type { Light } from './useLight.js';
+import { useSurfaceRegistration } from './useSurfaceRegistration.js';
+import { bindSurfaceAppearance } from './surface-appearance.js';
 
 export type { SurfaceOptions } from '@bolerish/edge-styles';
 
-/** Register your own host element and apply the returned className and inline style. */
-export function useSurface<T extends HTMLElement = HTMLElement>(
-  light: Light,
-  options: SurfaceOptions = {},
-) {
-  const core = getLightController(light);
-  const edgeStyle = options.edgeStyle ?? 'raised';
-  const currentEdgeStyle = useRef(edgeStyle);
-  const registration = useRef<Registration | null>(null);
-  const ref: RefCallback<T> = useCallback(
-    (element: T | null) => {
-      registration.current?.destroy();
-      registration.current = element
-        ? core.register(element, currentEdgeStyle.current)
-        : null;
-    },
-    [core],
-  );
-  // Runs before a scheduled frame, including a ref replacement in the same commit.
-  useLayoutEffect(() => {
-    currentEdgeStyle.current = edgeStyle;
-    registration.current?.update(edgeStyle);
-  }, [edgeStyle]);
+/** Connects an existing host. Edge owns decoration; the caller owns its UI. */
+export function useSurface<T extends HTMLElement = HTMLElement>(light: Light, options: SurfaceOptions = {}): RefCallback<T> {
   const props = getSurfaceProps(options);
-  const style: CSSProperties & typeof props.style = props.style;
-  return { ref, className: props.className, style };
+  const register = useSurfaceRegistration<T>(light, options.edgeStyle ?? 'raised');
+  const latest = useRef(props);
+  const binding = useRef<ReturnType<typeof bindSurfaceAppearance> | null>(null);
+  const ref = useCallback((element: T | null) => {
+    binding.current?.destroy();
+    binding.current = null;
+    register(element);
+    if (element) binding.current = bindSurfaceAppearance(element, latest.current);
+  }, [register]);
+  // Reapply after React changes a host's className/style; attachment also supports late children.
+  useLayoutEffect(() => {
+    latest.current = props;
+    binding.current?.update(props);
+  });
+  return ref;
 }

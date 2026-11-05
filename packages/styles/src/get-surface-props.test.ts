@@ -9,16 +9,6 @@ it('provides host bindings without requiring a framework or DOM', () => {
   expect(props.style['--wisp-highlight']).toBeUndefined();
   expect(props.style['--wisp-intensity']).toBeUndefined();
 });
-it('keeps the base appearance opt-in and selects the requested theme variant', () => {
-  const plain = getSurfaceProps().className;
-  const raised = getSurfaceProps({ theme: 'wisp', edgeStyle: 'raised' }).className;
-  const matte = getSurfaceProps({ theme: 'wisp', edgeStyle: 'matte' }).className;
-  expect(getSurfaceProps({ theme: false }).className).toBe(plain);
-  expect(raised).not.toBe(plain);
-  expect(matte).not.toBe(plain);
-  expect(matte).not.toBe(raised);
-  expect(getSurfaceProps({ theme: 'wisp' }).className).toBe(raised);
-});
 it('maps the requested highlight color to its CSS variable', () => {
   expect(getSurfaceProps({ color: 'red' }).style['--wisp-highlight']).toBe('red');
   expect(getSurfaceProps({ color: 'var(--brand)' }).style['--wisp-highlight']).toBe('var(--brand)');
@@ -44,9 +34,7 @@ it('selects one decoration slot without changing the binding shape', () => {
   expect(getSurfaceProps({ pseudoElement: 'after' })).toEqual(after);
   expect(Object.keys(before)).toEqual(['className', 'style']);
   expect(before.className).not.toBe(after.className);
-  const themed = getSurfaceProps({ pseudoElement: 'before', theme: 'wisp' });
-  expect(themed.className).not.toBe(before.className);
-  expect(themed.className).not.toBe(getSurfaceProps({ theme: 'wisp' }).className);
+
 });
 it.each(['first-line', '', null, 0])('rejects invalid decoration slot %s', (pseudoElement) => {
   expect(() => getSurfaceProps({ pseudoElement: pseudoElement as never })).toThrow(new RangeError('Unknown surface pseudoElement'));

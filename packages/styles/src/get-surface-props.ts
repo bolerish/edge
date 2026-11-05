@@ -1,7 +1,9 @@
 import * as stylex from '@stylexjs/stylex';
 import type { EdgeStyle } from '@bolerish/edge-core';
 
-interface SurfaceAppearance {
+export interface SurfaceOptions {
+  /** How the edge responds to light. */
+  edgeStyle?: EdgeStyle;
   /** Decoration slot. Choose before when the host already uses ::after. */
   pseudoElement?: 'before' | 'after';
   /** Any CSS color. */
@@ -13,19 +15,12 @@ interface SurfaceAppearance {
   /** Multiplier for the shared light, clamped to 0–1. Defaults to 1. */
   intensity?: number;
 }
-export type SurfaceOptions = SurfaceAppearance & (
-  | { edgeStyle?: EdgeStyle; theme?: false }
-  | { edgeStyle?: 'raised' | 'matte'; theme: 'wisp' }
-);
-
 /** Framework-independent class and CSS-variable bindings for one surface. */
 export function getSurfaceProps(options: SurfaceOptions = {}) {
   const pseudoElement = options.pseudoElement === undefined ? 'after' : options.pseudoElement;
   if (pseudoElement !== 'after' && pseudoElement !== 'before')
     throw new RangeError('Unknown surface pseudoElement');
-  const theme =
-    options.theme === 'wisp' ? wispStyles[options.edgeStyle ?? 'raised'] : null;
-  const props = stylex.props(surfaceStyles.host, surfaceStyles[pseudoElement], theme);
+  const props = stylex.props(surfaceStyles.host, surfaceStyles[pseudoElement]);
   const intensity = options.intensity;
   const style = {
     '--wisp-highlight': options.color,
@@ -98,26 +93,5 @@ const surfaceStyles = stylex.create({
       WebkitMaskComposite: 'xor',
       maskComposite: 'exclude',
     },
-  },
-});
-
-const wispStyles = stylex.create({
-  raised: {
-    backgroundColor: '#262d20',
-    color: '#e5e9d8',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#3b4431',
-    borderRadius: 10,
-    boxShadow: '0 3px 8px #0003, inset 0 1px #ffffff08',
-  },
-  matte: {
-    backgroundColor: '#20251c',
-    color: '#d2d8c5',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#343c2c',
-    borderRadius: 10,
-    boxShadow: 'none',
   },
 });

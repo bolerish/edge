@@ -9,7 +9,7 @@ it('renders plain host markup without adding a scope wrapper or leaking options'
   try {
     const html = renderToStaticMarkup(
       <Lighting motion="dynamic">
-        <Lighting.Surface as="article" className="card" pseudoElement="before" edgeStyle="matte" theme="wisp" color="red" intensity={0.4}>
+        <Lighting.Surface as="article" className="card" pseudoElement="before" edgeStyle="matte" color="red" intensity={0.4}>
           Card
         </Lighting.Surface>
       </Lighting>,
@@ -40,8 +40,8 @@ it('rejects unknown motion values from JavaScript consumers', () => {
 <Lighting.Surface as="button" href="/docs/" />;
 // @ts-expect-error A default div does not accept an href.
 <Lighting.Surface href="/docs/" />;
-// @ts-expect-error The optional Wisp theme has no recessed variant.
-<Lighting.Surface theme="wisp" edgeStyle="recessed" />;
+// @ts-expect-error Theme presets are not part of the surface API.
+<Lighting.Surface theme="wisp" />;
 
 it('rejects invalid decoration slots during SSR', () => {
   expect(() => renderToStaticMarkup(
