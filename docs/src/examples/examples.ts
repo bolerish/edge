@@ -7,16 +7,8 @@ export const sharedLightExample = {
   title: 'One light, your components',
   Component: SharedLightExample,
   code: `<Lighting>
-  <Lighting.Surface as="article">
-    Project overview
-  </Lighting.Surface>
-  <Lighting.Surface as="button" type="button" onClick={saveProject}>
-    Save project
-  </Lighting.Surface>
-  <Lighting.Surface as="label" edgeStyle="recessed">
-    Project name
-    <Input name="project-name" defaultValue="Website refresh" />
-  </Lighting.Surface>
+  <Lighting.Surface>Example card</Lighting.Surface>
+  <Lighting.Surface>Another example card</Lighting.Surface>
 </Lighting>`,
 };
 export const edgeStylesExample = {

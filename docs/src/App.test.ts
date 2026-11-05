@@ -519,19 +519,21 @@ test('the reading journey and document titles work without JavaScript', async ({
 test('shared light demo uses site settings and shows concise integration code', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('wisp:preferences:v1', JSON.stringify({ motion: 'static', staticDirection: 315 })));
   await page.goto('/docs/react/usage/');
-  const demo = page.getByRole('group', { name: 'Shared light controls', exact: true });
-  const card = demo.getByRole('article');
+  const demo = page.getByRole('group', { name: 'Shared light example', exact: true });
+  const cards = demo.getByRole('article');
+  await expect(cards).toHaveCount(2);
+  const card = cards.first();
+  await expect.poll(() => cards.nth(1).evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
   await expect.poll(() => card.evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
   await expect(demo.getByRole('combobox')).toHaveCount(0);
   const bounds = await card.boundingBox();
   if (!bounds) throw new Error('Missing demo card');
   await page.mouse.move(bounds.x + 1, bounds.y + bounds.height / 2);
   await expect.poll(() => card.evaluate(node => Number.parseFloat(node.style.getPropertyValue('--wisp-angle')))).toBeCloseTo(315, 0);
-  await demo.getByRole('textbox', { name: 'Project name' }).fill('My project');
-  await expect(demo.getByRole('textbox', { name: 'Project name' })).toHaveValue('My project');
-  await demo.getByRole('button', { name: 'Save project (0)', exact: true }).click();
-  await expect(demo.getByRole('button', { name: 'Save project (1)', exact: true })).toBeVisible();
-  expect(await demo.getByText('This ordinary element has no lighting decoration.', { exact: true }).evaluate(node => node.style.getPropertyValue('--wisp-strength'))).toBe('');
+  await expect(demo.getByRole('button')).toHaveCount(0);
+  await expect(demo.getByRole('textbox')).toHaveCount(0);
+  await expect(demo.getByText('Example card', { exact: true })).toBeVisible();
+  await expect(demo.getByText('Another example card', { exact: true })).toBeVisible();
   await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {
     configurable: true,
     value: { writeText: async (text: string) => { (window as unknown as { copied: string }).copied = text; } },
@@ -540,7 +542,10 @@ test('shared light demo uses site settings and shows concise integration code', 
   await page.getByRole('button', { name: 'Copy One light, your components', exact: true }).click();
   const copied = await page.evaluate(() => (window as unknown as { copied: string }).copied);
   expect(copied).toContain('<Lighting>');
-  expect(copied).toContain('edgeStyle="recessed"');
+  expect(copied).toContain('<Lighting.Surface>Example card</Lighting.Surface>');
+  expect(copied).toContain('<Lighting.Surface>Another example card</Lighting.Surface>');
+  expect(copied).not.toContain('saveProject');
+  expect(copied).not.toContain('<Input');
   expect(copied).not.toContain('useState');
   expect(copied).not.toContain('style.css');
 });
@@ -551,7 +556,10 @@ test('style example changes only edge style and retains Bolerish UI colors', asy
   await page.goto('/docs/styles/');
   const demo = page.getByRole('group', { name: 'Style comparison', exact: true });
   await expect(demo.getByRole('combobox', { name: 'Motion' })).toHaveCount(0);
-  const card = demo.getByRole('article');
+  const cards = demo.getByRole('article');
+  await expect(cards).toHaveCount(2);
+  const card = cards.first();
+  await expect.poll(() => cards.nth(1).evaluate(node => node.style.getPropertyValue('--wisp-angle'))).toBe('315.0deg');
   await expect.poll(() => card.evaluate(node => Number.parseFloat(node.style.getPropertyValue('--wisp-angle')))).not.toBeNaN();
   const initialColor = await card.evaluate(node => getComputedStyle(node).backgroundColor);
   await demo.getByRole('combobox', { name: 'Style', exact: true }).click();

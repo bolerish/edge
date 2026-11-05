@@ -1,9 +1,6 @@
-import { use, useState } from 'react';
+import { use } from 'react';
 import { useSurface } from '@bolerish/edge';
 import { Card, CardContent, CardHeader, CardTitle } from '@bolerish/ui/card';
-import { Button } from '@bolerish/ui/button';
-import { Input } from '@bolerish/ui/input';
-import { Label } from '@bolerish/ui/label';
 import { DocumentLightContext } from '../ui/document-light-context.js';
 import { usePreferences } from '../settings/usePreferences.js';
 import './usage-examples.css';
@@ -12,25 +9,18 @@ export function SharedLightExample() {
   const light = use(DocumentLightContext);
   if (!light) throw new Error('Usage example requires document lighting');
   const { edgeStyle } = usePreferences();
-  const card = useSurface<HTMLDivElement>(light, { edgeStyle });
-  const button = useSurface<HTMLButtonElement>(light, { edgeStyle });
-  const field = useSurface<HTMLDivElement>(light, { edgeStyle: 'recessed' });
-  const [saved, setSaved] = useState(0);
+  const firstCard = useSurface<HTMLDivElement>(light, { edgeStyle });
+  const secondCard = useSurface<HTMLDivElement>(light, { edgeStyle });
   return (
-    <div role="group" aria-label="Shared light controls" className="shared-light-example">
-      <Card ref={card} role="article">
-        <CardHeader><CardTitle>Project overview</CardTitle></CardHeader>
-        <CardContent>One light connects this card, the button and the input wrapper.</CardContent>
+    <div role="group" aria-label="Shared light example" className="shared-light-example">
+      <Card ref={firstCard} role="article">
+        <CardHeader><CardTitle>Example card</CardTitle></CardHeader>
+        <CardContent>Both cards respond to the same light.</CardContent>
       </Card>
-      <div className="shared-light-example-controls">
-        <div ref={field} className="shared-light-example-field">
-          <Label htmlFor="usage-project-name">Project name</Label>
-          <Input id="usage-project-name" name="project-name" defaultValue="Website refresh" />
-        </div>
-        <Button ref={button}
-          onClick={() => setSaved(count => count + 1)}>Save project ({saved})</Button>
-      </div>
-      <p>This ordinary element has no lighting decoration.</p>
+      <Card ref={secondCard} role="article">
+        <CardHeader><CardTitle>Another example card</CardTitle></CardHeader>
+        <CardContent>Both cards respond to the same light.</CardContent>
+      </Card>
     </div>
   );
 }

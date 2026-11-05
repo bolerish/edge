@@ -6,19 +6,6 @@
   gap: 16px;
 }
 .shared-light-example > [role='article'] { height: 100%; }
-.shared-light-example-controls { display: grid; gap: 16px; min-width: 0; }
-.shared-light-example-controls > button { justify-self: start; }
-.shared-light-example-field {
-  display: grid;
-  gap: 8px;
-  min-width: 0;
-  padding: 16px;
-  border-radius: 8px;
-}
-.example-preview-result .shared-light-example > p {
-  grid-column: 1 / -1;
-  margin: 0;
-}
 .decoration-slot-example > button { justify-self: start; align-self: center; }
 @media (max-width: 600px) {
   .shared-light-example,
