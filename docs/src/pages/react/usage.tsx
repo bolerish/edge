@@ -8,7 +8,7 @@ import type { DocPage } from '../types.js';
 
 export const usage: DocPage = {
   slug: 'react/usage',
-  aliases: ['usage', 'react', 'installation'],
+  aliases: ['usage', 'react'],
   section: 'React',
   title: 'Usage',
   description: 'Choose an area with Lighting, then mark the elements that should respond with Lighting.Surface. Keep your own styles and interactions.',
@@ -16,7 +16,7 @@ export const usage: DocPage = {
     {
       id: 'share-one-light', title: 'Connect an area', content: <>
         <span id="package-installation" /><span id="prepare-the-workspace" />
-        <P>Install Edge and load its CSS from <Link href="/docs/">Getting started</Link>. React 19 is required. In frameworks with Server Components, place interactive lighting components and hooks inside a client boundary.</P>
+        <P>Install Edge and load its CSS from <Link href="/docs/installation/">Installation</Link>. React 19 is required. In frameworks with Server Components, place interactive lighting components and hooks inside a client boundary.</P>
         <span id="create-your-first-surface" />
         <P>Wrap the part of your interface you want to connect in <code>Lighting</code>. Add <code>Lighting.Surface</code> only to the elements that should respond. Other elements keep their appearance. A nested Lighting creates an independent scope.</P>
         <ExamplePreview title={sharedLightExample.title} code={sharedLightExample.code}>

@@ -135,7 +135,7 @@ test('mobile navigation supports Escape and pages stay inside the viewport', asy
 test('copy reports actual clipboard success and gives a fallback on denial', async ({
   page,
 }) => {
-  await page.goto('/docs/');
+  await page.goto('/docs/installation/');
   await page.evaluate(() =>
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -169,7 +169,7 @@ test('copy reports actual clipboard success and gives a fallback on denial', asy
 });
 
 test('getting started owns shared installation and the AI prompt without demos', async ({ page }) => {
-  await page.goto('/docs/');
+  await page.goto('/docs/installation/');
   await expect(page.locator('.example-preview')).toHaveCount(0);
   const install = page.locator('#installation');
   for (const [manager, command] of [
@@ -236,7 +236,7 @@ test('preview data stays fixed and getting started leads directly to React usage
   ]);
   await page.getByRole('link', { name: 'Get started' }).click();
   await expect(page).toHaveURL(/\/docs\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Introduction');
   await page.getByRole('link', { name: 'React Usage', exact: true }).focus();
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/docs\/react\/usage\/$/);
@@ -323,8 +323,8 @@ test('documentation search finds section content and supports keyboard dismissal
   await page.keyboard.press('Control+k');
   await expect(dialog).toBeVisible();
   await query.fill('installation');
-  await dialog.locator('a[href="/docs/#installation"]').click();
-  await expect(page).toHaveURL(/\/docs\/#installation$/);
+  await dialog.locator('a[href="/docs/installation/"]').click();
+  await expect(page).toHaveURL(/\/docs\/installation\/$/);
 });
 
 test('API navigation follows the URL hash after hydration and in-page navigation', async ({ page }) => {
@@ -345,7 +345,7 @@ test('API navigation follows the URL hash after hydration and in-page navigation
 
 test('previous guide URLs preserve their content and API anchors', async ({ page }) => {
   for (const [slug, title] of [
-    ['installation', 'Usage'], ['usage', 'Usage'], ['materials', 'Style'],
+    ['installation', 'Installation'], ['usage', 'Usage'], ['materials', 'Style'],
     ['accessibility', 'Accessibility'], ['api', 'API reference'],
     ['react/materials', 'Style'], ['react/accessibility', 'Accessibility'],
   ] as const) {
@@ -362,7 +362,7 @@ test('previous guide URLs preserve their content and API anchors', async ({ page
 
 test('framework search uses canonical React guides and contextual labels', async ({ page }) => {
   await page.goto('/docs/getting-started/');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Introduction');
   await page.getByRole('button', { name: 'Search documentation' }).click();
   const dialog = page.getByRole('dialog');
   await dialog.getByRole('textbox', { name: 'Search titles and content' }).fill('React Usage');
@@ -376,7 +376,7 @@ test('shared guides appear before framework-specific documentation', async ({ pa
   await page.goto('/docs/');
   const groups = page.locator('.sidebar .nav-group');
   await expect(groups).toHaveCount(4);
-  await expect(groups.nth(0).getByRole('link')).toHaveText(['Getting started']);
+  await expect(groups.nth(0).getByRole('link')).toHaveText(['Introduction', 'Installation']);
   await expect(groups.nth(1).getByRole('link')).toHaveText(['Style', 'Motion']);
   await expect(groups.nth(2).getByRole('link')).toHaveText(['Accessibility', 'Integration']);
   await expect(groups.nth(3).getByRole('link')).toHaveText(['Usage', 'API reference']);
@@ -416,14 +416,14 @@ test('home and docs navigate without reloading or resetting the theme and header
   page.on('request', request => { if (request.isNavigationRequest()) documents++; });
   await page.getByRole('link', { name: 'Get started' }).click();
   await expect(page).toHaveURL(/\/docs\/$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Introduction');
   await expect(page.locator('html')).toHaveAttribute('data-bolerish-theme', 'dark');
   expect(await page.evaluate(() => (window as unknown as { navigationMarker: boolean }).navigationMarker)).toBe(true);
   expect((await brand.boundingBox())?.x).toBe(before?.x);
   await page.goBack();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('A little more alive.');
   await page.goForward();
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Getting started');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Introduction');
   expect(documents).toBe(0);
 });
 
@@ -495,7 +495,8 @@ test('the reading journey and document titles work without JavaScript', async ({
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   const journey = [
-    ['/docs/', 'Getting started · bolerish/edge'],
+    ['/docs/', 'Getting started · Introduction · bolerish/edge'],
+    ['/docs/installation/', 'Getting started · Installation · bolerish/edge'],
     ['/docs/react/usage/', 'React · Usage · bolerish/edge'],
     ['/docs/styles/', 'Appearance · Style · bolerish/edge'],
     ['/docs/motion/', 'Appearance · Motion · bolerish/edge'],
@@ -708,8 +709,7 @@ test('documentation surfaces share page lighting and keep native links and indep
   await page.mouse.move(bounds.x + 2, bounds.y + bounds.height / 2);
   await expect.poll(() => next.evaluate(node => Number.parseFloat(node.style.getPropertyValue('--wisp-angle')))).toBeCloseTo(270, 0);
   await next.click();
-  await expect(page).toHaveURL(/\/docs\/react\/usage\/$/);
-  await page.locator('.sidebar a[href="/docs/"]').click();
+  await expect(page).toHaveURL(/\/docs\/installation\/$/);
   const code = page.locator('.code-block').first();
   await code.scrollIntoViewIfNeeded();
   const codeBounds = await code.boundingBox();
