@@ -1,7 +1,6 @@
 {
   "name": "@bolerish/edge",
-  "version": "0.1.0-alpha.0",
-  "private": true,
+  "version": "0.1.0",
   "type": "module",
   "license": "MIT",
   "files": [
@@ -46,5 +45,20 @@
     "@types/node": "catalog:",
     "@stryker-mutator/core": "catalog:",
     "@stryker-mutator/vitest-runner": "catalog:"
+  },
+  "description": "Shared directional border lighting for your React components.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bolerish/wisp.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/bolerish/wisp#readme",
+  "bugs": {
+    "url": "https://github.com/bolerish/wisp/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest"
   }
 }

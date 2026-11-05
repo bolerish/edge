@@ -6,6 +6,9 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const sandbox = resolve(root, '.private/package-check');
+const releaseManifest: { version: string } = JSON.parse(
+  await readFile(resolve(root, 'packages/react/package.json'), 'utf8'),
+);
 await rm(sandbox, { recursive: true, force: true });
 await mkdir(resolve(sandbox, 'node_modules/@bolerish'), {
   recursive: true,
@@ -38,12 +41,24 @@ for (const name of ['core', 'styles', 'react']) {
   ]);
   const manifest: {
     name: string;
+    version: string;
+    private?: boolean;
+    publishConfig: { access: string; tag: string; registry: string };
     exports: Record<string, string | Record<string, string>>;
     dependencies?: Record<string, string>;
   } = JSON.parse(
     await readFile(resolve(destination, 'package.json'), 'utf8'),
   );
   assert.equal(manifest.name, name === 'react' ? '@bolerish/edge' : `@bolerish/edge-${name}`);
+  assert.equal(manifest.version, releaseManifest.version);
+  assert.notEqual(manifest.private, true);
+  assert.equal(manifest.publishConfig.access, 'public');
+  assert.equal(manifest.publishConfig.tag, 'latest');
+  assert.equal(manifest.publishConfig.registry, 'https://registry.npmjs.org/');
+  await readFile(resolve(destination, 'README.md'));
+  for (const [dependency, version] of Object.entries(manifest.dependencies ?? {})) {
+    if (dependency.startsWith('@bolerish/edge-')) assert.equal(version, `^${releaseManifest.version}`);
+  }
   for (const target of Object.values(manifest.exports)) {
     if (typeof target === 'string')
       await readFile(resolve(destination, target));
