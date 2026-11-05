@@ -1,6 +1,6 @@
-# Wisp
+# Edge
 
-Directional border lighting for the React components you own. Share one light across cards, buttons, input wrappers and same-document portals. Compose the UI with React and your preferred styling tool; Wisp handles pointer scheduling, geometry and decorative border output.
+Directional border lighting for the React components you own. Share one light across cards, buttons, input wrappers and same-document portals. Compose the UI with React and your preferred styling tool; Edge handles pointer scheduling, geometry and decorative border output.
 
 This is an unreleased React MVP. All workspace packages are private. Svelte, Solid and Vue adapters are not implemented yet. The DOM engine and plain CSS surface bindings are framework-independent.
 
@@ -22,7 +22,9 @@ function Area() {
 
 `Lighting` shares one light without adding DOM. Only explicit `Lighting.Surface` descendants respond; nested owners create independent lights. A surface renders a div by default. Use `as` for another HTML tag, and pass normal attributes, events, className, style and refs to that host.
 
-The highlight follows your component’s text color by default; its radius follows the host border-radius. Background, padding and base borders stay yours.
+Import `@bolerish/edge/style.css` once, before application and utility styles; a separate reset may load first. No styling compiler or style-injection provider is required.
+
+The highlight follows each component’s own text color by default; its radius follows the host border-radius. Background, padding and base borders stay yours.
 
 Motion accepts `dynamic`, `static` or `system` (the default). System respects device and reduced-motion preferences. The documentation demo opts into Dynamic. Choose raised, recessed or matte without changing your component’s base appearance. Set `color` and `intensity` through props; surface intensity multiplies shared light intensity.
 
@@ -43,7 +45,7 @@ The site lives in `docs/`. Run `pnpm dev`, then open [documentation](http://loca
 
 SSR/static rendering and client hydration are supported by the React adapter. Pointer frames do not update React state. System motion respects reduced motion; Dynamic follows the pointer, and Static uses fixed lighting. Lighting does not replace base borders, contrast or keyboard focus.
 
-The effect approximates axis-aligned rectangular surfaces. Position-only layout changes may require `light.refresh()` after commit. The declarative owner exposes the same handle through an optional `ref`. Changing gradients still has browser rendering costs; no FPS or speedup is promised. Cross-document portals and rotated/perspective geometry are not supported.
+The effect approximates axis-aligned rectangular surfaces. Position changes or host border-thickness changes without a size notification may require `light.refresh()` after commit. The declarative owner exposes the same handle through an optional `ref`. Changing gradients still has browser rendering costs; no FPS or speedup is promised. Cross-document portals and rotated/perspective geometry are not supported.
 
 MIT licensed.
 

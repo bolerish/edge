@@ -73,8 +73,8 @@ export const styles: DocPage = {
           <span id="apply-the-wisp-theme" />
           <P>Edge preserves your component’s background, text color, radius and layout. Choose raised, recessed or matte for the decorative response.</P>
           <P>
-            The highlight follows the host text color by default and inherits its border radius. Set <code>color</code> and <code>intensity</code> on a surface
-            to customize the highlight.
+            Each surface uses its own text color by default, including inside another surface, and inherits its host border radius. Set <code>color</code> and <code>intensity</code> on a surface
+            to customize that surface’s highlight.
             Set shadowColor to transparent on light surfaces if a dark
             opposite edge is unwanted. borderWidth controls the decorative
             thickness in pixels; it does not change the host border.
