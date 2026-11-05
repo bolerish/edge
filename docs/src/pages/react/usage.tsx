@@ -28,8 +28,8 @@ export const usage: DocPage = {
     {
       id: 'keep-your-styles', title: 'Keep your styles and events', content: <>
         <span id="load-the-stylesheet" />
-        <P>Use <code>as</code> to choose the HTML element, and pass your className, style, events and ref to that element. Lighting adds no wrapper; each Surface renders one host.</P>
-        <CodeBlock label="Style composition" code={'<Lighting.Surface as="button" className="button" onClick={saveProject}>\n  Save project\n</Lighting.Surface>'} />
+        <P>Use <code>as</code> to choose the HTML element, and pass events and refs to that element. The className and style props are optional: use them to apply your existing styles, not to enable Edge. Lighting adds no wrapper; each Surface renders one host.</P>
+        <CodeBlock label="Style composition" code={'<Lighting.Surface as="button" onClick={saveProject}>\n  Save project\n</Lighting.Surface>'} />
         <span id="wrap-inputs-you-own" />
         <P>Inputs need a wrapper. If an existing decoration conflicts, see <Link href="/docs/integration/">Integration</Link>. Choose appearance and movement in <Link href="/docs/styles/">Style</Link> and <Link href="/docs/motion/">Motion</Link>.</P>
       </>,

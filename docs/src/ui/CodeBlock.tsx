@@ -48,7 +48,7 @@ export function CodeBlock({
       </div>
       <Highlight
         prism={Prism}
-        code={code.replace(/^(?: {2})+/gm, (indent) => '\t'.repeat(indent.length / 2))}
+        code={code}
         language={language}
         theme={codeTheme}
       >

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '@bolerish/ui/button';
 import { Lighting } from '@bolerish/edge';
 import '@bolerish/edge/style.css';
+import './usage-examples.css';
 
 export function DecorationSlotExample() {
   const [pseudoElement, setPseudoElement] = useState<'before' | 'after'>('before');
@@ -11,6 +12,7 @@ export function DecorationSlotExample() {
         .edge-example-after::after { content: "Saved"; color: currentColor; }
         .edge-example-before::before { content: "Ready"; color: currentColor; }
       `}</style>
+      <div className="decoration-slot-example">
       <Lighting.Surface as="article" pseudoElement="before" className="edge-example-after"
         style={{ padding: 24, border: '1px solid currentColor', borderRadius: 16 }}>
         Your existing ::after stays intact.{' '}
@@ -27,6 +29,7 @@ export function DecorationSlotExample() {
         style={{ padding: 24, borderStyle: 'solid', borderWidth: '2px 3px 4px 5px', borderRadius: 16 }}>
         Decoration uses ::{pseudoElement}
       </Lighting.Surface>
+      </div>
     </Lighting>
   );
 }

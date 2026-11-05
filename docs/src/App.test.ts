@@ -721,7 +721,7 @@ test('documentation surfaces share page lighting and keep native links and indep
   expect(await code.evaluate(node => getComputedStyle(node, '::after').opacity)).toBe('0');
 });
 
-test('code remains readable with wider displayed indentation on desktop and mobile', async ({ page }) => {
+test('code preserves source indentation on desktop and mobile', async ({ page }) => {
   await page.goto('/docs/styles/');
   await page.getByRole('group', { name: 'Compare edge styles', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
   const code = page.getByRole('region', { name: 'Compare edge styles code', exact: true });
@@ -729,7 +729,28 @@ test('code remains readable with wider displayed indentation on desktop and mobi
     await page.setViewportSize({ width, height: 900 });
     expect(await code.evaluate(node => getComputedStyle(node).fontSize)).toBe('14px');
     expect(await code.evaluate(node => getComputedStyle(node).tabSize)).toBe('4');
-    expect(await code.textContent()).toContain('\tYour component');
+    expect(await code.textContent()).toContain('  Your component');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});
+
+test('usage and integration previews align on desktop and stack without overflow on mobile', async ({ page }) => {
+  for (const route of ['/docs/react/usage/', '/docs/integration/']) {
+    await page.goto(route);
+    const layout = page.locator(route.includes('usage') ? '.shared-light-example' : '.decoration-slot-example');
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      const first = await layout.locator(':scope > *').nth(0).boundingBox();
+      const second = await layout.locator(':scope > *').nth(1).boundingBox();
+      if (!first || !second) throw new Error('Missing preview items');
+      if (width === 1440) {
+        expect(Math.abs(first.y - second.y)).toBeLessThan(1);
+        expect(second.x).toBeGreaterThanOrEqual(first.x + first.width + 15);
+      } else {
+        expect(second.y).toBeGreaterThanOrEqual(first.y + first.height + 15);
+        expect(Math.abs(first.x - second.x)).toBeLessThan(1);
+      }
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    }
   }
 });
