@@ -16,10 +16,10 @@ Decoration uses ::after by default. Select pseudoElement: "before" when ::after 
 
 - [Introduction](/docs/): Shared-light concepts and scope.
 - [Installation](/docs/installation/): Package manager commands, stylesheet setup and AI installation prompt.
-- [Integration](/docs/integration/): Shared input-wrapper, decoration and layout constraints.
 - [Usage](/docs/usage/): Shared areas, selected surfaces and existing UI ownership.
 - [React Integration](/docs/react/usage/): React component example, client boundaries and existing-host connections.
 - [Style](/docs/styles/): Surface appearance values.
 - [Motion](/docs/motion/): Input behavior, static direction and reduced motion.
+- [Integration](/docs/integration/): Shared input-wrapper, decoration and layout constraints.
 - [Accessibility](/docs/accessibility/): Native controls, focus and forced colors.
 - [React API reference](/docs/react/api/): Complete props, hooks, defaults and cleanup contracts.
