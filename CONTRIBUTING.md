@@ -43,6 +43,8 @@ pnpm --filter @bolerish/edge-docs test:browser --browser=webkit
 
 Keep the same `PLAYWRIGHT_BROWSERS_PATH`; leave `WISP_CHROMIUM_EXECUTABLE` unset for Firefox and WebKit. If Firefox on macOS fails with `Could not find profile folder`, create `.private/firefox-home` and prefix its command with `CFFIXED_USER_HOME="$PWD/.private/firefox-home"`.
 
+`pnpm test:react-compat` packs the libraries and installs isolated React 18.0, 18.3, 19.0 and 19.3 consumers. It checks declarations without skipping library types, SSR, hydration, refs and native interactions in Chromium. Use the same browser cache above. The original React 18.0 types use classic JSX; later types use the automatic runtime. The docs site itself stays on React 19. Run this check before releasing React compatibility changes.
+
 `pnpm test:mutation` supplements unit tests. Review surviving and uncovered mutants in `.private/mutation/{core,styles,react}/report.json`; completion alone does not establish coverage. CSS behavior is checked in browser tests.
 
 ## Release

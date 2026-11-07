@@ -4,7 +4,7 @@ A little more alive. Connect your React components to one shared directional lig
 
 ## Quick start
 
-Requires React 19.
+Requires React 18 or 19.
 
 ```sh
 npm install @bolerish/edge

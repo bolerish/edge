@@ -139,6 +139,7 @@ function ExistingCard({ light }: { light: Light }) {
   const ref = useSurface<HTMLDivElement>(light);
   return <Card ref={ref}>Your existing component</Card>;
 }`} />
+          <P>In React 18, an existing function component must use <code>forwardRef</code> to pass the ref to its HTML host. React 19 also supports receiving ref as a prop.</P>
           {apiTable('useSurface options', surfaceOptionRows)}
           <div role="note" aria-label="One owner per element" className="doc-note">
             <P>
@@ -167,7 +168,7 @@ function ExistingCard({ light }: { light: Light }) {
             React StrictMode checks.
           </P>
           <P>
-            The React adapter requires React 19. Tests cover React’s server
+            The React adapter supports React 18 and 19. Tests cover React’s server
             renderer and hydration APIs; they do not establish integration with
             every SSR framework.
           </P>

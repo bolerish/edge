@@ -15,7 +15,7 @@ export const reactIntegration: DocPage = {
     {
       id: 'share-one-light', title: 'Connect an area', content: <>
         <span id="package-installation" /><span id="prepare-the-workspace" />
-        <P>Install Edge and load its CSS from <Link href="/docs/installation/">Installation</Link>. React 19 is required. In frameworks with Server Components, place interactive lighting components and hooks inside a client boundary.</P>
+        <P>Install Edge and load its CSS from <Link href="/docs/installation/">Installation</Link>. React 18 or 19 is required. In frameworks with Server Components, place interactive lighting components and hooks inside a client boundary.</P>
         <span id="create-your-first-surface" />
         <P>Connect the area you chose in <Link href="/docs/usage/">Usage</Link> with <code>Lighting</code>. Add <code>Lighting.Surface</code> only to the elements that should respond. Other elements keep their appearance. A nested Lighting creates an independent scope.</P>
         <ExamplePreview title={sharedLightExample.title} code={sharedLightExample.code}>
@@ -34,7 +34,7 @@ export const reactIntegration: DocPage = {
     },
     {
       id: 'connect-existing-components', title: 'Connect an existing component', content: <>
-        <P>The component API above is the default way to use Edge. If a Card or Button already owns its DOM element, use the <Link href="/docs/react/api/#use-surface">ref-based integration in the API reference</Link>. Create one light in the common parent and connect each existing component to that light.</P>
+        <P>The component API above is the default way to use Edge. If a Card or Button already owns its DOM element, use the <Link href="/docs/react/api/#use-surface">ref-based integration in the API reference</Link>. Create one light in the common parent and connect each existing component to that light. In React 18, function components must forward the ref to their HTML host with forwardRef.</P>
         <span id="refresh-after-layout-changes" />
         <P>For layout changes or decoration conflicts, see <Link href="/docs/integration/">Integration</Link>.</P>
       </>,

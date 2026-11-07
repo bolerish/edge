@@ -188,7 +188,7 @@ test('getting started owns shared installation and the AI prompt without demos',
   await install.getByRole('button', { name: 'Copy prompt', exact: true }).click();
   await expect(install.getByRole('button', { name: 'Copied', exact: true })).toBeVisible();
   const prompt = await page.evaluate(() => (window as unknown as { copied: string }).copied);
-  expect(prompt).toContain('React 19');
+  expect(prompt).toContain('React 18 or 19');
   expect(prompt).toContain('@bolerish/edge/style.css');
   expect(prompt).toContain('Do not add a demo page');
   await expect(install.getByRole('button', { name: 'Copy prompt', exact: true })).toBeVisible();

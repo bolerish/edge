@@ -17,6 +17,7 @@
     "verify:packages": "node scripts/verify-packages.ts",
     "test:mutation": "pnpm --filter './packages/**' build && pnpm -r --filter './packages/**' test:mutation",
     "typecheck:scripts": "pnpm --filter @bolerish/edge-docs exec tsc -p tsconfig.scripts.json",
-    "deploy:docs": "pnpm build && pnpm verify:packages && npx --yes wrangler@4.157.0 pages deploy --cwd docs --branch main"
+    "deploy:docs": "pnpm build && pnpm verify:packages && npx --yes wrangler@4.157.0 pages deploy --cwd docs --branch main",
+    "test:react-compat": "pnpm --filter './packages/**' build && pnpm --filter @bolerish/edge-docs exec node scripts/verify-react-compatibility.ts"
   }
 }

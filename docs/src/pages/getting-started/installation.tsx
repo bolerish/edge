@@ -14,7 +14,7 @@ export const installation: DocPage = {
       id: 'installation',
       title: 'Installation',
       content: <>
-        <P>Add Edge to your existing project with your package manager. The commands below target the React adapter; it requires React 19. Other framework adapters are not available yet.</P>
+        <P>Add Edge to your existing project with your package manager. The commands below target the React adapter; it requires React 18 or 19. Other framework adapters are not available yet.</P>
         <InstallCommands />
       </>,
     },

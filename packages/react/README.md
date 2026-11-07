@@ -2,7 +2,7 @@
 
 A little more alive. Connect your React components to one shared directional light.
 
-Requires React 19. Install with your package manager:
+Requires React 18 or 19. Install with your package manager:
 
 ```sh
 npm install @bolerish/edge
