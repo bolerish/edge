@@ -1,4 +1,4 @@
-import { useImperativeHandle, type ReactNode, type Ref } from 'react';
+import { forwardRef, useImperativeHandle, type ReactNode, type Ref } from 'react';
 import type { LightOptions } from '@bolerish/edge-core';
 import { useLight, type Light } from '../hooks/useLight.js';
 import { LightContext } from './light-context.js';
@@ -16,12 +16,12 @@ export interface LightingProps {
   ref?: Ref<Light>;
 }
 /** Shares one light with explicit descendant surfaces, without adding DOM. */
-function LightingRoot({
-  children, motion = 'system', staticDirection, radius, intensity, ref,
-}: LightingProps) {
+const LightingRoot = forwardRef<Light, Omit<LightingProps, 'ref'>>(function LightingRoot({
+  children, motion = 'system', staticDirection, radius, intensity,
+}, ref) {
   const light = useLight({ motion, radius, intensity, staticDirection });
   useImperativeHandle(ref, () => light, [light]);
-  return <LightContext value={light}>{children}</LightContext>;
-}
+  return <LightContext.Provider value={light}>{children}</LightContext.Provider>;
+});
 
 export const Lighting = Object.assign(LightingRoot, { Surface });

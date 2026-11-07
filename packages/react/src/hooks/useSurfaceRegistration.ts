@@ -1,4 +1,5 @@
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useBrowserLayoutEffect } from './useBrowserLayoutEffect.js';
+import { useCallback, useRef } from 'react';
 import type { Registration, EdgeStyle } from '@bolerish/edge-core';
 import { getLightController, type Light } from './useLight.js';
 
@@ -11,7 +12,7 @@ export function useSurfaceRegistration<T extends HTMLElement>(light: Light, edge
     registration.current?.destroy();
     registration.current = element ? core.register(element, currentEdgeStyle.current) : null;
   }, [core]);
-  useLayoutEffect(() => {
+  useBrowserLayoutEffect(() => {
     currentEdgeStyle.current = edgeStyle;
     registration.current?.update(edgeStyle);
   }, [edgeStyle]);

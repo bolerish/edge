@@ -1,4 +1,5 @@
-import { useCallback, useLayoutEffect, useRef, type RefCallback } from 'react';
+import { useBrowserLayoutEffect } from './useBrowserLayoutEffect.js';
+import { useCallback, useRef, type RefCallback } from 'react';
 import { getSurfaceProps, type SurfaceOptions } from '@bolerish/edge-styles';
 import type { Light } from './useLight.js';
 import { useSurfaceRegistration } from './useSurfaceRegistration.js';
@@ -19,7 +20,7 @@ export function useSurface<T extends HTMLElement = HTMLElement>(light: Light, op
     if (element) binding.current = bindSurfaceAppearance(element, latest.current);
   }, [register]);
   // Reapply after React changes a host's className/style; attachment also supports late children.
-  useLayoutEffect(() => {
+  useBrowserLayoutEffect(() => {
     latest.current = props;
     binding.current?.update(props);
   });

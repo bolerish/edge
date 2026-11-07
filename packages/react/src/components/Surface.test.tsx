@@ -141,6 +141,21 @@ it('honors React 19 callback-ref cleanup across StrictMode replay', async () => 
   expect(ref.mock.calls.filter(([element]) => element === null)).toHaveLength(0);
   expect(frames.size).toBe(0);
 });
+it('cleans the previous callback ref before attaching its replacement to the same host', async () => {
+  const firstCleanup = vi.fn();
+  const secondCleanup = vi.fn();
+  const first = vi.fn(() => firstCleanup);
+  const second = vi.fn(() => secondCleanup);
+  await act(async () => root.render(<Lighting><Lighting.Surface ref={first} /></Lighting>));
+  const host = container.firstElementChild;
+  await act(async () => root.render(<Lighting><Lighting.Surface ref={second} /></Lighting>));
+  expect(container.firstElementChild).toBe(host);
+  expect(firstCleanup).toHaveBeenCalledOnce();
+  expect(second).toHaveBeenCalledWith(host);
+  expect(secondCleanup).not.toHaveBeenCalled();
+  await act(async () => root.render(null));
+  expect(secondCleanup).toHaveBeenCalledOnce();
+});
 it('clears callback refs without cleanup functions', async () => {
   const ref = vi.fn((_element: HTMLDivElement | null) => {});
   await act(async () => root.render(<Lighting><Lighting.Surface ref={ref} /></Lighting>));
