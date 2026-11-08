@@ -1,0 +1,123 @@
+import AxeBuilder from '@axe-core/playwright';
+import { test, expect } from '@playwright/test';
+
+const languages = [
+  {
+    code: 'en',
+    name: 'English',
+    introduction: 'Introduction',
+    installation: 'Installation',
+    search: 'Search documentation',
+    language: 'Language',
+  },
+  {
+    code: 'ko',
+    name: '한국어',
+    introduction: '소개',
+    installation: '설치',
+    search: '문서 검색',
+    language: '언어 선택',
+  },
+  {
+    code: 'es',
+    name: 'Español',
+    introduction: 'Introducción',
+    installation: 'Instalación',
+    search: 'Buscar documentación',
+    language: 'Idioma',
+  },
+  {
+    code: 'zh',
+    name: '简体中文',
+    introduction: '简介',
+    installation: '安装',
+    search: '搜索文档',
+    language: '语言',
+  },
+  {
+    code: 'ja',
+    name: '日本語',
+    introduction: 'はじめに',
+    installation: 'インストール',
+    search: 'ドキュメントを検索',
+    language: '言語',
+  },
+];
+for (const language of languages) {
+  const prefix = language.code === 'en' ? '' : `/${language.code}`;
+  test(`${language.code}: prerendered content, metadata, local links and search`, async ({
+    browser,
+    page,
+    request,
+  }) => {
+    const response = await request.get(`${prefix}/docs/installation/`);
+    const html = await response.text();
+    expect(html).toContain(`lang="${language.code === 'zh' ? 'zh-Hans' : language.code}"`);
+    expect(html).toContain(
+      `rel="canonical" href="https://edge.bolerish.com${prefix}/docs/installation/"`,
+    );
+    expect(html).toContain(`${prefix}/docs/installation/index.md`);
+    expect((await request.get(`${prefix}/docs/installation/index.md`)).ok()).toBe(true);
+    const staticContext = await browser.newContext({ javaScriptEnabled: false });
+    try {
+      const staticPage = await staticContext.newPage();
+      await staticPage.goto(`${prefix}/docs/`);
+      await expect(staticPage.getByRole('heading', { level: 1 })).toHaveText(language.introduction);
+      await expect(staticPage.locator('.sidebar')).toBeVisible();
+    } finally {
+      await staticContext.close();
+    }
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.goto(`${prefix}/docs/`);
+    await page.reload();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(language.introduction);
+    await page
+      .locator('.sidebar')
+      .getByRole('link', { name: language.installation, exact: true })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`${prefix}/docs/installation/$`));
+    await page.getByRole('button', { name: language.search, exact: true }).click();
+    await page.getByRole('dialog').getByRole('textbox').fill(language.installation);
+    await expect(page.locator('.search-results a').first()).toHaveAttribute(
+      'href',
+      new RegExp(`^${prefix}/docs/`),
+    );
+    await page.keyboard.press('Escape');
+    const accessibility = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+      .analyze();
+    expect(accessibility.violations).toEqual([]);
+    expect(errors).toEqual([]);
+  });
+}
+
+test('language menu preserves the current document and section', async ({ page }) => {
+  await page.goto('/docs/installation/#stylesheet');
+  for (const language of [...languages.slice(1), languages[0]!]) {
+    await page.getByRole('button', { name: /^(Language|언어 선택|Idioma|语言|言語)$/ }).click();
+    await page.getByRole('menuitemradio', { name: language.name, exact: true }).click();
+    const prefix = language.code === 'en' ? '' : `/${language.code}`;
+    await expect(page).toHaveURL(new RegExp(`${prefix}/docs/installation/#stylesheet$`));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(language.installation);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+  }
+});
+
+test('translated navigation and language menu fit a narrow viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  for (const language of languages) {
+    const prefix = language.code === 'en' ? '' : `/${language.code}`;
+    await page.goto(`${prefix}/docs/installation/`);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await page.getByRole('button', { name: language.language, exact: true }).click();
+    await expect(
+      page.getByRole('menuitemradio', { name: language.name, exact: true }),
+    ).toBeVisible();
+    await page.keyboard.press('Escape');
+  }
+});

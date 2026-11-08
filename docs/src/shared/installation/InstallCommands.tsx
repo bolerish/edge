@@ -1,3 +1,4 @@
+import { m } from '../../paraglide/messages.js';
 import { colorVars } from '@bolerish/tokens/semantic.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { useEffect, useState } from 'react';
@@ -32,7 +33,7 @@ export function InstallCommands({ compact = false }: { compact?: boolean }) {
     <div className="install-commands">
       <Tabs defaultValue="npm">
         <div {...stylex.props(styles.installToolbar)}>
-          <TabsList aria-label="Package manager">
+          <TabsList aria-label={m.package_manager()}>
             {installationCommands.map(({ manager }) => (
               <TabsTrigger key={manager} value={manager}>
                 {manager}
@@ -40,7 +41,7 @@ export function InstallCommands({ compact = false }: { compact?: boolean }) {
             ))}
           </TabsList>
           <Button xstyle={styles.copyButton} size="sm" variant="ghost" onClick={copyPrompt}>
-            {status === 'copied' ? 'Copied' : 'Copy prompt'}
+            {status === 'copied' ? m.copied() : m.copy_prompt()}
           </Button>
         </div>
         {installationCommands.map(({ manager, command }) => (
@@ -61,13 +62,13 @@ export function InstallCommands({ compact = false }: { compact?: boolean }) {
         {...stylex.props(status === 'unavailable' ? styles.copyError : styles.visuallyHidden)}
       >
         {status === 'copied'
-          ? 'Installation prompt copied'
+          ? m.prompt_copied()
           : status === 'unavailable'
-            ? 'Copy unavailable. Select the prompt below to copy it manually.'
+            ? m.prompt_unavailable()
             : ''}
       </span>
       {status === 'unavailable' ? (
-        <pre {...stylex.props(styles.prompt)} tabIndex={0} aria-label="Installation prompt">
+        <pre {...stylex.props(styles.prompt)} tabIndex={0} aria-label={m.installation_prompt()}>
           {installPrompt}
         </pre>
       ) : null}

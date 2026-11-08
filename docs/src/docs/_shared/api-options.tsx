@@ -1,3 +1,4 @@
+import { m } from '../../paraglide/messages.js';
 import {
   Table,
   TableHeader,
@@ -27,32 +28,37 @@ const lightOptions = {
   motion: {
     type: "'system' | 'dynamic' | 'static'",
     defaultValue: "'system'",
-    description:
-      'System respects reduced-motion and device preferences. Dynamic follows mouse or pen input, even with reduced motion enabled. Static keeps a fixed direction. Touch does not drive the light.',
+    get description() {
+      return m.system_respects_reduced_motion_and_device_preferences();
+    },
   },
   staticDirection: {
     type: "number | 'random'",
     defaultValue: '315',
-    description:
-      'Direction in degrees for fixed lighting. Random chooses one shared direction per mount and keeps it across ordinary rerenders. Numbers must be finite.',
+    get description() {
+      return m.direction_in_degrees_for_fixed_lighting_random();
+    },
   },
   direction: {
     type: "'gather' | 'spread'",
     defaultValue: "'gather'",
-    description:
-      'Gather faces highlights toward the pointer; spread reverses them by 180 degrees. Recessed surfaces retain their inverted response. Only affects pointer-driven lighting; staticDirection controls fixed lighting.',
+    get description() {
+      return m.direction_description();
+    },
   },
   radius: {
     type: 'number',
     defaultValue: '480',
-    description:
-      'Distance over which dynamic lighting fades outside a surface, in viewport CSS pixels. Must be positive and finite.',
+    get description() {
+      return m.distance_over_which_dynamic_lighting_fades_outside();
+    },
   },
   intensity: {
     type: 'number',
     defaultValue: '0.75',
-    description:
-      'Shared light strength. Must be finite and between 0 and 1; invalid values throw a RangeError.',
+    get description() {
+      return m.shared_light_strength_must_be_finite_and();
+    },
   },
 } satisfies OptionDocs<LightOptions>;
 
@@ -60,38 +66,44 @@ const surfaceOptions = {
   pseudoElement: {
     type: "'after' | 'before'",
     defaultValue: "'after'",
-    description:
-      'Decoration slot. Choose before to preserve an existing ::after. If both slots are occupied, or the host is a native input, use a wrapper. Invalid values throw a RangeError.',
+    get description() {
+      return m.decoration_slot_choose_before_to_preserve_an();
+    },
   },
   edgeStyle: {
     type: "'raised' | 'recessed' | 'matte'",
     defaultValue: "'raised'",
-    description:
-      'How the edge responds to light. All three styles preserve your component appearance.',
+    get description() {
+      return m.how_the_edge_responds_to_light_all();
+    },
   },
   color: {
     type: 'string',
     defaultValue: 'currentColor',
-    description:
-      'Highlight color. Follows the host text color by default. Accepts any CSS color string, including a CSS variable.',
+    get description() {
+      return m.highlight_color_follows_the_host_text_color();
+    },
   },
   shadowColor: {
     type: 'string',
     defaultValue: '#0008',
-    description:
-      'Color on the opposite edge. Accepts any CSS color string; use transparent to remove this shadow on a light surface.',
+    get description() {
+      return m.color_on_the_opposite_edge_accepts_any();
+    },
   },
   borderWidth: {
     type: 'number',
     defaultValue: '1',
-    description:
-      'Decorative edge thickness in pixels; it does not change the host border. Negative values clamp to 0. Non-finite values use the default.',
+    get description() {
+      return m.decorative_edge_thickness_in_pixels_it_does();
+    },
   },
   intensity: {
     type: 'number',
     defaultValue: '1',
-    description:
-      'Multiplier for the shared light strength. Finite values clamp to 0–1; non-finite values use the default.',
+    get description() {
+      return m.multiplier_for_the_shared_light_strength_finite();
+    },
   },
 } satisfies OptionDocs<SurfaceOptions>;
 
@@ -99,14 +111,16 @@ const providerOwnProps = {
   children: {
     type: 'ReactNode',
     defaultValue: 'Required',
-    description:
-      'The area that shares this light. Ordinary children stay unchanged; only explicit surfaces respond.',
+    get description() {
+      return m.the_area_that_shares_this_light_ordinary();
+    },
   },
   ref: {
     type: 'Ref<Light>',
     defaultValue: 'Unset',
-    description:
-      'Optional stable light handle. Call its refresh() method after position-only layout changes.',
+    get description() {
+      return m.optional_stable_light_handle_call_its_refresh();
+    },
   },
 } satisfies OptionDocs<Omit<EdgeProviderProps, keyof LightOptions>>;
 
@@ -114,31 +128,37 @@ const surfaceOwnProps = {
   as: {
     type: 'HTML tag name',
     defaultValue: "'div'",
-    description:
-      'The HTML element to render. Native attributes and the ref follow the chosen tag; custom React components are not accepted here.',
+    get description() {
+      return m.the_html_element_to_render_native_attributes();
+    },
   },
   children: {
     type: 'ReactNode',
     defaultValue: 'Unset',
-    description:
-      'Content rendered inside the host. Use a wrapper for inputs and other elements that cannot display the decoration themselves.',
+    get description() {
+      return m.content_rendered_inside_the_host_use_a();
+    },
   },
   ref: {
     type: 'Ref<HTMLElement for the chosen tag>',
     defaultValue: 'Unset',
-    description:
-      'Forwarded to the rendered element alongside the internal registration ref. React 19 callback-ref cleanup is preserved.',
+    get description() {
+      return m.forwarded_to_the_rendered_element_alongside_the();
+    },
   },
   className: {
     type: 'string',
     defaultValue: 'Unset',
-    description: 'Your classes, combined with the decoration classes.',
+    get description() {
+      return m.your_classes_combined_with_the_decoration_classes();
+    },
   },
   style: {
     type: 'CSSProperties',
     defaultValue: 'Unset',
-    description:
-      'Your inline styles, merged after the decoration bindings. Keep Edge-owned CSS variables intact unless deliberately overriding them.',
+    get description() {
+      return m.your_inline_styles_merged_after_the_decoration();
+    },
   },
 } satisfies OptionDocs<Pick<SurfaceProps, 'as' | 'children' | 'ref' | 'className' | 'style'>>;
 
@@ -148,7 +168,14 @@ export const providerPropRows = [...lightOptionRows, ...rows(providerOwnProps)];
 export const surfacePropRows = [...surfaceOptionRows, ...rows(surfaceOwnProps)];
 
 function rows(options: Record<string, OptionDescription>): ApiRow[] {
-  return Object.entries(options).map(([name, option]) => ({ name, ...option }));
+  return Object.entries(options).map(([name, option]) => ({
+    name,
+    type: option.type,
+    defaultValue: option.defaultValue,
+    get description() {
+      return option.description;
+    },
+  }));
 }
 
 /** Build native nodes eagerly so document search can read the same table text. */
@@ -170,16 +197,16 @@ export function apiTable(caption: string, options: readonly ApiRow[]): ReactNode
         <TableHeader>
           <TableRow>
             <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-              Prop / option
+              {m.prop_option()}
             </TableHead>
             <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-              Type
+              {m.type()}
             </TableHead>
             <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-              Default
+              {m.label_default()}
             </TableHead>
             <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-              Description
+              {m.description()}
             </TableHead>
           </TableRow>
         </TableHeader>

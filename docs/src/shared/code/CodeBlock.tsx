@@ -1,3 +1,4 @@
+import { m } from '../../paraglide/messages.js';
 import { colorVars } from '@bolerish/tokens/semantic.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { LightingSurface } from '../lighting/LightingSurface.js';
@@ -43,8 +44,8 @@ export function CodeBlock({
     >
       <div {...stylex.props(styles.codeToolbar)}>
         <span {...stylex.props(hideLabel && styles.visuallyHidden)}>{label}</span>
-        <Button size="sm" variant="ghost" aria-label={`Copy ${label}`} onClick={copy}>
-          {status === 'copied' ? 'Copied' : 'Copy'}
+        <Button size="sm" variant="ghost" aria-label={m.copy_label({ label })} onClick={copy}>
+          {status === 'copied' ? m.copied() : m.copy()}
         </Button>
       </div>
       <Highlight prism={Prism} code={code} language={language} theme={codeTheme}>
@@ -53,7 +54,7 @@ export function CodeBlock({
             {...stylex.props(styles.pre)}
             role="region"
             tabIndex={0}
-            aria-label={`${label} code`}
+            aria-label={m.code_region({ label })}
           >
             <code {...stylex.props(styles.code)}>
               {tokens.map((line, index) => (
@@ -83,11 +84,7 @@ export function CodeBlock({
         {...stylex.props(status === 'unavailable' ? styles.copyError : styles.visuallyHidden)}
         role="status"
       >
-        {status === 'copied'
-          ? 'Copied'
-          : status === 'unavailable'
-            ? 'Copy unavailable. Select the code to copy it manually.'
-            : ''}
+        {status === 'copied' ? m.copied() : status === 'unavailable' ? m.copy_unavailable() : ''}
       </span>
     </LightingSurface>
   );

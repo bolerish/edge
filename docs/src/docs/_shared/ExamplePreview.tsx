@@ -1,3 +1,4 @@
+import { m } from '../../paraglide/messages.js';
 import { colorVars } from '@bolerish/tokens/semantic.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { usePreferences, type SitePreferences } from '../../shared/preferences/usePreferences.js';
@@ -31,16 +32,16 @@ export function ExamplePreview({
       aria-label={title}
     >
       <Tabs defaultValue="preview" variant="underline">
-        <TabsList aria-label={`${title} view`}>
-          <TabsTrigger value="preview">Preview</TabsTrigger>
-          <TabsTrigger value="code">Code</TabsTrigger>
+        <TabsList aria-label={m.view_region({ title })}>
+          <TabsTrigger value="preview">{m.preview()}</TabsTrigger>
+          <TabsTrigger value="code">{m.code()}</TabsTrigger>
         </TabsList>
         <TabsContent value="preview" keepMounted>
           <LightingSurface
             className="example-preview-result"
             xstyle={styles.examplePreviewResult}
             role="group"
-            aria-label={`${title} preview`}
+            aria-label={m.preview_region({ title })}
           >
             {children}
           </LightingSurface>
@@ -50,7 +51,7 @@ export function ExamplePreview({
         </TabsContent>
       </Tabs>
       <noscript>
-        <p>The example becomes interactive when JavaScript is enabled.</p>
+        <p>{m.the_example_becomes_interactive_when_javascript_is()}</p>
         <CodeBlock label={title} code={displayedCode} />
       </noscript>
     </div>

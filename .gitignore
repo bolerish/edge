@@ -6,3 +6,5 @@ node_modules/
 .stryker-tmp/
 
 .vscode/
+docs/src/paraglide/
+docs/project.inlang/cache/

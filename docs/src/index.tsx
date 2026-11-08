@@ -1,3 +1,6 @@
+import { overwriteGetLocale } from './paraglide/runtime.js';
+import { localeFromPath, basePath } from './shared/locale.js';
+overwriteGetLocale(() => localeFromPath(location.pathname));
 import './site.css';
 import '@bolerish/ui/global.css';
 import '@bolerish/edge/style.css';
@@ -57,7 +60,7 @@ function BrowserNavigation({ initialPath }: { initialPath: string }) {
       )
         return;
       const next = normalizePath(url.pathname);
-      if (next !== '/' && !findPage(next)) return;
+      if (basePath(next) !== '/' && !findPage(next)) return;
       event.preventDefault();
       history.pushState(null, '', url);
       update();

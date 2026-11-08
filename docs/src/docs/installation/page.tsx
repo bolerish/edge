@@ -1,3 +1,5 @@
+import { localePath } from '../../shared/locale.js';
+import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { contentStyles } from '../_shared/content-styles.js';
 import { InstallCommands } from '../../shared/installation/InstallCommands.js';
@@ -9,53 +11,68 @@ import type { DocPage } from '../_shared/types.js';
 export const installation: DocPage = {
   slug: 'installation',
   section: 'Getting started',
-  title: 'Installation',
-  description: 'Install Edge and load its stylesheet.',
+  get title() {
+    return m.installation();
+  },
+  get description() {
+    return m.install_edge_and_load_its_stylesheet();
+  },
   sections: [
     {
       id: 'installation',
-      title: 'Installation',
-      content: (
-        <>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            The React adapter requires React 18 or 19. Other framework adapters are not available
-            yet.
-          </P>
-          <InstallCommands />
-        </>
-      ),
+      get title() {
+        return m.installation();
+      },
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.the_react_adapter_requires_react_18_or()}
+            </P>
+            <InstallCommands />
+          </>
+        );
+      },
     },
     {
       id: 'stylesheet',
-      title: 'Load the stylesheet',
-      content: (
-        <>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Load the stylesheet once, before application and utility styles so they can override
-            Edge’s positioning defaults. A reset may load first. Choose one of the following:
-          </P>
-          <CodeBlock label="Application entry" code={"import '@bolerish/edge/style.css';"} />
-          <CodeBlock
-            label="Global CSS alternative"
-            language="css"
-            code={'@import "@bolerish/edge/style.css";'}
-          />
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            The CSS alternative needs a build tool that resolves package imports. No styling
-            compiler or style-injection provider is required.
-          </P>
-        </>
-      ),
+      get title() {
+        return m.load_the_stylesheet();
+      },
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.load_the_stylesheet_once_before_application_and()}
+            </P>
+            <CodeBlock label={m.application_entry()} code={"import '@bolerish/edge/style.css';"} />
+            <CodeBlock
+              label={m.global_css_alternative()}
+              language="css"
+              code={'@import "@bolerish/edge/style.css";'}
+            />
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.the_css_alternative_needs_a_build_tool()}
+            </P>
+          </>
+        );
+      },
     },
     {
       id: 'next-steps',
-      title: 'Start using Edge',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Choose an area and its surfaces in <Link href="/docs/usage/">Usage</Link>, then connect
-          them with <Link href="/docs/react/usage/">React Integration</Link>.
-        </P>
-      ),
+      get title() {
+        return m.start_using_edge();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.choose_an_area_and_its_surfaces_in()}
+            <Link href={localePath('/docs/usage/')}>{m.usage()}</Link>
+            {m.then_connect_them_with()}
+            <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>.
+          </P>
+        );
+      },
     },
   ],
 };

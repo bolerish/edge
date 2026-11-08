@@ -1,3 +1,5 @@
+import { localePath } from '../../shared/locale.js';
+import { m } from '../../paraglide/messages.js';
 import {
   Table,
   TableHeader,
@@ -19,133 +21,158 @@ import type { DocPage } from '../_shared/types.js';
 export const motion: DocPage = {
   slug: 'motion',
   section: 'Styles',
-  title: 'Motion',
-  description: 'Choose whether a shared light follows the pointer or keeps a fixed direction.',
+  get title() {
+    return m.motion();
+  },
+  get description() {
+    return m.choose_whether_a_shared_light_follows_the();
+  },
   sections: [
     {
       id: 'compare-motion',
-      title: 'Choose motion behavior',
-      content: (
-        <>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Try each mode below. The selection updates the shared light across this site, including
-            the example card.
-          </P>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Gather faces highlights toward the pointer; Spread reverses them. Range is the fade
-            distance outside each surface in CSS pixels. Fixed lighting ignores these settings.
-          </P>
-          <ExamplePreview title={motionExample.title} code={motionExample.code}>
-            <motionExample.Component />
-          </ExamplePreview>
-        </>
-      ),
+      get title() {
+        return m.choose_motion_behavior();
+      },
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.try_each_mode_below_the_selection_updates()}
+            </P>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.pointer_settings_hint()}
+            </P>
+            <ExamplePreview title={motionExample.title} code={motionExample.code}>
+              <motionExample.Component />
+            </ExamplePreview>
+          </>
+        );
+      },
     },
     {
       id: 'options',
-      title: 'Motion values',
-      content: (
-        <>
-          <TableContainer
-            className={`table-scroll ${stylex.props(contentStyles.tableScroll).className}`}
-            role="region"
-            aria-label="Motion values table"
-            tabIndex={0}
-          >
-            <Table className={`api-table ${stylex.props(contentStyles.apiTable).className}`}>
-              <TableCaption
-                xstyle={[contentStyles.tableCaption]}
-                className={`visually-hidden ${stylex.props(contentStyles.visuallyHidden).className}`}
-              >
-                Motion values
-              </TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-                    Value
-                  </TableHead>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-                    Behavior
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                    <code {...stylex.props(contentStyles.inlineCode)}>system</code>
-                  </TableHead>
-                  <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                    Respects reduced motion and input preferences. Library default.
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                    <code {...stylex.props(contentStyles.inlineCode)}>dynamic</code>
-                  </TableHead>
-                  <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                    Follows mouse or pen input, including with reduced motion enabled.
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                    <code {...stylex.props(contentStyles.inlineCode)}>static</code>
-                  </TableHead>
-                  <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                    Keeps a fixed direction; ignores pointer movement.
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            For additional settings, see the{' '}
-            <Link href="/docs/react/api/#lighting">API reference</Link>.
-          </P>
-        </>
-      ),
+      get title() {
+        return m.motion_values();
+      },
+      get content() {
+        return (
+          <>
+            <TableContainer
+              className={`table-scroll ${stylex.props(contentStyles.tableScroll).className}`}
+              role="region"
+              aria-label={m.motion_values_table()}
+              tabIndex={0}
+            >
+              <Table className={`api-table ${stylex.props(contentStyles.apiTable).className}`}>
+                <TableCaption
+                  xstyle={[contentStyles.tableCaption]}
+                  className={`visually-hidden ${stylex.props(contentStyles.visuallyHidden).className}`}
+                >
+                  {m.motion_values()}
+                </TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="col">
+                      {m.value()}
+                    </TableHead>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="col">
+                      {m.behavior()}
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
+                      <code {...stylex.props(contentStyles.inlineCode)}>{'system'}</code>
+                    </TableHead>
+                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
+                      {m.respects_reduced_motion_and_input_preferences_library()}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
+                      <code {...stylex.props(contentStyles.inlineCode)}>{'dynamic'}</code>
+                    </TableHead>
+                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
+                      {m.follows_mouse_or_pen_input_including_with()}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
+                      <code {...stylex.props(contentStyles.inlineCode)}>{'static'}</code>
+                    </TableHead>
+                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
+                      {m.keeps_a_fixed_direction_ignores_pointer_movement()}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.for_additional_settings_see_the()}{' '}
+              <Link href={localePath('/docs/react/api/#lighting')}>{m.api_reference()}</Link>.
+            </P>
+          </>
+        );
+      },
     },
     {
       id: 'system',
-      title: 'System',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Without a precise hover device, lighting starts fixed. Mouse or pen input can enable
-          tracking when reduced motion is off. Touch movement never drives the light.
-        </P>
-      ),
+      get title() {
+        return m.system();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.without_a_precise_hover_device_lighting_starts()}
+          </P>
+        );
+      },
     },
     {
       id: 'dynamic',
-      title: 'Dynamic',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Offer this mode as an explicit choice because it overrides reduced motion. The effect
-          stays hidden until mouse or pen input arrives.
-        </P>
-      ),
+      get title() {
+        return m.dynamic();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.offer_this_mode_as_an_explicit_choice()}
+          </P>
+        );
+      },
     },
     {
       id: 'static',
-      title: 'Static',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Set <code {...stylex.props(contentStyles.inlineCode)}>staticDirection</code> to any finite
-          angle in degrees or <code {...stylex.props(contentStyles.inlineCode)}>"random"</code>. The
-          demo offers 0°, 90°, 180°, 270° and 315°. Random chooses one shared direction per mount;
-          rerenders and appearance changes preserve it. Remount to choose a new direction.
-        </P>
-      ),
+      get title() {
+        return m.label_static();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.set()}
+            <code {...stylex.props(contentStyles.inlineCode)}>{'staticDirection'}</code>
+            {m.to_any_finite_angle_in_degrees_or()}
+            <code {...stylex.props(contentStyles.inlineCode)}>{'"random"'}</code>
+            {m.the_demo_offers_0_90_180_270()}
+          </P>
+        );
+      },
     },
     {
       id: 'accessibility',
-      title: 'Respect user preferences',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Keep focus, selection and validation visible independently of lighting. See{' '}
-          <Link href="/docs/accessibility/">Accessibility</Link> for input and forced-colors
-          behavior.
-        </P>
-      ),
+      get title() {
+        return m.respect_user_preferences();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.keep_focus_selection_and_validation_visible_independently()}{' '}
+            <Link href={localePath('/docs/accessibility/')}>{m.accessibility()}</Link>
+            {m.for_input_and_forced_colors_behavior()}
+          </P>
+        );
+      },
     },
   ],
 };

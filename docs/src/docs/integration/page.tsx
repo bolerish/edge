@@ -1,3 +1,5 @@
+import { localePath } from '../../shared/locale.js';
+import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { contentStyles } from '../_shared/content-styles.js';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
@@ -9,68 +11,90 @@ import type { DocPage } from '../_shared/types.js';
 export const integration: DocPage = {
   slug: 'integration',
   section: 'Guides',
-  title: 'Integration',
-  description: 'Handle decoration conflicts, native inputs and layout changes.',
+  get title() {
+    return m.integration();
+  },
+  get description() {
+    return m.handle_decoration_conflicts_native_inputs_and_layout();
+  },
   sections: [
     {
       id: 'existing-decorations',
-      title: 'Keep existing decorations',
-      content: (
-        <>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Edge uses <code {...stylex.props(contentStyles.inlineCode)}>::after</code> by default.
-            Set <code {...stylex.props(contentStyles.inlineCode)}>pseudoElement: 'before'</code> to
-            keep an existing <code {...stylex.props(contentStyles.inlineCode)}>::after</code>. If
-            both pseudo-elements are occupied, decorate a wrapper.
-          </P>
-          <ExamplePreview title={decorationSlotExample.title} code={decorationSlotExample.code}>
-            <decorationSlotExample.Component />
-          </ExamplePreview>
-        </>
-      ),
+      get title() {
+        return m.keep_existing_decorations();
+      },
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.edge_uses()}
+              <code {...stylex.props(contentStyles.inlineCode)}>{'::after'}</code>
+              {m.by_default_set()}
+              <code {...stylex.props(contentStyles.inlineCode)}>{"pseudoElement: 'before'"}</code>
+              {m.to_keep_an_existing()}
+              <code {...stylex.props(contentStyles.inlineCode)}>{'::after'}</code>
+              {m.if_both_pseudo_elements_are_occupied_decorate()}
+            </P>
+            <ExamplePreview title={decorationSlotExample.title} code={decorationSlotExample.code}>
+              <decorationSlotExample.Component />
+            </ExamplePreview>
+          </>
+        );
+      },
     },
     {
       id: 'wrap-inputs-you-own',
-      title: 'Wrap native inputs',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Native inputs do not reliably display pseudo-element decoration. Connect a surrounding{' '}
-          <code {...stylex.props(contentStyles.inlineCode)}>label</code> or{' '}
-          <code {...stylex.props(contentStyles.inlineCode)}>div</code> with a matching radius
-          instead. Keep the input’s label, focus, validation and keyboard behavior. Use{' '}
-          <code {...stylex.props(contentStyles.inlineCode)}>recessed</code> for an inset appearance.
-        </P>
-      ),
+      get title() {
+        return m.wrap_native_inputs();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.native_inputs_do_not_reliably_display_pseudo()}{' '}
+            <code {...stylex.props(contentStyles.inlineCode)}>{'label'}</code>
+            {m.or()} <code {...stylex.props(contentStyles.inlineCode)}>{'div'}</code>
+            {m.with_a_matching_radius_instead_keep_the()}{' '}
+            <code {...stylex.props(contentStyles.inlineCode)}>{'recessed'}</code>
+            {m.for_an_inset_appearance()}
+          </P>
+        );
+      },
     },
     {
       id: 'refresh-after-layout-changes',
-      title: 'Refresh after layout changes',
-      content: (
-        <>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Size changes, nested scrolling, viewport resizing, font loading and resource loads
-            update geometry automatically. After a position-only change or a host border-thickness
-            change without a size notification, call{' '}
-            <code {...stylex.props(contentStyles.inlineCode)}>light.refresh()</code> once the new
-            layout is applied. It updates even with a stationary pointer.
-          </P>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            See <Link href="/docs/react/api/#refresh">light.refresh()</Link> for the React call.
-          </P>
-        </>
-      ),
+      get title() {
+        return m.refresh_after_layout_changes();
+      },
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.size_changes_nested_scrolling_viewport_resizing_font()}{' '}
+              <code {...stylex.props(contentStyles.inlineCode)}>{'light.refresh()'}</code>
+              {m.once_the_new_layout_is_applied_it()}
+            </P>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.see()}
+              <Link href={localePath('/docs/react/api/#refresh')}>{'light.refresh()'}</Link>
+              {m.for_the_react_call()}
+            </P>
+          </>
+        );
+      },
     },
     {
       id: 'geometry-limits',
-      title: 'Geometry and document boundaries',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Edge approximates axis-aligned rectangles. Rotation, perspective transforms and
-          cross-document portals are unsupported. Portals within the same document can share a
-          light. For focus, selection and validation, see{' '}
-          <Link href="/docs/accessibility/">Accessibility</Link>.
-        </P>
-      ),
+      get title() {
+        return m.geometry_and_document_boundaries();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.edge_approximates_axis_aligned_rectangles_rotation_perspective()}{' '}
+            <Link href={localePath('/docs/accessibility/')}>{m.accessibility()}</Link>.
+          </P>
+        );
+      },
     },
   ],
 };

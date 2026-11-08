@@ -1,4 +1,5 @@
 import { LightingControls } from '../../../shared/preferences/LightingControls.js';
+import { m } from '../../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { use } from 'react';
 import { SurfaceLightContext } from '../../../shared/lighting/light-context.js';
@@ -15,9 +16,21 @@ import {
 } from '@bolerish/ui/select';
 import '@bolerish/edge/style.css';
 
-const motions = { system: 'System', dynamic: 'Dynamic', static: 'Static' };
+const motions = {
+  get system() {
+    return m.system();
+  },
+  get dynamic() {
+    return m.dynamic();
+  },
+  get static() {
+    return m.label_static();
+  },
+};
 const directions = {
-  random: 'Random per mount',
+  get random() {
+    return m.random();
+  },
   '0': '0°',
   '90': '90°',
   '180': '180°',
@@ -27,11 +40,11 @@ const directions = {
 export function MotionExample() {
   const { motion, staticDirection: direction } = usePreferences();
   return (
-    <div role="group" aria-label="Motion comparison">
+    <div role="group" aria-label={m.motion_comparison()}>
       <div {...stylex.props(styles.appearanceControls)}>
         <div {...stylex.props(styles.appearanceControl)}>
           <span {...stylex.props(styles.controlLabel)} id="example-motion-label">
-            Motion
+            {m.motion()}
           </span>
           <Select
             value={motion}
@@ -58,7 +71,7 @@ export function MotionExample() {
         {motion === 'static' ? (
           <div {...stylex.props(styles.appearanceControl)}>
             <span {...stylex.props(styles.controlLabel)} id="example-direction-label">
-              Static direction
+              {m.static_direction()}
             </span>
             <Select
               value={String(direction)}
@@ -110,20 +123,20 @@ function MotionCard() {
   return (
     <Card role="article" ref={surface}>
       <CardHeader>
-        <CardTitle>Follow your pointer</CardTitle>
+        <CardTitle>{m.follow_your_pointer()}</CardTitle>
         <CardDescription xstyle={styles.description}>
-          Choose how this card responds to movement.
+          {m.choose_how_this_card_responds_to_movement()}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        System respects your motion preferences. Static keeps the direction fixed.
-      </CardContent>
+      <CardContent>{m.system_respects_your_motion_preferences_static_keeps()}</CardContent>
     </Card>
   );
 }
 
 export const motionExample = {
-  title: 'Compare motion',
+  get title() {
+    return m.compare_motion();
+  },
   Component: MotionExample,
   code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__, direction: __DIRECTION__, radius: __RADIUS__ });
 const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });

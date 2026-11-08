@@ -1,4 +1,6 @@
 import { LightingControls } from './shared/preferences/LightingControls.js';
+import { localePath } from './shared/locale.js';
+import { m } from './paraglide/messages.js';
 import { Badge } from '@bolerish/ui/badge';
 import { Item, ItemContent, ItemTitle, ItemDescription } from '@bolerish/ui/item';
 import {
@@ -34,14 +36,36 @@ interface Project {
   updated: string;
 }
 const projects: readonly Project[] = [
-  { id: 1, name: 'Website refresh', status: 'In progress', updated: 'Today' },
+  {
+    id: 1,
+    get name() {
+      return m.website_refresh();
+    },
+    status: 'In progress',
+    get updated() {
+      return m.today();
+    },
+  },
   {
     id: 2,
-    name: 'Design system',
+    get name() {
+      return m.design_system();
+    },
     status: 'In progress',
-    updated: '2 days ago',
+    get updated() {
+      return m.days_ago();
+    },
   },
-  { id: 3, name: 'Mobile app', status: 'Completed', updated: '5 days ago' },
+  {
+    id: 3,
+    get name() {
+      return m.mobile_app();
+    },
+    status: 'Completed',
+    get updated() {
+      return m.label_5_days_ago();
+    },
+  },
 ];
 
 export function Home() {
@@ -59,19 +83,19 @@ export function Home() {
           <div {...stylex.props(styles.homeHeroLayout)}>
             <section {...stylex.props(styles.homeHero)} aria-labelledby="home-title">
               <Heading id="home-title" level={1} size="page" {...stylex.props(styles.heroTitle)}>
-                A little more alive.
+                {m.a_little_more_alive()}
               </Heading>
               <Paragraph variant="description" {...stylex.props(styles.heroDescription)}>
-                Subtle highlights that follow your pointer. Your components, colors and interactions
-                stay yours.
+                {m.subtle_highlights_that_follow_your_pointer_your()}
               </Paragraph>
               <Button
                 {...stylex.props(styles.heroLink)}
                 role="link"
                 nativeButton={false}
-                render={<a href="/docs/" />}
+                render={<a href={localePath('/docs/')} />}
               >
-                Get started <span aria-hidden="true">↗</span>
+                {m.get_started()}
+                <span aria-hidden="true">↗</span>
               </Button>
               <div {...stylex.props(styles.homeInstall)}>
                 <InstallCommands compact />
@@ -95,46 +119,46 @@ function Dashboard() {
       <header {...stylex.props(styles.dashboardHeader)}>
         <div>
           <Heading id="dashboard-title" level={2} size="section" xstyle={styles.dashboardTitle}>
-            Dashboard
+            {m.dashboard()}
           </Heading>
           <Paragraph variant="description">
-            Built with Bolerish UI. Move your pointer to explore the edges.
+            {m.built_with_bolerish_ui_move_your_pointer()}
           </Paragraph>
         </div>
       </header>
       <Paragraph variant="caption" xstyle={styles.dashboardNote}>
-        Interface preview · Search and project actions are inactive.{' '}
+        {m.interface_preview_search_and_project_actions_are()}{' '}
         <span id="dashboard-motion-description">{motionDescriptions[motion]}</span>
       </Paragraph>
       <div {...stylex.props(styles.summaryGrid)}>
         <Summary
           edgeStyle={edgeStyle}
-          title="Projects"
+          title={m.projects()}
           value={projects.length}
-          description="Across your workspace"
+          description={m.workspace_total()}
           testId="surface-card"
         />
         <Summary
           edgeStyle={edgeStyle}
-          title="In progress"
+          title={m.in_progress()}
           value={projects.length - completed}
-          description="Currently being worked on"
+          description={m.workspace_progress()}
         />
         <Summary
           edgeStyle={edgeStyle}
-          title="Completed"
+          title={m.completed()}
           value={completed}
-          description="Finished and ready to use"
+          description={m.workspace_done()}
         />
       </div>
       <div {...stylex.props(styles.dashboardPanels)}>
         <SurfaceCard edgeStyle={edgeStyle}>
           <CardHeader xstyle={styles.projectsHeader}>
-            <CardTitle id="projects-title">Projects</CardTitle>
+            <CardTitle id="projects-title">{m.projects()}</CardTitle>
             <div {...stylex.props(styles.projectActions)}>
               <div {...stylex.props(styles.projectSearch)}>
                 <Label htmlFor="project-search" {...stylex.props(commonStyles.visuallyHidden)}>
-                  Search projects
+                  {m.search_projects()}
                 </Label>
                 <Edge.Surface
                   color={colorVars.fgPrimary}
@@ -143,7 +167,7 @@ function Dashboard() {
                   {...stylex.props(styles.dashboardInput)}
                   data-testid="surface-input"
                 >
-                  <Input id="project-search" placeholder="Search projects…" readOnly />
+                  <Input id="project-search" placeholder={m.search_projects_011()} readOnly />
                 </Edge.Surface>
               </div>
               <Edge.Surface
@@ -154,7 +178,7 @@ function Dashboard() {
                 {...stylex.props(styles.dashboardButton)}
                 data-testid="surface-button"
               >
-                <Button disabled>New project</Button>
+                <Button disabled>{m.new_project()}</Button>
               </Edge.Surface>
             </div>
           </CardHeader>
@@ -167,18 +191,18 @@ function Dashboard() {
             >
               <Table xstyle={[styles.projectsTable]}>
                 <TableCaption xstyle={[commonStyles.visuallyHidden]}>
-                  Demo workspace projects
+                  {m.demo_workspace_projects()}
                 </TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead scope="col" xstyle={[styles.projectCell, styles.projectColumn]}>
-                      Name
+                      {m.name()}
                     </TableHead>
                     <TableHead scope="col" xstyle={[styles.projectCell, styles.projectColumn]}>
-                      Status
+                      {m.status()}
                     </TableHead>
                     <TableHead scope="col" xstyle={[styles.projectCell, styles.projectColumn]}>
-                      Updated
+                      {m.updated()}
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -192,7 +216,9 @@ function Dashboard() {
                         {project.name}
                       </TableHead>
                       <TableCell xstyle={styles.projectCell}>
-                        <Badge variant="secondary">{project.status}</Badge>
+                        <Badge variant="secondary">
+                          {project.status === 'Completed' ? m.completed() : m.in_progress()}
+                        </Badge>
                       </TableCell>
                       <TableCell xstyle={styles.projectCell}>{project.updated}</TableCell>
                     </TableRow>
@@ -204,8 +230,8 @@ function Dashboard() {
         </SurfaceCard>
         <SurfaceCard edgeStyle={edgeStyle}>
           <CardHeader>
-            <CardTitle>Recent activity</CardTitle>
-            <CardDescription>A few updates from this demo workspace.</CardDescription>
+            <CardTitle>{m.recent_activity()}</CardTitle>
+            <CardDescription>{m.a_few_updates_from_this_demo_workspace()}</CardDescription>
           </CardHeader>
           <CardContent>
             <ul className={`activity-list ${stylex.props(styles.activityList).className}`}>
@@ -213,10 +239,10 @@ function Dashboard() {
                 <Item size="xs" xstyle={styles.activityRow}>
                   <ItemContent>
                     <ItemTitle>
-                      Updated{' '}
-                      <strong {...stylex.props(styles.activityStrong)}>Design system</strong>
+                      {m.updated()}{' '}
+                      <strong {...stylex.props(styles.activityStrong)}>{m.design_system()}</strong>
                     </ItemTitle>
-                    <ItemDescription>Today at 10:24 AM</ItemDescription>
+                    <ItemDescription>{m.today_at_10_24_am()}</ItemDescription>
                   </ItemContent>
                 </Item>
               </li>
@@ -224,10 +250,12 @@ function Dashboard() {
                 <Item size="xs" xstyle={styles.activityRow}>
                   <ItemContent>
                     <ItemTitle>
-                      Created{' '}
-                      <strong {...stylex.props(styles.activityStrong)}>Website refresh</strong>
+                      {m.created()}{' '}
+                      <strong {...stylex.props(styles.activityStrong)}>
+                        {m.website_refresh()}
+                      </strong>
                     </ItemTitle>
-                    <ItemDescription>Yesterday at 4:19 PM</ItemDescription>
+                    <ItemDescription>{m.yesterday_at_4_19_pm()}</ItemDescription>
                   </ItemContent>
                 </Item>
               </li>
@@ -235,9 +263,10 @@ function Dashboard() {
                 <Item size="xs" xstyle={styles.activityRow}>
                   <ItemContent>
                     <ItemTitle>
-                      Completed <strong {...stylex.props(styles.activityStrong)}>Mobile app</strong>
+                      {m.completed_024()}
+                      <strong {...stylex.props(styles.activityStrong)}>{m.mobile_app()}</strong>
                     </ItemTitle>
-                    <ItemDescription>5 days ago</ItemDescription>
+                    <ItemDescription>{m.label_5_days_ago()}</ItemDescription>
                   </ItemContent>
                 </Item>
               </li>

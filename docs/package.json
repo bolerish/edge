@@ -6,31 +6,33 @@
   "scripts": {
     "build": "vite build && vite build --ssr src/entry-server.tsx --outDir ../.private/docs-ssr && node scripts/prerender.ts",
     "dev": "vite --host localhost --port 3000 --strictPort",
-    "typecheck": "tsc --noEmit",
-    "test:browser": "playwright test"
+    "typecheck": "pnpm i18n:compile && tsc --noEmit",
+    "test:browser": "playwright test",
+    "i18n:compile": "node scripts/check-translations.ts && paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --emit-ts-declarations"
   },
   "dependencies": {
     "@bolerish/edge": "workspace:^",
-    "react": "catalog:2026-11-03--react-stable",
-    "react-dom": "catalog:2026-11-03--react-stable",
+    "@bolerish/tokens": "catalog:2026-11-03--bolerish-stable",
     "@bolerish/ui": "catalog:2026-11-03--bolerish-stable",
-    "prism-react-renderer": "catalog:",
-    "prismjs": "catalog:",
     "@phosphor-icons/react": "catalog:",
     "@stylexjs/stylex": "catalog:",
-    "@bolerish/tokens": "catalog:2026-11-03--bolerish-stable"
+    "prism-react-renderer": "catalog:",
+    "prismjs": "catalog:",
+    "react": "catalog:2026-11-03--react-stable",
+    "react-dom": "catalog:2026-11-03--react-stable"
   },
   "devDependencies": {
-    "vite": "catalog:2026-11-03--vite-vitest-stable",
-    "typescript": "catalog:",
+    "@axe-core/playwright": "catalog:",
+    "@inlang/paraglide-js": "catalog:",
+    "@playwright/test": "catalog:",
+    "@stylexjs/unplugin": "catalog:",
     "@types/node": "catalog:",
+    "@types/prismjs": "catalog:",
     "@types/react": "catalog:2026-11-03--react-stable",
     "@types/react-dom": "catalog:2026-11-03--react-stable",
-    "@playwright/test": "catalog:",
-    "@axe-core/playwright": "catalog:",
-    "@types/prismjs": "catalog:",
-    "turndown": "catalog:",
     "@types/turndown": "catalog:",
-    "@stylexjs/unplugin": "catalog:"
+    "turndown": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:2026-11-03--vite-vitest-stable"
   }
 }

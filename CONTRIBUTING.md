@@ -30,6 +30,12 @@ Use installed `@bolerish/ui` components and public `@bolerish/tokens/semantic.st
 
 When changing a public API, update its types, documentation and examples together. Preserve existing documentation routes and section anchors. Document `page.tsx` files are a content convention; `docs/src/docs/_shared/routes.ts` and `page-registry.ts` remain the routing and catalog authorities. Site preferences live in `docs/src/shared/preferences/usePreferences.ts`; site defaults can differ from library defaults.
 
+## Documentation languages
+
+The site supports English, Korean, Spanish, Simplified Chinese and Japanese. English keeps the existing URLs; other languages use `/ko`, `/es`, `/zh` and `/ja` prefixes. Keep section IDs and code examples unchanged across languages. Use the existing language menu, UI components and Paraglide messages rather than adding a separate translation runtime.
+
+Edit all five catalogs in `docs/messages/` together. `pnpm --filter @bolerish/edge-docs i18n:compile` checks keys and interpolation inputs and regenerates the ignored Paraglide output. Authored scripts remain TypeScript; generated JavaScript and declarations belong to Paraglide. Builds and development compile messages through the Vite plugin. The SSR entry owns request-local locale storage; metadata, HTML, search and Markdown use the same locale.
+
 ## Checks
 
 Run the checks relevant to the change; use `pnpm check` before a release or after changes spanning packages and docs.

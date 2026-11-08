@@ -3,6 +3,7 @@ packages:
   - docs
 
 catalog:
+  '@inlang/paraglide-js': 3.2.1
   oxfmt: 0.77.0
   oxlint: 1.92.0
   '@stylexjs/stylex': 0.19.1

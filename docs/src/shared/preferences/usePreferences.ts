@@ -1,3 +1,4 @@
+import { m } from '../../paraglide/messages.js';
 import { useSyncExternalStore } from 'react';
 
 export interface SitePreferences {
@@ -23,9 +24,15 @@ let storedValue: string | null | undefined;
 const listeners = new Set<() => void>();
 
 export const motionDescriptions: Record<SitePreferences['motion'], string> = {
-  system: 'Respects motion and input preferences.',
-  dynamic: 'Follows your pointer, even when reduced motion is enabled.',
-  static: 'Keeps the light direction fixed.',
+  get system() {
+    return m.motion_system_hint();
+  },
+  get dynamic() {
+    return m.motion_dynamic_hint();
+  },
+  get static() {
+    return m.motion_static_hint();
+  },
 };
 
 export function usePreferences() {

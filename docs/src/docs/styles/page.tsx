@@ -1,3 +1,5 @@
+import { localePath } from '../../shared/locale.js';
+import { m } from '../../paraglide/messages.js';
 import {
   Table,
   TableHeader,
@@ -19,146 +21,178 @@ export const styles: DocPage = {
   slug: 'styles',
   aliases: ['materials', 'react/materials'],
   section: 'Styles',
-  title: 'Style',
-  description: 'Choose how a surface responds to light without changing its base styles.',
+  get title() {
+    return m.style();
+  },
+  get description() {
+    return m.choose_how_a_surface_responds_to_light();
+  },
   sections: [
     {
       id: 'compare-styles',
-      title: 'Compare the edge response',
-      content: (
-        <>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Choose a style and move your pointer around the card. The selection also updates this
-            site’s cards, code blocks and navigation surfaces.
-          </P>
-          <ExamplePreview title={edgeStylesExample.title} code={edgeStylesExample.code}>
-            <edgeStylesExample.Component />
-          </ExamplePreview>
-        </>
-      ),
+      get title() {
+        return m.compare_the_edge_response();
+      },
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.choose_a_style_and_move_your_pointer()}
+            </P>
+            <ExamplePreview title={edgeStylesExample.title} code={edgeStylesExample.code}>
+              <edgeStylesExample.Component />
+            </ExamplePreview>
+          </>
+        );
+      },
     },
     {
       id: 'options',
-      title: 'Style values',
-      content: (
-        <>
-          <TableContainer
-            className={`table-scroll ${stylex.props(contentStyles.tableScroll).className}`}
-            role="region"
-            aria-label="Style values table"
-            tabIndex={0}
-          >
-            <Table className={`api-table ${stylex.props(contentStyles.apiTable).className}`}>
-              <TableCaption
-                xstyle={[contentStyles.tableCaption]}
-                className={`visually-hidden ${stylex.props(contentStyles.visuallyHidden).className}`}
-              >
-                Style values
-              </TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-                    Value
-                  </TableHead>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-                    Behavior
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                    <code {...stylex.props(contentStyles.inlineCode)}>raised</code>
-                  </TableHead>
-                  <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                    Highlights the edge facing the light. Default.
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                    <code {...stylex.props(contentStyles.inlineCode)}>recessed</code>
-                  </TableHead>
-                  <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                    Reverses the direction for an inset appearance.
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                    <code {...stylex.props(contentStyles.inlineCode)}>matte</code>
-                  </TableHead>
-                  <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                    Softens the edge response.
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            For additional settings, see the{' '}
-            <Link href="/docs/react/api/#lighting-surface">API reference</Link>.
-          </P>
-        </>
-      ),
+      get title() {
+        return m.style_values();
+      },
+      get content() {
+        return (
+          <>
+            <TableContainer
+              className={`table-scroll ${stylex.props(contentStyles.tableScroll).className}`}
+              role="region"
+              aria-label={m.style_values_table()}
+              tabIndex={0}
+            >
+              <Table className={`api-table ${stylex.props(contentStyles.apiTable).className}`}>
+                <TableCaption
+                  xstyle={[contentStyles.tableCaption]}
+                  className={`visually-hidden ${stylex.props(contentStyles.visuallyHidden).className}`}
+                >
+                  {m.style_values()}
+                </TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="col">
+                      {m.value()}
+                    </TableHead>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="col">
+                      {m.behavior()}
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
+                      <code {...stylex.props(contentStyles.inlineCode)}>{'raised'}</code>
+                    </TableHead>
+                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
+                      {m.highlights_the_edge_facing_the_light_default()}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
+                      <code {...stylex.props(contentStyles.inlineCode)}>{'recessed'}</code>
+                    </TableHead>
+                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
+                      {m.reverses_the_direction_for_an_inset_appearance()}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
+                      <code {...stylex.props(contentStyles.inlineCode)}>{'matte'}</code>
+                    </TableHead>
+                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
+                      {m.softens_the_edge_response()}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.for_additional_settings_see_the()}{' '}
+              <Link href={localePath('/docs/react/api/#lighting-surface')}>
+                {m.api_reference()}
+              </Link>
+              .
+            </P>
+          </>
+        );
+      },
     },
     {
       id: 'raised',
-      title: 'Raised',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Use <code {...stylex.props(contentStyles.inlineCode)}>edgeStyle: 'raised'</code> for an
-          outward-facing edge highlight.
-        </P>
-      ),
+      get title() {
+        return m.raised();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.use()}
+            <code {...stylex.props(contentStyles.inlineCode)}>{"edgeStyle: 'raised'"}</code>
+            {m.for_an_outward_facing_edge_highlight()}
+          </P>
+        );
+      },
     },
     {
       id: 'recessed',
-      title: 'Recessed',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Use <code {...stylex.props(contentStyles.inlineCode)}>edgeStyle: 'recessed'</code> for
-          inset elements such as input wrappers.
-        </P>
-      ),
+      get title() {
+        return m.recessed();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.use()}
+            <code {...stylex.props(contentStyles.inlineCode)}>{"edgeStyle: 'recessed'"}</code>
+            {m.for_inset_elements_such_as_input_wrappers()}
+          </P>
+        );
+      },
     },
     {
       id: 'matte',
-      title: 'Matte',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          Use <code {...stylex.props(contentStyles.inlineCode)}>edgeStyle: 'matte'</code> for a
-          softer, quieter border.
-        </P>
-      ),
+      get title() {
+        return m.matte();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.use()}
+            <code {...stylex.props(contentStyles.inlineCode)}>{"edgeStyle: 'matte'"}</code>
+            {m.for_a_softer_quieter_border()}
+          </P>
+        );
+      },
     },
     {
       id: 'customize-the-highlight',
-      title: 'Customize the highlight',
-      content: (
-        <>
-          <span id="apply-the-edge-theme" />
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Each surface uses its own text color, even when nested, and follows its host border
-            radius. Set <code {...stylex.props(contentStyles.inlineCode)}>color</code> to override
-            the highlight, or <code {...stylex.props(contentStyles.inlineCode)}>intensity</code> to
-            multiply the shared light strength. Use{' '}
-            <code {...stylex.props(contentStyles.inlineCode)}>shadowColor="transparent"</code> to
-            remove the opposite-edge shadow.
-            <code {...stylex.props(contentStyles.inlineCode)}> borderWidth</code> changes the
-            decoration thickness in pixels, not the host border. Pass options to{' '}
-            <Link href="/docs/react/api/#lighting-surface">Edge.Surface</Link>; no CSS variable
-            declarations are needed.
-          </P>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            The effect approximates a direction on axis-aligned rectangles, not a physical point
-            light. Near the center, directional intensity fades over a region proportional to the
-            surface size.
-          </P>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            For existing decorations and input wrappers, see{' '}
-            <Link href="/docs/integration/">Integration</Link>.
-          </P>
-        </>
-      ),
+      get title() {
+        return m.customize_the_highlight();
+      },
+      get content() {
+        return (
+          <>
+            <span id="apply-the-edge-theme" />
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.each_surface_uses_its_own_text_color()}
+              <code {...stylex.props(contentStyles.inlineCode)}>{'color'}</code>
+              {m.to_override_the_highlight_or()}
+              <code {...stylex.props(contentStyles.inlineCode)}>{'intensity'}</code>
+              {m.to_multiply_the_shared_light_strength_use()}{' '}
+              <code {...stylex.props(contentStyles.inlineCode)}>{'shadowColor="transparent"'}</code>
+              {m.to_remove_the_opposite_edge_shadow()}
+              <code {...stylex.props(contentStyles.inlineCode)}>{' borderWidth'}</code>
+              {m.changes_the_decoration_thickness_in_pixels_not()}{' '}
+              <Link href={localePath('/docs/react/api/#lighting-surface')}>{'Edge.Surface'}</Link>
+              {m.no_css_variable_declarations_are_needed()}
+            </P>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.the_effect_approximates_a_direction_on_axis()}
+            </P>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.for_existing_decorations_and_input_wrappers_see()}{' '}
+              <Link href={localePath('/docs/integration/')}>{m.integration()}</Link>.
+            </P>
+          </>
+        );
+      },
     },
   ],
 };

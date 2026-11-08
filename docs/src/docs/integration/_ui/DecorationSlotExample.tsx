@@ -1,3 +1,4 @@
+import { m } from '../../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { useState } from 'react';
 import { Button } from '@bolerish/ui/button';
@@ -16,21 +17,23 @@ export function DecorationSlotExample() {
           pseudoElement="before"
           className={`edge-example-after ${stylex.props(styles.surface, styles.existingAfter).className}`}
         >
-          Your existing ::after stays intact.{' '}
+          {m.your_existing_after_stays_intact()}{' '}
         </Edge.Surface>
         <Edge.Surface
           as="article"
           className={`edge-example-before ${stylex.props(styles.surface, styles.existingBefore).className}`}
         >
           {' '}
-          The default keeps your ::before intact.
+          {m.the_default_keeps_your_before_intact()}
         </Edge.Surface>
         <Button
           xstyle={styles.switchButton}
           type="button"
           onClick={() => setPseudoElement(pseudoElement === 'before' ? 'after' : 'before')}
         >
-          Use {pseudoElement === 'before' ? 'after' : 'before'} decoration
+          {m.use()}
+          {pseudoElement === 'before' ? 'after' : 'before'}
+          {m.decoration()}
         </Button>
         <Edge.Surface
           data-testid="decoration-slot"
@@ -39,7 +42,8 @@ export function DecorationSlotExample() {
           borderWidth={2}
           {...stylex.props(styles.surface, styles.asymmetric)}
         >
-          Decoration uses ::{pseudoElement}
+          {m.decoration_uses()}
+          {pseudoElement}
         </Edge.Surface>
       </div>
     </Edge.Provider>
@@ -47,7 +51,9 @@ export function DecorationSlotExample() {
 }
 
 export const decorationSlotExample = {
-  title: 'Keep existing pseudo-elements',
+  get title() {
+    return m.keep_existing_pseudo_elements();
+  },
   Component: DecorationSlotExample,
   code: `import { Edge } from '@bolerish/edge';
 

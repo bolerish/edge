@@ -1,3 +1,4 @@
+import { m } from '../../../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { use } from 'react';
 import { useSurface } from '@bolerish/edge';
@@ -14,27 +15,29 @@ export function SharedLightExample() {
   return (
     <div
       role="group"
-      aria-label="Shared light example"
+      aria-label={m.shared_light_example()}
       className={`shared-light-example ${stylex.props(styles.sharedLightExample).className}`}
     >
       <Card xstyle={styles.exampleCard} ref={firstCard} role="article">
         <CardHeader>
-          <CardTitle>Example card</CardTitle>
+          <CardTitle>{m.example_card()}</CardTitle>
         </CardHeader>
-        <CardContent>Both cards respond to the same light.</CardContent>
+        <CardContent>{m.both_cards_respond_to_the_same_light()}</CardContent>
       </Card>
       <Card xstyle={styles.exampleCard} ref={secondCard} role="article">
         <CardHeader>
-          <CardTitle>Another example card</CardTitle>
+          <CardTitle>{m.another_example_card()}</CardTitle>
         </CardHeader>
-        <CardContent>Both cards respond to the same light.</CardContent>
+        <CardContent>{m.both_cards_respond_to_the_same_light()}</CardContent>
       </Card>
     </div>
   );
 }
 
 export const sharedLightExample = {
-  title: 'One light, your components',
+  get title() {
+    return m.one_light_your_components();
+  },
   Component: SharedLightExample,
   code: `<Edge.Provider>
   <Edge.Surface>Example card</Edge.Surface>

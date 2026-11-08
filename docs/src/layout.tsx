@@ -1,3 +1,7 @@
+import { localePath } from './shared/locale.js';
+import { basePath } from './shared/locale.js';
+import { LanguageMenu } from './shared/LanguageMenu.js';
+import { m } from './paraglide/messages.js';
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -20,7 +24,7 @@ import { DocumentLayout } from './docs/layout.js';
 import { normalizePath } from './docs/_shared/routes.js';
 
 export function Layout({ pathname }: { pathname: string }) {
-  const path = normalizePath(pathname);
+  const path = normalizePath(basePath(pathname));
   const [navigationOpen, setNavigationOpen] = useState(false);
   return (
     <>
@@ -51,36 +55,38 @@ function SiteHeader({
   return (
     <>
       <Link variant="plain" {...stylex.props(documentStyles.link, styles.skipLink)} href="#content">
-        Skip to content
+        {m.skip_to_content()}
       </Link>
       <header className={`site-header ${stylex.props(styles.siteHeader).className}`}>
         <Link
           variant="plain"
           className={`wordmark ${stylex.props(documentStyles.link, styles.wordmark).className}`}
-          href="/"
+          href={localePath('/')}
           aria-current={section === 'home' ? 'page' : undefined}
         >
-          bolerish<span {...stylex.props(documentStyles.link, styles.wordmarkSuffix)}>/edge</span>
+          {'bolerish'}
+          <span {...stylex.props(documentStyles.link, styles.wordmarkSuffix)}>{'/edge'}</span>
         </Link>
-        <NavigationMenu xstyle={styles.topNav} aria-label="Sections">
+        <NavigationMenu xstyle={styles.topNav} aria-label={m.sections()}>
           <NavigationMenuList>
             <NavigationMenuItem>
               <NavigationMenuLink
-                href="/docs/"
+                href={localePath('/docs/')}
                 active={section === 'docs'}
                 aria-current={section === 'docs' ? 'page' : undefined}
               >
-                Docs
+                {m.docs()}
               </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
         <div {...stylex.props(styles.headerActions)}>
           <DocumentationSearch />
+          <LanguageMenu />
           <Button
             size="icon"
             variant="ghost"
-            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            aria-label={theme === 'light' ? m.switch_dark() : m.switch_light()}
             onClick={() => updatePreferences({ theme: theme === 'light' ? 'dark' : 'light' })}
           >
             {theme === 'light' ? (
@@ -94,7 +100,7 @@ function SiteHeader({
               <Button
                 size="icon"
                 variant="ghost"
-                aria-label="Open navigation"
+                aria-label={m.open_navigation()}
                 aria-expanded={navigationOpen}
                 aria-controls="mobile-navigation"
                 onClick={() => setNavigationOpen(!navigationOpen)}
@@ -111,8 +117,11 @@ function SiteHeader({
 
 const styles = stylex.create({
   siteHeader: {
-    height: '64px',
-    display: 'flex',
+    height: { default: '64px', '@media (max-width: 760px)': '88px' },
+    display: { default: 'flex', '@media (max-width: 760px)': 'grid' },
+    gridTemplateColumns: { default: null, '@media (max-width: 760px)': 'minmax(0, 1fr) auto' },
+    gridTemplateRows: { default: null, '@media (max-width: 760px)': '48px 40px' },
+    rowGap: 0,
     alignItems: 'center',
     gap: {
       default: '36px',
@@ -145,6 +154,8 @@ const styles = stylex.create({
     color: `${colorVars.fgSecondary}`,
   },
   topNav: {
+    gridColumn: { default: null, '@media (max-width: 760px)': '1 / -1' },
+    gridRow: { default: null, '@media (max-width: 760px)': '2' },
     display: 'flex',
     alignItems: 'center',
     gap: {

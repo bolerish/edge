@@ -1,3 +1,4 @@
+import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { Button } from '@bolerish/ui/button';
 import { Slider } from '@bolerish/ui/slider';
@@ -7,27 +8,27 @@ export function LightingControls() {
   const { direction, radius, motion } = usePreferences();
   return (
     <fieldset {...stylex.props(styles.controls)} disabled={motion === 'static'}>
-      <legend>Pointer lighting</legend>
-      <div role="group" aria-label="Highlight direction" {...stylex.props(styles.directions)}>
+      <legend>{m.pointer_lighting()}</legend>
+      <div role="group" aria-label={m.highlight_direction()} {...stylex.props(styles.directions)}>
         <Button
           variant="outline"
           aria-pressed={direction === 'gather'}
           onClick={() => updatePreferences({ direction: 'gather' })}
         >
-          Gather
+          {m.gather()}
         </Button>
         <Button
           variant="outline"
           aria-pressed={direction === 'spread'}
           onClick={() => updatePreferences({ direction: 'spread' })}
         >
-          Spread
+          {m.spread()}
         </Button>
       </div>
       <div {...stylex.props(styles.range)}>
-        <span>Range: {radius} px</span>
+        <span>{m.range_value({ radius })}</span>
         <Slider
-          aria-label="Light range"
+          aria-label={m.light_range()}
           min={40}
           max={1200}
           step={20}
@@ -39,10 +40,7 @@ export function LightingControls() {
           }}
         />
       </div>
-      <small>
-        Gather faces the pointer; Spread faces away. Range is the fade distance outside each
-        surface. Fixed lighting ignores these settings.
-      </small>
+      <small>{m.pointer_settings_hint()}</small>
     </fieldset>
   );
 }

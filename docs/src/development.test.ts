@@ -19,6 +19,20 @@ test('development serves styled content before JavaScript and hydrates it on ref
     if (message.type() === 'error') errors.push(message.text());
   });
   try {
+    await Promise.all(
+      [
+        ['/docs/', 'Introduction', 'en'],
+        ['/ko/docs/', '소개', 'ko'],
+        ['/es/docs/', 'Introducción', 'es'],
+        ['/zh/docs/', '简介', 'zh-Hans'],
+        ['/ja/docs/', 'はじめに', 'ja'],
+      ].map(async ([path, title, lang]) => {
+        const response = await request.get(origin + path);
+        const html = await response.text();
+        expect(html).toContain(`lang="${lang}"`);
+        expect(html).toContain(title);
+      }),
+    );
     const agentIndex = await request.get(origin + '/llms.txt');
     expect(agentIndex.ok()).toBe(true);
     expect(await agentIndex.text()).toContain('/docs/react/api/index.md');

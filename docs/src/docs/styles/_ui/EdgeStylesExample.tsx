@@ -1,3 +1,4 @@
+import { m } from '../../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { use } from 'react';
 import { SurfaceLightContext } from '../../../shared/lighting/light-context.js';
@@ -15,19 +16,34 @@ import {
 import '@bolerish/edge/style.css';
 
 const edgeStyles = [
-  { value: 'raised', label: 'Raised' },
-  { value: 'recessed', label: 'Recessed' },
-  { value: 'matte', label: 'Matte' },
+  {
+    value: 'raised',
+    get label() {
+      return m.raised();
+    },
+  },
+  {
+    value: 'recessed',
+    get label() {
+      return m.recessed();
+    },
+  },
+  {
+    value: 'matte',
+    get label() {
+      return m.matte();
+    },
+  },
 ] as const;
 
 export function EdgeStylesExample() {
   const { edgeStyle } = usePreferences();
   return (
-    <div role="group" aria-label="Style comparison">
+    <div role="group" aria-label={m.style_comparison()}>
       <div {...stylex.props(styles.appearanceControls)}>
         <div {...stylex.props(styles.appearanceControl)}>
           <span {...stylex.props(styles.controlLabel)} id="example-style-label">
-            Style
+            {m.style()}
           </span>
           <Select
             value={edgeStyle}
@@ -65,16 +81,18 @@ function StyleCard({ edgeStyle }: { edgeStyle: EdgeStyle }) {
       <CardHeader>
         <CardTitle>{edgeStyles.find((style) => style.value === edgeStyle)?.label}</CardTitle>
         <CardDescription xstyle={styles.description}>
-          A border that responds to your pointer.
+          {m.a_border_that_responds_to_your_pointer()}
         </CardDescription>
       </CardHeader>
-      <CardContent>Your component keeps its own colors and layout.</CardContent>
+      <CardContent>{m.your_component_keeps_its_own_colors_and()}</CardContent>
     </Card>
   );
 }
 
 export const edgeStylesExample = {
-  title: 'Compare edge styles',
+  get title() {
+    return m.compare_edge_styles();
+  },
   Component: EdgeStylesExample,
   code: `const light = useLight();
 const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });

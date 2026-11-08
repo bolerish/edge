@@ -1,3 +1,4 @@
+import { m } from '../paraglide/messages.js';
 import { colorVars } from '@bolerish/tokens/semantic.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { Card } from '@bolerish/ui/card';
@@ -7,7 +8,7 @@ import { usePreferences } from '../shared/preferences/usePreferences.js';
 export function HeroExample() {
   const { edgeStyle } = usePreferences();
   return (
-    <section {...stylex.props(styles.heroExample)} aria-label="Edge example">
+    <section {...stylex.props(styles.heroExample)} aria-label={m.edge_example()}>
       <div {...stylex.props(styles.heroExampleStage)} aria-hidden="true">
         {(['back', 'middle', 'front'] as const).map((layer) => (
           <Edge.Surface

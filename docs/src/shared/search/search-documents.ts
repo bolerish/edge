@@ -1,9 +1,10 @@
+import { sectionLabel } from '../locale.js';
 import { isValidElement, type ReactNode } from 'react';
 import { pages } from '../../docs/_shared/page-registry.js';
 import { getPagePath } from '../../docs/_shared/routes.js';
 
-export const searchCategories = [...new Set(pages.map(page => page.section ?? 'Getting started'))];
-export type SearchCategory = typeof searchCategories[number];
+export const searchCategories = ['Getting started', 'Styles', 'Guides', 'React'];
+export type SearchCategory = (typeof searchCategories)[number];
 
 interface SearchDocument {
   title: string;
@@ -13,27 +14,43 @@ interface SearchDocument {
   text: string;
   description: string;
 }
-const documents: SearchDocument[] = pages.flatMap((page) => {
-  const href = getPagePath(page);
-  const category: SearchDocument['category'] = page.section ?? 'Getting started';
-  const pageTitle = [page.section, page.title].filter(Boolean).join(' · ');
-  return [
-    { title: page.title, pageTitle, category, href, text: `${pageTitle} ${page.description}`.toLowerCase(), description: page.description },
-    ...page.sections.map((section) => {
-      const description = textContent(section.content).replace(/\s+/g, ' ').trim();
-      return {
-        title: section.title, pageTitle, category, href: `${href}#${section.id}`,
-        text: `${pageTitle} ${section.title} ${description}`.toLowerCase(), description,
-      };
-    }),
-  ];
-});
-
+function getDocuments(): SearchDocument[] {
+  return pages.flatMap((page) => {
+    const href = getPagePath(page);
+    const category: SearchDocument['category'] = page.section ?? 'Getting started';
+    const pageTitle = [page.section ? sectionLabel(page.section) : undefined, page.title]
+      .filter(Boolean)
+      .join(' · ');
+    return [
+      {
+        title: page.title,
+        pageTitle,
+        category,
+        href,
+        text: `${pageTitle} ${page.description}`.toLowerCase(),
+        description: page.description,
+      },
+      ...page.sections.map((section) => {
+        const description = textContent(section.content).replace(/\s+/g, ' ').trim();
+        return {
+          title: section.title,
+          pageTitle,
+          category,
+          href: `${href}#${section.id}`,
+          text: `${pageTitle} ${section.title} ${description}`.toLowerCase(),
+          description,
+        };
+      }),
+    ];
+  });
+}
 export function searchDocuments(query: string) {
   const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-  return documents.filter((document) => words.length
-    ? words.every((word) => document.text.includes(word))
-    : !document.href.includes('#'));
+  return getDocuments().filter((document) =>
+    words.length
+      ? words.every((word) => document.text.includes(word))
+      : !document.href.includes('#'),
+  );
 }
 function textContent(node: ReactNode): string {
   if (typeof node === 'string' || typeof node === 'number') return String(node);

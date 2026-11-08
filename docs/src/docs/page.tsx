@@ -1,3 +1,5 @@
+import { localePath } from '../shared/locale.js';
+import { m } from '../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { contentStyles } from './_shared/content-styles.js';
 import { Link } from '@bolerish/ui/link';
@@ -8,34 +10,48 @@ export const introduction: DocPage = {
   slug: '',
   aliases: ['getting-started', 'introduction'],
   section: 'Getting started',
-  title: 'Introduction',
-  description: 'Subtle highlights for your UI, with your existing colors, layout and interactions.',
+  get title() {
+    return m.introduction();
+  },
+  get description() {
+    return m.subtle_highlights_for_your_ui_with_your();
+  },
   sections: [
     {
       id: 'one-shared-light',
-      title: 'A little more alive.',
-      content: (
-        <>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Group elements under one shared light and choose which surfaces respond. Give an area
-            its own light when it should react independently.
-          </P>
-        </>
-      ),
+      get title() {
+        return m.a_little_more_alive();
+      },
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.group_elements_under_one_shared_light_and()}
+            </P>
+          </>
+        );
+      },
     },
     {
       id: 'choose-your-framework',
-      title: 'Start using Edge',
-      content: (
-        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-          <span id="installation" />
-          <span id="stylesheet" />
-          Start with <Link href="/docs/installation/">Installation</Link>, learn the concepts in{' '}
-          <Link href="/docs/usage/">Usage</Link>, then follow{' '}
-          <Link href="/docs/react/usage/">React Integration</Link>. Find settings in the{' '}
-          <Link href="/docs/react/api/">API reference</Link>.
-        </P>
-      ),
+      get title() {
+        return m.start_using_edge();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            <span id="installation" />
+            <span id="stylesheet" />
+            {m.start_with()}
+            <Link href={localePath('/docs/installation/')}>{m.installation()}</Link>
+            {m.learn_the_concepts_in()} <Link href={localePath('/docs/usage/')}>{m.usage()}</Link>
+            {m.then_follow()}{' '}
+            <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>
+            {m.find_settings_in_the()}{' '}
+            <Link href={localePath('/docs/react/api/')}>{m.api_reference()}</Link>.
+          </P>
+        );
+      },
     },
   ],
 };

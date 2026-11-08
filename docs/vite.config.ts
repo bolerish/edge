@@ -1,3 +1,4 @@
+import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { defineConfig } from 'vite';
 import stylex from '@stylexjs/unplugin';
 import { createHash } from 'node:crypto';
@@ -14,6 +15,13 @@ export default defineConfig({
   optimizeDeps: { exclude: ['@bolerish/tokens'] },
   ssr: { noExternal: ['@bolerish/tokens'] },
   plugins: [
+    paraglideVitePlugin({
+      project: './project.inlang',
+      outdir: './src/paraglide',
+      emitTsDeclarations: true,
+      // The static site's URL adapter and SSR context supply the locale.
+      strategy: ['baseLocale'],
+    }),
     stylex.vite({
       // The document prelude places Edge below the shared StyleX priority layers.
       useCSSLayers: true,
@@ -31,7 +39,8 @@ export default defineConfig({
             !(
               path === '/llms.txt' ||
               path === '/llms-full.txt' ||
-              /^\/docs\/.*index\.md$/.test(path)
+              /^\/(ko\/|es\/|zh\/|ja\/)?docs\/.*index\.md$/.test(path) ||
+              /^\/(ko|es|zh|ja)\/llms(-full)?\.txt$/.test(path)
             )
           )
             return next();

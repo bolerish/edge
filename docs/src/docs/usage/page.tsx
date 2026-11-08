@@ -1,3 +1,5 @@
+import { localePath } from '../../shared/locale.js';
+import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { contentStyles } from '../_shared/content-styles.js';
 import { Link } from '@bolerish/ui/link';
@@ -7,67 +9,88 @@ import type { DocPage } from '../_shared/types.js';
 export const usage: DocPage = {
   slug: 'usage',
   section: 'Getting started',
-  title: 'Usage',
-  description: 'Understand lights and surfaces before connecting your components.',
+  get title() {
+    return m.usage();
+  },
+  get description() {
+    return m.understand_lights_and_surfaces_before_connecting_your();
+  },
   sections: [
     {
       id: 'share-one-light',
-      title: 'Choose an area',
-      content: (
-        <>
-          <span id="package-installation" />
-          <span id="prepare-the-workspace" />
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            A light controls a group of surfaces that respond together. Choose a section or a few
-            elements to share one light.
-          </P>
-          <span id="create-your-first-surface" />
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            A surface is an element connected to that light. Only connected surfaces respond. Use a
-            separate light for an independent area.
-          </P>
-        </>
-      ),
+      get title() {
+        return m.choose_an_area();
+      },
+      get content() {
+        return (
+          <>
+            <span id="package-installation" />
+            <span id="prepare-the-workspace" />
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.a_light_controls_a_group_of_surfaces()}
+            </P>
+            <span id="create-your-first-surface" />
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.a_surface_is_an_element_connected_to()}
+            </P>
+          </>
+        );
+      },
     },
     {
       id: 'keep-your-styles',
-      title: 'Keep your UI',
-      content: (
-        <>
-          <span id="load-the-stylesheet" />
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Edge keeps your background, text, spacing and base border. Its highlight uses each
-            surface’s own text color and border radius by default. Keep existing interactions and
-            keyboard focus indicators.
-          </P>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Choose the surface response in <Link href="/docs/styles/">Style</Link> and how the light
-            moves in <Link href="/docs/motion/">Motion</Link>.
-          </P>
-          <span id="wrap-inputs-you-own" />
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            For input wrappers and decoration conflicts, see{' '}
-            <Link href="/docs/integration/#wrap-inputs-you-own">Integration</Link>.
-          </P>
-          <span id="refresh-after-layout-changes" />
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            For application-controlled position changes, see{' '}
-            <Link href="/docs/integration/#refresh-after-layout-changes">layout changes</Link>.
-          </P>
-        </>
-      ),
+      get title() {
+        return m.keep_your_ui();
+      },
+      get content() {
+        return (
+          <>
+            <span id="load-the-stylesheet" />
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.edge_keeps_your_background_text_spacing_and()}
+            </P>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.choose_the_surface_response_in()}
+              <Link href={localePath('/docs/styles/')}>{m.style()}</Link>
+              {m.and_how_the_light_moves_in()}
+              <Link href={localePath('/docs/motion/')}>{m.motion()}</Link>.
+            </P>
+            <span id="wrap-inputs-you-own" />
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.for_input_wrappers_and_decoration_conflicts_see()}{' '}
+              <Link href={localePath('/docs/integration/#wrap-inputs-you-own')}>
+                {m.integration()}
+              </Link>
+              .
+            </P>
+            <span id="refresh-after-layout-changes" />
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.for_application_controlled_position_changes_see()}{' '}
+              <Link href={localePath('/docs/integration/#refresh-after-layout-changes')}>
+                {m.layout_changes()}
+              </Link>
+              .
+            </P>
+          </>
+        );
+      },
     },
     {
       id: 'connect-existing-components',
-      title: 'Connect your components',
-      content: (
-        <>
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            Follow <Link href="/docs/react/usage/">React Integration</Link> to connect new or
-            existing components. React is the currently available adapter.
-          </P>
-        </>
-      ),
+      get title() {
+        return m.connect_your_components();
+      },
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.follow()}
+              <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>
+              {m.to_connect_new_or_existing_components_react()}
+            </P>
+          </>
+        );
+      },
     },
   ],
 };

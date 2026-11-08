@@ -1,3 +1,5 @@
+import { sectionLabel } from '../locale.js';
+import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { useEffect, useState, type ChangeEvent } from 'react';
 import { Button } from '@bolerish/ui/button';
@@ -44,25 +46,25 @@ export function DocumentationSearch() {
             xstyle={styles.documentationSearch}
             align="start"
             variant="outline"
-            aria-label="Search documentation"
+            aria-label={m.search_documentation()}
           >
             <MagnifyingGlassIcon {...stylex.props(styles.icon)} aria-hidden="true" />
-            <span {...stylex.props(styles.triggerText)}>Search documentation…</span>
+            <span {...stylex.props(styles.triggerText)}>{m.search_documentation_329()}</span>
           </Button>
         }
       />
 
       <DialogContent xstyle={styles.searchDialog}>
-        <DialogTitle>Search documentation</DialogTitle>
+        <DialogTitle>{m.search_documentation()}</DialogTitle>
         <Input
           xstyle={styles.searchInput}
-          aria-label="Search titles and content"
-          placeholder="Search titles and content…"
+          aria-label={m.search_titles_and_content()}
+          placeholder={m.search_titles_and_content_331()}
           value={query}
           onChange={(event: ChangeEvent<HTMLInputElement>) => setQuery(event.target.value)}
         />
         <div {...stylex.props(styles.searchLayout)}>
-          <nav aria-label="Search sections">
+          <nav aria-label={m.search_sections()}>
             <ToggleGroup
               value={[category]}
               onValueChange={(values) => {
@@ -74,7 +76,7 @@ export function DocumentationSearch() {
             >
               {(['All', ...searchCategories] as const).map((section) => (
                 <ToggleGroupItem key={section} value={section}>
-                  #{section}
+                  #{sectionLabel(section)}
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
@@ -83,19 +85,17 @@ export function DocumentationSearch() {
             {searching && results.length === 0 ? (
               <Empty xstyle={styles.emptyResults}>
                 <EmptyDescription role="status">
-                  No documents found. Try another search.
+                  {m.no_documents_found_try_another_search()}
                 </EmptyDescription>
               </Empty>
             ) : (
               <Paragraph variant="caption" role="status" xstyle={styles.searchCount}>
-                {!searching
-                  ? 'Search documentation or choose a category.'
-                  : `${results.length} ${results.length === 1 ? 'result' : 'results'}`}
+                {!searching ? m.search_hint() : m.results({ count: results.length })}
               </Paragraph>
             )}
             <nav
               className={`search-results ${stylex.props(styles.searchResults).className}`}
-              aria-label="Search results"
+              aria-label={m.search_results()}
             >
               {results.map((result) => (
                 <Link

@@ -1,3 +1,5 @@
+import { localePath, sectionLabel } from '../shared/locale.js';
+import { m } from '../paraglide/messages.js';
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -17,7 +19,7 @@ import { usePreferences } from '../shared/preferences/usePreferences.js';
 import { useLocationHash } from '../shared/site-shell/useLocationHash.js';
 import { getReadingNeighbors } from './_shared/page-registry.js';
 import { findPage, getPagePath } from './_shared/routes.js';
-import { docsNavigation } from './_shared/sidebar.js';
+import { getDocsNavigation } from './_shared/sidebar.js';
 import { SurfaceLightContext } from '../shared/lighting/light-context.js';
 import { LightingSurface } from '../shared/lighting/LightingSurface.js';
 export interface NavigationGroup {
@@ -40,7 +42,7 @@ export function DocumentLayout({
   const { previous, next } = page
     ? getReadingNeighbors(page)
     : { previous: undefined, next: undefined };
-  const navigation = docsNavigation;
+  const navigation = getDocsNavigation();
   const toc = page?.sections.map(({ id, title }) => ({ id, title })) ?? [];
   const hash = useLocationHash();
   useEffect(() => {
@@ -57,7 +59,7 @@ export function DocumentLayout({
   const nav = (
     <NavigationMenu
       orientation="vertical"
-      aria-label="Documentation"
+      aria-label={m.documentation()}
       xstyle={styles.navigationRoot}
     >
       <NavigationMenuList xstyle={styles.navigationList}>
@@ -127,7 +129,7 @@ export function DocumentLayout({
                 ))}
                 <nav
                   className={`reading-navigation ${stylex.props(styles.readingNavigation).className}`}
-                  aria-label="Continue reading"
+                  aria-label={m.continue_reading()}
                 >
                   {previous ? (
                     <LightingSurface
@@ -136,7 +138,7 @@ export function DocumentLayout({
                       rel="prev"
                       {...stylex.props(documentStyles.link, styles.readingLink)}
                     >
-                      <small {...stylex.props(styles.readingLabel)}>Previous</small>
+                      <small {...stylex.props(styles.readingLabel)}>{m.previous()}</small>
                       <span>{previous.title}</span>
                     </LightingSurface>
                   ) : (
@@ -149,24 +151,27 @@ export function DocumentLayout({
                       rel="next"
                       {...stylex.props(documentStyles.link, styles.readingLink, styles.nextLink)}
                     >
-                      <small {...stylex.props(styles.readingLabel)}>Next</small>
+                      <small {...stylex.props(styles.readingLabel)}>{m.next()}</small>
                       <span>{next.title}</span>
                     </LightingSurface>
                   ) : null}
                 </nav>
                 <footer {...stylex.props(styles.pageFooter)}>
-                  bolerish/edge{page.section ? ` · ${page.section}` : ''}
+                  {'bolerish/edge'}
+                  {page.section ? ` · ${sectionLabel(page.section)}` : ''}
                 </footer>
               </article>
             </>
           ) : (
             <article className="document">
               <Heading level={1} size="page" xstyle={styles.documentTitle}>
-                Page not found
+                {m.page_not_found()}
               </Heading>
               <Paragraph>
-                This page is not available. <Link href="/docs/">Return to Getting started</Link> or
-                explore the <Link href="/">dashboard example</Link>.
+                {m.this_page_is_not_available()}
+                <Link href={localePath('/docs/')}>{m.return_to_getting_started()}</Link>
+                {m.or_explore_the()}
+                <Link href={localePath('/')}>{m.dashboard_example()}</Link>.
               </Paragraph>
             </article>
           )}
@@ -174,9 +179,9 @@ export function DocumentLayout({
         {toc.length ? (
           <nav
             className={`table-of-contents ${stylex.props(styles.tableOfContents).className}`}
-            aria-label="On this page"
+            aria-label={m.on_this_page()}
           >
-            <p {...stylex.props(styles.tocTitle)}>On this page</p>
+            <p {...stylex.props(styles.tocTitle)}>{m.on_this_page()}</p>
             {toc.map((item) => (
               <Link
                 variant="plain"
@@ -321,7 +326,7 @@ const styles = stylex.create({
       '@media (max-width: 760px)': 'block',
     },
     position: 'fixed',
-    top: 64,
+    top: 88,
     bottom: 0,
     left: 0,
     width: 'min(300px, 85vw)',
