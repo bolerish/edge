@@ -239,13 +239,14 @@ it('renders the same light for mouse and touch coordinates, then clears on relea
   point();
   flush();
   const mouse = node.style.cssText;
-  document.dispatchEvent(Object.assign(new Event('pointerdown'), {
-    clientX: 250, clientY: 150, pointerType: 'touch', pointerId: 1, isPrimary: true,
+  document.dispatchEvent(Object.assign(new Event('touchstart'), {
+    touches: [{ identifier: 1, clientX: 250, clientY: 150 }],
+    changedTouches: [{ identifier: 1, clientX: 250, clientY: 150 }],
   }));
   flush();
   expect(node.style.cssText).toBe(mouse);
-  document.dispatchEvent(Object.assign(new Event('pointerup'), {
-    pointerType: 'touch', pointerId: 1,
+  document.dispatchEvent(Object.assign(new Event('touchend'), {
+    touches: [], changedTouches: [{ identifier: 1 }],
   }));
   flush();
   expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');

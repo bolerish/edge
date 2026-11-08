@@ -141,47 +141,75 @@ it('releases every document, window and media listener with its original capture
 function touch(type: string, pointerId = 1, isPrimary = true) {
   document.dispatchEvent(
     Object.assign(new Event(type), {
-      clientX: 40,
-      clientY: 50,
-      pointerType: 'touch',
-      pointerId,
-      isPrimary,
+      touches:
+        type === 'touchend' || type === 'touchcancel'
+          ? []
+          : [
+              { identifier: pointerId, clientX: 40, clientY: 50 },
+              ...(!isPrimary ? [{ identifier: 1, clientX: 40, clientY: 50 }] : []),
+            ],
+      changedTouches: [{ identifier: pointerId, clientX: 40, clientY: 50 }],
     }),
   );
 }
-it.each(['pointerup', 'pointercancel', 'scroll'])(
+it.each(['touchend', 'touchcancel'])(
   'tracks a touch until %s and restores fixed lighting',
   (ending) => {
     const { render } = scene();
     queries.get('(hover: hover) and (pointer: fine)')!.matches = false;
-    touch('pointermove');
+    touch('touchmove');
     expect(frames.size).toBe(0);
-    touch('pointerdown');
+    touch('touchstart');
     flush();
     expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
-    touch('pointermove', 2, false);
+    touch('touchmove', 2);
     expect(frames.size).toBe(0);
-    touch('pointerup', 2, false);
+    touch('touchend', 2, false);
     expect(frames.size).toBe(0);
-    touch('pointermove');
+    touch('touchmove');
     flush();
     expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
     touch(ending);
     flush();
     expect(render).toHaveBeenLastCalledWith(null, true);
-    touch('pointermove');
+    touch('touchmove');
     expect(frames.size).toBe(0);
   },
 );
 it('ignores secondary touches and honors static and reduced motion on touch down', () => {
   const { session } = scene('static');
-  touch('pointerdown');
+  touch('touchstart');
   expect(frames.size).toBe(0);
   session.stop();
   scene();
-  touch('pointerdown', 2, false);
+  touch('touchstart', 2, false);
   expect(frames.size).toBe(0);
   queries.get('(prefers-reduced-motion: reduce)')!.matches = true;
-  touch('pointerdown');
+  touch('touchstart');
   expect(frames.size).toBe(0);
+});
+
+it('keeps tracking touch positions after pointer cancellation and native scrolling', () => {
+  const { render, invalidate } = scene();
+  function send(type: string, x = 40, y = 50) {
+    const contact = { identifier: 7, clientX: x, clientY: y };
+    document.dispatchEvent(
+      Object.assign(new Event(type), {
+        touches: type === 'touchend' ? [] : [contact],
+        changedTouches: [contact],
+      }),
+    );
+  }
+  send('touchstart');
+  flush();
+  expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
+  touch('pointercancel');
+  document.dispatchEvent(new Event('scroll'));
+  send('touchmove', 60, 80);
+  flush();
+  expect(render).toHaveBeenLastCalledWith({ x: 60, y: 80 }, false);
+  expect(invalidate).toHaveBeenCalled();
+  send('touchend');
+  flush();
+  expect(render).toHaveBeenLastCalledWith(null, false);
 });

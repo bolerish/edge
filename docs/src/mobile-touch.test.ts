@@ -46,7 +46,7 @@ for (const mode of ['dynamic', 'system', 'static', 'reduced'] as const) {
       const angle = await card.evaluate((node) => node.style.getPropertyValue('--edge-angle'));
       await session.send('Input.dispatchTouchEvent', {
         type: 'touchMove',
-        touchPoints: [{ ...point, x: point.x + 2 }],
+        touchPoints: [{ ...point, x: point.x + 24 }],
       });
       await expect
         .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
@@ -81,7 +81,7 @@ for (const mode of ['dynamic', 'system', 'static', 'reduced'] as const) {
   });
 }
 
-test('native touch scrolling stays available and clears active lighting', async ({
+test('native scrolling keeps touch lighting active until the finger is released', async ({
   page,
   context,
 }) => {
@@ -108,8 +108,18 @@ test('native touch scrolling stays available and clears active lighting', async 
       touchPoints: [{ ...point, y: point.y - step * 20 }],
     });
   }
-  await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(initialScroll);
+  await expect
+    .poll(() => card.evaluate((node) => Number(node.style.getPropertyValue('--edge-strength'))))
+    .toBeGreaterThan(0);
+  await session.send('Input.dispatchTouchEvent', {
+    type: 'touchMove',
+    touchPoints: [{ ...point, y: point.y - 110 }],
+  });
+  await expect
+    .poll(() => card.evaluate((node) => Number(node.style.getPropertyValue('--edge-strength'))))
+    .toBeGreaterThan(0);
+  await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await expect
     .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-strength')))
     .toBe('0.000');

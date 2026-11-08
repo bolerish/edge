@@ -33,23 +33,36 @@ export function createLightSession(
       (motion === 'system' && (reduced.matches || (!fine.matches && !pointer)));
     render(pointer, fixed);
   }
-  function move(event: PointerEvent) {
-    if (
-      (event.pointerType === 'touch' && event.pointerId !== touchId) ||
-      getMotion() === 'static' ||
-      (getMotion() === 'system' && reduced.matches)
-    )
-      return;
-    pointer = { x: event.clientX, y: event.clientY };
+  function updatePointer(x: number, y: number) {
+    if (getMotion() === 'static' || (getMotion() === 'system' && reduced.matches)) return;
+    pointer = { x, y };
     scheduleFrame();
   }
-  function down(event: PointerEvent) {
-    if (event.pointerType !== 'touch' || !event.isPrimary) return;
-    touchId = event.pointerId;
-    move(event);
+  function move(event: PointerEvent) {
+    if (event.pointerType !== 'touch') updatePointer(event.clientX, event.clientY);
   }
-  function end(event: PointerEvent) {
-    if (event.pointerType === 'touch' && event.pointerId === touchId) clear();
+  function handleTouchStart(event: TouchEvent) {
+    if (touchId !== null || event.touches.length !== 1) return;
+    const contact = event.changedTouches[0];
+    if (!contact) return;
+    touchId = contact.identifier;
+    updatePointer(contact.clientX, contact.clientY);
+  }
+  function handleTouchMove(event: TouchEvent) {
+    for (const contact of Array.from(event.touches)) {
+      if (contact.identifier === touchId) {
+        updatePointer(contact.clientX, contact.clientY);
+        return;
+      }
+    }
+  }
+  function handleTouchEnd(event: TouchEvent) {
+    for (const contact of Array.from(event.changedTouches)) {
+      if (contact.identifier === touchId) {
+        clear();
+        return;
+      }
+    }
   }
   function clear() {
     touchId = null;
@@ -67,14 +80,15 @@ export function createLightSession(
   }
   function scrolled(event: Event) {
     if (!live) return;
-    if (touchId !== null) clear();
     const container = event.target instanceof view!.Element ? (event.target as Element) : undefined;
     invalidate(container);
   }
   const observer = new view.ResizeObserver(invalidateGeometry);
-  target.addEventListener('pointerdown', down, { passive: true });
-  target.addEventListener('pointerup', end, { passive: true });
-  target.addEventListener('pointercancel', end, { passive: true });
+  // Native scrolling cancels pointer events while touch events continue.
+  target.addEventListener('touchstart', handleTouchStart, { passive: true });
+  target.addEventListener('touchmove', handleTouchMove, { passive: true });
+  target.addEventListener('touchend', handleTouchEnd, { passive: true });
+  target.addEventListener('touchcancel', handleTouchEnd, { passive: true });
   target.addEventListener('pointermove', move, { passive: true });
   target.addEventListener('pointerout', out, { passive: true });
   target.addEventListener('scroll', scrolled, {
@@ -105,9 +119,10 @@ export function createLightSession(
       live = false;
       if (frame !== null) view.cancelAnimationFrame(frame);
       observer.disconnect();
-      target.removeEventListener('pointerdown', down);
-      target.removeEventListener('pointerup', end);
-      target.removeEventListener('pointercancel', end);
+      target.removeEventListener('touchstart', handleTouchStart);
+      target.removeEventListener('touchmove', handleTouchMove);
+      target.removeEventListener('touchend', handleTouchEnd);
+      target.removeEventListener('touchcancel', handleTouchEnd);
       target.removeEventListener('pointermove', move);
       target.removeEventListener('pointerout', out);
       target.removeEventListener('scroll', scrolled, true);
