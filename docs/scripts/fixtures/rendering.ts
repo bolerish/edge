@@ -4,11 +4,11 @@ import { PassThrough } from 'node:stream';
 import React from 'react';
 import { renderToPipeableStream, renderToStaticMarkup } from 'react-dom/server';
 import { Scene } from './scene.js';
-import { createStreamingScene } from './rendering-scene.mjs';
+import { createStreamingScene } from './rendering-scene.ts';
 
-const errors = [];
+const errors: string[] = [];
 console.error = (...args) => errors.push(args.join(' '));
-const tree = (fixture) =>
+const tree = (fixture: ReturnType<typeof createStreamingScene>) =>
   React.createElement(
     'html',
     null,
@@ -21,19 +21,19 @@ const tree = (fixture) =>
       'body',
       null,
       React.createElement('div', { id: 'root' }, React.createElement(fixture.Scene)),
-      React.createElement('script', { type: 'module', src: '/rendering-client.mjs' }),
+      React.createElement('script', { type: 'module', src: '/rendering-client.ts' }),
     ),
   );
-const document = (html, script = 'rendering-client.mjs', mode = '') =>
+const document = (html: string, script = 'rendering-client.ts', mode = '') =>
   '<!doctype html><html><head><title>Rendering compatibility</title></head><body>' +
   `<div id="root" data-mode="${mode}">${html}</div>` +
   (script ? `<script type="module" src="/${script}"></script>` : '') +
   '</body></html>';
 
-async function nodeStream(allReady) {
+async function nodeStream(allReady: boolean) {
   const fixture = createStreamingScene();
-  const chunks = [];
-  await new Promise((resolve, reject) => {
+  const chunks: string[] = [];
+  await new Promise<void>((resolve, reject) => {
     const output = new PassThrough();
     let released = false;
     output.on('data', (chunk) => {
@@ -44,7 +44,7 @@ async function nodeStream(allReady) {
         fixture.resolve();
       }
     });
-    output.on('end', resolve);
+    output.on('end', () => resolve());
     output.on('error', reject);
     const stream = renderToPipeableStream(tree(fixture), {
       onShellReady() {
@@ -86,10 +86,10 @@ if (process.argv[2] !== 'web') {
   );
   writeFileSync('csr.html', document('', 'client.js', 'csr'));
 } else {
-  const { renderToReadableStream } = await import(process.argv[3]);
+  const { renderToReadableStream } = await import(process.argv[3] ?? 'react-dom/server.edge');
   const fixture = createStreamingScene();
   const stream = await renderToReadableStream(tree(fixture), {
-    onError: (error) => errors.push(String(error)),
+    onError: (error: unknown) => errors.push(String(error)),
   });
   const reader = stream.getReader();
   const first = await reader.read();

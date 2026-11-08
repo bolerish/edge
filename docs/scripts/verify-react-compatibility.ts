@@ -144,7 +144,7 @@ try {
     );
     await writeFile(resolve(consumer, 'scene.js'), scene);
     await writeFile(
-      resolve(consumer, 'ssr.mjs'),
+      resolve(consumer, 'ssr.ts'),
       `
       import assert from 'node:assert/strict';
       import { writeFileSync } from 'node:fs';
@@ -161,13 +161,13 @@ try {
     `,
     );
     for (const environment of ['development', 'production']) {
-      execFileSync(process.execPath, ['ssr.mjs'], {
+      execFileSync(process.execPath, ['ssr.ts'], {
         cwd: consumer,
         stdio: 'pipe',
         env: { ...process.env, NODE_ENV: environment },
       });
     }
-    for (const name of ['rendering.mjs', 'rendering-scene.mjs', 'rendering-client.mjs']) {
+    for (const name of ['rendering.ts', 'rendering-scene.ts', 'rendering-client.ts']) {
       await copyFile(new URL(`./fixtures/${name}`, import.meta.url), resolve(consumer, name));
     }
     for (const environment of ['development', 'production']) {
@@ -175,7 +175,7 @@ try {
         execFileSync(
           process.execPath,
           [
-            'rendering.mjs',
+            'rendering.ts',
             backend,
             version.react.startsWith('18.') ? 'react-dom/server.browser' : 'react-dom/server.edge',
           ],
