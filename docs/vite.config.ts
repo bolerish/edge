@@ -1,4 +1,6 @@
 import { defineConfig } from 'vite';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const stylesheets = [
@@ -12,16 +14,15 @@ export default defineConfig({
   plugins: [{
     name: 'edge-docs-development-html',
     async transformIndexHtml(html, context) {
+      const faviconVersion = createHash('sha256')
+        .update(readFileSync(new URL('./public/favicon.ico', import.meta.url))).digest('hex').slice(0, 12);
+      html = html.replace('href="/favicon.ico"', `href="/favicon.ico?v=${faviconVersion}"`);
       if (!context.server) return html;
-      const { render } = await context.server.ssrLoadModule('/src/entry-server.tsx') as
+      const { renderDocument } = await context.server.ssrLoadModule('/src/entry-server.tsx') as
         typeof import('./src/entry-server.js');
       const path = new URL(context.originalUrl ?? context.path, 'http://localhost').pathname;
-      const page = render(path);
       return {
-        html: html
-          .replace('<!--app-html-->', page.html)
-          .replace('id="root"', `id="root" data-path="${page.path}"`)
-          .replace(/<title>[^<]*<\/title>/, () => `<title>${page.title}</title>`),
+        html: renderDocument(html, path),
         tags: stylesheets.map(path => ({
           tag: 'link',
           attrs: { rel: 'stylesheet', href: `/@fs/${path}?direct` },
