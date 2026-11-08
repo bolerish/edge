@@ -401,7 +401,7 @@ pre:focus-visible,
   border-top: 1px solid var(--site-border);
   padding-top: 24px;
 }
-.reading-navigation a { display: grid; gap: 6px; text-decoration: none; }
+.reading-navigation a { display: grid; gap: 6px; text-decoration: none; color: var(--site-foreground); }
 .reading-navigation a[rel="next"] { text-align: right; }
 .reading-navigation small { color: var(--site-muted); }
 .doc-note { border-left: 3px solid var(--site-border); padding: 12px 20px; margin: 20px 0; background: var(--site-subtle); }
