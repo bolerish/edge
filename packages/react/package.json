@@ -26,7 +26,7 @@
     "test": "vitest run",
     "test:mutation": "stryker run",
     "test:unit": "vitest run --exclude \"src/**/*.integration.test.*\"",
-    "test:integration": "vitest run src/components/Surface.integration.test.tsx src/hooks/useSurface.integration.test.tsx"
+    "test:integration": "vitest run src/surface/Surface.integration.test.tsx src/surface/useSurface.integration.test.tsx"
   },
   "dependencies": {
     "@bolerish/edge-core": "workspace:^",

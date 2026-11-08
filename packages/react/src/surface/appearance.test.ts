@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { expect, it } from 'vitest';
 import { getSurfaceProps } from '@bolerish/edge-styles';
-import { bindSurfaceAppearance } from './surface-appearance.js';
+import { bindSurfaceAppearance } from './appearance.js';
 
 it('preserves existing classes, inline styles and priorities when released', () => {
   const host = document.createElement('div');

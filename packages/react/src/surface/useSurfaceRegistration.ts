@@ -1,7 +1,7 @@
 import { useBrowserLayoutEffect } from './useBrowserLayoutEffect.js';
 import { useCallback, useRef } from 'react';
 import type { Registration, EdgeStyle } from '@bolerish/edge-core';
-import { getLightController, type Light } from './useLight.js';
+import { getLightController, type Light } from '../light/useLight.js';
 
 /** Shares registration without assigning appearance ownership. */
 export function useSurfaceRegistration<T extends HTMLElement>(light: Light, edgeStyle: EdgeStyle) {

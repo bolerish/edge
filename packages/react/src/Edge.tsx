@@ -1,8 +1,8 @@
 import { forwardRef, useImperativeHandle, type ReactNode, type Ref } from 'react';
 import type { LightOptions } from '@bolerish/edge-core';
-import { useLight, type Light } from '../hooks/useLight.js';
-import { LightContext } from './light-context.js';
-import { Surface } from './Surface.js';
+import { useLight, type Light } from './light/useLight.js';
+import { LightContext } from './light/light-context.js';
+import { Surface } from './surface/Surface.js';
 
 export type Motion = NonNullable<LightOptions['motion']>;
 export interface EdgeProviderProps {

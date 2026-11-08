@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, it, vi } from 'vitest';
-import { Edge } from '../index.js';
+import { Edge } from './index.js';
 
 it('renders plain host markup without adding a scope wrapper or leaking options', () => {
   expect(typeof window).toBe('undefined');

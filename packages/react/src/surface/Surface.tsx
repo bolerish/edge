@@ -11,8 +11,8 @@ import {
   type RefCallback,
 } from 'react';
 import { getSurfaceProps, type SurfaceOptions } from '@bolerish/edge-styles';
-import { useSurfaceRegistration } from '../hooks/useSurfaceRegistration.js';
-import { LightContext } from './light-context.js';
+import { useSurfaceRegistration } from './useSurfaceRegistration.js';
+import { LightContext } from '../light/light-context.js';
 
 export type SurfaceTag = Extract<keyof HTMLElementTagNameMap, ElementType>;
 export type SurfaceProps<T extends SurfaceTag = 'div'> = SurfaceOptions &

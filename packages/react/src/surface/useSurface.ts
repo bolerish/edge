@@ -1,10 +1,10 @@
 import { useBrowserLayoutEffect } from './useBrowserLayoutEffect.js';
 import { useCallback, useContext, useRef, type RefCallback } from 'react';
 import { getSurfaceProps, type SurfaceOptions } from '@bolerish/edge-styles';
-import { isLight, getLightController, type Light } from './useLight.js';
+import { isLight, getLightController, type Light } from '../light/useLight.js';
 import { useSurfaceRegistration } from './useSurfaceRegistration.js';
-import { LightContext } from '../components/light-context.js';
-import { bindSurfaceAppearance } from './surface-appearance.js';
+import { LightContext } from '../light/light-context.js';
+import { bindSurfaceAppearance } from './appearance.js';
 
 export type { SurfaceOptions } from '@bolerish/edge-styles';
 
