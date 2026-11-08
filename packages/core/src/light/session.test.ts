@@ -17,15 +17,23 @@ beforeEach(() => {
   vi.stubGlobal('cancelAnimationFrame', (id: number) => frames.delete(id));
   vi.stubGlobal('matchMedia', (media: string) => {
     const query = Object.assign(new EventTarget(), {
-      media, matches: media.includes('pointer: fine'),
-      onchange: null, addListener() {}, removeListener() {},
+      media,
+      matches: media.includes('pointer: fine'),
+      onchange: null,
+      addListener() {},
+      removeListener() {},
     });
     queries.set(media, query);
     return query;
   });
-  vi.stubGlobal('ResizeObserver', class {
-    observe() {} unobserve() {} disconnect() {}
-  });
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    },
+  );
 });
 afterEach(() => {
   for (const stop of cleanup) stop();
@@ -45,9 +53,13 @@ function flush() {
   for (const callback of batch) callback(0);
 }
 function move() {
-  document.dispatchEvent(Object.assign(new Event('pointermove'), {
-    clientX: 20, clientY: 30, pointerType: 'mouse',
-  }));
+  document.dispatchEvent(
+    Object.assign(new Event('pointermove'), {
+      clientX: 20,
+      clientY: 30,
+      pointerType: 'mouse',
+    }),
+  );
 }
 it('keeps static and reduced-motion sessions idle on pointer input', () => {
   const fixed = scene('static');
@@ -98,24 +110,78 @@ it('does not render a canceled frame even if its callback arrives late', () => {
 });
 it('releases every document, window and media listener with its original capture mode', () => {
   const targets = [document, window];
-  const subscriptions = targets.map(target => ({
+  const subscriptions = targets.map((target) => ({
     add: vi.spyOn(target, 'addEventListener'),
     remove: vi.spyOn(target, 'removeEventListener'),
   }));
   const { session } = scene();
-  const mediaSubscriptions = [...queries.values()].map(target => ({
-    target, remove: vi.spyOn(target, 'removeEventListener'),
+  const mediaSubscriptions = [...queries.values()].map((target) => ({
+    target,
+    remove: vi.spyOn(target, 'removeEventListener'),
   }));
   session.stop();
   const capture = (options: boolean | AddEventListenerOptions | undefined) =>
-    typeof options === 'boolean' ? options : options?.capture ?? false;
+    typeof options === 'boolean' ? options : (options?.capture ?? false);
   for (const { add, remove } of subscriptions) {
     for (const [type, listener, options] of add.mock.calls) {
-      expect(remove.mock.calls.some(([removedType, removedListener, removedOptions]) =>
-        removedType === type && removedListener === listener && capture(removedOptions) === capture(options),
-      )).toBe(true);
+      expect(
+        remove.mock.calls.some(
+          ([removedType, removedListener, removedOptions]) =>
+            removedType === type &&
+            removedListener === listener &&
+            capture(removedOptions) === capture(options),
+        ),
+      ).toBe(true);
     }
   }
   for (const { remove } of mediaSubscriptions)
     expect(remove).toHaveBeenCalledWith('change', expect.any(Function));
+});
+
+function touch(type: string, pointerId = 1, isPrimary = true) {
+  document.dispatchEvent(
+    Object.assign(new Event(type), {
+      clientX: 40,
+      clientY: 50,
+      pointerType: 'touch',
+      pointerId,
+      isPrimary,
+    }),
+  );
+}
+it.each(['pointerup', 'pointercancel', 'scroll'])(
+  'tracks a touch until %s and restores fixed lighting',
+  (ending) => {
+    const { render } = scene();
+    queries.get('(hover: hover) and (pointer: fine)')!.matches = false;
+    touch('pointermove');
+    expect(frames.size).toBe(0);
+    touch('pointerdown');
+    flush();
+    expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
+    touch('pointermove', 2, false);
+    expect(frames.size).toBe(0);
+    touch('pointerup', 2, false);
+    expect(frames.size).toBe(0);
+    touch('pointermove');
+    flush();
+    expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
+    touch(ending);
+    flush();
+    expect(render).toHaveBeenLastCalledWith(null, true);
+    touch('pointermove');
+    expect(frames.size).toBe(0);
+  },
+);
+it('ignores secondary touches and honors static and reduced motion on touch down', () => {
+  const { session } = scene('static');
+  touch('pointerdown');
+  expect(frames.size).toBe(0);
+  session.stop();
+  scene();
+  touch('pointerdown', 2, false);
+  expect(frames.size).toBe(0);
+  queries.get('(prefers-reduced-motion: reduce)')!.matches = true;
+  touch('pointerdown');
+  expect(frames.size).toBe(0);
 });

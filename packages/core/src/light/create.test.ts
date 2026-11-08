@@ -216,7 +216,7 @@ it('cancels frames and ignores late observer callbacks after stopping', () => {
   entry.destroy();
   expect(node.style.getPropertyValue('--edge-strength')).toBe('');
 });
-it('clears pointer output on window blur and never handles touch as a light', () => {
+it('clears pointer output on window blur and ignores touch movement without a press', () => {
   const light = createLight();
   const { node } = element();
   light.register(node, 'raised');
@@ -227,6 +227,26 @@ it('clears pointer output on window blur and never handles touch as a light', ()
   point();
   flush();
   window.dispatchEvent(new Event('blur'));
+  flush();
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
+  stop();
+});
+it('renders the same light for mouse and touch coordinates, then clears on release', () => {
+  const light = createLight();
+  const { node } = element();
+  light.register(node, 'raised');
+  const stop = light.mount(document);
+  point();
+  flush();
+  const mouse = node.style.cssText;
+  document.dispatchEvent(Object.assign(new Event('pointerdown'), {
+    clientX: 250, clientY: 150, pointerType: 'touch', pointerId: 1, isPrimary: true,
+  }));
+  flush();
+  expect(node.style.cssText).toBe(mouse);
+  document.dispatchEvent(Object.assign(new Event('pointerup'), {
+    pointerType: 'touch', pointerId: 1,
+  }));
   flush();
   expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
   stop();
