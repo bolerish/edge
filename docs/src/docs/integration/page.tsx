@@ -1,3 +1,4 @@
+import { inlineMessage } from '../_shared/inline-message.js';
 import { localePath } from '../../shared/locale.js';
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
@@ -27,13 +28,15 @@ export const integration: DocPage = {
         return (
           <>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.edge_uses()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'::after'}</code>
-              {m.by_default_set()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{"pseudoElement: 'before'"}</code>
-              {m.to_keep_an_existing()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'::after'}</code>
-              {m.if_both_pseudo_elements_are_occupied_decorate()}
+              {inlineMessage(m.pseudo_element_options(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'::after'}</code>,
+                part1: (
+                  <code {...stylex.props(contentStyles.inlineCode)}>
+                    {"pseudoElement: 'before'"}
+                  </code>
+                ),
+                part2: <code {...stylex.props(contentStyles.inlineCode)}>{'::after'}</code>,
+              })}
             </P>
             <ExamplePreview title={decorationSlotExample.title} code={decorationSlotExample.code}>
               <decorationSlotExample.Component />
@@ -50,12 +53,11 @@ export const integration: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {m.native_inputs_do_not_reliably_display_pseudo()}{' '}
-            <code {...stylex.props(contentStyles.inlineCode)}>{'label'}</code>
-            {m.or()} <code {...stylex.props(contentStyles.inlineCode)}>{'div'}</code>
-            {m.with_a_matching_radius_instead_keep_the()}{' '}
-            <code {...stylex.props(contentStyles.inlineCode)}>{'recessed'}</code>
-            {m.for_an_inset_appearance()}
+            {inlineMessage(m.native_input_wrapper(), {
+              part0: <code {...stylex.props(contentStyles.inlineCode)}>{'label'}</code>,
+              part1: <code {...stylex.props(contentStyles.inlineCode)}>{'div'}</code>,
+              part2: <code {...stylex.props(contentStyles.inlineCode)}>{'recessed'}</code>,
+            })}
           </P>
         );
       },
@@ -69,14 +71,16 @@ export const integration: DocPage = {
         return (
           <>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.size_changes_nested_scrolling_viewport_resizing_font()}{' '}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'light.refresh()'}</code>
-              {m.once_the_new_layout_is_applied_it()}
+              {inlineMessage(m.manual_layout_refresh(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'light.refresh()'}</code>,
+              })}
             </P>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.see()}
-              <Link href={localePath('/docs/react/api/#refresh')}>{'light.refresh()'}</Link>
-              {m.for_the_react_call()}
+              {inlineMessage(m.react_refresh_link(), {
+                part0: (
+                  <Link href={localePath('/docs/react/api/#refresh')}>{'light.refresh()'}</Link>
+                ),
+              })}
             </P>
           </>
         );
@@ -90,8 +94,9 @@ export const integration: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {m.edge_approximates_axis_aligned_rectangles_rotation_perspective()}{' '}
-            <Link href={localePath('/docs/accessibility/')}>{m.accessibility()}</Link>.
+            {inlineMessage(m.geometry_limits_link(), {
+              part0: <Link href={localePath('/docs/accessibility/')}>{m.accessibility()}</Link>,
+            })}
           </P>
         );
       },

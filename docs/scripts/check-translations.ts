@@ -22,6 +22,8 @@ const settings: { locales: string[]; baseLocale: string } = JSON.parse(
 const base = await catalog(settings.baseLocale);
 const placeholders = (text: string) =>
   [...text.matchAll(/\{(\w+)\}/g)].map((match) => match[1]).sort();
+const inlineParts = (text: string) =>
+  [...text.matchAll(/<part\d+\/>/g)].map((match) => match[0]).sort();
 for (const locale of settings.locales) {
   const messages = await catalog(locale);
   assert.deepEqual(
@@ -32,6 +34,11 @@ for (const locale of settings.locales) {
   for (const [key, source] of Object.entries(base)) {
     const translation = messages[key];
     assert(translation !== undefined);
+    assert.deepEqual(
+      inlineParts(translation),
+      inlineParts(source),
+      `Inline message parts differ: ${locale}.${key}`,
+    );
     assert.deepEqual(
       placeholders(translation),
       placeholders(source),

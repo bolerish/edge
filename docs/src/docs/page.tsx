@@ -1,3 +1,4 @@
+import { inlineMessage } from './_shared/inline-message.js';
 import { localePath } from '../shared/locale.js';
 import { m } from '../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
@@ -40,15 +41,14 @@ export const introduction: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            <span id="installation" />
-            <span id="stylesheet" />
-            {m.start_with()}
-            <Link href={localePath('/docs/installation/')}>{m.installation()}</Link>
-            {m.learn_the_concepts_in()} <Link href={localePath('/docs/usage/')}>{m.usage()}</Link>
-            {m.then_follow()}{' '}
-            <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>
-            {m.find_settings_in_the()}{' '}
-            <Link href={localePath('/docs/react/api/')}>{m.api_reference()}</Link>.
+            {inlineMessage(m.start_reading(), {
+              part0: <span id="installation" />,
+              part1: <span id="stylesheet" />,
+              part2: <Link href={localePath('/docs/installation/')}>{m.installation()}</Link>,
+              part3: <Link href={localePath('/docs/usage/')}>{m.usage()}</Link>,
+              part4: <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>,
+              part5: <Link href={localePath('/docs/react/api/')}>{m.api_reference()}</Link>,
+            })}
           </P>
         );
       },

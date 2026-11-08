@@ -1,3 +1,4 @@
+import { inlineMessage } from '../_shared/inline-message.js';
 import { localePath } from '../../shared/locale.js';
 import { m } from '../../paraglide/messages.js';
 import {
@@ -106,11 +107,13 @@ export const styles: DocPage = {
               </Table>
             </TableContainer>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.for_additional_settings_see_the()}{' '}
-              <Link href={localePath('/docs/react/api/#lighting-surface')}>
-                {m.api_reference()}
-              </Link>
-              .
+              {inlineMessage(m.additional_options_link(), {
+                part0: (
+                  <Link href={localePath('/docs/react/api/#lighting-surface')}>
+                    {m.api_reference()}
+                  </Link>
+                ),
+              })}
             </P>
           </>
         );
@@ -124,9 +127,11 @@ export const styles: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {m.use()}
-            <code {...stylex.props(contentStyles.inlineCode)}>{"edgeStyle: 'raised'"}</code>
-            {m.for_an_outward_facing_edge_highlight()}
+            {inlineMessage(m.raised_style_usage(), {
+              part0: (
+                <code {...stylex.props(contentStyles.inlineCode)}>{"edgeStyle: 'raised'"}</code>
+              ),
+            })}
           </P>
         );
       },
@@ -139,9 +144,11 @@ export const styles: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {m.use()}
-            <code {...stylex.props(contentStyles.inlineCode)}>{"edgeStyle: 'recessed'"}</code>
-            {m.for_inset_elements_such_as_input_wrappers()}
+            {inlineMessage(m.recessed_style_usage(), {
+              part0: (
+                <code {...stylex.props(contentStyles.inlineCode)}>{"edgeStyle: 'recessed'"}</code>
+              ),
+            })}
           </P>
         );
       },
@@ -154,9 +161,11 @@ export const styles: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {m.use()}
-            <code {...stylex.props(contentStyles.inlineCode)}>{"edgeStyle: 'matte'"}</code>
-            {m.for_a_softer_quieter_border()}
+            {inlineMessage(m.matte_style_usage(), {
+              part0: (
+                <code {...stylex.props(contentStyles.inlineCode)}>{"edgeStyle: 'matte'"}</code>
+              ),
+            })}
           </P>
         );
       },
@@ -171,24 +180,29 @@ export const styles: DocPage = {
           <>
             <span id="apply-the-edge-theme" />
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.each_surface_uses_its_own_text_color()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'color'}</code>
-              {m.to_override_the_highlight_or()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'intensity'}</code>
-              {m.to_multiply_the_shared_light_strength_use()}{' '}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'shadowColor="transparent"'}</code>
-              {m.to_remove_the_opposite_edge_shadow()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{' borderWidth'}</code>
-              {m.changes_the_decoration_thickness_in_pixels_not()}{' '}
-              <Link href={localePath('/docs/react/api/#lighting-surface')}>{'Edge.Surface'}</Link>
-              {m.no_css_variable_declarations_are_needed()}
+              {inlineMessage(m.customize_surface_options(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'color'}</code>,
+                part1: <code {...stylex.props(contentStyles.inlineCode)}>{'intensity'}</code>,
+                part2: (
+                  <code {...stylex.props(contentStyles.inlineCode)}>
+                    {'shadowColor="transparent"'}
+                  </code>
+                ),
+                part3: <code {...stylex.props(contentStyles.inlineCode)}>{'borderWidth'}</code>,
+                part4: (
+                  <Link href={localePath('/docs/react/api/#lighting-surface')}>
+                    {'Edge.Surface'}
+                  </Link>
+                ),
+              })}
             </P>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {m.the_effect_approximates_a_direction_on_axis()}
             </P>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.for_existing_decorations_and_input_wrappers_see()}{' '}
-              <Link href={localePath('/docs/integration/')}>{m.integration()}</Link>.
+              {inlineMessage(m.existing_decoration_link(), {
+                part0: <Link href={localePath('/docs/integration/')}>{m.integration()}</Link>,
+              })}
             </P>
           </>
         );

@@ -1,3 +1,4 @@
+import { inlineMessage } from '../_shared/inline-message.js';
 import { localePath } from '../../shared/locale.js';
 import { m } from '../../paraglide/messages.js';
 import {
@@ -109,8 +110,11 @@ export const motion: DocPage = {
               </Table>
             </TableContainer>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.for_additional_settings_see_the()}{' '}
-              <Link href={localePath('/docs/react/api/#lighting')}>{m.api_reference()}</Link>.
+              {inlineMessage(m.motion_options_link(), {
+                part0: (
+                  <Link href={localePath('/docs/react/api/#lighting')}>{m.api_reference()}</Link>
+                ),
+              })}
             </P>
           </>
         );
@@ -150,11 +154,10 @@ export const motion: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {m.set()}
-            <code {...stylex.props(contentStyles.inlineCode)}>{'staticDirection'}</code>
-            {m.to_any_finite_angle_in_degrees_or()}
-            <code {...stylex.props(contentStyles.inlineCode)}>{'"random"'}</code>
-            {m.the_demo_offers_0_90_180_270()}
+            {inlineMessage(m.static_direction_options(), {
+              part0: <code {...stylex.props(contentStyles.inlineCode)}>{'staticDirection'}</code>,
+              part1: <code {...stylex.props(contentStyles.inlineCode)}>{'"random"'}</code>,
+            })}
           </P>
         );
       },
@@ -167,9 +170,9 @@ export const motion: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {m.keep_focus_selection_and_validation_visible_independently()}{' '}
-            <Link href={localePath('/docs/accessibility/')}>{m.accessibility()}</Link>
-            {m.for_input_and_forced_colors_behavior()}
+            {inlineMessage(m.motion_accessibility_link(), {
+              part0: <Link href={localePath('/docs/accessibility/')}>{m.accessibility()}</Link>,
+            })}
           </P>
         );
       },

@@ -31,9 +31,7 @@ export function DecorationSlotExample() {
           type="button"
           onClick={() => setPseudoElement(pseudoElement === 'before' ? 'after' : 'before')}
         >
-          {m.use()}
-          {pseudoElement === 'before' ? 'after' : 'before'}
-          {m.decoration()}
+          {m.switch_pseudo_element({ element: pseudoElement === 'before' ? 'after' : 'before' })}
         </Button>
         <Edge.Surface
           data-testid="decoration-slot"
@@ -42,8 +40,7 @@ export function DecorationSlotExample() {
           borderWidth={2}
           {...stylex.props(styles.surface, styles.asymmetric)}
         >
-          {m.decoration_uses()}
-          {pseudoElement}
+          {m.current_pseudo_element({ element: pseudoElement })}
         </Edge.Surface>
       </div>
     </Edge.Provider>
@@ -56,6 +53,7 @@ export const decorationSlotExample = {
   },
   Component: DecorationSlotExample,
   code: `import { Edge } from '@bolerish/edge';
+import '@bolerish/edge/style.css';
 
 <Edge.Provider>
   <Edge.Surface as="article" pseudoElement="before" className="existing-after">

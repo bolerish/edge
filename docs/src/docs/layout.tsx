@@ -1,3 +1,4 @@
+import { inlineMessage } from './_shared/inline-message.js';
 import { localePath, sectionLabel } from '../shared/locale.js';
 import { m } from '../paraglide/messages.js';
 import {
@@ -168,10 +169,10 @@ export function DocumentLayout({
                 {m.page_not_found()}
               </Heading>
               <Paragraph>
-                {m.this_page_is_not_available()}
-                <Link href={localePath('/docs/')}>{m.return_to_getting_started()}</Link>
-                {m.or_explore_the()}
-                <Link href={localePath('/')}>{m.dashboard_example()}</Link>.
+                {inlineMessage(m.not_found_navigation(), {
+                  part0: <Link href={localePath('/docs/')}>{m.getting_started()}</Link>,
+                  part1: <Link href={localePath('/')}>{m.dashboard_example()}</Link>,
+                })}
               </Paragraph>
             </article>
           )}

@@ -1,3 +1,4 @@
+import { inlineMessage } from '../_shared/inline-message.js';
 import { localePath } from '../../shared/locale.js';
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
@@ -26,11 +27,10 @@ export const aiIntegration: DocPage = {
         return (
           <>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.start_with()}
-              <Link href={localePath('/llms.txt')}>{'llms.txt'}</Link>
-              {m.for_a_short_index_linking_to_markdown()}{' '}
-              <Link href={localePath('/llms-full.txt')}>{'llms-full.txt'}</Link>
-              {m.when_your_assistant_needs_all_the_documentation()}
+              {inlineMessage(m.assistant_document_links(), {
+                part0: <Link href={localePath('/llms.txt')}>{'llms.txt'}</Link>,
+                part1: <Link href={localePath('/llms-full.txt')}>{'llms-full.txt'}</Link>,
+              })}
             </P>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {m.these_files_are_generated_from_the_same()}

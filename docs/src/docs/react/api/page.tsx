@@ -1,3 +1,4 @@
+import { inlineMessage } from '../../_shared/inline-message.js';
 import { localePath } from '../../../shared/locale.js';
 import { m } from '../../../paraglide/messages.js';
 import { Banner } from '@bolerish/ui/banner';
@@ -55,11 +56,10 @@ export const api: DocPage = {
             />
             {apiTable('Edge.Provider props', providerPropRows)}
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.pointer_input_comes_from_the_document_the()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{' staticDirection'}</code>
-              {m.applies_whenever_fixed_lighting_is_active_including()}{' '}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'motion="system"'}</code>
-              {m.respects_reduced_motion()}
+              {inlineMessage(m.provider_input(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'staticDirection'}</code>,
+                part1: <code {...stylex.props(contentStyles.inlineCode)}>{'motion="system"'}</code>,
+              })}
             </P>
           </>
         );
@@ -74,8 +74,9 @@ export const api: DocPage = {
         return (
           <>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.renders_one_html_element_connected_to_the()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'as'}</code>.
+              {inlineMessage(m.surface_element(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'as'}</code>,
+              })}
             </P>
             <CodeBlock
               label={m.edge_surface_signature()}
@@ -91,17 +92,17 @@ export const api: DocPage = {
               xstyle={contentStyles.docNote}
             >
               <P xstyle={contentStyles.noteParagraph}>
-                {m.place_every()}
-                <code {...stylex.props(contentStyles.inlineCode)}>{'Edge.Surface'}</code>{' '}
-                {m.inside_a()}
-                <code {...stylex.props(contentStyles.inlineCode)}>{' Edge.Provider'}</code>
-                {m.owner_rendering_it_outside_one_throws_an()}
-                <Link href={localePath('/docs/integration/')}>{m.integration()}</Link>.
+                {inlineMessage(m.surface_provider_requirement(), {
+                  part0: <code {...stylex.props(contentStyles.inlineCode)}>{'Edge.Surface'}</code>,
+                  part1: <code {...stylex.props(contentStyles.inlineCode)}>{'Edge.Provider'}</code>,
+                  part2: <Link href={localePath('/docs/integration/')}>{m.integration()}</Link>,
+                })}
               </P>
             </Banner>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.decoration_aligns_with_the_outside_of_the()}
-              <Link href="#use-surface">{'useSurface'}</Link>.
+              {inlineMessage(m.surface_existing_element(), {
+                part0: <Link href="#use-surface">{'useSurface'}</Link>,
+              })}
             </P>
           </>
         );
@@ -116,9 +117,10 @@ export const api: DocPage = {
         return (
           <>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.returns_a_callback_ref_that_connects_an()}{' '}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'className'}</code>
-              {m.and()} <code {...stylex.props(contentStyles.inlineCode)}>{'style'}</code>.
+              {inlineMessage(m.use_surface_ref(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'className'}</code>,
+                part1: <code {...stylex.props(contentStyles.inlineCode)}>{'style'}</code>,
+              })}
             </P>
             <CodeBlock
               label={m.usesurface_signature()}
@@ -136,18 +138,19 @@ function ExistingCard() {
 }`}
             />
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.in_react_18_an_existing_function_component()}{' '}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'forwardRef'}</code>
-              {m.to_pass_the_ref_to_its_html()}
+              {inlineMessage(m.react_ref_versions(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'forwardRef'}</code>,
+              })}
             </P>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.without_an_explicit_light_this_hook_requires()}
-              <code {...stylex.props(contentStyles.inlineCode)}>
-                {'useSurface(light, options)'}
-              </code>{' '}
-              {m.with_a_handle_returned_by()}{' '}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'useLight'}</code>
-              {m.the_explicit_light_takes_precedence_over_the()}
+              {inlineMessage(m.explicit_light_override(), {
+                part0: (
+                  <code {...stylex.props(contentStyles.inlineCode)}>
+                    {'useSurface(light, options)'}
+                  </code>
+                ),
+                part1: <code {...stylex.props(contentStyles.inlineCode)}>{'useLight'}</code>,
+              })}
             </P>
             {apiTable('useSurface options', surfaceOptionRows)}
             <Banner
@@ -159,9 +162,9 @@ function ExistingCard() {
               <P xstyle={contentStyles.noteParagraph}>{m.an_element_can_belong_to_only_one()}</P>
             </Banner>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.options_update_without_replacing_the_element_hook()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'Edge.Surface'}</code>
-              {m.to_include_appearance_classes_and_variables_in()}
+              {inlineMessage(m.hook_server_appearance(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'Edge.Surface'}</code>,
+              })}
             </P>
           </>
         );
@@ -176,15 +179,15 @@ function ExistingCard() {
         return (
           <>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.returns_a_stable()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'Light'}</code>
-              {m.handle_for_explicit_ownership_without_a_provider()}{' '}
-              <code {...stylex.props(contentStyles.inlineCode)}>
-                {'useSurface(light, options)'}
-              </code>
-              {m.option_changes_update_the_existing_light_use()}{' '}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'Edge.Provider'}</code>
-              {m.for_ordinary_component_trees()}
+              {inlineMessage(m.use_light_handle(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'Light'}</code>,
+                part1: (
+                  <code {...stylex.props(contentStyles.inlineCode)}>
+                    {'useSurface(light, options)'}
+                  </code>
+                ),
+                part2: <code {...stylex.props(contentStyles.inlineCode)}>{'Edge.Provider'}</code>,
+              })}
             </P>
             <CodeBlock
               label={m.uselight_signature()}
@@ -192,10 +195,10 @@ function ExistingCard() {
             />
             {apiTable('useLight options', lightOptionRows)}
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              <code {...stylex.props(contentStyles.inlineCode)}>{'radius'}</code>
-              {m.affects_dynamic_lighting_only_fixed_lighting_uses()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{' staticDirection'}</code>
-              {m.without_distance_attenuation()}
+              {inlineMessage(m.light_radius_modes(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'radius'}</code>,
+                part1: <code {...stylex.props(contentStyles.inlineCode)}>{'staticDirection'}</code>,
+              })}
             </P>
           </>
         );
@@ -219,11 +222,13 @@ function ExistingCard() {
 }`}
             />
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.size_changes_and_scrolling_are_handled_automatically()}{' '}
-              <Link href={localePath('/docs/integration/#refresh-after-layout-changes')}>
-                {m.layout_updates()}
-              </Link>
-              {m.for_details()}
+              {inlineMessage(m.automatic_layout_updates(), {
+                part0: (
+                  <Link href={localePath('/docs/integration/#refresh-after-layout-changes')}>
+                    {m.layout_updates()}
+                  </Link>
+                ),
+              })}
             </P>
           </>
         );
@@ -241,10 +246,10 @@ function ExistingCard() {
               {m.server_rendering_does_not_access_the_dom()}
             </P>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              <code {...stylex.props(contentStyles.inlineCode)}>{'Edge.Surface'}</code>
-              {m.includes_appearance_classes_and_variables_in_server()}
-              <code {...stylex.props(contentStyles.inlineCode)}>{' useSurface'}</code>
-              {m.leaves_your_markup_unchanged_until_hydration_geometry()}
+              {inlineMessage(m.component_hook_rendering(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'Edge.Surface'}</code>,
+                part1: <code {...stylex.props(contentStyles.inlineCode)}>{'useSurface'}</code>,
+              })}
             </P>
             <TableContainer
               className={`table-scroll ${stylex.props(contentStyles.tableScroll).className}`}
@@ -314,8 +319,9 @@ function ExistingCard() {
               </Table>
             </TableContainer>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.in_server_component_frameworks_use_edge_inside()}{' '}
-              <code {...stylex.props(contentStyles.inlineCode)}>{'"use client"'}</code>.
+              {inlineMessage(m.server_component_boundary(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'"use client"'}</code>,
+              })}
             </P>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {m.react_18_and_19_are_supported_web()}

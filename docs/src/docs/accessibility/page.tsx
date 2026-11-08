@@ -1,3 +1,4 @@
+import { inlineMessage } from '../_shared/inline-message.js';
 import { localePath } from '../../shared/locale.js';
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
@@ -24,12 +25,11 @@ export const accessibility: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {m.use()}
-            <code {...stylex.props(contentStyles.inlineCode)}>{'system'}</code>
-            {m.to_respect_reduced_motion_touch_never_drives()}{' '}
-            <code {...stylex.props(contentStyles.inlineCode)}>{'dynamic'}</code>
-            {m.only_as_an_explicit_choice_because_it()}
-            <Link href={localePath('/docs/motion/')}>{m.motion()}</Link> {m.for_details_156()}
+            {inlineMessage(m.accessible_motion_choice(), {
+              part0: <code {...stylex.props(contentStyles.inlineCode)}>{'system'}</code>,
+              part1: <code {...stylex.props(contentStyles.inlineCode)}>{'dynamic'}</code>,
+              part2: <Link href={localePath('/docs/motion/')}>{m.motion()}</Link>,
+            })}
           </P>
         );
       },

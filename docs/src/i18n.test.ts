@@ -121,3 +121,22 @@ test('translated navigation and language menu fit a narrow viewport', async ({ p
     await page.keyboard.press('Escape');
   }
 });
+
+test('translated sentences keep native inline code in the language’s word order', async ({
+  page,
+}) => {
+  const openings: readonly (readonly [string, string])[] = [
+    ['/docs/react/usage/', 'Use as to choose'],
+    ['/ko/docs/react/usage/', 'as로 렌더링할 HTML 태그를 선택하세요.'],
+    ['/ja/docs/react/usage/', 'as でレンダリングする HTML タグを選びます。'],
+    ['/es/docs/react/usage/', 'Elige la etiqueta HTML con as.'],
+    ['/zh/docs/react/usage/', '通过 as 选择要渲染的 HTML 标签。'],
+  ];
+  for (const [path, opening] of openings) {
+    await page.goto(path);
+    const paragraph = page.locator('#keep-your-styles p').first();
+    await expect(paragraph).toContainText(opening);
+    await expect(paragraph.locator('code')).toHaveText(['as', 'className', 'style']);
+    await expect(page.locator('.document')).not.toContainText(/<part\d+\/>/);
+  }
+});

@@ -1,3 +1,4 @@
+import { inlineMessage } from '../_shared/inline-message.js';
 import { localePath } from '../../shared/locale.js';
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
@@ -50,26 +51,30 @@ export const usage: DocPage = {
               {m.edge_keeps_your_background_text_spacing_and()}
             </P>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.choose_the_surface_response_in()}
-              <Link href={localePath('/docs/styles/')}>{m.style()}</Link>
-              {m.and_how_the_light_moves_in()}
-              <Link href={localePath('/docs/motion/')}>{m.motion()}</Link>.
+              {inlineMessage(m.style_and_motion_links(), {
+                part0: <Link href={localePath('/docs/styles/')}>{m.style()}</Link>,
+                part1: <Link href={localePath('/docs/motion/')}>{m.motion()}</Link>,
+              })}
             </P>
             <span id="wrap-inputs-you-own" />
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.for_input_wrappers_and_decoration_conflicts_see()}{' '}
-              <Link href={localePath('/docs/integration/#wrap-inputs-you-own')}>
-                {m.integration()}
-              </Link>
-              .
+              {inlineMessage(m.input_integration_link(), {
+                part0: (
+                  <Link href={localePath('/docs/integration/#wrap-inputs-you-own')}>
+                    {m.integration()}
+                  </Link>
+                ),
+              })}
             </P>
             <span id="refresh-after-layout-changes" />
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.for_application_controlled_position_changes_see()}{' '}
-              <Link href={localePath('/docs/integration/#refresh-after-layout-changes')}>
-                {m.layout_changes()}
-              </Link>
-              .
+              {inlineMessage(m.application_layout_link(), {
+                part0: (
+                  <Link href={localePath('/docs/integration/#refresh-after-layout-changes')}>
+                    {m.layout_changes()}
+                  </Link>
+                ),
+              })}
             </P>
           </>
         );
@@ -84,9 +89,9 @@ export const usage: DocPage = {
         return (
           <>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.follow()}
-              <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>
-              {m.to_connect_new_or_existing_components_react()}
+              {inlineMessage(m.react_usage_link(), {
+                part0: <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>,
+              })}
             </P>
           </>
         );

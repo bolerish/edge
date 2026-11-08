@@ -34,6 +34,8 @@ When changing a public API, update its types, documentation and examples togethe
 
 The site supports English, Korean, Spanish, Simplified Chinese and Japanese. English keeps the existing URLs; other languages use `/ko`, `/es`, `/zh` and `/ja` prefixes. Keep section IDs and code examples unchanged across languages. Use the existing language menu, UI components and Paraglide messages rather than adding a separate translation runtime.
 
+Translate complete sentences, including the text around code and links. Use `inlineMessage` with `<part0/>` slots when inline elements need a different position in another language; preserve every slot in each catalog. Do not assemble translated prose from sentence fragments. Keep API identifiers and option values intact. Use English labels or established transliterations when they read more naturally than literal translations; explain behavior in the surrounding prose.
+
 Edit all five catalogs in `docs/messages/` together. `pnpm --filter @bolerish/edge-docs i18n:compile` checks keys and interpolation inputs and regenerates the ignored Paraglide output. Authored scripts remain TypeScript; generated JavaScript and declarations belong to Paraglide. Builds and development compile messages through the Vite plugin. The SSR entry owns request-local locale storage; metadata, HTML, search and Markdown use the same locale.
 
 ## Checks

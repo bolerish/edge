@@ -1,3 +1,4 @@
+import { inlineMessage } from '../_shared/inline-message.js';
 import { localePath } from '../../shared/locale.js';
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
@@ -66,10 +67,10 @@ export const installation: DocPage = {
       get content() {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {m.choose_an_area_and_its_surfaces_in()}
-            <Link href={localePath('/docs/usage/')}>{m.usage()}</Link>
-            {m.then_connect_them_with()}
-            <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>.
+            {inlineMessage(m.installation_next_steps(), {
+              part0: <Link href={localePath('/docs/usage/')}>{m.usage()}</Link>,
+              part1: <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>,
+            })}
           </P>
         );
       },
