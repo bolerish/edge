@@ -5,7 +5,7 @@
 Use Node from `.node-version` and pnpm from `package.json`.
 
 ```sh
-pnpm install --frozen-lockfile
+pnpm install
 pnpm dev
 ```
 

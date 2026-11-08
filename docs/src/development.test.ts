@@ -35,6 +35,16 @@ test('development serves styled content before JavaScript and hydrates it on ref
       await staticPage.goto(origin + path);
       await expect(staticPage.getByRole('heading', { level: 1 })).toBeVisible();
       await expect(staticPage.locator('.site-header')).toHaveCSS('display', 'flex');
+      if (path === '/docs/') {
+        await expect(staticPage.locator('.sidebar nav')).toHaveCSS('display', 'block');
+        await expect(staticPage.locator('.sidebar ul')).toHaveCSS('display', 'block');
+        await expect(staticPage.locator('.sidebar a').first()).toHaveCSS('display', 'flex');
+        expect(
+          await staticPage
+            .locator('.sidebar')
+            .evaluate((node) => node.scrollWidth <= node.clientWidth),
+        ).toBe(true);
+      }
       if (path === '/') {
         await expect(staticPage.getByTestId('hero-surface')).toHaveCSS('position', 'absolute');
         await expect(staticPage.locator('.code-block').first()).toHaveCSS(

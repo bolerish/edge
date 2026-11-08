@@ -17,6 +17,8 @@ export default defineConfig({
     stylex.vite({
       // The document prelude places Edge below the shared StyleX priority layers.
       useCSSLayers: true,
+      // Match the published UI package so xstyle replaces its base property keys.
+      debug: false,
       unstable_moduleResolution: { type: 'commonJS' },
     }),
     {
