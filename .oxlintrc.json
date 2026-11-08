@@ -1,0 +1,51 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn"
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    ".private/**",
+    "**/coverage/**",
+    "**/.stryker-tmp/**",
+    "**/*.tsbuildinfo",
+    "**/*.gen.*",
+    "**/*.min.*",
+    "**/*.map",
+    "pnpm-lock.yaml"
+  ],
+  "overrides": [
+    {
+      "files": ["packages/react/src/light/useLight.ts"],
+      "rules": {
+        "react/refs": "off"
+      }
+    },
+    {
+      "files": ["packages/react/src/surface/Surface.tsx"],
+      "rules": {
+        "react/immutability": "off"
+      }
+    },
+    {
+      "files": ["packages/react/src/surface/useSurface.integration.test.tsx"],
+      "rules": {
+        "react/globals": "off"
+      }
+    }
+  ]
+}

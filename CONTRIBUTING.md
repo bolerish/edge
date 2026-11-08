@@ -32,14 +32,20 @@ When changing a public API, update its types, documentation and examples togethe
 
 Run the checks relevant to the change; use `pnpm check` before a release or after changes spanning packages and docs.
 
-| Command | Purpose |
-| --- | --- |
-| `pnpm test:unit` | Vitest: individual functions and controller logic. |
-| `pnpm test:integration` | Vitest + Testing Library: providers, hosts, events and cleanup. |
-| `pnpm test:e2e` | Playwright: browser flows, CSS and accessibility. |
-| `pnpm test:mutation` | StrykerJS: whether tests detect introduced defects. |
-| `pnpm test:react-compat` | Packed React 18/19 consumers: types, rendering, hydration and cleanup. |
-| `pnpm check` | Build, types, unit/integration tests, Chromium tests and package archives. |
+| Command                  | Purpose                                                                          |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| `pnpm format`            | Oxfmt: format selected paths (defaults to the repository).                       |
+| `pnpm format:check`      | Check formatting without writing files.                                          |
+| `pnpm lint`              | Oxlint: JavaScript/TypeScript and React correctness.                             |
+| `pnpm lint:fix`          | Apply safe automatic lint fixes to selected paths.                               |
+| `pnpm test:unit`         | Vitest: individual functions and controller logic.                               |
+| `pnpm test:integration`  | Vitest + Testing Library: providers, hosts, events and cleanup.                  |
+| `pnpm test:e2e`          | Playwright: browser flows, CSS and accessibility.                                |
+| `pnpm test:mutation`     | StrykerJS: whether tests detect introduced defects.                              |
+| `pnpm test:react-compat` | Packed React 18/19 consumers: types, rendering, hydration and cleanup.           |
+| `pnpm check`             | Lint, build, types, unit/integration tests, Chromium tests and package archives. |
+
+Formatting is an explicit check while the existing repository formatting baseline is being adopted; `pnpm check` runs lint before its existing build and test pipeline. Format the files you change (for example `pnpm format docs/src/layout.tsx`), and preserve unrelated dirty files. Generated output, private artifacts, coverage and the lockfile are ignored by the tools. Oxlint does not replace TypeScript or the StyleX compiler and has no configured StyleX-specific plugin. Three file-scoped React Compiler exceptions preserve lazy light initialization, ref-callback cleanup and a test-only render observer; ordinary hook rules remain enabled.
 
 Keep React integration tests in `.integration.test.tsx` files. Direct React rendering APIs are appropriate when testing hydration or rendering lifetimes. Inspect surviving and uncovered mutants rather than treating a mutation score as proof of correctness.
 

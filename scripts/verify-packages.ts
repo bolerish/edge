@@ -176,7 +176,7 @@ for (const route of routes) {
     html.includes(`data-path="${route}"`) && html.includes('<h1'),
     `Missing prerendered content: ${route}`,
   );
-  const escapedTitle = titleFor(route).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('\"', '&quot;').replaceAll("'", '&#39;');
+  const escapedTitle = titleFor(route).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
   assert(html.includes(`<title>${escapedTitle}</title>`), `Incorrect static title: ${route}`);
   documents.set(route, html);
 }
