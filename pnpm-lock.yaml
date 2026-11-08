@@ -255,6 +255,9 @@ importers:
 
   .:
     devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.20.5
       oxfmt:
         specifier: 'catalog:'
         version: 0.77.0
