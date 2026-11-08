@@ -43,13 +43,16 @@ export function DocumentationSearch() {
       <DialogTrigger
         render={
           <Button
+            size="icon"
             xstyle={styles.documentationSearch}
             align="start"
             variant="outline"
             aria-label={m.search_documentation()}
           >
-            <MagnifyingGlassIcon {...stylex.props(styles.icon)} aria-hidden="true" />
-            <span {...stylex.props(styles.triggerText)}>{m.search_documentation_329()}</span>
+            <span {...stylex.props(styles.triggerContent)}>
+              <MagnifyingGlassIcon {...stylex.props(styles.icon)} aria-hidden="true" />
+              <span {...stylex.props(styles.triggerText)}>{m.search_documentation_329()}</span>
+            </span>
           </Button>
         }
       />
@@ -157,6 +160,14 @@ const styles = stylex.create({
       '@media (max-width: 760px)': '36px',
     },
     flexShrink: '0',
+  },
+  triggerContent: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    width: '100%',
+    paddingInline: { default: 12, '@media (max-width: 760px)': 0 },
+    justifyContent: { default: 'flex-start', '@media (max-width: 760px)': 'center' },
   },
   triggerText: {
     display: {
