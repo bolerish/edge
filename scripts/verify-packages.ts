@@ -32,13 +32,7 @@ for (const name of ['core', 'styles', 'react']) {
     name === 'react' ? 'edge' : `edge-${name}`,
   );
   await mkdir(destination, { recursive: true });
-  execFileSync('tar', [
-    '-xzf',
-    archive,
-    '--strip-components=1',
-    '-C',
-    destination,
-  ]);
+  execFileSync('tar', ['-xzf', archive, '--strip-components=1', '-C', destination]);
   const manifest: {
     name: string;
     version: string;
@@ -46,9 +40,7 @@ for (const name of ['core', 'styles', 'react']) {
     publishConfig: { access: string; tag: string; registry: string };
     exports: Record<string, string | Record<string, string>>;
     dependencies?: Record<string, string>;
-  } = JSON.parse(
-    await readFile(resolve(destination, 'package.json'), 'utf8'),
-  );
+  } = JSON.parse(await readFile(resolve(destination, 'package.json'), 'utf8'));
   assert.equal(manifest.name, name === 'react' ? '@bolerish/edge' : `@bolerish/edge-${name}`);
   assert.equal(manifest.version, releaseManifest.version);
   assert.notEqual(manifest.private, true);
@@ -57,20 +49,23 @@ for (const name of ['core', 'styles', 'react']) {
   assert.equal(manifest.publishConfig.registry, 'https://registry.npmjs.org/');
   await readFile(resolve(destination, 'README.md'));
   for (const [dependency, version] of Object.entries(manifest.dependencies ?? {})) {
-    if (dependency.startsWith('@bolerish/edge-')) assert.equal(version, `^${releaseManifest.version}`);
+    if (dependency.startsWith('@bolerish/edge-'))
+      assert.equal(version, `^${releaseManifest.version}`);
   }
   for (const target of Object.values(manifest.exports)) {
-    if (typeof target === 'string')
-      await readFile(resolve(destination, target));
-    else
-      for (const path of Object.values(target))
-        await readFile(resolve(destination, path));
+    if (typeof target === 'string') await readFile(resolve(destination, target));
+    else for (const path of Object.values(target)) await readFile(resolve(destination, path));
   }
   assert(!JSON.stringify(manifest.dependencies ?? {}).includes('workspace:'));
   await readFile(resolve(destination, 'dist/LICENSE'));
 }
 // The common style bindings must work before any React package is available.
-execFileSync(process.execPath, ['--input-type=module', '-e', `
+execFileSync(
+  process.execPath,
+  [
+    '--input-type=module',
+    '-e',
+    `
   import assert from 'node:assert/strict';
   import {getSurfaceProps} from '@bolerish/edge-styles';
   const props = getSurfaceProps({color:'red',intensity:0.4});
@@ -78,7 +73,10 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
   assert.notEqual(getSurfaceProps({pseudoElement:'before'}).className,getSurfaceProps().className);
   assert.equal(props.style['--edge-highlight'],'red');
   assert.equal(props.style['--edge-intensity'],0.4);
-`], {cwd:sandbox, stdio:'pipe'});
+`,
+  ],
+  { cwd: sandbox, stdio: 'pipe' },
+);
 for (const name of ['react', 'react-dom']) {
   await symlink(
     resolve(root, 'packages/react/node_modules', name),
@@ -109,9 +107,15 @@ execFileSync(
   { cwd: sandbox, stdio: 'pipe' },
 );
 await mkdir(resolve(sandbox, 'node_modules/@types'), { recursive: true });
-await symlink(resolve(root, 'packages/react/node_modules/@types/react'), resolve(sandbox, 'node_modules/@types/react'), 'dir');
+await symlink(
+  resolve(root, 'packages/react/node_modules/@types/react'),
+  resolve(sandbox, 'node_modules/@types/react'),
+  'dir',
+);
 const consumer = resolve(sandbox, 'consumer.mts');
-await writeFile(consumer, `
+await writeFile(
+  consumer,
+  `
   import '@bolerish/edge/style.css';
   import '@bolerish/edge-styles/style.css';
   import {Edge, useLight, useSurface, type SurfaceProps} from '@bolerish/edge';
@@ -123,12 +127,27 @@ await writeFile(consumer, `
   const surface: SurfaceProps = {pseudoElement:'before'};
   void surface;
   getSurfaceProps({color:'red',pseudoElement:'before'});
-`);
-execFileSync('pnpm', [
-  '--filter', '@bolerish/edge', 'exec', 'tsc', '--ignoreConfig',
-  '--noEmit', '--strict', '--skipLibCheck', '--module', 'nodenext',
-  '--target', 'es2022', consumer,
-], {cwd:root, stdio:'pipe'});
+`,
+);
+execFileSync(
+  'pnpm',
+  [
+    '--filter',
+    '@bolerish/edge',
+    'exec',
+    'tsc',
+    '--ignoreConfig',
+    '--noEmit',
+    '--strict',
+    '--skipLibCheck',
+    '--module',
+    'nodenext',
+    '--target',
+    'es2022',
+    consumer,
+  ],
+  { cwd: root, stdio: 'pipe' },
+);
 
 const css = await readFile(
   resolve(sandbox, 'node_modules/@bolerish/edge/dist/assets/edge.css'),
@@ -136,39 +155,34 @@ const css = await readFile(
 );
 assert(css.includes('conic-gradient') && css.includes('--edge-angle'));
 assert(css.includes('var(--edge-highlight, currentColor)'));
-const styleLibrary = await readFile(resolve(sandbox, 'node_modules/@bolerish/edge-styles/dist/index.js'), 'utf8');
+const styleLibrary = await readFile(
+  resolve(sandbox, 'node_modules/@bolerish/edge-styles/dist/index.js'),
+  'utf8',
+);
 assert(!/stylex|styleq/i.test(styleLibrary), 'The styles bundle must not include StyleX or styleq');
 const library = await readFile(
   resolve(sandbox, 'node_modules/@bolerish/edge/dist/index.js'),
   'utf8',
 );
 assert(!/stylex|styleq/i.test(library), 'The React bundle must not include StyleX or styleq');
-assert(
-  library.startsWith('"use client"') || library.startsWith("'use client'"),
-);
+assert(library.startsWith('"use client"') || library.startsWith("'use client'"));
 const serverUrl = new URL('../.private/docs-ssr/entry-server.js', import.meta.url);
-const { titleFor, pages, learningPath }: typeof import('../docs/src/entry-server.js') = await import(serverUrl.href);
+const { titleFor, pages, learningPath }: typeof import('../docs/src/entry-server.js') =
+  await import(serverUrl.href);
 assert.equal(new Set(learningPath).size, pages.length, 'Reading path covers each page once');
-assert(learningPath.every(page => pages.includes(page)), 'Reading path contains only known pages');
+assert(
+  learningPath.every((page) => pages.includes(page)),
+  'Reading path contains only known pages',
+);
 const site = resolve(root, 'docs/dist');
 const routes: string[] = JSON.parse(await readFile(resolve(site, 'routes.json'), 'utf8'));
 const notFound = await readFile(resolve(site, '404.html'), 'utf8');
 assert(notFound.includes('Page not found') && notFound.includes('data-path="/404/"'));
 
-assert(
-  routes.includes('/docs/') &&
-    routes.includes('/') &&
-    !routes.includes('/playground/'),
-);
+assert(routes.includes('/docs/') && routes.includes('/') && !routes.includes('/playground/'));
 assert.equal(new Set(routes).size, routes.length, 'Documentation routes must be unique');
-const usage = await readFile(
-  resolve(site, 'docs/react/usage/index.html'),
-  'utf8',
-);
-assert(
-  usage.includes('token tag'),
-  'SSG must include highlighted code tokens',
-);
+const usage = await readFile(resolve(site, 'docs/react/usage/index.html'), 'utf8');
+assert(usage.includes('token tag'), 'SSG must include highlighted code tokens');
 const documents = new Map<string, string>();
 for (const route of routes) {
   const html = await readFile(resolve(site, `.${route}`, 'index.html'), 'utf8');
@@ -176,7 +190,12 @@ for (const route of routes) {
     html.includes(`data-path="${route}"`) && html.includes('<h1'),
     `Missing prerendered content: ${route}`,
   );
-  const escapedTitle = titleFor(route).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+  const escapedTitle = titleFor(route)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
   assert(html.includes(`<title>${escapedTitle}</title>`), `Incorrect static title: ${route}`);
   documents.set(route, html);
 }
@@ -184,18 +203,14 @@ for (const [route, html] of documents) {
   for (const match of html.matchAll(/<a\b[^>]*\bhref="([^"]+)"/g)) {
     const href = match[1];
     assert(href !== undefined);
-    const target = new URL(
-      href.replaceAll('&amp;', '&'),
-      `https://edge.invalid${route}`,
-    );
+    const target = new URL(href.replaceAll('&amp;', '&'), `https://edge.invalid${route}`);
     if (target.origin !== 'https://edge.invalid') continue;
-    const page = documents.get(target.pathname) ??
-      await readFile(resolve(site, `.${target.pathname}`), 'utf8').catch(() => undefined);
+    const page =
+      documents.get(target.pathname) ??
+      (await readFile(resolve(site, `.${target.pathname}`), 'utf8').catch(() => undefined));
     assert(page, `Broken site route: ${match[1]} from ${route}`);
     if (target.hash) {
-      const ids = new Set(
-        [...page.matchAll(/\bid="([^"]+)"/g)].map((item) => item[1]),
-      );
+      const ids = new Set([...page.matchAll(/\bid="([^"]+)"/g)].map((item) => item[1]));
       assert(
         ids.has(decodeURIComponent(target.hash.slice(1))),
         `Broken site anchor: ${match[1]} from ${route}`,

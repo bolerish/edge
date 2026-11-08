@@ -18,7 +18,9 @@ export function Area() {
   return (
     <Edge.Provider>
       <Edge.Surface as="article">Your card</Edge.Surface>
-      <Edge.Surface as="button" type="button">Save</Edge.Surface>
+      <Edge.Surface as="button" type="button">
+        Save
+      </Edge.Surface>
     </Edge.Provider>
   );
 }
