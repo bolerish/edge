@@ -8,13 +8,13 @@ export const installation: DocPage = {
   slug: 'installation',
   section: 'Getting started',
   title: 'Installation',
-  description: 'Install Edge with your package manager or AI assistant, then load the stylesheet once.',
+  description: 'Install Edge and load its stylesheet.',
   sections: [
     {
       id: 'installation',
       title: 'Installation',
       content: <>
-        <P>Add Edge to your existing project with your package manager. The commands below target the React adapter; it requires React 18 or 19. Other framework adapters are not available yet.</P>
+        <P>The React adapter requires React 18 or 19. Other framework adapters are not available yet.</P>
         <InstallCommands />
       </>,
     },
@@ -22,15 +22,15 @@ export const installation: DocPage = {
       id: 'stylesheet',
       title: 'Load the stylesheet',
       content: <>
-        <P>Load the styles once, before your application and utility styles so their positioning rules can override Edge’s defaults. A separate reset can load first. Choose either your application entry or a global CSS file.</P>
+        <P>Load the stylesheet once, before application and utility styles so they can override Edge’s positioning defaults. A reset may load first. Choose one of the following:</P>
         <CodeBlock label="Application entry" code={"import '@bolerish/edge/style.css';"} />
         <CodeBlock label="Global CSS alternative" language="css" code={'@import "@bolerish/edge/style.css";'} />
-        <P>The CSS alternative requires a build tool that resolves package imports. Edge ships plain CSS; no styling compiler or style-injection provider is needed.</P>
+        <P>The CSS alternative needs a build tool that resolves package imports. No styling compiler or style-injection provider is required.</P>
       </>,
     },
     {
       id: 'next-steps', title: 'Start using Edge',
-      content: <P>Continue to <Link href="/docs/usage/">Usage</Link> to choose an area and its surfaces, then connect them with <Link href="/docs/react/usage/">React Integration</Link>.</P>,
+      content: <P>Choose an area and its surfaces in <Link href="/docs/usage/">Usage</Link>, then connect them with <Link href="/docs/react/usage/">React Integration</Link>.</P>,
     },
   ],
 };
