@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 for (const locale of ['', '/ko', '/es', '/zh', '/ja']) {
-  test(`mobile header keeps its rows and controls inside the viewport: ${locale || 'en'}`, async ({
+  test(`mobile header keeps its single row and controls inside the viewport: ${locale || 'en'}`, async ({
     page,
   }) => {
     for (const width of [320, 375, 760]) {
@@ -18,7 +18,11 @@ for (const locale of ['', '/ko', '/es', '/zh', '/ja']) {
           const brandBounds = brand.getBoundingClientRect();
           const navBounds = nav.getBoundingClientRect();
           return {
-            brandAboveNav: brandBounds.bottom <= navBounds.top,
+            brandBesideNav:
+              brandBounds.right <= navBounds.left &&
+              Math.abs(
+                brandBounds.top + brandBounds.height / 2 - (navBounds.top + navBounds.height / 2),
+              ) < 1,
             controlsContained: buttons.every((button) => {
               const rect = button.getBoundingClientRect();
               return (
@@ -50,7 +54,7 @@ for (const locale of ['', '/ko', '/es', '/zh', '/ja']) {
         const searchBounds = await searchIcon.boundingBox();
         expect(searchBounds?.width).toBeGreaterThanOrEqual(16);
         expect(layout).toEqual({
-          brandAboveNav: true,
+          brandBesideNav: true,
           controlsContained: true,
           navContained: true,
           buttonsDoNotOverlap: true,

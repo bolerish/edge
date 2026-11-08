@@ -67,20 +67,6 @@ function SiteHeader({
           {'bolerish'}
           <span {...stylex.props(documentStyles.link, styles.wordmarkSuffix)}>{'/edge'}</span>
         </Link>
-        {section === 'docs' ? (
-          <div {...stylex.props(styles.mobileToggle)}>
-            <Button
-              size="icon"
-              variant="ghost"
-              aria-label={m.open_navigation()}
-              aria-expanded={navigationOpen}
-              aria-controls="mobile-navigation"
-              onClick={() => setNavigationOpen(!navigationOpen)}
-            >
-              <span aria-hidden="true">☰</span>
-            </Button>
-          </div>
-        ) : null}
         <NavigationMenu xstyle={styles.topNav} aria-label={m.sections()}>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -89,7 +75,7 @@ function SiteHeader({
                 active={section === 'docs'}
                 aria-current={section === 'docs' ? 'page' : undefined}
               >
-                {m.docs()}
+                Docs
               </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
@@ -111,29 +97,31 @@ function SiteHeader({
           </Button>
         </div>
       </header>
+      {section === 'docs' ? (
+        <div {...stylex.props(styles.mobileToggle)}>
+          <Button
+            size="icon"
+            variant="ghost"
+            aria-label={m.open_navigation()}
+            aria-expanded={navigationOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setNavigationOpen(!navigationOpen)}
+          >
+            <span aria-hidden="true">☰</span>
+          </Button>
+        </div>
+      ) : null}
     </>
   );
 }
 
 const styles = stylex.create({
   siteHeader: {
-    height: { default: '64px', '@media (max-width: 760px)': '88px' },
-    display: { default: 'flex', '@media (max-width: 760px)': 'grid' },
-    gridTemplateColumns: { default: null, '@media (max-width: 760px)': 'minmax(0, 1fr) auto' },
-    gridTemplateRows: {
-      default: null,
-      '@media (max-width: 760px)': 'minmax(0, 1fr) minmax(0, 1fr)',
-    },
-    rowGap: 0,
+    height: '64px',
+    display: 'flex',
     alignItems: 'center',
-    columnGap: {
-      default: '36px',
-      '@media (max-width: 760px)': '8px',
-    },
-    padding: {
-      default: '0 32px',
-      '@media (max-width: 760px)': '0 16px',
-    },
+    columnGap: { default: '36px', '@media (max-width: 760px)': '8px' },
+    padding: { default: '0 32px', '@media (max-width: 760px)': '0 12px' },
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
     borderBottomColor: colorVars.strokeDefault,
@@ -143,8 +131,6 @@ const styles = stylex.create({
     zIndex: '20',
   },
   wordmark: {
-    gridColumn: { default: null, '@media (max-width: 760px)': '1' },
-    gridRow: { default: null, '@media (max-width: 760px)': '1' },
     fontFamily: 'ui-monospace, SFMono-Regular, monospace',
     fontSize: {
       default: '14px',
@@ -159,8 +145,6 @@ const styles = stylex.create({
     color: `${colorVars.fgSecondary}`,
   },
   topNav: {
-    gridColumn: { default: null, '@media (max-width: 760px)': '1' },
-    gridRow: { default: null, '@media (max-width: 760px)': '2' },
     display: 'flex',
     alignItems: 'center',
     gap: {
@@ -170,8 +154,6 @@ const styles = stylex.create({
     flex: '1',
   },
   headerActions: {
-    gridColumn: { default: null, '@media (max-width: 760px)': '2' },
-    gridRow: { default: null, '@media (max-width: 760px)': '2' },
     display: 'flex',
     alignItems: 'center',
     gap: {
@@ -187,9 +169,8 @@ const styles = stylex.create({
     flexShrink: '0',
   },
   mobileToggle: {
-    gridColumn: '2',
-    gridRow: '1',
-    justifySelf: 'end',
+    padding: '4px 12px',
+    borderBottom: `1px solid ${colorVars.strokeDefault}`,
     display: {
       default: 'none',
       '@media (max-width: 760px)': 'block',
