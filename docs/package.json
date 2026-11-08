@@ -16,7 +16,9 @@
     "@bolerish/ui": "catalog:2026-11-03--bolerish-stable",
     "prism-react-renderer": "catalog:",
     "prismjs": "catalog:",
-    "@phosphor-icons/react": "catalog:"
+    "@phosphor-icons/react": "catalog:",
+    "@stylexjs/stylex": "catalog:",
+    "@bolerish/tokens": "catalog:2026-11-03--bolerish-stable"
   },
   "devDependencies": {
     "vite": "catalog:2026-11-03--vite-vitest-stable",
@@ -28,6 +30,7 @@
     "@axe-core/playwright": "catalog:",
     "@types/prismjs": "catalog:",
     "turndown": "catalog:",
-    "@types/turndown": "catalog:"
+    "@types/turndown": "catalog:",
+    "@stylexjs/unplugin": "catalog:"
   }
 }

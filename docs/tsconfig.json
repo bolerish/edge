@@ -3,7 +3,9 @@
   "compilerOptions": {
     "lib": ["ES2022", "DOM"],
     "jsx": "react-jsx",
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
   },
   "include": ["src", "*.config.ts"]
 }

@@ -1,12 +1,17 @@
+import { colorVars } from '@bolerish/tokens/semantic.stylex';
+import * as stylex from '@stylexjs/stylex';
 import { usePreferences, type SitePreferences } from '../../shared/preferences/usePreferences.js';
-import { DocumentSurface } from './DocumentSurface.js';
+import { LightingSurface } from '../../shared/lighting/LightingSurface.js';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
 import type { ReactNode } from 'react';
 import { CodeBlock } from '../../shared/code/CodeBlock.js';
-import './ExamplePreview.css';
 
 /** Keeps the executable preview and its exact imported source in one region. */
-export function ExamplePreview({ title, code, children }: {
+export function ExamplePreview({
+  title,
+  code,
+  children,
+}: {
   title: string;
   code: string;
   children: ReactNode;
@@ -14,16 +19,25 @@ export function ExamplePreview({ title, code, children }: {
   const { edgeStyle, motion, staticDirection } = usePreferences();
   const displayedCode = formatExampleCode(code, { edgeStyle, motion, staticDirection });
   return (
-    <div className="example-preview" role="group" aria-label={title}>
+    <div
+      className={`example-preview ${stylex.props(styles.examplePreview).className}`}
+      role="group"
+      aria-label={title}
+    >
       <Tabs defaultValue="preview" variant="underline">
         <TabsList aria-label={`${title} view`}>
           <TabsTrigger value="preview">Preview</TabsTrigger>
           <TabsTrigger value="code">Code</TabsTrigger>
         </TabsList>
         <TabsContent value="preview" keepMounted>
-          <DocumentSurface className="example-preview-result" role="group" aria-label={`${title} preview`}>
+          <LightingSurface
+            className="example-preview-result"
+            xstyle={styles.examplePreviewResult}
+            role="group"
+            aria-label={`${title} preview`}
+          >
             {children}
-          </DocumentSurface>
+          </LightingSurface>
         </TabsContent>
         <TabsContent value="code" keepMounted>
           <CodeBlock label={title} code={displayedCode} />
@@ -37,8 +51,26 @@ export function ExamplePreview({ title, code, children }: {
   );
 }
 
-export function formatExampleCode(code: string, preferences: Pick<SitePreferences, 'edgeStyle' | 'motion' | 'staticDirection'>) {
-  return code.replaceAll('__EDGE_STYLE__', JSON.stringify(preferences.edgeStyle))
+export function formatExampleCode(
+  code: string,
+  preferences: Pick<SitePreferences, 'edgeStyle' | 'motion' | 'staticDirection'>,
+) {
+  return code
+    .replaceAll('__EDGE_STYLE__', JSON.stringify(preferences.edgeStyle))
     .replaceAll('__MOTION__', JSON.stringify(preferences.motion))
     .replaceAll('__STATIC_DIRECTION__', JSON.stringify(preferences.staticDirection));
 }
+
+const styles = stylex.create({
+  examplePreview: {
+    display: 'grid',
+    gap: '16px',
+    minWidth: '0',
+    marginBlock: '24px',
+  },
+  examplePreviewResult: {
+    minWidth: 0,
+    padding: { default: 24, '@media (max-width: 760px)': 16 },
+    backgroundColor: colorVars.bgSubtle,
+  },
+});

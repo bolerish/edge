@@ -17,14 +17,16 @@ Open http://localhost:3000.
 - `packages/styles/src/`: shared CSS and surface appearance bindings.
 - `packages/react/src/`: `Edge.tsx` composes the React adapter; `light/` owns light handles and context, and `surface/` owns surface rendering, appearance and registration.
 - `docs/src/`: browser entry (`index.tsx`), common layout (`layout.tsx`), home (`page.tsx`), global `site.css` and browser tests.
-- `docs/src/docs/`: document content and its registry, routes and types. Pages with interactive examples keep them in a local `_ui/`; `docs/_shared/` owns document rendering and shared previews.
-- `docs/src/shared/`: search, preferences, installation and code presentation.
+- `docs/src/docs/`: document layout, route-owned content and the `_shared/` registry, routes and types. Pages with interactive examples keep them in a local `_ui/`; `docs/_shared/` owns document-only previews and content styles.
+- `docs/src/shared/`: search, preferences, installation, code presentation and optional surface-light context. The document layout owns the light lifetime; shared lit surfaces reuse UI Card and Link hosts.
 - `docs/src/_ui/`: home-private examples.
 - `docs/scripts/`: prerendering and packed React compatibility verification with its fixtures.
 
 Keep framework behavior in its adapter so a future Solid adapter can reuse core and styles. Group code by responsibility, colocate tests, and keep `index.ts` limited to imports and re-exports. Import workspace packages through public exports. Use the catalogs in `pnpm-workspace.yaml` and update the lockfile with dependency changes.
 
 Keep server imports safe, preserve native controls and focus indicators, and clean up refs, listeners and pending frames. Pointer movement must not update React state. Read geometry before writing styles; option changes must work with a stationary pointer. Preserve engine-owned CSS variables such as `--wisp-angle` and `--wisp-strength`.
+
+Use installed `@bolerish/ui` components and public `@bolerish/tokens/semantic.stylex` roles before authoring site styles. Colocate layout and example styles in `stylex.create`; shared theme variables use `.stylex.ts`. The StyleX Vite plugin extracts production CSS and serves its collected SSR rules before development hydration. `site.css` is limited to the layer-order prelude, document color-scheme, focus scroll margin and universal reduced-motion preferences, which StyleX 0.19 cannot apply globally. Keep its prelude before package styles in production and development. Edge’s public `packages/styles/src/edge.css` remains a distribution asset.
 
 When changing a public API, update its types, documentation and examples together. Preserve existing documentation routes and section anchors. Document `page.tsx` files are a content convention; `docs/src/docs/_shared/routes.ts` and `page-registry.ts` remain the routing and catalog authorities. Site preferences live in `docs/src/shared/preferences/usePreferences.ts`; site defaults can differ from library defaults.
 

@@ -1,3 +1,15 @@
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+  TableContainer,
+} from '@bolerish/ui/table';
+import * as stylex from '@stylexjs/stylex';
+import { contentStyles } from '../_shared/content-styles.js';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
 import { ExamplePreview } from '../_shared/ExamplePreview.js';
@@ -8,39 +20,93 @@ export const styles: DocPage = {
   aliases: ['materials', 'react/materials'],
   section: 'Styles',
   title: 'Style',
-  description:
-    'Choose how a surface responds to light without changing its base styles.',
+  description: 'Choose how a surface responds to light without changing its base styles.',
   sections: [
     {
       id: 'compare-styles',
       title: 'Compare the edge response',
-      content: <>
-        <P>Choose a style and move your pointer around the card. The selection also updates this site’s cards, code blocks and navigation surfaces.</P>
-        <ExamplePreview title={edgeStylesExample.title} code={edgeStylesExample.code}>
-          <edgeStylesExample.Component />
-        </ExamplePreview>
-      </>,
+      content: (
+        <>
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            Choose a style and move your pointer around the card. The selection also updates this
+            site’s cards, code blocks and navigation surfaces.
+          </P>
+          <ExamplePreview title={edgeStylesExample.title} code={edgeStylesExample.code}>
+            <edgeStylesExample.Component />
+          </ExamplePreview>
+        </>
+      ),
     },
-    { id: 'options', title: 'Style values', content: <>
-      <div className="table-scroll" role="region" aria-label="Style values table" tabIndex={0}>
-        <table className="api-table">
-          <caption className="visually-hidden">Style values</caption>
-          <thead><tr><th scope="col">Value</th><th scope="col">Behavior</th></tr></thead>
-          <tbody>
-            <tr><th scope="row"><code>raised</code></th><td>Highlights the edge facing the light. Default.</td></tr>
-            <tr><th scope="row"><code>recessed</code></th><td>Reverses the direction for an inset appearance.</td></tr>
-            <tr><th scope="row"><code>matte</code></th><td>Softens the edge response.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <P>For additional settings, see the <Link href="/docs/react/api/#lighting-surface">API reference</Link>.</P>
-    </> },
+    {
+      id: 'options',
+      title: 'Style values',
+      content: (
+        <>
+          <TableContainer
+            className={`table-scroll ${stylex.props(contentStyles.tableScroll).className}`}
+            role="region"
+            aria-label="Style values table"
+            tabIndex={0}
+          >
+            <Table className={`api-table ${stylex.props(contentStyles.apiTable).className}`}>
+              <TableCaption
+                xstyle={[contentStyles.tableCaption]}
+                className={`visually-hidden ${stylex.props(contentStyles.visuallyHidden).className}`}
+              >
+                Style values
+              </TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead xstyle={[contentStyles.tableCell]} scope="col">
+                    Value
+                  </TableHead>
+                  <TableHead xstyle={[contentStyles.tableCell]} scope="col">
+                    Behavior
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableHead xstyle={[contentStyles.tableCell]} scope="row">
+                    <code {...stylex.props(contentStyles.inlineCode)}>raised</code>
+                  </TableHead>
+                  <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
+                    Highlights the edge facing the light. Default.
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableHead xstyle={[contentStyles.tableCell]} scope="row">
+                    <code {...stylex.props(contentStyles.inlineCode)}>recessed</code>
+                  </TableHead>
+                  <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
+                    Reverses the direction for an inset appearance.
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableHead xstyle={[contentStyles.tableCell]} scope="row">
+                    <code {...stylex.props(contentStyles.inlineCode)}>matte</code>
+                  </TableHead>
+                  <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
+                    Softens the edge response.
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            For additional settings, see the{' '}
+            <Link href="/docs/react/api/#lighting-surface">API reference</Link>.
+          </P>
+        </>
+      ),
+    },
     {
       id: 'raised',
       title: 'Raised',
       content: (
-        <P>
-          Use <code>edgeStyle: 'raised'</code> for an outward-facing edge highlight.
+        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+          Use <code {...stylex.props(contentStyles.inlineCode)}>edgeStyle: 'raised'</code> for an
+          outward-facing edge highlight.
         </P>
       ),
     },
@@ -48,8 +114,9 @@ export const styles: DocPage = {
       id: 'recessed',
       title: 'Recessed',
       content: (
-        <P>
-          Use <code>edgeStyle: 'recessed'</code> for inset elements such as input wrappers.
+        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+          Use <code {...stylex.props(contentStyles.inlineCode)}>edgeStyle: 'recessed'</code> for
+          inset elements such as input wrappers.
         </P>
       ),
     },
@@ -57,8 +124,9 @@ export const styles: DocPage = {
       id: 'matte',
       title: 'Matte',
       content: (
-        <P>
-          Use <code>edgeStyle: 'matte'</code> for a softer, quieter border.
+        <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+          Use <code {...stylex.props(contentStyles.inlineCode)}>edgeStyle: 'matte'</code> for a
+          softer, quieter border.
         </P>
       ),
     },
@@ -68,18 +136,27 @@ export const styles: DocPage = {
       content: (
         <>
           <span id="apply-the-wisp-theme" />
-          <P>
-            Each surface uses its own text color, even when nested, and follows its host border radius.
-            Set <code>color</code> to override the highlight, or <code>intensity</code> to multiply the shared light strength.
-            Use <code>shadowColor="transparent"</code> to remove the opposite-edge shadow.
-            <code> borderWidth</code> changes the decoration thickness in pixels, not the host border.
-            Pass options to <Link href="/docs/react/api/#lighting-surface">Edge.Surface</Link>; no CSS variable declarations are needed.
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            Each surface uses its own text color, even when nested, and follows its host border
+            radius. Set <code {...stylex.props(contentStyles.inlineCode)}>color</code> to override
+            the highlight, or <code {...stylex.props(contentStyles.inlineCode)}>intensity</code> to
+            multiply the shared light strength. Use{' '}
+            <code {...stylex.props(contentStyles.inlineCode)}>shadowColor="transparent"</code> to
+            remove the opposite-edge shadow.
+            <code {...stylex.props(contentStyles.inlineCode)}> borderWidth</code> changes the
+            decoration thickness in pixels, not the host border. Pass options to{' '}
+            <Link href="/docs/react/api/#lighting-surface">Edge.Surface</Link>; no CSS variable
+            declarations are needed.
           </P>
-          <P>
-            The effect approximates a direction on axis-aligned rectangles, not a physical point light.
-            Near the center, directional intensity fades over a region proportional to the surface size.
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            The effect approximates a direction on axis-aligned rectangles, not a physical point
+            light. Near the center, directional intensity fades over a region proportional to the
+            surface size.
           </P>
-          <P>For existing decorations and input wrappers, see <Link href="/docs/integration/">Integration</Link>.</P>
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            For existing decorations and input wrappers, see{' '}
+            <Link href="/docs/integration/">Integration</Link>.
+          </P>
         </>
       ),
     },

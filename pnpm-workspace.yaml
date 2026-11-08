@@ -5,6 +5,8 @@ packages:
 catalog:
   oxfmt: 0.77.0
   oxlint: 1.92.0
+  '@stylexjs/stylex': 0.19.1
+  '@stylexjs/unplugin': 0.19.1
   turndown: 7.2.5
   '@types/turndown': 5.0.6
   '@testing-library/react': 16.3.3
@@ -32,6 +34,7 @@ catalogs:
     vitest: 5.1.0
   2026-11-03--bolerish-stable:
     '@bolerish/ui': 0.18.1
+    '@bolerish/tokens': 0.18.1
 
 minimumReleaseAgeExclude:
   - '@vitest/mocker@5.1.0'
