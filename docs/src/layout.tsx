@@ -2,12 +2,6 @@ import { localePath } from './shared/locale.js';
 import { basePath } from './shared/locale.js';
 import { LanguageMenu } from './shared/LanguageMenu.js';
 import { m } from './paraglide/messages.js';
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuLink,
-} from '@bolerish/ui/navigation-menu';
 import { colorVars } from '@bolerish/tokens/semantic.stylex';
 import { documentStyles } from './shared/document-styles.js';
 import { siteColors } from './shared/site.stylex';
@@ -67,19 +61,16 @@ function SiteHeader({
           {'bolerish'}
           <span {...stylex.props(documentStyles.link, styles.wordmarkSuffix)}>{'/edge'}</span>
         </Link>
-        <NavigationMenu xstyle={styles.topNav} aria-label={m.sections()}>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                href={localePath('/docs/')}
-                active={section === 'docs'}
-                aria-current={section === 'docs' ? 'page' : undefined}
-              >
-                Docs
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+        <nav {...stylex.props(styles.topNav)} aria-label={m.sections()}>
+          <Link
+            variant="plain"
+            className={stylex.props(documentStyles.link, styles.docsLink).className}
+            href={localePath('/docs/')}
+            aria-current={section === 'docs' ? 'page' : undefined}
+          >
+            Docs
+          </Link>
+        </nav>
         <div {...stylex.props(styles.headerActions)}>
           <DocumentationSearch />
           <LanguageMenu />
@@ -132,10 +123,8 @@ const styles = stylex.create({
   },
   wordmark: {
     fontFamily: 'ui-monospace, SFMono-Regular, monospace',
-    fontSize: {
-      default: '14px',
-      '@media (max-width: 760px)': '12px',
-    },
+    fontSize: '14px',
+    flexShrink: 0,
     textDecoration: 'none',
     whiteSpace: 'nowrap',
     letterSpacing: '0.4px',
@@ -143,6 +132,13 @@ const styles = stylex.create({
   },
   wordmarkSuffix: {
     color: `${colorVars.fgSecondary}`,
+  },
+  docsLink: {
+    fontSize: '12px',
+    fontWeight: 400,
+    color: { default: colorVars.fgSecondary, ':hover': colorVars.fgPrimary },
+    padding: '8px 4px',
+    textDecoration: 'none',
   },
   topNav: {
     display: 'flex',

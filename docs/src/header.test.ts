@@ -17,7 +17,13 @@ for (const locale of ['', '/ko', '/es', '/zh', '/ja']) {
           const bounds = header.getBoundingClientRect();
           const brandBounds = brand.getBoundingClientRect();
           const navBounds = nav.getBoundingClientRect();
+          const docs = nav.querySelector('a');
+          const suffix = brand.querySelector('span');
+          if (!docs || !suffix) throw new Error('Missing brand or Docs label');
           return {
+            brandSize: getComputedStyle(brand).fontSize,
+            docsSize: getComputedStyle(docs).fontSize,
+            docsMuted: getComputedStyle(docs).color === getComputedStyle(suffix).color,
             brandBesideNav:
               brandBounds.right <= navBounds.left &&
               Math.abs(
@@ -54,6 +60,9 @@ for (const locale of ['', '/ko', '/es', '/zh', '/ja']) {
         const searchBounds = await searchIcon.boundingBox();
         expect(searchBounds?.width).toBeGreaterThanOrEqual(16);
         expect(layout).toEqual({
+          brandSize: '14px',
+          docsSize: '12px',
+          docsMuted: true,
           brandBesideNav: true,
           controlsContained: true,
           navContained: true,
