@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const stylesheets = [
   fileURLToPath(import.meta.resolve('@bolerish/ui/global.css')),
   fileURLToPath(import.meta.resolve('@bolerish/edge/style.css')),
-  ...['site.css', 'home/home.css', 'shared/code/code-theme.css'].map(path =>
+  ...['site.css', 'home.css', 'shared/code/code-theme.css'].map(path =>
     fileURLToPath(new URL(`./src/${path}`, import.meta.url))),
 ];
 

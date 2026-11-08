@@ -6,12 +6,12 @@ Edge adds shared directional highlights to explicitly connected UI surfaces. Cor
 
 Read [README.md](README.md) for the consumer API and [CONTRIBUTING.md](CONTRIBUTING.md) for package ownership, conventions and validation. Follow those rules without duplicating them here.
 
-When changing public options, update `docs/src/pages/appearance/api-options.tsx`, relevant examples and public documentation. Keep copied code consistent with its demonstrated behavior.
+When changing public options, update `docs/src/docs/_shared/api-options.tsx`, relevant examples and public documentation. Keep copied code consistent with its demonstrated behavior.
 
 Documentation entry points:
 
-- `docs/src/pages/page-registry.ts`: sidebar and reading order.
-- `docs/src/pages/routes.ts`: canonical routes and aliases; preserve existing routes and section anchors.
+- `docs/src/docs/_shared/page-registry.ts`: sidebar and reading order.
+- `docs/src/docs/_shared/routes.ts`: canonical routes and aliases; preserve existing routes and section anchors.
 - `docs/src/shared/preferences/usePreferences.ts`: persisted site settings; distinguish site defaults from library defaults.
 
 Run the relevant checks in CONTRIBUTING. Report checks actually run and remaining limitations. Do not infer performance gains from source structure alone.

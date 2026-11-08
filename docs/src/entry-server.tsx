@@ -1,13 +1,13 @@
 import { renderToString } from 'react-dom/server';
-import { App } from './App.js';
-import { findPage, getPagePath, normalizePath, publicPaths, titleFor } from './pages/routes.js';
+import { Layout } from './layout.js';
+import { findPage, getPagePath, normalizePath, publicPaths, titleFor } from './docs/_shared/routes.js';
 export { publicPaths, titleFor, getPagePath };
 export { renderAgentDocuments } from './agent-documents.js';
-export { pages, learningPath } from './pages/page-registry.js';
+export { pages, learningPath } from './docs/_shared/page-registry.js';
 export function render(path: string) {
   return {
     path: normalizePath(path),
-    html: renderToString(<App pathname={path} />),
+    html: renderToString(<Layout pathname={path} />),
     title: titleFor(path),
   };
 }

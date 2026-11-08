@@ -28,7 +28,7 @@ Load the stylesheet once, before your application styles. Only marked surfaces r
 
 ## Documentation
 
-See the [guides and API reference](docs/src/pages) for styles, motion, integration and rendering.
+See the [guides and API reference](docs/src/docs) for styles, motion, integration and rendering.
 
 ## Contributing
 

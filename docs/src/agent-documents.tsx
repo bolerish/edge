@@ -1,10 +1,10 @@
 import { Children, cloneElement, isValidElement, type ComponentProps, type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import TurndownService from 'turndown';
-import { learningPath } from './pages/page-registry.js';
-import { getPagePath } from './pages/routes.js';
+import { learningPath } from './docs/_shared/page-registry.js';
+import { getPagePath } from './docs/_shared/routes.js';
 import { CodeBlock } from './shared/code/CodeBlock.js';
-import { ExamplePreview, formatExampleCode } from './pages/_shared/ExamplePreview.js';
+import { ExamplePreview, formatExampleCode } from './docs/_shared/ExamplePreview.js';
 import { InstallCommands, installationCommands } from './shared/installation/InstallCommands.js';
 import { usePreferences, type SitePreferences } from './shared/preferences/usePreferences.js';
 

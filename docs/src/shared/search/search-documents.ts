@@ -1,6 +1,6 @@
 import { isValidElement, type ReactNode } from 'react';
-import { pages } from '../../pages/page-registry.js';
-import { getPagePath } from '../../pages/routes.js';
+import { pages } from '../../docs/_shared/page-registry.js';
+import { getPagePath } from '../../docs/_shared/routes.js';
 
 export const searchCategories = [...new Set(pages.map(page => page.section ?? 'Getting started'))];
 export type SearchCategory = typeof searchCategories[number];
