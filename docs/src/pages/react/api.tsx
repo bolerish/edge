@@ -16,7 +16,7 @@ export const api: DocPage = {
   section: 'React',
   title: 'API reference',
   description:
-    'Look up component props, hook options and their defaults. Start with Edge.Provider and Edge.Surface; use the hooks when you need to connect an existing host.',
+    'Component props, hook signatures, defaults and rendering behavior.',
   sections: [
     {
       id: 'lighting',
@@ -24,9 +24,8 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Wrap the part of your interface that should share a light.
-            <code> Edge.Provider</code> adds no DOM element. Each surface uses its
-            nearest owner, so nested owners create independent lights.
+            Shares one light with descendant surfaces without adding DOM.
+            Nested providers create independent lights.
           </P>
           <CodeBlock
             label="Edge.Provider signature"
@@ -49,8 +48,8 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Mark an element that should respond to its nearest light. It renders
-            one HTML host and preserves your native attributes and event handlers.
+            Renders one HTML element connected to the nearest provider.
+            Native attributes and events follow the tag selected by <code>as</code>.
           </P>
           <CodeBlock
             label="Edge.Surface signature"
@@ -65,53 +64,8 @@ export const api: DocPage = {
             </P>
           </div>
           <P>
-            Existing host borders are measured so the decoration aligns with
-            their outside edge. <code>borderWidth</code> changes the decoration
-            thickness, not the host border. For a custom component that already
-            exposes its host, use <code>useSurface</code> below.
-          </P>
-        </>
-      ),
-    },
-    {
-      id: 'use-light',
-      title: 'useLight(options?)',
-      content: (
-        <>
-          <P>
-            Create an independent light when you need to manage it explicitly. Normally, use Edge.Provider and useSurface(options) instead. Pass this handle to useSurface(light, options) to connect a host without a provider. The returned <code>Light</code> handle stays stable; changing
-            options updates the existing light.
-          </P>
-          <CodeBlock
-            label="useLight signature"
-            code={'function useLight(options?: LightOptions): Light;'}
-          />
-          {apiTable('useLight options', lightOptionRows)}
-          <P>
-            Omitted options use their defaults. <code>radius</code> controls
-            distance attenuation for dynamic lighting. Fixed lighting uses
-            <code> staticDirection</code> and does not fade because an element
-            is far from an arbitrary origin.
-          </P>
-        </>
-      ),
-    },
-    {
-      id: 'refresh',
-      title: 'light.refresh()',
-      content: (
-        <>
-          <P>
-            Call <code>light.refresh()</code> after your application moves an
-            element or changes its host border thickness without a size notification. It remeasures geometry on the
-            next frame, including while the pointer is stationary.
-          </P>
-          <CodeBlock label="refresh signature" code={`interface Light {
-  refresh(): void;
-}`} />
-          <P>
-            Call it after React commits the new layout. It schedules an update
-            without replacing the light handle or requiring pointer movement.
+            Decoration aligns with the outside of the host border.
+            To connect an existing component’s HTML element, use <Link href="#use-surface">useSurface</Link>.
           </P>
         </>
       ),
@@ -122,8 +76,8 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Connect one existing HTML host to the nearest Edge.Provider. Attach the returned
-            <code> ref</code>. Edge applies and removes its own decoration; keep your existing className and style props.
+            Returns a callback ref that connects an existing HTML element to the nearest provider.
+            Attach it to the element displaying the border and keep your existing <code>className</code> and <code>style</code>.
           </P>
           <CodeBlock
             label="useSurface signature"
@@ -142,15 +96,51 @@ function ExistingCard() {
           {apiTable('useSurface options', surfaceOptionRows)}
           <div role="note" aria-label="One owner per element" className="doc-note">
             <P>
-              An element can belong to only one light controller. Connect the
-              returned ref to the element that actually displays the border,
-              not to a parent whose dimensions differ.
+              An element can belong to only one light. Do not attach the ref to a parent with different dimensions.
             </P>
           </div>
           <P>
-            <code>edgeStyle</code> changes update the existing registration.
-            Appearance options update without replacing the host. Hook decoration is attached on the client; its server markup contains only your own styles. Use Edge.Surface when you need the decorative CSS in server output too.
+            Options update without replacing the element. Hook decoration attaches after hydration;
+            use <code>Edge.Surface</code> to include appearance classes and variables in server output.
           </P>
+        </>
+      ),
+    },
+    {
+      id: 'use-light',
+      title: 'useLight(options?)',
+      content: (
+        <>
+          <P>
+            Returns a stable <code>Light</code> handle for explicit ownership without a provider.
+            Pass it to <code>useSurface(light, options)</code>. Option changes update the existing light;
+            use <code>Edge.Provider</code> for ordinary component trees.
+          </P>
+          <CodeBlock
+            label="useLight signature"
+            code={'function useLight(options?: LightOptions): Light;'}
+          />
+          {apiTable('useLight options', lightOptionRows)}
+          <P>
+            <code>radius</code> affects dynamic lighting only. Fixed lighting uses
+            <code> staticDirection</code> without distance attenuation.
+          </P>
+        </>
+      ),
+    },
+    {
+      id: 'refresh',
+      title: 'light.refresh()',
+      content: (
+        <>
+          <P>
+            Remeasures surfaces on the next frame, even with a stationary pointer.
+            Call after React commits a position or host border-thickness change without a size notification.
+          </P>
+          <CodeBlock label="refresh signature" code={`interface Light {
+  refresh(): void;
+}`} />
+          <P>Size changes and scrolling are handled automatically; see <Link href="/docs/integration/#refresh-after-layout-changes">layout updates</Link> for details.</P>
         </>
       ),
     },
@@ -160,16 +150,14 @@ function ExistingCard() {
       content: (
         <>
           <P>
-            Hooks can create handles and render markup on the server without
-            accessing the DOM. Client effects activate the light after hydration.
-            Cleanup restores controller-owned inline variables, removes browser
-            subscriptions and cancels pending frames. Setup can restart during
-            React StrictMode checks.
+            Server rendering does not access the DOM. Lighting starts on the client after hydration.
+            Cleanup restores owned inline variables, removes listeners and cancels pending frames;
+            setup can restart in React StrictMode.
           </P>
           <P>
-            Edge.Surface emits its decoration classes and appearance variables on the server.
-            Geometry, fixed direction and pointer tracking activate only on the client.
-            A host connected with useSurface keeps only your own markup and styles until hydration.
+            <code>Edge.Surface</code> includes appearance classes and variables in server HTML.
+            <code> useSurface</code> leaves your markup unchanged until hydration.
+            Geometry, fixed direction and pointer tracking require client code.
           </P>
           <div className="table-scroll" role="region" aria-label="Rendering modes table" tabIndex={0}>
             <table className="api-table">
@@ -185,16 +173,12 @@ function ExistingCard() {
             </table>
           </div>
           <P>
-            In a framework with Server Components, import Edge inside a client module
-            marked with <code>{'"use client"'}</code> and render that module from your server component.
-            The package marks its JavaScript entry as a client module; it does not provide a Server Component API.
+            In Server Component frameworks, use Edge inside a client module marked
+            with <code>{'"use client"'}</code>.
           </P>
           <P>
-            The isolated React 18 and 19 checks cover development and production server output,
-            delayed Suspense output from both streaming APIs, hydration of completed output, CSR,
-            static HTML without JavaScript and cleanup. Web Streams are tested in Node;
-            this is not a deployment check for every runtime or SSR framework, nor a test of
-            hydrating an incomplete stream.
+            React 18 and 19 are supported. Web Streams are tested in Node;
+            individual frameworks, deployed Web runtimes and hydration of incomplete streams are not verified.
           </P>
         </>
       ),

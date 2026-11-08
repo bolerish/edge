@@ -9,13 +9,13 @@ export const styles: DocPage = {
   section: 'Styles',
   title: 'Style',
   description:
-    'Choose how an edge responds to light. Edge style response and base component styling are separate decisions.',
+    'Choose how a surface responds to light without changing its base styles.',
   sections: [
     {
       id: 'compare-styles',
       title: 'Compare the edge response',
       content: <>
-        <P>Choose Raised, Recessed or Matte to change how the card responds to the shared light. Move your pointer around it to compare the edge response. Your selection also updates the cards, code blocks and navigation surfaces across this site.</P>
+        <P>Choose a style and move your pointer around the card. The selection also updates this site’s cards, code blocks and navigation surfaces.</P>
         <ExamplePreview title={edgeStylesExample.title} code={edgeStylesExample.code}>
           <edgeStylesExample.Component />
         </ExamplePreview>
@@ -40,8 +40,7 @@ export const styles: DocPage = {
       title: 'Raised',
       content: (
         <P>
-          Raised surfaces catch a highlight on the edge facing the light. Use{' '}
-          <code>edgeStyle: 'raised'</code> for an outward-facing response.
+          Use <code>edgeStyle: 'raised'</code> for an outward-facing edge highlight.
         </P>
       ),
     },
@@ -50,8 +49,7 @@ export const styles: DocPage = {
       title: 'Recessed',
       content: (
         <P>
-          Recessed surfaces reverse the light direction. Use{' '}
-          <code>edgeStyle: 'recessed'</code> for inset wrappers such as fields.
+          Use <code>edgeStyle: 'recessed'</code> for inset elements such as input wrappers.
         </P>
       ),
     },
@@ -60,8 +58,7 @@ export const styles: DocPage = {
       title: 'Matte',
       content: (
         <P>
-          Matte surfaces use a softer directional response. Use{' '}
-          <code>edgeStyle: 'matte'</code> when the border should remain quiet.
+          Use <code>edgeStyle: 'matte'</code> for a softer, quieter border.
         </P>
       ),
     },
@@ -71,24 +68,16 @@ export const styles: DocPage = {
       content: (
         <>
           <span id="apply-the-wisp-theme" />
-          <P>Edge preserves your component’s background, text color, radius and layout. Choose raised, recessed or matte for the decorative response.</P>
           <P>
-            Each surface uses its own text color by default, including inside another surface, and inherits its host border radius. Set <code>color</code> and <code>intensity</code> on a surface
-            to customize that surface’s highlight.
-            Set shadowColor to transparent on light surfaces if a dark
-            opposite edge is unwanted. borderWidth controls the decorative
-            thickness in pixels; it does not change the host border.
-            Surface intensity multiplies the shared light intensity. Internal
-            CSS variables are reserved for Edge; no CSS variable declarations
-            are required in your application. In React, pass these options to{' '}
-            <Link href="/docs/react/api/#lighting-surface">Edge.Surface</Link>.
+            Each surface uses its own text color, even when nested, and follows its host border radius.
+            Set <code>color</code> to override the highlight, or <code>intensity</code> to multiply the shared light strength.
+            Use <code>shadowColor="transparent"</code> to remove the opposite-edge shadow.
+            <code> borderWidth</code> changes the decoration thickness in pixels, not the host border.
+            Pass options to <Link href="/docs/react/api/#lighting-surface">Edge.Surface</Link>; no CSS variable declarations are needed.
           </P>
           <P>
-            The effect approximates lighting on axis-aligned rectangles. It is
-            not a physically accurate point-light renderer. Directional
-            intensity fades across a region proportional to the element size
-            near the center, where a unique edge direction is ambiguous.
-            The light follows a direction rather than simulating a local point light.
+            The effect approximates a direction on axis-aligned rectangles, not a physical point light.
+            Near the center, directional intensity fades over a region proportional to the surface size.
           </P>
           <P>For existing decorations and input wrappers, see <Link href="/docs/integration/">Integration</Link>.</P>
         </>

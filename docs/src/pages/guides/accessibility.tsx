@@ -7,13 +7,13 @@ export const accessibility: DocPage = {
   section: 'Guides',
   title: 'Accessibility',
   description:
-    'Treat lighting as decoration. Components must remain readable and operable without a moving highlight.',
+    'Keep components readable and operable without lighting.',
   sections: [
     {
       id: 'choose-an-input-mode',
       title: 'Choose motion behavior',
       content: (
-        <P>Keep the default <code>system</code> motion to respect reduced-motion preferences. Touch movement never drives the light. Offer <code>dynamic</code> as an explicit choice because it overrides reduced motion; see <Link href="/docs/motion/">Motion</Link> for the available behaviors.</P>
+        <P>Use <code>system</code> to respect reduced motion. Touch never drives the light. Offer <code>dynamic</code> only as an explicit choice because it overrides reduced motion. See <Link href="/docs/motion/">Motion</Link> for details.</P>
       ),
     },
     {
@@ -22,14 +22,13 @@ export const accessibility: DocPage = {
       content: (
         <>
           <P>
-            Keep useful base borders, text contrast, labels and focus styles.
-            Edge’s decoration does not capture pointer events. Your app owns
-            input values, selection, keyboard handlers and portal composition.
+            Keep labels, text contrast, base borders and visible keyboard focus.
+            Decoration does not capture pointer events; input values, selection,
+            keyboard handling and portals remain under your control.
           </P>
           <P>
-            Forced-colors mode hides the border decoration. Do not use its
-            presence or absence as the only way to communicate selection,
-            validation or availability.
+            Forced-colors mode hides decoration. Communicate selection, validation
+            and availability independently of the highlight.
           </P>
         </>
       ),
@@ -39,16 +38,9 @@ export const accessibility: DocPage = {
       title: 'Understand rendering cost',
       content: (
         <>
-          <P>
-            One light coalesces updates into at most one pending frame. Geometry
-            reads precede style writes and unchanged output properties are
-            skipped.
-          </P>
-          <P>
-            Changing gradients can still require browser rendering work. Framework
-            execution counts and functional browser tests are not measurements
-            of paint, compositing, battery use or frame-rate guarantees.
-          </P>
+          <P>Each light queues at most one frame, reads geometry before writing styles,
+            and skips unchanged output. Gradient changes still require browser rendering work;
+            this does not guarantee a frame rate or battery cost.</P>
         </>
       ),
     },

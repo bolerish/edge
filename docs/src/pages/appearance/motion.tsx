@@ -8,11 +8,11 @@ export const motion: DocPage = {
   slug: 'motion',
   section: 'Styles',
   title: 'Motion',
-  description: 'Choose whether lighting follows your pointer or stays in a fixed direction. Configure motion once for every surface sharing the light.',
+  description: 'Choose whether a shared light follows the pointer or keeps a fixed direction.',
   sections: [
     {
       id: 'compare-motion', title: 'Choose motion behavior', content: <>
-        <P>Try System, Dynamic and Static below. Your selection updates the shared light across this site, including this card. Each surface keeps its colors and layout.</P>
+        <P>Try each mode below. The selection updates the shared light across this site, including the example card.</P>
         <ExamplePreview title={motionExample.title} code={motionExample.code}>
           <motionExample.Component />
         </ExamplePreview>
@@ -24,7 +24,7 @@ export const motion: DocPage = {
           <caption className="visually-hidden">Motion values</caption>
           <thead><tr><th scope="col">Value</th><th scope="col">Behavior</th></tr></thead>
           <tbody>
-            <tr><th scope="row"><code>system</code></th><td>Respects reduced motion and input preferences. Default.</td></tr>
+            <tr><th scope="row"><code>system</code></th><td>Respects reduced motion and input preferences. Library default.</td></tr>
             <tr><th scope="row"><code>dynamic</code></th><td>Follows mouse or pen input, including with reduced motion enabled.</td></tr>
             <tr><th scope="row"><code>static</code></th><td>Keeps a fixed direction; ignores pointer movement.</td></tr>
           </tbody>
@@ -33,13 +33,13 @@ export const motion: DocPage = {
       <P>For additional settings, see the <Link href="/docs/react/api/#lighting">API reference</Link>.</P>
     </> },
     {
-      id: 'system', title: 'System', content: <P>The default respects reduced motion. Without a precise hover device, lighting starts fixed; mouse or pen input can enable tracking when reduced motion is off. Touch movement never drives the light.</P>,
+      id: 'system', title: 'System', content: <P>Without a precise hover device, lighting starts fixed. Mouse or pen input can enable tracking when reduced motion is off. Touch movement never drives the light.</P>,
     },
     {
-      id: 'dynamic', title: 'Dynamic', content: <P>Continuously follows mouse or pen input, even when reduced motion is enabled. Offer it as an explicit user choice. Before pointer input, the dynamic effect is hidden.</P>,
+      id: 'dynamic', title: 'Dynamic', content: <P>Offer this mode as an explicit choice because it overrides reduced motion. The effect stays hidden until mouse or pen input arrives.</P>,
     },
     {
-      id: 'static', title: 'Static', content: <P>Keeps a fixed direction. The selector offers 0°, 90°, 180°, 270° and 315°, plus Random per mount. In your code, use any finite angle in degrees, or <code>"random"</code> to choose one shared direction per mount. Rerenders and appearance updates keep that direction; remount the light to sample a new one.</P>,
+      id: 'static', title: 'Static', content: <P>Set <code>staticDirection</code> to any finite angle in degrees or <code>"random"</code>. The demo offers 0°, 90°, 180°, 270° and 315°. Random chooses one shared direction per mount; rerenders and appearance changes preserve it. Remount to choose a new direction.</P>,
     },
     {
       id: 'accessibility', title: 'Respect user preferences', content: <P>Keep focus, selection and validation visible independently of lighting. See <Link href="/docs/accessibility/">Accessibility</Link> for input and forced-colors behavior.</P>,

@@ -2,7 +2,7 @@ import { isValidElement, type ReactNode } from 'react';
 import { pages } from '../pages/index.js';
 import { getPagePath } from '../pages/routes.js';
 
-export const searchCategories = ['Getting started', 'Usage', 'Styles', 'Guides', 'React'] as const;
+export const searchCategories = [...new Set(pages.map(page => page.section ?? 'Getting started'))];
 export type SearchCategory = typeof searchCategories[number];
 
 interface SearchDocument {
@@ -15,7 +15,7 @@ interface SearchDocument {
 }
 const documents: SearchDocument[] = pages.flatMap((page) => {
   const href = getPagePath(page);
-  const category: SearchDocument['category'] = page.section ?? 'Usage';
+  const category: SearchDocument['category'] = page.section ?? 'Getting started';
   const pageTitle = [page.section, page.title].filter(Boolean).join(' · ');
   return [
     { title: page.title, pageTitle, category, href, text: `${pageTitle} ${page.description}`.toLowerCase(), description: page.description },

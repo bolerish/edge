@@ -418,15 +418,13 @@ test('framework search uses canonical React guides and contextual labels', async
 test('shared guides appear before framework-specific documentation', async ({ page }) => {
   await page.goto('/docs/');
   const groups = page.locator('.sidebar .nav-group');
-  await expect(groups).toHaveCount(5);
-  await expect(groups.nth(0).getByRole('link')).toHaveText(['Introduction', 'Installation']);
-  await expect(groups.nth(1).getByRole('link')).toHaveText(['Usage']);
-  await expect(groups.nth(1).locator('h2, h3')).toHaveCount(0);
-  await expect(groups.nth(2)).toContainText('Styles');
-  await expect(groups.nth(2).getByRole('link')).toHaveText(['Style', 'Motion']);
-  await expect(groups.nth(3).getByRole('link')).toHaveText(['Integration', 'Accessibility']);
-  await expect(groups.nth(4).getByRole('link')).toHaveText(['Integration', 'API reference']);
-  await groups.nth(2).getByRole('link', { name: 'Style', exact: true }).click();
+  await expect(groups).toHaveCount(4);
+  await expect(groups.nth(0).getByRole('link')).toHaveText(['Introduction', 'Installation', 'Usage']);
+  await expect(groups.nth(1)).toContainText('Styles');
+  await expect(groups.nth(1).getByRole('link')).toHaveText(['Style', 'Motion']);
+  await expect(groups.nth(2).getByRole('link')).toHaveText(['Integration', 'Accessibility']);
+  await expect(groups.nth(3).getByRole('link')).toHaveText(['Integration', 'API reference']);
+  await groups.nth(1).getByRole('link', { name: 'Style', exact: true }).click();
   await expect(page).toHaveURL(/\/docs\/styles\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Style');
 });
@@ -543,7 +541,7 @@ test('the reading journey and document titles work without JavaScript', async ({
   const journey = [
     ['/docs/', 'Getting started · Introduction · bolerish/edge'],
     ['/docs/installation/', 'Getting started · Installation · bolerish/edge'],
-    ['/docs/usage/', 'Usage · bolerish/edge'],
+    ['/docs/usage/', 'Getting started · Usage · bolerish/edge'],
     ['/docs/react/usage/', 'React · Integration · bolerish/edge'],
     ['/docs/styles/', 'Styles · Style · bolerish/edge'],
     ['/docs/motion/', 'Styles · Motion · bolerish/edge'],
@@ -709,10 +707,9 @@ test('search matches the shared layout and filters real document categories', as
   const categoriesBox = await dialog.getByRole('navigation', { name: 'Search sections' }).boundingBox();
   expect(categoriesBox!.y).toBeGreaterThan(inputBox!.y + inputBox!.height);
   await dialog.getByRole('button', { name: '#Getting started', exact: true }).click();
-  await expect(dialog.locator('.search-results a')).toHaveCount(2);
-  await expect(dialog.locator('.search-results a').filter({ hasText: 'Getting started ·' })).toHaveCount(2);
-  await dialog.getByRole('button', { name: '#Usage', exact: true }).click();
-  await expect(dialog.locator('.search-results a')).toHaveCount(1);
+  await expect(dialog.locator('.search-results a')).toHaveCount(3);
+  await expect(dialog.locator('.search-results a').filter({ hasText: 'Getting started ·' })).toHaveCount(3);
+  await expect(dialog.getByRole('button', { name: '#Usage', exact: true })).toHaveCount(0);
   await expect(dialog.locator('a[href="/docs/usage/"]')).toBeVisible();
   await dialog.getByRole('button', { name: '#Guides', exact: true }).click();
   await expect(dialog.locator('.search-results a')).toHaveCount(2);
