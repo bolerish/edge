@@ -643,12 +643,16 @@ it.each(['input-first', 'scroll-first', 'stationary-touch'])(
     flush();
     expect(node.style.getPropertyValue('--edge-angle')).toBe('0.0deg');
     measure.mockReturnValue({ ...measure.mock.results[0]!.value, top: -100, bottom: 0, y: -100 });
-    if (order === 'input-first') point(150, 50);
+    if (order === 'input-first') point(250, 50);
     document.dispatchEvent(new Event('scroll'));
-    if (order === 'scroll-first') point(150, 50);
+    if (order === 'scroll-first') point(250, 50);
     flush();
-    expect(node.style.getPropertyValue('--edge-angle')).toBe('180.0deg');
-    expect(node.style.getPropertyValue('--edge-strength')).toBe('0.803');
+    expect(node.style.getPropertyValue('--edge-angle')).toBe(
+      order === 'stationary-touch' ? '180.0deg' : '135.0deg',
+    );
+    expect(node.style.getPropertyValue('--edge-strength')).toBe(
+      order === 'stationary-touch' ? '0.803' : '0.727',
+    );
     entry.destroy();
     stop();
   },
