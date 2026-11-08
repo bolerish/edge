@@ -15,14 +15,18 @@ Open http://localhost:3000.
 
 - `packages/core/src/`: framework-independent light, geometry and frame scheduling.
 - `packages/styles/src/`: shared CSS and surface appearance bindings.
-- `packages/react/src/`: React provider, surfaces and hooks.
-- `docs/src/`: documentation, examples and browser tests.
+- `packages/react/src/`: `Edge.tsx` composes the React adapter; `light/` owns light handles and context, and `surface/` owns surface rendering, appearance and registration.
+- `docs/src/`: application entry points, global `site.css` and browser tests.
+- `docs/src/pages/`: document content and its registry, routes and types. Pages with interactive examples keep them in a local `_ui/`; `pages/_shared/` owns document rendering and shared previews.
+- `docs/src/shared/`: site shell, search, preferences, installation and code presentation.
+- `docs/src/home/`: home dashboard and its example.
+- `docs/scripts/`: prerendering and packed React compatibility verification with its fixtures.
 
 Keep framework behavior in its adapter so a future Solid adapter can reuse core and styles. Group code by responsibility, colocate tests, and keep `index.ts` limited to imports and re-exports. Import workspace packages through public exports. Use the catalogs in `pnpm-workspace.yaml` and update the lockfile with dependency changes.
 
 Keep server imports safe, preserve native controls and focus indicators, and clean up refs, listeners and pending frames. Pointer movement must not update React state. Read geometry before writing styles; option changes must work with a stationary pointer. Preserve engine-owned CSS variables such as `--wisp-angle` and `--wisp-strength`.
 
-When changing a public API, update its types, documentation and examples together. Preserve existing documentation routes and section anchors.
+When changing a public API, update its types, documentation and examples together. Preserve existing documentation routes and section anchors. Document `page.tsx` files are a content convention; `docs/src/pages/routes.ts` and `page-registry.ts` remain the routing and catalog authorities. Site preferences live in `docs/src/shared/preferences/usePreferences.ts`; site defaults can differ from library defaults.
 
 ## Checks
 
@@ -46,7 +50,7 @@ export PLAYWRIGHT_BROWSERS_PATH="$PWD/.private/playwright-browsers"
 pnpm --filter @bolerish/edge-docs exec playwright install chromium
 ```
 
-For a focused test, run Vitest from the owning package, for example `pnpm --filter @bolerish/edge exec vitest run src/components/Surface.integration.test.tsx`. Run `pnpm verify:packages` after changing exports, declarations or package assets. Rendering coverage and its limits are described in the [React API documentation](docs/src/pages/react/api.tsx).
+For a focused test, run Vitest from the owning package, for example `pnpm --filter @bolerish/edge exec vitest run src/surface/Surface.integration.test.tsx`. Run `pnpm verify:packages` after changing exports, declarations or package assets. Rendering coverage and its limits are described in the [React API documentation](docs/src/pages/react/api.tsx).
 
 ## Release
 

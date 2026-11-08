@@ -1,4 +1,4 @@
-import { DocumentSurface } from './DocumentSurface.js';
+import { DocumentSurface } from '../../pages/_shared/DocumentSurface.js';
 import { Highlight } from 'prism-react-renderer';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx.js';

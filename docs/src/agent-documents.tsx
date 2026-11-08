@@ -3,10 +3,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import TurndownService from 'turndown';
 import { learningPath } from './pages/page-registry.js';
 import { getPagePath } from './pages/routes.js';
-import { CodeBlock } from './ui/CodeBlock.js';
-import { ExamplePreview, formatExampleCode } from './ui/ExamplePreview.js';
-import { InstallCommands, installationCommands } from './ui/InstallCommands.js';
-import { usePreferences, type SitePreferences } from './settings/usePreferences.js';
+import { CodeBlock } from './shared/code/CodeBlock.js';
+import { ExamplePreview, formatExampleCode } from './pages/_shared/ExamplePreview.js';
+import { InstallCommands, installationCommands } from './shared/installation/InstallCommands.js';
+import { usePreferences, type SitePreferences } from './shared/preferences/usePreferences.js';
 
 const origin = 'https://edge.bolerish.com';
 

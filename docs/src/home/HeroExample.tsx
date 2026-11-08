@@ -1,6 +1,6 @@
 import { Card } from '@bolerish/ui/card';
 import { Edge } from '@bolerish/edge';
-import { usePreferences } from '../settings/usePreferences.js';
+import { usePreferences } from '../shared/preferences/usePreferences.js';
 
 export function HeroExample() {
   const { edgeStyle } = usePreferences();

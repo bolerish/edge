@@ -1,9 +1,9 @@
 import { Link } from '@bolerish/ui/link';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
-import { CodeBlock } from '../../ui/CodeBlock.js';
-import { sharedLightExample } from '../../examples/examples.js';
-import { ExamplePreview } from '../../ui/ExamplePreview.js';
-import type { DocPage } from '../types.js';
+import { CodeBlock } from '../../../shared/code/CodeBlock.js';
+import { sharedLightExample } from './_ui/SharedLightExample.js';
+import { ExamplePreview } from '../../_shared/ExamplePreview.js';
+import type { DocPage } from '../../types.js';
 
 export const reactIntegration: DocPage = {
   slug: 'react/usage',

@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Button } from '@bolerish/ui/button';
 import { Link } from '@bolerish/ui/link';
-import { pages } from '../pages/index.js';
-import { getPagePath } from '../pages/routes.js';
 import { useLocationHash } from './useLocationHash.js';
 import { MoonIcon } from '@phosphor-icons/react/Moon';
 import { SunIcon } from '@phosphor-icons/react/Sun';
 import { DocumentationSearch } from '../search/DocumentationSearch.js';
-import { updatePreferences, usePreferences } from '../settings/usePreferences.js';
+import { updatePreferences, usePreferences } from '../preferences/usePreferences.js';
 
 export interface NavigationGroup {
   title?: string;
@@ -157,12 +155,3 @@ export function SiteShell({
     </>
   );
 }
-
-export const docsNavigation: NavigationGroup[] = [
-  ...new Set(pages.map((page) => page.section)),
-].map((section) => ({
-  title: section,
-  items: pages
-    .filter((page) => page.section === section)
-    .map((page) => ({ title: page.title, href: getPagePath(page) })),
-}));

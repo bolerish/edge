@@ -1,8 +1,8 @@
-import { usePreferences, type SitePreferences } from '../settings/usePreferences.js';
+import { usePreferences, type SitePreferences } from '../../shared/preferences/usePreferences.js';
 import { DocumentSurface } from './DocumentSurface.js';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
 import type { ReactNode } from 'react';
-import { CodeBlock } from './CodeBlock.js';
+import { CodeBlock } from '../../shared/code/CodeBlock.js';
 import './ExamplePreview.css';
 
 /** Keeps the executable preview and its exact imported source in one region. */

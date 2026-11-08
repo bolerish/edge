@@ -12,13 +12,13 @@ import { Input } from '@bolerish/ui/input';
 import { Label } from '@bolerish/ui/label';
 import { Paragraph } from '@bolerish/ui/paragraph';
 import { Edge } from '@bolerish/edge';
-import { SiteShell } from '../ui/SiteShell.js';
-import { InstallCommands } from '../ui/InstallCommands.js';
+import { SiteShell } from '../shared/site-shell/SiteShell.js';
+import { InstallCommands } from '../shared/installation/InstallCommands.js';
 import { HeroExample } from './HeroExample.js';
 import {
   motionDescriptions,
   usePreferences,
-} from '../settings/usePreferences.js';
+} from '../shared/preferences/usePreferences.js';
 
 type EdgeStyle = 'raised' | 'recessed' | 'matte';
 interface Project {

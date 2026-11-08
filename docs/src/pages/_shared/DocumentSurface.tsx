@@ -1,6 +1,6 @@
 import { createElement, use, type ComponentPropsWithoutRef, type ReactNode } from 'react';
 import { useSurface, type Light } from '@bolerish/edge';
-import { usePreferences } from '../settings/usePreferences.js';
+import { usePreferences } from '../../shared/preferences/usePreferences.js';
 import { DocumentLightContext } from './document-light-context.js';
 
 type Props = { as?: 'div' | 'a'; children: ReactNode } & ComponentPropsWithoutRef<'a'>;

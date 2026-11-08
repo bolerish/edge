@@ -1,11 +1,11 @@
 import { use } from 'react';
-import { DocumentLightContext } from '../ui/document-light-context.js';
-import { usePreferences, updatePreferences } from '../settings/usePreferences.js';
+import { DocumentLightContext } from '../../../_shared/document-light-context.js';
+import { usePreferences, updatePreferences } from '../../../../shared/preferences/usePreferences.js';
 import { useSurface, type EdgeStyle } from '@bolerish/edge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@bolerish/ui/card';
 import { Select, SelectItem, SelectList, SelectPopup, SelectTrigger, SelectValue } from '@bolerish/ui/select';
 import '@bolerish/edge/style.css';
-import './appearance-examples.css';
+import '../../_shared/example-controls.css';
 
 const edgeStyles = [
   { value: 'raised', label: 'Raised' },
@@ -47,3 +47,14 @@ function StyleCard({ edgeStyle }: { edgeStyle: EdgeStyle }) {
     </Card>
   );
 }
+
+export const edgeStylesExample = {
+  title: 'Compare edge styles',
+  Component: EdgeStylesExample,
+  code: `const light = useLight();
+const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
+
+<Card ref={surface}>
+  Your component
+</Card>`,
+};

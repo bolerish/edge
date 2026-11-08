@@ -1,5 +1,5 @@
-import { InstallCommands } from '../../ui/InstallCommands.js';
-import { CodeBlock } from '../../ui/CodeBlock.js';
+import { InstallCommands } from '../../shared/installation/InstallCommands.js';
+import { CodeBlock } from '../../shared/code/CodeBlock.js';
 import { Link } from '@bolerish/ui/link';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import type { DocPage } from '../types.js';

@@ -1,8 +1,8 @@
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
-import { ExamplePreview } from '../../ui/ExamplePreview.js';
-import { edgeStylesExample } from '../../examples/examples.js';
-import type { DocPage } from '../types.js';
+import { ExamplePreview } from '../../_shared/ExamplePreview.js';
+import { edgeStylesExample } from './_ui/EdgeStylesExample.js';
+import type { DocPage } from '../../types.js';
 export const styles: DocPage = {
   slug: 'styles',
   aliases: ['materials', 'react/materials'],

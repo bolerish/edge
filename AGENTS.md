@@ -12,6 +12,6 @@ Documentation entry points:
 
 - `docs/src/pages/page-registry.ts`: sidebar and reading order.
 - `docs/src/pages/routes.ts`: canonical routes and aliases; preserve existing routes and section anchors.
-- `docs/src/settings/usePreferences.ts`: persisted site settings; distinguish site defaults from library defaults.
+- `docs/src/shared/preferences/usePreferences.ts`: persisted site settings; distinguish site defaults from library defaults.
 
 Run the relevant checks in CONTRIBUTING. Report checks actually run and remaining limitations. Do not infer performance gains from source structure alone.

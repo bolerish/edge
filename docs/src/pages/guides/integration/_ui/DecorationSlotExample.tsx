@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@bolerish/ui/button';
 import { Edge } from '@bolerish/edge';
 import '@bolerish/edge/style.css';
-import './usage-examples.css';
+import '../../../_shared/example-layout.css';
 
 export function DecorationSlotExample() {
   const [pseudoElement, setPseudoElement] = useState<'before' | 'after'>('before');
@@ -33,3 +33,15 @@ export function DecorationSlotExample() {
     </Edge.Provider>
   );
 }
+
+export const decorationSlotExample = {
+  title: 'Keep existing pseudo-elements',
+  Component: DecorationSlotExample,
+  code: `import { Edge } from '@bolerish/edge';
+
+<Edge.Provider>
+  <Edge.Surface as="article" pseudoElement="before" className="existing-after">
+    Your existing ::after stays intact.
+  </Edge.Surface>
+</Edge.Provider>`,
+};

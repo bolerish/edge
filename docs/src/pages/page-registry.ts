@@ -1,13 +1,13 @@
 import { introduction } from './getting-started/introduction.js';
 import { installation } from './getting-started/installation.js';
-import { integration } from './guides/integration.js';
 import { usage } from './usage.js';
-import { reactIntegration } from './react/usage.js';
-import { styles } from './appearance/style.js';
-import { motion } from './appearance/motion.js';
+import { styles } from './appearance/style/page.js';
+import { motion } from './appearance/motion/page.js';
+import { integration } from './guides/integration/page.js';
 import { accessibility } from './guides/accessibility.js';
 import { api } from './react/api.js';
 import { aiIntegration } from './guides/ai-integration.js';
+import { reactIntegration } from './react/usage/page.js';
 export const pages = [
   introduction,
   installation,

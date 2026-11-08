@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { App } from '../App.js';
-import { findPage, normalizePath, titleFor } from '../pages/routes.js';
+import { App } from './App.js';
+import { findPage, normalizePath, titleFor } from './pages/routes.js';
 
 /** Keeps document navigation in the current page; native links still work without JS. */
 export function BrowserApp({ initialPath }: { initialPath: string }) {

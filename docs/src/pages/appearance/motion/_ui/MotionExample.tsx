@@ -1,11 +1,11 @@
 import { use } from 'react';
-import { DocumentLightContext } from '../ui/document-light-context.js';
-import { usePreferences, updatePreferences } from '../settings/usePreferences.js';
+import { DocumentLightContext } from '../../../_shared/document-light-context.js';
+import { usePreferences, updatePreferences } from '../../../../shared/preferences/usePreferences.js';
 import { useSurface } from '@bolerish/edge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@bolerish/ui/card';
 import { Select, SelectItem, SelectList, SelectPopup, SelectTrigger, SelectValue } from '@bolerish/ui/select';
 import '@bolerish/edge/style.css';
-import './appearance-examples.css';
+import '../../_shared/example-controls.css';
 
 const motions = { system: 'System', dynamic: 'Dynamic', static: 'Static' };
 const directions = { random: 'Random per mount', '0': '0°', '90': '90°', '180': '180°', '270': '270°', '315': '315°' };
@@ -59,3 +59,10 @@ function MotionCard() {
     </Card>
   );
 }
+
+export const motionExample = { title: 'Compare motion', Component: MotionExample, code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__ });
+const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
+
+<Card ref={surface}>
+  Your component
+</Card>` };

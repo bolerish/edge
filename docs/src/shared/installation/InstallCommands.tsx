@@ -3,7 +3,7 @@ import { Button } from '@bolerish/ui/button';
 import { installPrompt } from './install-prompt.js';
 import './InstallCommands.css';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
-import { CodeBlock } from './CodeBlock.js';
+import { CodeBlock } from '../code/CodeBlock.js';
 const COPY_CONFIRMATION_DURATION_MS = 2000;
 
 export const installationCommands = [

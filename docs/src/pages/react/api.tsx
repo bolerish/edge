@@ -1,6 +1,6 @@
 import { Link } from '@bolerish/ui/link';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
-import { CodeBlock } from '../../ui/CodeBlock.js';
+import { CodeBlock } from '../../shared/code/CodeBlock.js';
 import {
   apiTable,
   providerPropRows,

@@ -1,9 +1,9 @@
 import { use } from 'react';
 import { useSurface } from '@bolerish/edge';
 import { Card, CardContent, CardHeader, CardTitle } from '@bolerish/ui/card';
-import { DocumentLightContext } from '../ui/document-light-context.js';
-import { usePreferences } from '../settings/usePreferences.js';
-import './usage-examples.css';
+import { DocumentLightContext } from '../../../_shared/document-light-context.js';
+import { usePreferences } from '../../../../shared/preferences/usePreferences.js';
+import '../../../_shared/example-layout.css';
 
 export function SharedLightExample() {
   const light = use(DocumentLightContext);
@@ -24,3 +24,12 @@ export function SharedLightExample() {
     </div>
   );
 }
+
+export const sharedLightExample = {
+  title: 'One light, your components',
+  Component: SharedLightExample,
+  code: `<Edge.Provider>
+  <Edge.Surface>Example card</Edge.Surface>
+  <Edge.Surface>Another example card</Edge.Surface>
+</Edge.Provider>`,
+};

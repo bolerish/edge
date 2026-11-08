@@ -1,10 +1,10 @@
 import '@bolerish/ui/global.css';
 import '@bolerish/edge/style.css';
-import './ui/site.css';
+import './site.css';
 import './home/home.css';
-import './ui/code-theme.css';
+import './shared/code/code-theme.css';
 import { createRoot, hydrateRoot } from 'react-dom/client';
-import { BrowserApp } from './navigation/BrowserApp.js';
+import { BrowserApp } from './BrowserApp.js';
 import { normalizePath, titleFor } from './pages/routes.js';
 const root = document.querySelector<HTMLElement>('#root');
 if (!root) throw new Error('Missing site root');
