@@ -6,7 +6,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
 import { CodeBlock } from './CodeBlock.js';
 const COPY_CONFIRMATION_DURATION_MS = 2000;
 
-const commands = [
+export const installationCommands = [
   { manager: 'npm', command: 'npm install @bolerish/edge' },
   { manager: 'pnpm', command: 'pnpm add @bolerish/edge' },
   { manager: 'Yarn', command: 'yarn add @bolerish/edge' },
@@ -32,7 +32,7 @@ export function InstallCommands() {
       <Tabs defaultValue="npm">
         <div className="install-toolbar">
           <TabsList aria-label="Package manager">
-            {commands.map(({ manager }) => (
+            {installationCommands.map(({ manager }) => (
               <TabsTrigger key={manager} value={manager}>
                 {manager}
               </TabsTrigger>
@@ -42,7 +42,7 @@ export function InstallCommands() {
             {status === 'copied' ? 'Copied' : 'Copy prompt'}
           </Button>
         </div>
-        {commands.map(({ manager, command }) => (
+        {installationCommands.map(({ manager, command }) => (
           <TabsContent key={manager} value={manager}>
             <CodeBlock
               label={`${manager} installation`}

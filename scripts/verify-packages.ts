@@ -189,7 +189,8 @@ for (const [route, html] of documents) {
       `https://wisp.invalid${route}`,
     );
     if (target.origin !== 'https://wisp.invalid') continue;
-    const page = documents.get(target.pathname);
+    const page = documents.get(target.pathname) ??
+      await readFile(resolve(site, `.${target.pathname}`), 'utf8').catch(() => undefined);
     assert(page, `Broken site route: ${match[1]} from ${route}`);
     if (target.hash) {
       const ids = new Set(

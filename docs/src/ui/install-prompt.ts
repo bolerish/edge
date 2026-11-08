@@ -1,4 +1,5 @@
 export const installPrompt = `Set up @bolerish/edge in this existing React project.
+Read https://edge.bolerish.com/llms.txt and its relevant Markdown documents first. Match the documentation to the installed package version.
 
 1. Inspect package.json, the lockfile and the app entry or root layout. Use the project's existing package manager. Edge requires React 18 or 19; report an incompatible version instead of upgrading React automatically.
 2. Add @bolerish/edge with npm install, pnpm add, yarn add or bun add. If the registry reports that the package is unavailable, report the error and stop; do not substitute another package.

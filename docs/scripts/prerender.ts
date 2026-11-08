@@ -1,5 +1,5 @@
 import { readFile, writeFile, mkdir, symlink } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 await symlink(
   resolve('node_modules'),
   resolve('../.private/docs-ssr/node_modules'),
@@ -8,7 +8,7 @@ await symlink(
   if (!(error instanceof Error && 'code' in error && error.code === 'EEXIST')) throw error;
 });
 const serverUrl = new URL('../../.private/docs-ssr/entry-server.js', import.meta.url);
-const { renderDocument, publicPaths }: typeof import('../src/entry-server.js') = await import(serverUrl.href);
+const { renderDocument, publicPaths, renderAgentDocuments }: typeof import('../src/entry-server.js') = await import(serverUrl.href);
 const destination = resolve('dist');
 const template = await readFile(resolve(destination, 'index.html'), 'utf8');
 if ([...template.matchAll(/<title>[^<]*<\/title>/g)].length !== 1)
@@ -28,3 +28,10 @@ await writeFile(
   resolve(destination, 'routes.json'),
   JSON.stringify(publicPaths),
 );
+
+const { version }: { version: string } = JSON.parse(await readFile(resolve('../packages/react/package.json'), 'utf8'));
+for (const [path, body] of renderAgentDocuments(version)) {
+  const file = resolve(destination, `.${path}`);
+  await mkdir(dirname(file), { recursive: true });
+  await writeFile(file, body);
+}

@@ -12,7 +12,23 @@ const stylesheets = [
 
 export default defineConfig({
   plugins: [{
-    name: 'edge-docs-development-html',
+    name: 'edge-docs-html',
+    configureServer(server) {
+      server.middlewares.use(async (request, response, next) => {
+        const path = new URL(request.url ?? '/', 'http://localhost').pathname;
+        if (!['GET', 'HEAD'].includes(request.method ?? '') ||
+          !(path === '/llms.txt' || path === '/llms-full.txt' || /^\/docs\/.*index\.md$/.test(path))) return next();
+        try {
+          const { renderAgentDocuments } = await server.ssrLoadModule('/src/entry-server.tsx') as
+            typeof import('./src/entry-server.js');
+          const { version } = JSON.parse(readFileSync(new URL('../packages/react/package.json', import.meta.url), 'utf8'));
+          const body = renderAgentDocuments(version).get(path);
+          response.statusCode = body === undefined ? 404 : 200;
+          response.setHeader('Content-Type', `${path.endsWith('.md') ? 'text/markdown' : 'text/plain'}; charset=utf-8`);
+          response.end(request.method === 'HEAD' ? undefined : body ?? 'Not found');
+        } catch (error) { next(error); }
+      });
+    },
     async transformIndexHtml(html, context) {
       const faviconVersion = createHash('sha256')
         .update(readFileSync(new URL('./public/favicon.ico', import.meta.url))).digest('hex').slice(0, 12);

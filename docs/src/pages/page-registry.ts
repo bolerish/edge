@@ -7,6 +7,7 @@ import { styles } from './appearance/style.js';
 import { motion } from './appearance/motion.js';
 import { accessibility } from './guides/accessibility.js';
 import { api } from './react/api.js';
+import { aiIntegration } from './guides/ai-integration.js';
 export const pages = [
   introduction,
   installation,
@@ -15,12 +16,13 @@ export const pages = [
   motion,
   integration,
   accessibility,
+  aiIntegration,
   reactIntegration,
   api,
 ];
 
 // A reading journey differs from the sidebar's responsibility-based catalog.
-export const learningPath = [introduction, installation, usage, reactIntegration, styles, motion, integration, accessibility, api];
+export const learningPath = [introduction, installation, usage, reactIntegration, styles, motion, integration, accessibility, aiIntegration, api];
 
 export function getReadingNeighbors(page: (typeof pages)[number]) {
   const index = learningPath.indexOf(page);

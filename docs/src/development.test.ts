@@ -12,6 +12,12 @@ test('development serves styled content before JavaScript and hydrates it on ref
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   try {
+    const agentIndex = await request.get(origin + '/llms.txt');
+    expect(agentIndex.ok()).toBe(true);
+    expect(await agentIndex.text()).toContain('/docs/react/api/index.md');
+    const agentApi = await request.get(origin + '/docs/react/api/index.md');
+    expect(agentApi.headers()['content-type']).toContain('text/markdown');
+    expect(await agentApi.text()).toContain('const ref = useSurface<HTMLElement>(options);');
     const staticPage = await noScript.newPage();
     for (const path of ['/docs/', '/']) {
       const response = await request.get(origin + path);

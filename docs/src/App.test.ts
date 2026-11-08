@@ -422,7 +422,7 @@ test('shared guides appear before framework-specific documentation', async ({ pa
   await expect(groups.nth(0).getByRole('link')).toHaveText(['Introduction', 'Installation', 'Usage']);
   await expect(groups.nth(1)).toContainText('Styles');
   await expect(groups.nth(1).getByRole('link')).toHaveText(['Style', 'Motion']);
-  await expect(groups.nth(2).getByRole('link')).toHaveText(['Integration', 'Accessibility']);
+  await expect(groups.nth(2).getByRole('link')).toHaveText(['Integration', 'Accessibility', 'AI Integration']);
   await expect(groups.nth(3).getByRole('link')).toHaveText(['Integration', 'API reference']);
   await groups.nth(1).getByRole('link', { name: 'Style', exact: true }).click();
   await expect(page).toHaveURL(/\/docs\/styles\/$/);
@@ -547,6 +547,7 @@ test('the reading journey and document titles work without JavaScript', async ({
     ['/docs/motion/', 'Styles · Motion · bolerish/edge'],
     ['/docs/integration/', 'Guides · Integration · bolerish/edge'],
     ['/docs/accessibility/', 'Guides · Accessibility · bolerish/edge'],
+    ['/docs/ai-integration/', 'Guides · AI Integration · bolerish/edge'],
     ['/docs/react/api/', 'React · API reference · bolerish/edge'],
   ] as const;
   await page.goto('http://127.0.0.1:4183/docs/');
@@ -712,7 +713,7 @@ test('search matches the shared layout and filters real document categories', as
   await expect(dialog.getByRole('button', { name: '#Usage', exact: true })).toHaveCount(0);
   await expect(dialog.locator('a[href="/docs/usage/"]')).toBeVisible();
   await dialog.getByRole('button', { name: '#Guides', exact: true }).click();
-  await expect(dialog.locator('.search-results a')).toHaveCount(2);
+  await expect(dialog.locator('.search-results a')).toHaveCount(3);
   await expect(dialog.locator('.search-results a').filter({ hasText: 'Getting started ·' })).toHaveCount(0);
   await dialog.getByRole('button', { name: '#React', exact: true }).click();
   await expect(dialog.locator('.search-results a')).toHaveCount(2);

@@ -26,6 +26,8 @@
     "@types/react-dom": "catalog:2026-11-03--react-stable",
     "@playwright/test": "catalog:",
     "@axe-core/playwright": "catalog:",
-    "@types/prismjs": "catalog:"
+    "@types/prismjs": "catalog:",
+    "turndown": "catalog:",
+    "@types/turndown": "catalog:"
   }
 }

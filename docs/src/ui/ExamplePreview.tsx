@@ -1,4 +1,4 @@
-import { usePreferences } from '../settings/usePreferences.js';
+import { usePreferences, type SitePreferences } from '../settings/usePreferences.js';
 import { DocumentSurface } from './DocumentSurface.js';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
 import type { ReactNode } from 'react';
@@ -12,7 +12,7 @@ export function ExamplePreview({ title, code, children }: {
   children: ReactNode;
 }) {
   const { edgeStyle, motion, staticDirection } = usePreferences();
-  const displayedCode = code.replaceAll('__EDGE_STYLE__', JSON.stringify(edgeStyle)).replaceAll('__MOTION__', JSON.stringify(motion)).replaceAll('__STATIC_DIRECTION__', JSON.stringify(staticDirection));
+  const displayedCode = formatExampleCode(code, { edgeStyle, motion, staticDirection });
   return (
     <div className="example-preview" role="group" aria-label={title}>
       <Tabs defaultValue="preview" variant="underline">
@@ -35,4 +35,10 @@ export function ExamplePreview({ title, code, children }: {
       </noscript>
     </div>
   );
+}
+
+export function formatExampleCode(code: string, preferences: Pick<SitePreferences, 'edgeStyle' | 'motion' | 'staticDirection'>) {
+  return code.replaceAll('__EDGE_STYLE__', JSON.stringify(preferences.edgeStyle))
+    .replaceAll('__MOTION__', JSON.stringify(preferences.motion))
+    .replaceAll('__STATIC_DIRECTION__', JSON.stringify(preferences.staticDirection));
 }
