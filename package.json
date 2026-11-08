@@ -25,7 +25,8 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "lint": "oxlint",
-    "lint:fix": "oxlint --fix"
+    "lint:fix": "oxlint --fix",
+    "release:prepare": "pnpm check && pnpm test:react-compat"
   },
   "devDependencies": {
     "@types/node": "catalog:",

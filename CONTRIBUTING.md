@@ -70,6 +70,16 @@ For a focused test, run Vitest from the owning package, for example `pnpm --filt
 
 ## Release
 
-Keep library versions aligned. Publish only when explicitly requested, in order: core, styles, React. Verify packed installation before publishing.
+Keep library versions aligned. Run release preparation with Chromium installed as described above:
+
+```sh
+pnpm release:prepare
+```
+
+This runs `pnpm check` followed by `pnpm test:react-compat`. Verified archives remain at `.private/package-check/core.tgz`, `.private/package-check/styles.tgz` and `.private/package-check/react.tgz`. The compatibility check creates separate archives in `.private/react-compatibility` and preserves the package-check archives. Each preparation run replaces its previous package-check output.
+
+The manually dispatched `.github/workflows/release-prepare.yml` installs the pinned Node and pnpm versions, runs the same checks and uploads only those three package-check archives. It does not publish packages or deploy the site. Passing preparation is not proof that a version can be published: all three packages at `0.1.0` were already published on November 5, 2026, and cannot be overwritten. Versions remain `0.1.0` for this preparation change; the next release requires an unused aligned version and a new preparation run.
+
+Check real iOS and Android devices separately before release; Chromium and React compatibility checks do not cover real devices. Publish only upon future explicit authorization, in order: core, styles, React. Publish the exact verified tarballs from that release preparation, rather than repacking source afterward. npm authentication is not configured by this workflow.
 
 Deploy only when requested with `pnpm deploy:docs`. Cloudflare Pages serves `docs/dist` at `edge.bolerish.com`; `.private/docs-ssr` is a build artifact and must not be deployed.
