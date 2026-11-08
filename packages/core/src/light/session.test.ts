@@ -189,7 +189,7 @@ it('ignores secondary touches and honors static and reduced motion on touch down
   expect(frames.size).toBe(0);
 });
 
-it('keeps tracking touch positions after pointer cancellation and native scrolling', () => {
+it('stops touch lighting after native scrolling until release', () => {
   const { render, invalidate } = scene();
   function send(type: string, x = 40, y = 50) {
     const contact = { identifier: 7, clientX: x, clientY: y };
@@ -207,7 +207,7 @@ it('keeps tracking touch positions after pointer cancellation and native scrolli
   document.dispatchEvent(new Event('scroll'));
   send('touchmove', 60, 80);
   flush();
-  expect(render).toHaveBeenLastCalledWith({ x: 60, y: 80 }, false);
+  expect(render).toHaveBeenLastCalledWith(null, false);
   expect(invalidate).toHaveBeenCalled();
   send('touchend');
   flush();
@@ -274,4 +274,49 @@ it('ignores fonts ready resolving after stop', async () => {
     if (previous) Object.defineProperty(document, 'fonts', previous);
     else Reflect.deleteProperty(document, 'fonts');
   }
+});
+
+it.each(['scroll', 'pointercancel'])('retains cancelled gesture ownership after %s', (ending) => {
+  const { render } = scene('dynamic');
+  touch('touchstart');
+  flush();
+  if (ending === 'scroll') {
+    const nested = document.createElement('div');
+    document.body.append(nested);
+    nested.dispatchEvent(new Event('scroll'));
+    nested.remove();
+  } else {
+    document.dispatchEvent(Object.assign(new Event('pointercancel'), { pointerType: 'touch' }));
+  }
+  flush();
+  expect(render).toHaveBeenLastCalledWith(null, false);
+  touch('touchstart', 2, false);
+  touch('touchmove');
+  move();
+  document.dispatchEvent(
+    Object.assign(new Event('pointermove'), { pointerType: 'pen', clientX: 90, clientY: 90 }),
+  );
+  expect(frames.size).toBe(0);
+  document.dispatchEvent(
+    Object.assign(new Event('touchend'), {
+      touches: [{ identifier: 2 }],
+      changedTouches: [{ identifier: 1 }],
+    }),
+  );
+  touch('touchmove', 2);
+  move();
+  expect(frames.size).toBe(0);
+  touch('touchend', 2);
+  touch('touchstart');
+  flush();
+  expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
+});
+
+it('preserves mouse lighting on mouse pointer cancellation', () => {
+  const { render } = scene();
+  move();
+  flush();
+  document.dispatchEvent(Object.assign(new Event('pointercancel'), { pointerType: 'mouse' }));
+  expect(frames.size).toBe(0);
+  expect(render).toHaveBeenLastCalledWith({ x: 20, y: 30 }, false);
 });

@@ -81,10 +81,7 @@ for (const mode of ['dynamic', 'system', 'static', 'reduced'] as const) {
   });
 }
 
-test('native scrolling keeps touch lighting active until the finger is released', async ({
-  page,
-  context,
-}) => {
+test('native scrolling restores resting lighting until a new press', async ({ page, context }) => {
   await page.goto('/docs/motion/');
   const card = page
     .getByRole('group', { name: 'Compare motion', exact: true })
@@ -119,40 +116,12 @@ test('native scrolling keeps touch lighting active until the finger is released'
     });
   }
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(initialScroll);
-  await expect
-    .poll(() => card.evaluate((node) => Number(node.style.getPropertyValue('--edge-strength'))))
-    .toBeGreaterThan(0);
+  await expect(card).toHaveCSS('--edge-strength', '0.000');
   await session.send('Input.dispatchTouchEvent', {
     type: 'touchMove',
     touchPoints: [{ ...point, y: point.y - 110 }],
   });
-  await expect
-    .poll(() => card.evaluate((node) => Number(node.style.getPropertyValue('--edge-strength'))))
-    .toBeGreaterThan(0);
-
-  await expect
-    .poll(() => page.evaluate(() => document.documentElement.dataset.pointerCancelled))
-    .toBe('true');
-  await expect
-    .poll(() =>
-      card.evaluate(
-        (node, contact) => {
-          const rect = node.getBoundingClientRect();
-          const expected =
-            ((Math.atan2(
-              contact.y - rect.top - rect.height / 2,
-              contact.x - rect.left - rect.width / 2,
-            ) *
-              180) /
-              Math.PI +
-              450) %
-            360;
-          return Math.abs(parseFloat(node.style.getPropertyValue('--edge-angle')) - expected);
-        },
-        { x: point.x, y: point.y - 110 },
-      ),
-    )
-    .toBeLessThan(0.1);
+  await expect(card).toHaveCSS('--edge-strength', '0.000');
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await expect
     .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-strength')))
@@ -162,6 +131,27 @@ test('native scrolling keeps touch lighting active until the finger is released'
   await expect
     .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-strength')))
     .toBe('0.000');
+  let previousScroll = -1;
+  let stableScrollSamples = 0;
+  await expect
+    .poll(async () => {
+      const currentScroll = await page.evaluate(() => scrollY);
+      stableScrollSamples = currentScroll === previousScroll ? stableScrollSamples + 1 : 0;
+      previousScroll = currentScroll;
+      return stableScrollSamples;
+    })
+    .toBeGreaterThanOrEqual(3);
+  await card.scrollIntoViewIfNeeded();
+  const nextBox = await card.boundingBox();
+  if (!nextBox) throw new Error('Missing motion card');
+  await session.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [{ x: nextBox.x + 10, y: nextBox.y + 10, id: 2 }],
+  });
+  await expect
+    .poll(() => card.evaluate((node) => Number(node.style.getPropertyValue('--edge-strength'))))
+    .toBeGreaterThan(0);
+  await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await session.detach();
 });
 

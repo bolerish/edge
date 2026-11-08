@@ -17,6 +17,8 @@ export function createLightSession(
   if (!view) throw new Error('Light requires a browser document');
   let pointer: Point | null = null;
   let touchId: number | null = null;
+  let touchOwned = false;
+  let touchCancelled = false;
   let live = true;
   let frame: number | null = null;
   const reduced = view.matchMedia('(prefers-reduced-motion: reduce)');
@@ -39,17 +41,19 @@ export function createLightSession(
     scheduleFrame();
   }
   function move(event: PointerEvent) {
-    if (touchId === null && event.pointerType !== 'touch')
-      updatePointer(event.clientX, event.clientY);
+    if (!touchOwned && event.pointerType !== 'touch') updatePointer(event.clientX, event.clientY);
   }
   function handleTouchStart(event: TouchEvent) {
-    if (touchId !== null || event.touches.length !== 1) return;
+    const owned = touchOwned;
+    touchOwned = event.touches.length > 0;
+    if (owned || touchCancelled || event.touches.length !== 1) return;
     const contact = event.changedTouches[0];
     if (!contact) return;
     touchId = contact.identifier;
     updatePointer(contact.clientX, contact.clientY);
   }
   function handleTouchMove(event: TouchEvent) {
+    if (touchCancelled) return;
     for (const contact of Array.from(event.touches)) {
       if (contact.identifier === touchId) {
         updatePointer(contact.clientX, contact.clientY);
@@ -58,12 +62,23 @@ export function createLightSession(
     }
   }
   function handleTouchEnd(event: TouchEvent) {
+    touchOwned = event.touches.length > 0;
+    if (!touchOwned) touchCancelled = false;
     for (const contact of Array.from(event.changedTouches)) {
       if (contact.identifier === touchId) {
-        clear();
+        cancelTouch();
+        if (!touchOwned) touchCancelled = false;
         return;
       }
     }
+  }
+  function cancelTouch() {
+    if (!touchOwned && touchId === null) return;
+    touchCancelled = true;
+    clear();
+  }
+  function cancelled(event: PointerEvent) {
+    if (event.pointerType === 'touch') cancelTouch();
   }
   function clear() {
     touchId = null;
@@ -71,7 +86,7 @@ export function createLightSession(
     scheduleFrame();
   }
   function out(event: PointerEvent) {
-    if (touchId === null && event.pointerType !== 'touch' && event.relatedTarget === null) clear();
+    if (!touchOwned && event.pointerType !== 'touch' && event.relatedTarget === null) clear();
   }
   function invalidateGeometry() {
     if (live) invalidate();
@@ -81,11 +96,13 @@ export function createLightSession(
   }
   function scrolled(event: Event) {
     if (!live) return;
+    cancelTouch();
     const container = event.target instanceof view!.Element ? (event.target as Element) : undefined;
     invalidate(container);
   }
   const observer = new view.ResizeObserver(invalidateGeometry);
-  // Native scrolling can cancel the pointer stream; touch events track contact lifetime.
+  // Keep gesture ownership until every contact ends, including after native takeover.
+  target.addEventListener('pointercancel', cancelled, { passive: true });
   target.addEventListener('touchstart', handleTouchStart, { passive: true });
   target.addEventListener('touchmove', handleTouchMove, { passive: true });
   target.addEventListener('touchend', handleTouchEnd, { passive: true });
@@ -120,6 +137,7 @@ export function createLightSession(
       live = false;
       if (frame !== null) view.cancelAnimationFrame(frame);
       observer.disconnect();
+      target.removeEventListener('pointercancel', cancelled);
       target.removeEventListener('touchstart', handleTouchStart);
       target.removeEventListener('touchmove', handleTouchMove);
       target.removeEventListener('touchend', handleTouchEnd);

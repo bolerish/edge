@@ -648,10 +648,10 @@ it.each(['input-first', 'scroll-first', 'stationary-touch'])(
     if (order === 'scroll-first') point(250, 50);
     flush();
     expect(node.style.getPropertyValue('--edge-angle')).toBe(
-      order === 'stationary-touch' ? '180.0deg' : '135.0deg',
+      order === 'stationary-touch' ? '315.0deg' : '135.0deg',
     );
     expect(node.style.getPropertyValue('--edge-strength')).toBe(
-      order === 'stationary-touch' ? '0.803' : '0.727',
+      order === 'stationary-touch' ? '0.000' : '0.727',
     );
     entry.destroy();
     stop();
