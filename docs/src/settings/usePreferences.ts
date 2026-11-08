@@ -41,13 +41,20 @@ export function updatePreferences(changes: Partial<SitePreferences>) {
 function subscribe(onChange: () => void) {
   if (listeners.size === 0) window.addEventListener('storage', notify);
   listeners.add(onChange);
+  applyTheme();
   return () => {
     listeners.delete(onChange);
     if (listeners.size === 0) window.removeEventListener('storage', notify);
   };
 }
 function notify() {
+  applyTheme();
   for (const listener of listeners) listener();
+}
+function applyTheme() {
+  const theme = getSnapshot().theme;
+  if (document.documentElement.dataset.bolerishTheme !== theme)
+    document.documentElement.dataset.bolerishTheme = theme;
 }
 function getServerSnapshot() {
   return defaults;

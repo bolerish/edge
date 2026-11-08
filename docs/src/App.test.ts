@@ -11,6 +11,49 @@ const routes = [
   '/',
 ];
 
+test('refresh preserves the stored theme before and after hydration', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.addInitScript(() => {
+    localStorage.setItem('wisp:preferences:v1', JSON.stringify({ theme: 'dark' }));
+    const transitions: Array<string | null> = [];
+    Object.assign(window, { themeTransitions: transitions });
+    let initialized = false;
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.target !== document.documentElement) continue;
+        if (!initialized) {
+          initialized = document.documentElement.dataset.bolerishTheme === 'dark';
+          if (initialized) transitions.push('dark');
+          continue;
+        }
+        if (record.oldValue) transitions.push(record.oldValue);
+        transitions.push(document.documentElement.getAttribute('data-bolerish-theme'));
+      }
+    }).observe(document, {
+      subtree: true, attributes: true, attributeOldValue: true, attributeFilter: ['data-bolerish-theme'],
+    });
+  });
+  // Delay the application, keeping the initial HTML and stylesheet observable.
+  await page.route('**/*.js', async route => {
+    await new Promise(resolve => setTimeout(resolve, 150));
+    await route.continue();
+  });
+  for (const path of ['/docs/', '/']) {
+    await page.goto(path, { waitUntil: 'domcontentloaded' });
+    await expect(page.getByRole('button', { name: 'Switch to light theme' })).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Switch to light theme' })).toBeVisible();
+    const transitions = await page.evaluate(() => (window as unknown as { themeTransitions: string[] }).themeTransitions);
+    expect(transitions).toContain('dark');
+    expect(transitions).not.toContain('light');
+    await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(8, 9, 10)');
+  }
+  await page.getByRole('button', { name: 'Switch to light theme' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-bolerish-theme', 'light');
+  expect(errors).toEqual([]);
+});
+
 test('public routes render content before JavaScript and hydrate without errors', async ({
   page,
   request,

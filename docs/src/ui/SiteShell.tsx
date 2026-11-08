@@ -36,9 +36,6 @@ export function SiteShell({
   const hash = useLocationHash();
   const menu = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    document.documentElement.dataset.bolerishTheme = theme;
-  }, [theme]);
-  useEffect(() => {
     if (!open) return;
     const escape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
