@@ -2,7 +2,9 @@
 
 A little more alive. Connect your React components to one shared directional light.
 
-Requires React 18 or 19. Install with your package manager:
+## Quick start
+
+Requires React 18 or 19.
 
 ```sh
 npm install @bolerish/edge
@@ -22,20 +24,16 @@ export function Area() {
 }
 ```
 
-Load the stylesheet once, before application and utility styles; a separate reset may load first. Edge preserves your background, text, padding and base border. Highlights use the host's text color and border radius by default.
+Load the stylesheet once, before your application styles. Only marked surfaces respond; your colors, layout and interactions stay yours.
 
-`Edge.Provider` adds no DOM. Only explicit surfaces respond. Choose `edgeStyle="raised"`, `"recessed"` or `"matte"`; motion defaults to `"system"` and respects reduced motion. Existing hosts can call `useSurface(options?)` inside the provider and attach its callback ref. Use `useLight` with `useSurface(light, options)` only when managing a separate light explicitly.
+## Documentation
 
-Decoration uses `::after`; choose `pseudoElement="before"` if needed. Native inputs and hosts using both pseudo-elements need a wrapper. Preserve native focus indicators. Hook decoration attaches after hydration; `Edge.Surface` also emits decorative classes during SSR.
+See the [guides and API reference](https://github.com/bolerish/wisp/tree/main/docs/src/pages) for styles, motion, integration and rendering.
 
-## Rendering
+## Contributing
 
-`Edge.Provider` and `Edge.Surface` support CSR, SSR and build-time prerendering. `Edge.Surface` emits decoration classes and appearance variables on the server; geometry and lighting activate on the client. `useSurface` attaches decoration after hydration. Keep labels, focus and validation independent of lighting.
+See [CONTRIBUTING.md](https://github.com/bolerish/wisp/blob/main/CONTRIBUTING.md) for setup and checks.
 
-Node streaming SSR (`renderToPipeableStream`) and Web streaming SSR (`renderToReadableStream`) can render delayed Suspense surfaces under the same provider. For SSG with hydration, collect hydratable output after all content is ready. `renderToStaticMarkup` is for non-hydratable HTML; without client code, content remains available but lighting does not activate.
+## License
 
-In Server Component frameworks, use Edge from a client module marked with `"use client"`. Isolated React 18/19 tests cover both streaming APIs and hydration of completed output, not every framework, deployed runtime or incomplete-stream selective hydration.
-
-See the [usage guide](https://github.com/bolerish/wisp#readme) for limits and the source documentation in the repository's `docs/` directory.
-
-MIT licensed.
+[MIT](https://github.com/bolerish/wisp/blob/main/LICENSE).
