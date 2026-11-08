@@ -1,3 +1,4 @@
+import { LightingControls } from './shared/preferences/LightingControls.js';
 import { Badge } from '@bolerish/ui/badge';
 import { Item, ItemContent, ItemTitle, ItemDescription } from '@bolerish/ui/item';
 import {
@@ -44,9 +45,15 @@ const projects: readonly Project[] = [
 ];
 
 export function Home() {
-  const { motion, staticDirection } = usePreferences();
+  const { motion, staticDirection, direction, radius } = usePreferences();
   return (
-    <Edge.Provider motion={motion} staticDirection={staticDirection} intensity={0.8}>
+    <Edge.Provider
+      motion={motion}
+      staticDirection={staticDirection}
+      direction={direction}
+      radius={radius}
+      intensity={0.8}
+    >
       <div {...stylex.props(styles.homeLayout)}>
         <main id="content" tabIndex={-1} {...stylex.props(styles.siteContent)}>
           <div {...stylex.props(styles.homeHeroLayout)}>
@@ -72,6 +79,7 @@ export function Home() {
             </section>
             <HeroExample />
           </div>
+          <LightingControls />
           <Dashboard />
         </main>
       </div>

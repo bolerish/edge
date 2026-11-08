@@ -1,3 +1,4 @@
+import { LightingControls } from '../../../shared/preferences/LightingControls.js';
 import * as stylex from '@stylexjs/stylex';
 import { use } from 'react';
 import { SurfaceLightContext } from '../../../shared/lighting/light-context.js';
@@ -96,6 +97,7 @@ export function MotionExample() {
           </div>
         ) : null}
       </div>
+      <LightingControls />
       <MotionCard />
     </div>
   );
@@ -123,7 +125,7 @@ function MotionCard() {
 export const motionExample = {
   title: 'Compare motion',
   Component: MotionExample,
-  code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__ });
+  code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__, direction: __DIRECTION__, radius: __RADIUS__ });
 const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 
 <Card ref={surface}>

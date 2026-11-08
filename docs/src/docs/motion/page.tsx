@@ -31,6 +31,10 @@ export const motion: DocPage = {
             Try each mode below. The selection updates the shared light across this site, including
             the example card.
           </P>
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            Gather faces highlights toward the pointer; Spread reverses them. Range is the fade
+            distance outside each surface in CSS pixels. Fixed lighting ignores these settings.
+          </P>
           <ExamplePreview title={motionExample.title} code={motionExample.code}>
             <motionExample.Component />
           </ExamplePreview>

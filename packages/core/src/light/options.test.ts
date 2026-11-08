@@ -2,10 +2,21 @@ import { expect, it } from 'vitest';
 import { normalizeLightOptions } from './options.js';
 
 it('uses documented defaults and accepts both intensity boundaries', () => {
-  expect(normalizeLightOptions({})).toEqual({ motion: 'system', radius: 480, intensity: 0.75, staticDirection: 315 });
+  expect(normalizeLightOptions({})).toEqual({
+    motion: 'system',
+    radius: 480,
+    intensity: 0.75,
+    staticDirection: 315,
+    direction: 'gather',
+  });
   for (const intensity of [0, 1]) {
-    expect(normalizeLightOptions({ motion: 'dynamic', radius: 1, intensity }))
-      .toEqual({ motion: 'dynamic', radius: 1, intensity, staticDirection: 315 });
+    expect(normalizeLightOptions({ motion: 'dynamic', radius: 1, intensity })).toEqual({
+      motion: 'dynamic',
+      radius: 1,
+      intensity,
+      staticDirection: 315,
+      direction: 'gather',
+    });
   }
 });
 it.each([0, -1, NaN, Infinity, -Infinity])('rejects invalid radius %s', (radius) => {
@@ -26,4 +37,10 @@ it.each([NaN, Infinity, -Infinity])('rejects invalid static direction %s', (stat
 it('accepts random and explicit static directions', () => {
   expect(normalizeLightOptions({ staticDirection: 'random' }).staticDirection).toBe('random');
   expect(normalizeLightOptions({ staticDirection: 90 }).staticDirection).toBe(90);
+});
+
+it('accepts spread and rejects an unknown direction from JavaScript', () => {
+  expect(normalizeLightOptions({ direction: 'spread' }).direction).toBe('spread');
+  // @ts-expect-error Exercise untyped consumers.
+  expect(() => normalizeLightOptions({ direction: 'unknown' })).toThrow(/direction/);
 });

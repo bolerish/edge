@@ -571,3 +571,27 @@ it('remeasures host borders when surface style changes without a resize event', 
   ).toEqual(['-2px', '-3px', '-4px', '-5px']);
   stop();
 });
+
+it('reconfigures direction and radius with a stationary pointer and preserves static lighting', () => {
+  const light = createLight({ motion: 'dynamic', radius: 100 });
+  const { node, measure } = element();
+  const entry = light.register(node, 'raised');
+  const stop = light.mount(document);
+  point();
+  flush();
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.188');
+  light.configure({ motion: 'dynamic', direction: 'spread', radius: 200 });
+  flush();
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('270.0deg');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.422');
+  expect(measure).toHaveBeenCalledOnce();
+  entry.update('recessed');
+  flush();
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
+  light.configure({ motion: 'static', staticDirection: 45, direction: 'spread', radius: 1 });
+  flush();
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('225.0deg');
+  entry.destroy();
+  stop();
+});

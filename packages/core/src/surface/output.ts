@@ -71,8 +71,10 @@ export function renderSurfaces(
     let strength = 0;
     if (entry.element.isConnected && rect.width > 0 && rect.height > 0) {
       if (fixed) strength = staticLighting.strength;
-      else if (pointer)
+      else if (pointer) {
         ({ angle, strength } = getLighting(rect, pointer, options.radius, entry.edgeStyle));
+        if (options.direction === 'spread') angle = (angle + 180) % 360;
+      }
     }
     const values = [
       `${angle.toFixed(ANGLE_DECIMAL_PLACES)}deg`,

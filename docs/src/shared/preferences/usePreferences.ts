@@ -4,6 +4,8 @@ export interface SitePreferences {
   edgeStyle: 'raised' | 'recessed' | 'matte';
   motion: 'system' | 'dynamic' | 'static';
   staticDirection: 0 | 90 | 180 | 270 | 315 | 'random';
+  direction: 'gather' | 'spread';
+  radius: number;
   theme: 'light' | 'dark';
 }
 const storageKey = 'edge:preferences:v1';
@@ -11,6 +13,8 @@ const defaults: Readonly<SitePreferences> = Object.freeze({
   edgeStyle: 'raised',
   motion: 'dynamic',
   staticDirection: 'random',
+  direction: 'gather',
+  radius: 480,
   theme: 'light',
 });
 // Only the client snapshot changes. SSR always uses the immutable defaults.
@@ -92,6 +96,14 @@ function parsePreferences(serialized: string | null): Readonly<SitePreferences> 
             : 'dynamic',
       staticDirection:
         'staticDirection' in value ? parseStaticDirection(value.staticDirection) : 'random',
+      direction: 'direction' in value && value.direction === 'spread' ? 'spread' : 'gather',
+      radius:
+        'radius' in value &&
+        typeof value.radius === 'number' &&
+        Number.isFinite(value.radius) &&
+        value.radius > 0
+          ? value.radius
+          : 480,
       theme: 'theme' in value && value.theme === 'dark' ? 'dark' : 'light',
     });
   } catch {

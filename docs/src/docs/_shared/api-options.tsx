@@ -36,6 +36,12 @@ const lightOptions = {
     description:
       'Direction in degrees for fixed lighting. Random chooses one shared direction per mount and keeps it across ordinary rerenders. Numbers must be finite.',
   },
+  direction: {
+    type: "'gather' | 'spread'",
+    defaultValue: "'gather'",
+    description:
+      'Gather faces highlights toward the pointer; spread reverses them by 180 degrees. Recessed surfaces retain their inverted response. Only affects pointer-driven lighting; staticDirection controls fixed lighting.',
+  },
   radius: {
     type: 'number',
     defaultValue: '480',

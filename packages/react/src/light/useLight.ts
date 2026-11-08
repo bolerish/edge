@@ -8,18 +8,24 @@ export interface Light {
 }
 
 /** Owns one shared light. Pointer frames never update React state. */
-export function useLight({ motion, staticDirection, radius, intensity }: LightOptions = {}): Light {
+export function useLight({
+  motion,
+  staticDirection,
+  direction,
+  radius,
+  intensity,
+}: LightOptions = {}): Light {
   const lightRef = useRef<Light | null>(null);
   if (lightRef.current === null) {
-    const core = createLight({ motion, radius, intensity, staticDirection });
+    const core = createLight({ motion, radius, intensity, staticDirection, direction });
     lightRef.current = { [lightBrand]: core, refresh: core.refresh };
   }
   const light = lightRef.current;
   const core = light[lightBrand];
   useEffect(() => core.mount(document), [core]);
   useEffect(
-    () => core.configure({ motion, radius, intensity, staticDirection }),
-    [core, motion, radius, intensity, staticDirection],
+    () => core.configure({ motion, radius, intensity, staticDirection, direction }),
+    [core, motion, radius, intensity, staticDirection, direction],
   );
   return light;
 }

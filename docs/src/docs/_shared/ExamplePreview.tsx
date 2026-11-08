@@ -16,8 +16,14 @@ export function ExamplePreview({
   code: string;
   children: ReactNode;
 }) {
-  const { edgeStyle, motion, staticDirection } = usePreferences();
-  const displayedCode = formatExampleCode(code, { edgeStyle, motion, staticDirection });
+  const { edgeStyle, motion, staticDirection, direction, radius } = usePreferences();
+  const displayedCode = formatExampleCode(code, {
+    edgeStyle,
+    motion,
+    staticDirection,
+    direction,
+    radius,
+  });
   return (
     <div
       className={`example-preview ${stylex.props(styles.examplePreview).className}`}
@@ -53,12 +59,15 @@ export function ExamplePreview({
 
 export function formatExampleCode(
   code: string,
-  preferences: Pick<SitePreferences, 'edgeStyle' | 'motion' | 'staticDirection'>,
+  preferences: Pick<SitePreferences, 'edgeStyle' | 'motion' | 'staticDirection'> &
+    Partial<Pick<SitePreferences, 'direction' | 'radius'>>,
 ) {
   return code
     .replaceAll('__EDGE_STYLE__', JSON.stringify(preferences.edgeStyle))
     .replaceAll('__MOTION__', JSON.stringify(preferences.motion))
-    .replaceAll('__STATIC_DIRECTION__', JSON.stringify(preferences.staticDirection));
+    .replaceAll('__STATIC_DIRECTION__', JSON.stringify(preferences.staticDirection))
+    .replaceAll('__DIRECTION__', JSON.stringify(preferences.direction ?? 'gather'))
+    .replaceAll('__RADIUS__', String(preferences.radius ?? 480));
 }
 
 const styles = stylex.create({
