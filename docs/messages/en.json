@@ -276,5 +276,14 @@
   "geometry_limits_link": "Edge approximates axis-aligned rectangles. Rotation, perspective transforms and cross-document portals are unsupported. Portals within the same document can share a light. For focus, selection and validation, see <part0/>.",
   "switch_pseudo_element": "Use {element} decoration",
   "current_pseudo_element": "Decoration uses ::{element}",
-  "not_found_navigation": "This page is not available. Return to <part0/> or explore the <part1/>."
+  "not_found_navigation": "This page is not available. Return to <part0/> or explore the <part1/>.",
+  "why_edge": "Why Edge",
+  "benefit_keep_ui_title": "Keep your UI",
+  "benefit_keep_ui_description": "Add highlights to the components you already have. Keep their colors, layout and interactions.",
+  "benefit_shared_title": "One light, connected components",
+  "benefit_shared_description": "Cards, buttons and other connected surfaces respond to the same light direction, so they feel part of one space.",
+  "benefit_explicit_title": "Choose what responds",
+  "benefit_explicit_description": "Only surfaces you connect receive the effect. Use a separate Edge.Provider for an area that should react independently.",
+  "benefit_preferences_title": "Respect motion preferences",
+  "benefit_preferences_description": "The default motion=\"system\" follows reduced-motion preferences. Your controls and focus indicators remain usable without lighting."
 }

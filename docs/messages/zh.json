@@ -276,5 +276,14 @@
   "geometry_limits_link": "Edge 近似模拟轴对齐矩形。不支持旋转、透视变换和跨文档 Portal。同一文档内的 Portal 可以共享光照。焦点、选择状态和验证见<part0/>。",
   "switch_pseudo_element": "使用 {element} 绘制高光",
   "current_pseudo_element": "高光使用 ::{element}",
-  "not_found_navigation": "此页面不存在。请返回<part0/>，或查看<part1/>。"
+  "not_found_navigation": "此页面不存在。请返回<part0/>，或查看<part1/>。",
+  "why_edge": "为什么选择 Edge",
+  "benefit_keep_ui_title": "保留现有 UI",
+  "benefit_keep_ui_description": "为已有组件添加高光，保留原有颜色、布局和交互。",
+  "benefit_shared_title": "多个组件共享光照",
+  "benefit_shared_description": "卡片、按钮和其他已连接的表面响应同一光照方向，呈现身处同一空间的视觉感受。",
+  "benefit_explicit_title": "只应用于指定元素",
+  "benefit_explicit_description": "效果只应用于已连接的表面。需要独立响应的区域可使用单独的 Edge.Provider。",
+  "benefit_preferences_title": "尊重用户的动态效果偏好",
+  "benefit_preferences_description": "默认 motion=\"system\" 遵循减少动态效果设置。即使没有光照，原有控件和焦点标识仍可使用。"
 }

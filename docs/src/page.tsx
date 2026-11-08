@@ -1,3 +1,4 @@
+import { Benefits } from './_ui/Benefits.js';
 import { localePath } from './shared/locale.js';
 import { m } from './paraglide/messages.js';
 import { Badge } from '@bolerish/ui/badge';
@@ -102,6 +103,7 @@ export function Home() {
             </section>
             <HeroExample />
           </div>
+          <Benefits />
           <Dashboard />
         </main>
       </div>

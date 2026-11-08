@@ -1,6 +1,36 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from '@playwright/test';
 
+test('localized home loads its fonts and keeps benefit cards inside the viewport', async ({
+  page,
+}) => {
+  for (const [locale, family, sample] of [
+    ['en', 'LINE Seed EN', 'Edge'],
+    ['ko', 'LINE Seed KR', '조명'],
+    ['es', 'Edge Latin Supplement', 'ñá'],
+    ['ja', 'LINE Seed JP', '照明'],
+    ['zh', 'LINE Seed EN', 'Edge'],
+  ]) {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto(locale === 'en' ? '/' : `/${locale}/`);
+    const fonts = await page.evaluate(
+      async ({ family, sample }) => {
+        const loaded = await document.fonts.load(`16px "${family}"`, sample);
+        await document.fonts.ready;
+        return loaded.map((font) => font.status);
+      },
+      { family, sample },
+    );
+    expect(fonts).toEqual(['loaded']);
+    const benefits = page.locator('section[aria-labelledby="why-edge"]');
+    await expect(benefits.getByRole('heading', { level: 2 })).toBeVisible();
+    await expect(benefits.getByRole('heading', { level: 3 })).toHaveCount(4);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+  }
+});
+
 const languages = [
   {
     code: 'en',

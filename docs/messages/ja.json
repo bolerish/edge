@@ -276,5 +276,14 @@
   "geometry_limits_link": "Edge は軸に沿った矩形を前提とします。回転、遠近変換、別ドキュメントへのポータルには対応していません。同一ドキュメント内のポータルは光を共有できます。フォーカス、選択、検証については<part0/>を参照してください。",
   "switch_pseudo_element": "{element} にハイライトを適用",
   "current_pseudo_element": "ハイライトは ::{element} を使用",
-  "not_found_navigation": "ページが見つかりません。<part0/>に戻るか、<part1/>をご覧ください。"
+  "not_found_navigation": "ページが見つかりません。<part0/>に戻るか、<part1/>をご覧ください。",
+  "why_edge": "Edge を使う理由",
+  "benefit_keep_ui_title": "既存の UI をそのままに",
+  "benefit_keep_ui_description": "既存のコンポーネントにハイライトを加えます。色、レイアウト、操作はそのままです。",
+  "benefit_shared_title": "複数のコンポーネントでライトを共有",
+  "benefit_shared_description": "カードやボタンが同じライトの方向に反応し、1 つの空間にあるように感じられます。",
+  "benefit_explicit_title": "必要な要素だけに適用",
+  "benefit_explicit_description": "接続したサーフェスだけに効果が付きます。独立して反応させる領域には別の Edge.Provider を使います。",
+  "benefit_preferences_title": "動きの設定を尊重",
+  "benefit_preferences_description": "デフォルトの motion=\"system\" は動きを減らす設定に従います。ライトがなくても既存の操作やフォーカス表示を使えます。"
 }

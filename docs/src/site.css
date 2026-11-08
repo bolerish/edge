@@ -1,6 +1,7 @@
 /* Establish order before either package declares its own layers. */
 @layer reset, bolerish-edge, priority1, priority2, priority3, priority4, priority5, priority6, priority7, priority8, priority9;
 
+@import './fonts.css';
 @import '@bolerish/ui/global.css';
 @import '@bolerish/edge/style.css';
 

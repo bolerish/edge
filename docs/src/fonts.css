@@ -1,0 +1,78 @@
+@font-face {
+  font-family: 'LINE Seed EN';
+  src: url('/fonts/line-seed-en-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed EN';
+  src: url('/fonts/line-seed-en-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed KR';
+  src: url('/fonts/line-seed-kr-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed KR';
+  src: url('/fonts/line-seed-kr-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed JP';
+  src: url('/fonts/line-seed-jp-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed JP';
+  src: url('/fonts/line-seed-jp-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Edge Latin Supplement';
+  src: url('/fonts/edge-latin-supplement-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Edge Latin Supplement';
+  src: url('/fonts/edge-latin-supplement-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bolerish-font-body: 'LINE Seed EN', 'Edge Latin Supplement', system-ui, sans-serif;
+  --bolerish-font-heading: var(--bolerish-font-body);
+}
+:root:lang(ko) {
+  --bolerish-font-body: 'LINE Seed EN', 'Edge Latin Supplement', 'LINE Seed KR', sans-serif;
+}
+:root:lang(ja) {
+  --bolerish-font-body: 'LINE Seed EN', 'Edge Latin Supplement', 'LINE Seed JP', sans-serif;
+}
+:root:lang(zh) {
+  --bolerish-font-body:
+    'LINE Seed EN', 'Edge Latin Supplement', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}

@@ -276,5 +276,14 @@
   "geometry_limits_link": "Edge aproxima rectángulos alineados con los ejes. No admite rotación, transformaciones de perspectiva ni portales entre documentos. Los portales del mismo documento pueden compartir luz. Para foco, selección y validación, consulta <part0/>.",
   "switch_pseudo_element": "Usar {element} para el reflejo",
   "current_pseudo_element": "El reflejo usa ::{element}",
-  "not_found_navigation": "Esta página no está disponible. Vuelve a <part0/> o explora el <part1/>."
+  "not_found_navigation": "Esta página no está disponible. Vuelve a <part0/> o explora el <part1/>.",
+  "why_edge": "Por qué Edge",
+  "benefit_keep_ui_title": "Conserva tu UI",
+  "benefit_keep_ui_description": "Añade reflejos a los componentes que ya tienes. Conserva sus colores, diseño e interacciones.",
+  "benefit_shared_title": "Una luz entre componentes",
+  "benefit_shared_description": "Las tarjetas, botones y otras superficies conectadas responden a una misma dirección de luz y se perciben como parte de un mismo espacio.",
+  "benefit_explicit_title": "Elige qué responde",
+  "benefit_explicit_description": "El efecto solo se aplica a las superficies conectadas. Usa otro Edge.Provider para las áreas que deban reaccionar por separado.",
+  "benefit_preferences_title": "Respeta las preferencias de movimiento",
+  "benefit_preferences_description": "El valor predeterminado motion=\"system\" respeta el movimiento reducido. Los controles y el foco siguen funcionando sin iluminación."
 }
