@@ -14,7 +14,7 @@ test('refresh preserves the stored theme before and after hydration', async ({ p
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.addInitScript(() => {
-    localStorage.setItem('wisp:preferences:v1', JSON.stringify({ theme: 'dark' }));
+    localStorage.setItem('edge:preferences:v1', JSON.stringify({ theme: 'dark' }));
     const transitions: Array<string | null> = [];
     Object.assign(window, { themeTransitions: transitions });
     let initialized = false;
@@ -62,7 +62,7 @@ test('StyleX layout and colors are present before hydration on cold load and ref
   page,
 }) => {
   await page.addInitScript(() => {
-    localStorage.setItem('wisp:preferences:v1', JSON.stringify({ theme: 'dark' }));
+    localStorage.setItem('edge:preferences:v1', JSON.stringify({ theme: 'dark' }));
   });
   let release: () => void = () => {};
   let ready = new Promise<void>((resolve) => {
@@ -131,13 +131,13 @@ test('one light changes preview borders while project actions stay inactive', as
   await page.mouse.move(box.x + 4, box.y + box.height / 2);
   await expect
     .poll(() =>
-      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
+      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--edge-angle'))),
     )
     .toBeCloseTo(270, 0);
   await page.mouse.move(box.x + box.width - 4, box.y + box.height / 2);
   await expect
     .poll(() =>
-      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
+      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--edge-angle'))),
     )
     .toBeCloseTo(90, 0);
   expect(
@@ -169,7 +169,7 @@ test('appearance controls update the document and persist across navigation', as
   const frame = page.locator('.example-preview-result');
   for (const target of [card, frame])
     await expect
-      .poll(() => target.evaluate((node) => node.style.getPropertyValue('--wisp-angle')))
+      .poll(() => target.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
       .toBe('315.0deg');
   await page.locator('.sidebar').getByRole('link', { name: 'Style', exact: true }).click();
   await page.getByRole('combobox', { name: 'Style', exact: true }).click();
@@ -179,7 +179,7 @@ test('appearance controls update the document and persist across navigation', as
       page
         .locator('.reading-navigation a')
         .first()
-        .evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
+        .evaluate((node) => node.style.getPropertyValue('--edge-angle')),
     )
     .toBe('135.0deg');
   await page.reload();
@@ -200,7 +200,7 @@ test('appearance controls update the document and persist across navigation', as
     .poll(() =>
       page
         .getByTestId('surface-card')
-        .evaluate((node) => node.style.getPropertyValue('--wisp-angle')),
+        .evaluate((node) => node.style.getPropertyValue('--edge-angle')),
     )
     .toBe('135.0deg');
 });
@@ -329,7 +329,7 @@ test('static direction presets update every shared surface, code and persisted s
     await page.getByRole('option', { name: `${angle}°`, exact: true }).click();
     for (const target of [example.getByRole('article'), page.locator('.example-preview-result')])
       await expect
-        .poll(() => target.evaluate((node) => node.style.getPropertyValue('--wisp-angle')))
+        .poll(() => target.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
         .toBe(`${angle.toFixed(1)}deg`);
     await example.getByRole('tab', { name: 'Code', exact: true }).click();
     await expect(
@@ -664,13 +664,13 @@ test('large-card center crossings fade before the edge direction reverses', asyn
     await page.mouse.move(x, 258);
     await expect
       .poll(() =>
-        surface.evaluate((node) => Number(node.style.getPropertyValue('--wisp-strength'))),
+        surface.evaluate((node) => Number(node.style.getPropertyValue('--edge-strength'))),
       )
       .toBeLessThan(0.02);
   }
   await page.mouse.move(865, 258);
   await expect
-    .poll(() => surface.evaluate((node) => Number(node.style.getPropertyValue('--wisp-strength'))))
+    .poll(() => surface.evaluate((node) => Number(node.style.getPropertyValue('--edge-strength'))))
     .toBeGreaterThan(0.7);
 });
 
@@ -707,7 +707,7 @@ test('shared light demo uses site settings and shows concise integration code', 
 }) => {
   await page.addInitScript(() =>
     localStorage.setItem(
-      'wisp:preferences:v1',
+      'edge:preferences:v1',
       JSON.stringify({ motion: 'static', staticDirection: 315 }),
     ),
   );
@@ -717,10 +717,10 @@ test('shared light demo uses site settings and shows concise integration code', 
   await expect(cards).toHaveCount(2);
   const card = cards.first();
   await expect
-    .poll(() => cards.nth(1).evaluate((node) => node.style.getPropertyValue('--wisp-angle')))
+    .poll(() => cards.nth(1).evaluate((node) => node.style.getPropertyValue('--edge-angle')))
     .toBe('315.0deg');
   await expect
-    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')))
+    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
     .toBe('315.0deg');
   await expect(demo.getByRole('combobox')).toHaveCount(0);
   const bounds = await card.boundingBox();
@@ -728,7 +728,7 @@ test('shared light demo uses site settings and shows concise integration code', 
   await page.mouse.move(bounds.x + 1, bounds.y + bounds.height / 2);
   await expect
     .poll(() =>
-      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
+      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--edge-angle'))),
     )
     .toBeCloseTo(315, 0);
   await expect(demo.getByRole('button')).toHaveCount(0);
@@ -763,7 +763,7 @@ test('shared light demo uses site settings and shows concise integration code', 
 test('style example changes only edge style and retains Bolerish UI colors', async ({ page }) => {
   await page.addInitScript(() =>
     localStorage.setItem(
-      'wisp:preferences:v1',
+      'edge:preferences:v1',
       JSON.stringify({ motion: 'static', staticDirection: 'fixed' }),
     ),
   );
@@ -774,22 +774,22 @@ test('style example changes only edge style and retains Bolerish UI colors', asy
   const card = demo.getByRole('article');
   await expect
     .poll(() =>
-      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
+      card.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--edge-angle'))),
     )
     .not.toBeNaN();
   const initialColor = await card.evaluate((node) => getComputedStyle(node).backgroundColor);
   await demo.getByRole('combobox', { name: 'Style', exact: true }).click();
   await page.getByRole('option', { name: 'Recessed', exact: true }).click();
   await expect
-    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')))
+    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
     .toBe('135.0deg');
   const strength = await card.evaluate((node) =>
-    Number(node.style.getPropertyValue('--wisp-strength')),
+    Number(node.style.getPropertyValue('--edge-strength')),
   );
   await demo.getByRole('combobox', { name: 'Style', exact: true }).click();
   await page.getByRole('option', { name: 'Matte', exact: true }).click();
   await expect
-    .poll(() => card.evaluate((node) => Number(node.style.getPropertyValue('--wisp-strength'))))
+    .poll(() => card.evaluate((node) => Number(node.style.getPropertyValue('--edge-strength'))))
     .toBeCloseTo(strength * 0.3, 2);
   expect(await card.evaluate((node) => getComputedStyle(node).backgroundColor)).toBe(initialColor);
   await page
@@ -867,7 +867,7 @@ test('existing section anchors remain in the catalog after rewriting the pages',
       'raised',
       'recessed',
       'matte',
-      'apply-the-wisp-theme',
+      'apply-the-edge-theme',
       'customize-the-highlight',
     ],
     '/docs/accessibility/': [
@@ -920,7 +920,7 @@ test('decoration slots preserve consumer pseudo-elements and switch without extr
   ).toContain('conic-gradient');
   const host = page.getByTestId('decoration-slot');
   await expect
-    .poll(() => host.evaluate((node) => node.style.getPropertyValue('--wisp-inset-top')))
+    .poll(() => host.evaluate((node) => node.style.getPropertyValue('--edge-inset-top')))
     .toBe('-2px');
   const geometry = await host.evaluate((node) => {
     const decoration = getComputedStyle(node, '::before');
@@ -1007,7 +1007,7 @@ test('appearance pages expose topic options and examples retain state across pre
 }) => {
   await page.addInitScript(() =>
     localStorage.setItem(
-      'wisp:preferences:v1',
+      'edge:preferences:v1',
       JSON.stringify({ motion: 'system', staticDirection: 'fixed' }),
     ),
   );
@@ -1025,7 +1025,7 @@ test('appearance pages expose topic options and examples retain state across pre
   await page.getByRole('option', { name: 'Static', exact: true }).click();
   const card = example.getByRole('article');
   await expect
-    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')))
+    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
     .toBe('315.0deg');
   await example.getByRole('tab', { name: 'Code', exact: true }).click();
   await expect(
@@ -1039,12 +1039,12 @@ test('appearance pages expose topic options and examples retain state across pre
   await example.getByRole('combobox', { name: 'Static direction', exact: true }).click();
   await page.getByRole('option', { name: 'Random per mount', exact: true }).click();
   await expect
-    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--wisp-angle')))
+    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
     .not.toBe('315.0deg');
-  const angle = await card.evaluate((node) => node.style.getPropertyValue('--wisp-angle'));
+  const angle = await card.evaluate((node) => node.style.getPropertyValue('--edge-angle'));
   await example.getByRole('tab', { name: 'Code', exact: true }).click();
   await example.getByRole('tab', { name: 'Preview', exact: true }).click();
-  expect(await card.evaluate((node) => node.style.getPropertyValue('--wisp-angle'))).toBe(angle);
+  expect(await card.evaluate((node) => node.style.getPropertyValue('--edge-angle'))).toBe(angle);
   await page.goto('/docs/styles/');
   const styleTable = page.getByRole('table', { name: 'Style values', exact: true });
   await expect(styleTable.getByRole('rowheader', { name: 'color', exact: true })).toHaveCount(0);
@@ -1063,7 +1063,7 @@ test('documentation surfaces share page lighting and keep native links and indep
   await page.mouse.move(bounds.x + 2, bounds.y + bounds.height / 2);
   await expect
     .poll(() =>
-      next.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
+      next.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--edge-angle'))),
     )
     .toBeCloseTo(270, 0);
   await next.click();
@@ -1075,7 +1075,7 @@ test('documentation surfaces share page lighting and keep native links and indep
   await page.mouse.move(codeBounds.x + 2, codeBounds.y + codeBounds.height / 2);
   await expect
     .poll(() =>
-      code.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--wisp-angle'))),
+      code.evaluate((node) => Number.parseFloat(node.style.getPropertyValue('--edge-angle'))),
     )
     .toBeCloseTo(270, 0);
   expect(await code.evaluate((node) => getComputedStyle(node, '::after').pointerEvents)).toBe(
@@ -1148,7 +1148,7 @@ test('surface style changes remeasure host border offsets with a stationary poin
     node.dataset.identity = 'original';
   });
   await expect
-    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--wisp-inset-top')))
+    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-inset-top')))
     .toBe('-1px');
   const contentWidth = await card.evaluate((node) => node.clientWidth);
   await card.evaluate((node) => {
@@ -1162,7 +1162,7 @@ test('surface style changes remeasure host border offsets with a stationary poin
     .poll(() =>
       card.evaluate((node) =>
         ['top', 'right', 'bottom', 'left'].map((side) =>
-          node.style.getPropertyValue(`--wisp-inset-${side}`),
+          node.style.getPropertyValue(`--edge-inset-${side}`),
         ),
       ),
     )

@@ -14,19 +14,17 @@ function flush() {
 function element() {
   const node = document.createElement('button');
   document.body.append(node);
-  const measure = vi
-    .spyOn(node, 'getBoundingClientRect')
-    .mockReturnValue({
-      left: 100,
-      top: 100,
-      width: 100,
-      height: 100,
-      right: 200,
-      bottom: 200,
-      x: 100,
-      y: 100,
-      toJSON() {},
-    });
+  const measure = vi.spyOn(node, 'getBoundingClientRect').mockReturnValue({
+    left: 100,
+    top: 100,
+    width: 100,
+    height: 100,
+    right: 200,
+    bottom: 200,
+    x: 100,
+    y: 100,
+    toJSON() {},
+  });
   return { node, measure };
 }
 function point(x = 250, y = 150, pointerType = 'mouse') {
@@ -70,8 +68,12 @@ beforeEach(() => {
         this.state = { fire: () => callback([], this), disconnected: false, targets: new Set() };
         observers.push(this.state);
       }
-      observe(target: Element) { this.state.targets.add(target); }
-      unobserve(target: Element) { this.state.targets.delete(target); }
+      observe(target: Element) {
+        this.state.targets.add(target);
+      }
+      unobserve(target: Element) {
+        this.state.targets.delete(target);
+      }
       disconnect() {
         this.state.disconnected = true;
       }
@@ -95,12 +97,12 @@ it('queues child registrations, coalesces pointer frames and reuses geometry', (
   point();
   expect(frames.size).toBe(1);
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
   expect(measure).toHaveBeenCalledOnce();
   expect(frames.size).toBe(0);
   point(50, 150);
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('270.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('270.0deg');
   expect(measure).toHaveBeenCalledOnce();
   entry.destroy();
   stop();
@@ -108,21 +110,21 @@ it('queues child registrations, coalesces pointer frames and reuses geometry', (
 it('restores values and rewrites static output after stop and restart', () => {
   const light = createLight({ motion: 'static' });
   const { node } = element();
-  node.style.setProperty('--wisp-angle', '22deg', 'important');
+  node.style.setProperty('--edge-angle', '22deg', 'important');
   const entry = light.register(node, 'raised');
   let stop = light.mount(document);
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('315.0deg');
   stop();
   stop();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('22deg');
-  expect(node.style.getPropertyPriority('--wisp-angle')).toBe('important');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('22deg');
+  expect(node.style.getPropertyPriority('--edge-angle')).toBe('important');
   stop = light.mount(document);
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('315.0deg');
   entry.destroy();
   stop();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('22deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('22deg');
   expect(observers.every((observer) => observer.disconnected)).toBe(true);
 });
 it('updates edgeStyle and options without a new pointer and attaches late surfaces', () => {
@@ -134,10 +136,10 @@ it('updates edgeStyle and options without a new pointer and attaches late surfac
   flush();
   entry.update('recessed');
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('135.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('135.0deg');
   light.configure({ motion: 'static', intensity: 0.4 });
   flush();
-  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.280');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.280');
   entry.destroy();
   stop();
 });
@@ -164,9 +166,7 @@ it('rejects duplicate ownership and other documents even before mounting', () =>
   const entry = first.register(node, 'raised');
   expect(() => second.register(node, 'raised')).toThrow('owner');
   const another = document.implementation.createHTMLDocument();
-  expect(() => first.register(another.createElement('div'), 'raised')).toThrow(
-    'document',
-  );
+  expect(() => first.register(another.createElement('div'), 'raised')).toThrow('document');
   expect(() => first.mount(another)).toThrow('document');
   entry.destroy();
   entry.destroy();
@@ -186,18 +186,18 @@ it('accepts mouse events on hybrid devices and keeps auto reduced-motion static'
   flush();
   point();
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
   const reduced = queries[0];
   if (!reduced) throw new Error('no media query');
   Object.defineProperty(reduced, 'matches', { value: true });
   reduced.dispatchEvent(new Event('change'));
   point();
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('315.0deg');
   light.configure({ motion: 'dynamic' });
   point();
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
   stop();
 });
 it('cancels frames and ignores late observer callbacks after stopping', () => {
@@ -214,7 +214,7 @@ it('cancels frames and ignores late observer callbacks after stopping', () => {
   light.refresh();
   expect(frames.size).toBe(0);
   entry.destroy();
-  expect(node.style.getPropertyValue('--wisp-strength')).toBe('');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('');
 });
 it('clears pointer output on window blur and never handles touch as a light', () => {
   const light = createLight();
@@ -223,12 +223,12 @@ it('clears pointer output on window blur and never handles touch as a light', ()
   const stop = light.mount(document);
   point(250, 150, 'touch');
   flush();
-  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
   point();
   flush();
   window.dispatchEvent(new Event('blur'));
   flush();
-  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
   stop();
 });
 it('validates options atomically', () => {
@@ -281,7 +281,7 @@ it('writes only the changed CSS property when edgeStyle flips the direction', ()
   const write = vi.spyOn(node.style, 'setProperty');
   entry.update('recessed');
   flush();
-  expect(write.mock.calls).toEqual([['--wisp-angle', '135.0deg']]);
+  expect(write.mock.calls).toEqual([['--edge-angle', '135.0deg']]);
   entry.destroy();
   stop();
 });
@@ -291,8 +291,9 @@ it('rejects concurrent mounts and documents without a browser window', () => {
   const stop = light.mount(document);
   expect(() => light.mount(document)).toThrow(/active owner/);
   stop();
-  expect(() => createLight().mount(document.implementation.createHTMLDocument()))
-    .toThrow(/browser document/);
+  expect(() => createLight().mount(document.implementation.createHTMLDocument())).toThrow(
+    /browser document/,
+  );
 });
 it('ignores an old cleanup after a new session has started', () => {
   const light = createLight({ motion: 'dynamic' });
@@ -305,7 +306,7 @@ it('ignores an old cleanup after a new session has started', () => {
   previousStop();
   point();
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
   stop();
 });
 it('keeps document ownership until both the session and surfaces are released', () => {
@@ -343,7 +344,7 @@ it('schedules late registrations and leaves removed surfaces untouched', () => {
   entry.destroy();
   light.refresh();
   flush();
-  expect(node.style.getPropertyValue('--wisp-strength')).toBe('');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('');
   entry.update('matte');
   expect(frames.size).toBe(0);
   const replacement = createLight().register(node, 'raised');
@@ -361,11 +362,11 @@ it('preserves the pointer for same-motion configuration and clears it on motion 
   flush();
   light.configure({ motion: 'dynamic', intensity: 0.4 });
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
-  expect(Number(node.style.getPropertyValue('--wisp-strength'))).toBeGreaterThan(0);
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
+  expect(Number(node.style.getPropertyValue('--edge-strength'))).toBeGreaterThan(0);
   light.configure({ motion: 'system' });
   flush();
-  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
   stop();
 });
 it('clears light only when the pointer exits the document', () => {
@@ -377,10 +378,10 @@ it('clears light only when the pointer exits the document', () => {
   flush();
   document.dispatchEvent(Object.assign(new Event('pointerout'), { relatedTarget: node }));
   flush();
-  expect(Number(node.style.getPropertyValue('--wisp-strength'))).toBeGreaterThan(0);
+  expect(Number(node.style.getPropertyValue('--edge-strength'))).toBeGreaterThan(0);
   document.dispatchEvent(Object.assign(new Event('pointerout'), { relatedTarget: null }));
   flush();
-  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
   stop();
 });
 it.each([
@@ -393,7 +394,7 @@ it.each([
   light.register(node, 'raised');
   const stop = light.mount(document);
   flush();
-  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
   stop();
 });
 it('suppresses output for detached surfaces', () => {
@@ -403,10 +404,9 @@ it('suppresses output for detached surfaces', () => {
   node.remove();
   const stop = light.mount(document);
   flush();
-  expect(node.style.getPropertyValue('--wisp-strength')).toBe('0.000');
+  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
   stop();
 });
-
 
 it('samples a shared static direction once per mount and preserves it on configure', () => {
   const random = vi.spyOn(Math, 'random').mockReturnValueOnce(0.25).mockReturnValueOnce(0.5);
@@ -416,23 +416,22 @@ it('samples a shared static direction once per mount and preserves it on configu
   expect(random).not.toHaveBeenCalled();
   const stop = light.mount(document);
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
   light.configure({ motion: 'static', staticDirection: 'random' });
   light.refresh();
   point();
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
   expect(random).toHaveBeenCalledOnce();
   stop();
   const stopAgain = light.mount(document);
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('180.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('180.0deg');
   light.configure({ motion: 'static', staticDirection: 45 });
   flush();
-  expect(node.style.getPropertyValue('--wisp-angle')).toBe('45.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('45.0deg');
   stopAgain();
 });
-
 
 it('refreshes geometry after font loading and removes the font subscription on stop', async () => {
   const fonts = Object.assign(new EventTarget(), { ready: Promise.resolve() });
@@ -458,7 +457,6 @@ it('refreshes geometry after font loading and removes the font subscription on s
   }
 });
 
-
 it('remeasures only descendants of a scrolled container', () => {
   const light = createLight();
   const inside = element();
@@ -482,21 +480,25 @@ it('remeasures only descendants of a scrolled container', () => {
   stop();
 });
 
-
 it('aligns decoration to asymmetric host borders and restores owned inset variables', () => {
   const light = createLight();
   const { node } = element();
   node.style.borderStyle = 'solid';
   node.style.borderWidth = '2px 3px 4px 5px';
-  node.style.setProperty('--wisp-inset-top', '7px');
+  node.style.setProperty('--edge-inset-top', '7px');
   const registration = light.register(node, 'raised');
   const stop = light.mount(document);
   flush();
-  for (const [side, width] of [['top', 2], ['right', 3], ['bottom', 4], ['left', 5]] as const)
-    expect(node.style.getPropertyValue(`--wisp-inset-${side}`)).toBe(`-${width}px`);
+  for (const [side, width] of [
+    ['top', 2],
+    ['right', 3],
+    ['bottom', 4],
+    ['left', 5],
+  ] as const)
+    expect(node.style.getPropertyValue(`--edge-inset-${side}`)).toBe(`-${width}px`);
   registration.destroy();
-  expect(node.style.getPropertyValue('--wisp-inset-top')).toBe('7px');
-  expect(node.style.getPropertyValue('--wisp-inset-right')).toBe('');
+  expect(node.style.getPropertyValue('--edge-inset-top')).toBe('7px');
+  expect(node.style.getPropertyValue('--edge-inset-right')).toBe('');
   stop();
 });
 
@@ -558,11 +560,14 @@ it('remeasures host borders when surface style changes without a resize event', 
   node.style.borderWidth = '1px';
   const entry = light.register(node, 'raised');
   flush();
-  expect(node.style.getPropertyValue('--wisp-inset-top')).toBe('-1px');
+  expect(node.style.getPropertyValue('--edge-inset-top')).toBe('-1px');
   node.style.borderWidth = '2px 3px 4px 5px';
   entry.update('matte');
   flush();
-  expect(['top', 'right', 'bottom', 'left'].map(side => node.style.getPropertyValue(`--wisp-inset-${side}`)))
-    .toEqual(['-2px', '-3px', '-4px', '-5px']);
+  expect(
+    ['top', 'right', 'bottom', 'left'].map((side) =>
+      node.style.getPropertyValue(`--edge-inset-${side}`),
+    ),
+  ).toEqual(['-2px', '-3px', '-4px', '-5px']);
   stop();
 });

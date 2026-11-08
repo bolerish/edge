@@ -8,15 +8,27 @@ import { createStreamingScene } from './rendering-scene.mjs';
 
 const errors = [];
 console.error = (...args) => errors.push(args.join(' '));
-const tree = fixture => React.createElement('html', null,
-  React.createElement('head', null, React.createElement('title', null, 'Rendering compatibility')),
-  React.createElement('body', null,
-    React.createElement('div', { id: 'root' }, React.createElement(fixture.Scene)),
-    React.createElement('script', { type: 'module', src: '/rendering-client.mjs' })));
+const tree = (fixture) =>
+  React.createElement(
+    'html',
+    null,
+    React.createElement(
+      'head',
+      null,
+      React.createElement('title', null, 'Rendering compatibility'),
+    ),
+    React.createElement(
+      'body',
+      null,
+      React.createElement('div', { id: 'root' }, React.createElement(fixture.Scene)),
+      React.createElement('script', { type: 'module', src: '/rendering-client.mjs' }),
+    ),
+  );
 const document = (html, script = 'rendering-client.mjs', mode = '') =>
   '<!doctype html><html><head><title>Rendering compatibility</title></head><body>' +
   `<div id="root" data-mode="${mode}">${html}</div>` +
-  (script ? `<script type="module" src="/${script}"></script>` : '') + '</body></html>';
+  (script ? `<script type="module" src="/${script}"></script>` : '') +
+  '</body></html>';
 
 async function nodeStream(allReady) {
   const fixture = createStreamingScene();
@@ -24,7 +36,7 @@ async function nodeStream(allReady) {
   await new Promise((resolve, reject) => {
     const output = new PassThrough();
     let released = false;
-    output.on('data', chunk => {
+    output.on('data', (chunk) => {
       chunks.push(chunk.toString());
       if (!allReady && !released && chunks.join('').includes('Loading')) {
         assert(!chunks.join('').includes('delayed-surface'));
@@ -39,7 +51,9 @@ async function nodeStream(allReady) {
         if (allReady) fixture.resolve();
         else stream.pipe(output);
       },
-      onAllReady() { if (allReady) stream.pipe(output); },
+      onAllReady() {
+        if (allReady) stream.pipe(output);
+      },
       onShellError: reject,
       onError: reject,
     });
@@ -58,14 +72,25 @@ if (process.argv[2] !== 'web') {
 
   const staticHtml = renderToStaticMarkup(React.createElement(Scene));
   assert(staticHtml.includes('bolerish-edge-after'));
-  assert(!staticHtml.includes('--wisp-angle:'));
-  writeFileSync('static.css', readFileSync(new URL(import.meta.resolve('@bolerish/edge/style.css'))));
-  writeFileSync('static.html', document(staticHtml, '').replace('</head>', '<link rel="stylesheet" href="./static.css"></head>'));
+  assert(!staticHtml.includes('--edge-angle:'));
+  writeFileSync(
+    'static.css',
+    readFileSync(new URL(import.meta.resolve('@bolerish/edge/style.css'))),
+  );
+  writeFileSync(
+    'static.html',
+    document(staticHtml, '').replace(
+      '</head>',
+      '<link rel="stylesheet" href="./static.css"></head>',
+    ),
+  );
   writeFileSync('csr.html', document('', 'client.js', 'csr'));
 } else {
   const { renderToReadableStream } = await import(process.argv[3]);
   const fixture = createStreamingScene();
-  const stream = await renderToReadableStream(tree(fixture), { onError: error => errors.push(String(error)) });
+  const stream = await renderToReadableStream(tree(fixture), {
+    onError: (error) => errors.push(String(error)),
+  });
   const reader = stream.getReader();
   const first = await reader.read();
   const decoder = new TextDecoder();

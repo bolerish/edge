@@ -24,7 +24,7 @@ Open http://localhost:3000.
 
 Keep framework behavior in its adapter so a future Solid adapter can reuse core and styles. Group code by responsibility, colocate tests, and keep `index.ts` limited to imports and re-exports. Import workspace packages through public exports. Use the catalogs in `pnpm-workspace.yaml` and update the lockfile with dependency changes.
 
-Keep server imports safe, preserve native controls and focus indicators, and clean up refs, listeners and pending frames. Pointer movement must not update React state. Read geometry before writing styles; option changes must work with a stationary pointer. Preserve engine-owned CSS variables such as `--wisp-angle` and `--wisp-strength`.
+Keep server imports safe, preserve native controls and focus indicators, and clean up refs, listeners and pending frames. Pointer movement must not update React state. Read geometry before writing styles; option changes must work with a stationary pointer. Preserve engine-owned CSS variables such as `--edge-angle` and `--edge-strength`.
 
 Use installed `@bolerish/ui` components and public `@bolerish/tokens/semantic.stylex` roles before authoring site styles. Colocate layout and example styles in `stylex.create`; shared theme variables use `.stylex.ts`. The StyleX Vite plugin extracts production CSS and serves its collected SSR rules before development hydration. `site.css` is limited to the layer-order prelude, document color-scheme, focus scroll margin and universal reduced-motion preferences, which StyleX 0.19 cannot apply globally. Keep its prelude before package styles in production and development. Edge’s public `packages/styles/src/edge.css` remains a distribution asset.
 

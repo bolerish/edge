@@ -4,13 +4,7 @@ import { createRoot, hydrateRoot, type Root } from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import {
-  useLight,
-  useSurface,
-  type EdgeStyle,
-  type LightOptions,
-  type Light,
-} from '../index.js';
+import { useLight, useSurface, type EdgeStyle, type LightOptions, type Light } from '../index.js';
 
 let frames: Map<number, FrameRequestCallback>;
 let sequence: number;
@@ -32,10 +26,7 @@ function Button({
 }) {
   const surface = useSurface<HTMLButtonElement>(light, { edgeStyle });
   return (
-    <button
-      key={String(replace)}
-      ref={surface}
-    >
+    <button key={String(replace)} ref={surface}>
       Save
     </button>
   );
@@ -111,9 +102,9 @@ it('connects actual core after child refs and survives StrictMode replay', async
     ),
   );
   flush();
-  expect(
-    container.querySelector('button')?.style.getPropertyValue('--wisp-angle'),
-  ).toBe('315.0deg');
+  expect(container.querySelector('button')?.style.getPropertyValue('--edge-angle')).toBe(
+    '315.0deg',
+  );
   await act(async () => root.render(null));
   expect(frames.size).toBe(0);
 });
@@ -121,21 +112,17 @@ it('updates stationary edgeStyle and intensity, then replaces the ref target wit
   await act(async () => root.render(<App />));
   flush();
   const original = container.querySelector('button')!;
-  await act(async () =>
-    root.render(<App edgeStyle="recessed" intensity={0.4} />),
-  );
+  await act(async () => root.render(<App edgeStyle="recessed" intensity={0.4} />));
   flush();
   expect(container.querySelector('button')).toBe(original);
-  expect(original.style.getPropertyValue('--wisp-angle')).toBe('135.0deg');
-  expect(original.style.getPropertyValue('--wisp-strength')).toBe('0.280');
-  await act(async () =>
-    root.render(<App edgeStyle="recessed" intensity={0.4} replace />),
-  );
+  expect(original.style.getPropertyValue('--edge-angle')).toBe('135.0deg');
+  expect(original.style.getPropertyValue('--edge-strength')).toBe('0.280');
+  await act(async () => root.render(<App edgeStyle="recessed" intensity={0.4} replace />));
   flush();
-  expect(original.style.getPropertyValue('--wisp-angle')).toBe('');
-  expect(
-    container.querySelector('button')?.style.getPropertyValue('--wisp-angle'),
-  ).toBe('135.0deg');
+  expect(original.style.getPropertyValue('--edge-angle')).toBe('');
+  expect(container.querySelector('button')?.style.getPropertyValue('--edge-angle')).toBe(
+    '135.0deg',
+  );
 });
 it('does not rerender React components during pointer updates and preserves nodes', async () => {
   let renders = 0;
@@ -143,11 +130,7 @@ it('does not rerender React components during pointer updates and preserves node
     renders++;
     const light = useLight({ motion: 'dynamic' });
     const surface = useSurface<HTMLButtonElement>(light);
-    return (
-      <button ref={surface}>
-        Save
-      </button>
-    );
+    return <button ref={surface}>Save</button>;
   }
   await act(async () => root.render(<Counter />));
   flush();
@@ -164,13 +147,13 @@ it('does not rerender React components during pointer updates and preserves node
   flush();
   expect(renders).toBe(before);
   expect(container.querySelector('button')).toBe(button);
-  expect(button?.style.getPropertyValue('--wisp-angle')).toBe('90.0deg');
+  expect(button?.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
 });
 it('supports same-document portals without reparenting native controls', async () => {
   await act(async () => root.render(<App portal />));
   flush();
   const outside = document.body.querySelector(':scope > button');
-  expect(outside?.getAttribute('style')).toContain('--wisp-angle: 315.0deg');
+  expect(outside?.getAttribute('style')).toContain('--edge-angle: 315.0deg');
   await act(async () => root.render(<App />));
   expect(outside?.isConnected).toBe(false);
 });
@@ -184,10 +167,7 @@ it('hydrates server markup and keeps an edited input value and selection', async
     return (
       <label ref={surface}>
         Query
-        <input
-          value={value}
-          onChange={(event) => setValue(event.target.value)}
-        />
+        <input value={value} onChange={(event) => setValue(event.target.value)} />
       </label>
     );
   }
@@ -221,21 +201,21 @@ it('updates and clears surface appearance without replacing its registration', a
   await act(async () => root.render(<Appearance color="red" intensity={0.4} />));
   flush();
   const button = container.querySelector('button')!;
-  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('red');
-  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('0.4');
-  const angle = button.style.getPropertyValue('--wisp-angle');
+  expect(button.style.getPropertyValue('--edge-highlight')).toBe('red');
+  expect(button.style.getPropertyValue('--edge-intensity')).toBe('0.4');
+  const angle = button.style.getPropertyValue('--edge-angle');
   await act(async () => root.render(<Appearance color="blue" intensity={2} />));
   expect(container.querySelector('button')).toBe(button);
-  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('blue');
-  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('1');
-  expect(button.style.getPropertyValue('--wisp-angle')).toBe(angle);
+  expect(button.style.getPropertyValue('--edge-highlight')).toBe('blue');
+  expect(button.style.getPropertyValue('--edge-intensity')).toBe('1');
+  expect(button.style.getPropertyValue('--edge-angle')).toBe(angle);
   await act(async () => root.render(<Appearance intensity={-1} />));
-  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('0');
-  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('');
+  expect(button.style.getPropertyValue('--edge-intensity')).toBe('0');
+  expect(button.style.getPropertyValue('--edge-highlight')).toBe('');
   await act(async () => root.render(<Appearance intensity={NaN} />));
-  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('');
+  expect(button.style.getPropertyValue('--edge-intensity')).toBe('');
   await act(async () => root.render(<Appearance />));
-  expect(button.style.getPropertyValue('--wisp-intensity')).toBe('');
+  expect(button.style.getPropertyValue('--edge-intensity')).toBe('');
 });
 
 it('reconnects an existing surface when its light handle changes', async () => {
@@ -248,11 +228,11 @@ it('reconnects an existing surface when its light handle changes', async () => {
   await act(async () => root.render(<Scene second={false} />));
   flush();
   const button = container.querySelector('button')!;
-  expect(button.style.getPropertyValue('--wisp-strength')).toBe('0.140');
+  expect(button.style.getPropertyValue('--edge-strength')).toBe('0.140');
   await act(async () => root.render(<Scene second />));
   flush();
   expect(container.querySelector('button')).toBe(button);
-  expect(button.style.getPropertyValue('--wisp-strength')).toBe('0.560');
+  expect(button.style.getPropertyValue('--edge-strength')).toBe('0.560');
 });
 it('allows a surface hook without an attached host', async () => {
   function Hidden() {
@@ -271,24 +251,46 @@ it('exposes refresh to remeasure a stationary pointer after a position change', 
     return <button ref={useSurface<HTMLButtonElement>(light)}>Save</button>;
   }
   await act(async () => root.render(<Scene />));
-  document.dispatchEvent(Object.assign(new Event('pointermove'), {
-    clientX: 50, clientY: -10, pointerType: 'mouse',
-  }));
+  document.dispatchEvent(
+    Object.assign(new Event('pointermove'), {
+      clientX: 50,
+      clientY: -10,
+      pointerType: 'mouse',
+    }),
+  );
   flush();
   const button = container.querySelector('button')!;
-  expect(button.style.getPropertyValue('--wisp-strength')).toBe('0.000');
-  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, -20, 100, 100));
+  expect(button.style.getPropertyValue('--edge-strength')).toBe('0.000');
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(
+    new DOMRect(0, -20, 100, 100),
+  );
   expect(refresh).toBeTypeOf('function');
   refresh!();
   flush();
-  expect(Number(button.style.getPropertyValue('--wisp-strength'))).toBeGreaterThan(0);
+  expect(Number(button.style.getPropertyValue('--edge-strength'))).toBeGreaterThan(0);
 });
 
 it('keeps native classes/styles through rerenders and releases only the effect on detach', async () => {
-  function Scene({ enabled, variant, color }: { enabled: boolean; variant: string; color?: string }) {
+  function Scene({
+    enabled,
+    variant,
+    color,
+  }: {
+    enabled: boolean;
+    variant: string;
+    color?: string;
+  }) {
     const light = useLight({ motion: 'static' });
     const ref = useSurface<HTMLButtonElement>(light, { color });
-    return <button ref={enabled ? ref : undefined} className={variant} style={{ padding: variant === 'first' ? 12 : 24 }}>Save</button>;
+    return (
+      <button
+        ref={enabled ? ref : undefined}
+        className={variant}
+        style={{ padding: variant === 'first' ? 12 : 24 }}
+      >
+        Save
+      </button>
+    );
   }
   await act(async () => root.render(<Scene enabled variant="first" color="red" />));
   flush();
@@ -300,26 +302,36 @@ it('keeps native classes/styles through rerenders and releases only the effect o
   expect(button.classList.contains('first')).toBe(false);
   expect(button.className.split(' ').length).toBe(initialClasses.split(' ').length);
   expect(button.style.padding).toBe('24px');
-  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('blue');
+  expect(button.style.getPropertyValue('--edge-highlight')).toBe('blue');
   await act(async () => root.render(<Scene enabled={false} variant="second" />));
   expect(button.className).toBe('second');
   expect(button.style.padding).toBe('24px');
-  expect(button.style.getPropertyValue('--wisp-highlight')).toBe('');
-  expect(button.style.getPropertyValue('--wisp-angle')).toBe('');
+  expect(button.style.getPropertyValue('--edge-highlight')).toBe('');
+  expect(button.style.getPropertyValue('--edge-angle')).toBe('');
   await act(async () => root.render(<Scene enabled variant="second" />));
   flush();
   expect(button.className).not.toBe('second');
-  expect(button.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
+  expect(button.style.getPropertyValue('--edge-angle')).toBe('315.0deg');
 });
 
 it('decorates a late child and preserves its independent class updates', async () => {
   function Child({ surface }: { surface: ReturnType<typeof useSurface<HTMLButtonElement>> }) {
     const [shown, setShown] = useState(false);
     const [active, setActive] = useState(false);
-    return <>
-      <button onClick={() => setShown(true)}>Show host</button>
-      {shown ? <button ref={surface} className={active ? 'active' : 'idle'} onClick={() => setActive(true)}>Host</button> : null}
-    </>;
+    return (
+      <>
+        <button onClick={() => setShown(true)}>Show host</button>
+        {shown ? (
+          <button
+            ref={surface}
+            className={active ? 'active' : 'idle'}
+            onClick={() => setActive(true)}
+          >
+            Host
+          </button>
+        ) : null}
+      </>
+    );
   }
   function Scene() {
     const light = useLight({ motion: 'static' });
@@ -330,7 +342,7 @@ it('decorates a late child and preserves its independent class updates', async (
   await act(async () => container.querySelector('button')!.click());
   flush();
   const host = container.querySelectorAll('button')[1]!;
-  expect(host.style.getPropertyValue('--wisp-highlight')).toBe('red');
+  expect(host.style.getPropertyValue('--edge-highlight')).toBe('red');
   const classes = host.className.split(' ').length;
   await act(async () => host.click());
   expect(host.classList.contains('active')).toBe(true);

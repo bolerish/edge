@@ -22,30 +22,23 @@ for (const viewport of [
       await page.setViewportSize(viewport);
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.addInitScript((theme) => {
-        localStorage.setItem('wisp:preferences:v1', JSON.stringify({ theme }));
+        localStorage.setItem('edge:preferences:v1', JSON.stringify({ theme }));
       }, theme);
       const reports = [];
       for (const route of routes) {
         await page.goto(route);
-        await expect(page.getByRole('button', {
-          name: theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
-        })).toBeVisible();
+        await expect(
+          page.getByRole('button', {
+            name: theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+          }),
+        ).toBeVisible();
         const result = await new AxeBuilder({ page })
-          .withTags([
-            'wcag2a',
-            'wcag2aa',
-            'wcag21a',
-            'wcag21aa',
-            'wcag22aa',
-            'best-practice',
-          ])
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
           .analyze();
         if (route === '/') {
           // Axe cannot infer text backgrounds through the decorative pseudo-elements.
           const contrasts = await page
-            .locator(
-              '.dashboard-card h3, .dashboard-card p, .activity-list span',
-            )
+            .locator('.dashboard-card h3, .dashboard-card p, .activity-list span')
             .evaluateAll((nodes) => {
               const canvas = document.createElement('canvas');
               canvas.width = canvas.height = 1;
@@ -67,8 +60,7 @@ for (const viewport of [
               return nodes.map((node) => {
                 const foreground = luminance(getComputedStyle(node).color);
                 const background = luminance(
-                  getComputedStyle(node.closest('.dashboard-card')!)
-                    .backgroundColor,
+                  getComputedStyle(node.closest('.dashboard-card')!).backgroundColor,
                 );
                 return {
                   text: node.textContent,
@@ -109,9 +101,11 @@ for (const viewport of [
       ).toEqual([]);
       if (viewport.width === 1440) {
         await page.goto('/');
-        await expect(page.getByRole('button', {
-          name: theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
-        })).toBeVisible();
+        await expect(
+          page.getByRole('button', {
+            name: theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+          }),
+        ).toBeVisible();
         await page.screenshot({
           path: `../.private/home-${theme}.png`,
           fullPage: true,

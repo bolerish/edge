@@ -135,7 +135,7 @@ export const styles: DocPage = {
       title: 'Customize the highlight',
       content: (
         <>
-          <span id="apply-the-wisp-theme" />
+          <span id="apply-the-edge-theme" />
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
             Each surface uses its own text color, even when nested, and follows its host border
             radius. Set <code {...stylex.props(contentStyles.inlineCode)}>color</code> to override

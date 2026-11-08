@@ -22,10 +22,13 @@ export function getSurfaceProps(options: SurfaceOptions = {}) {
   const className = `bolerish-edge bolerish-edge-${pseudoElement}`;
   const intensity = options.intensity;
   const style = {
-    '--wisp-highlight': options.color,
-    '--wisp-shadow': options.shadowColor,
-    '--wisp-border-width': options.borderWidth === undefined || !Number.isFinite(options.borderWidth) ? undefined : `${Math.max(0, options.borderWidth)}px`,
-    '--wisp-intensity':
+    '--edge-highlight': options.color,
+    '--edge-shadow': options.shadowColor,
+    '--edge-border-width':
+      options.borderWidth === undefined || !Number.isFinite(options.borderWidth)
+        ? undefined
+        : `${Math.max(0, options.borderWidth)}px`,
+    '--edge-intensity':
       intensity === undefined || !Number.isFinite(intensity)
         ? undefined
         : Math.min(1, Math.max(0, intensity)),

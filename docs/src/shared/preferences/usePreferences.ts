@@ -6,7 +6,7 @@ export interface SitePreferences {
   staticDirection: 0 | 90 | 180 | 270 | 315 | 'random';
   theme: 'light' | 'dark';
 }
-const storageKey = 'wisp:preferences:v1';
+const storageKey = 'edge:preferences:v1';
 const defaults: Readonly<SitePreferences> = Object.freeze({
   edgeStyle: 'raised',
   motion: 'dynamic',
@@ -77,12 +77,21 @@ function parsePreferences(serialized: string | null): Readonly<SitePreferences> 
     if (value === null || typeof value !== 'object') return defaults;
     return Object.freeze({
       edgeStyle:
-        'edgeStyle' in value && value.edgeStyle === 'recessed' ? 'recessed' : ('edgeStyle' in value && value.edgeStyle === 'matte') || ('material' in value && value.material === 'matte') ? 'matte' : 'raised',
+        'edgeStyle' in value && value.edgeStyle === 'recessed'
+          ? 'recessed'
+          : ('edgeStyle' in value && value.edgeStyle === 'matte') ||
+              ('material' in value && value.material === 'matte')
+            ? 'matte'
+            : 'raised',
       motion:
-        ('motion' in value && value.motion === 'static') || ('mode' in value && value.mode === 'static')
+        ('motion' in value && value.motion === 'static') ||
+        ('mode' in value && value.mode === 'static')
           ? 'static'
-          : 'motion' in value && value.motion === 'system' ? 'system' : 'dynamic',
-      staticDirection: 'staticDirection' in value ? parseStaticDirection(value.staticDirection) : 'random',
+          : 'motion' in value && value.motion === 'system'
+            ? 'system'
+            : 'dynamic',
+      staticDirection:
+        'staticDirection' in value ? parseStaticDirection(value.staticDirection) : 'random',
       theme: 'theme' in value && value.theme === 'dark' ? 'dark' : 'light',
     });
   } catch {

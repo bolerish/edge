@@ -76,8 +76,8 @@ execFileSync(process.execPath, ['--input-type=module', '-e', `
   const props = getSurfaceProps({color:'red',intensity:0.4});
   assert(props.className);
   assert.notEqual(getSurfaceProps({pseudoElement:'before'}).className,getSurfaceProps().className);
-  assert.equal(props.style['--wisp-highlight'],'red');
-  assert.equal(props.style['--wisp-intensity'],0.4);
+  assert.equal(props.style['--edge-highlight'],'red');
+  assert.equal(props.style['--edge-intensity'],0.4);
 `], {cwd:sandbox, stdio:'pipe'});
 for (const name of ['react', 'react-dom']) {
   await symlink(
@@ -134,8 +134,8 @@ const css = await readFile(
   resolve(sandbox, 'node_modules/@bolerish/edge/dist/assets/edge.css'),
   'utf8',
 );
-assert(css.includes('conic-gradient') && css.includes('--wisp-angle'));
-assert(css.includes('var(--wisp-highlight, currentColor)'));
+assert(css.includes('conic-gradient') && css.includes('--edge-angle'));
+assert(css.includes('var(--edge-highlight, currentColor)'));
 const styleLibrary = await readFile(resolve(sandbox, 'node_modules/@bolerish/edge-styles/dist/index.js'), 'utf8');
 assert(!/stylex|styleq/i.test(styleLibrary), 'The styles bundle must not include StyleX or styleq');
 const library = await readFile(
@@ -186,9 +186,9 @@ for (const [route, html] of documents) {
     assert(href !== undefined);
     const target = new URL(
       href.replaceAll('&amp;', '&'),
-      `https://wisp.invalid${route}`,
+      `https://edge.invalid${route}`,
     );
-    if (target.origin !== 'https://wisp.invalid') continue;
+    if (target.origin !== 'https://edge.invalid') continue;
     const page = documents.get(target.pathname) ??
       await readFile(resolve(site, `.${target.pathname}`), 'utf8').catch(() => undefined);
     assert(page, `Broken site route: ${match[1]} from ${route}`);

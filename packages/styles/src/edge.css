@@ -7,39 +7,44 @@
 
 :where(.bolerish-edge) {
   /* Each connected host starts with its own defaults, even inside another surface. */
-  --wisp-highlight: currentColor;
-  --wisp-shadow: #0008;
-  --wisp-border-width: 1px;
-  --wisp-intensity: 1;
-  --wisp-angle: 315deg;
-  --wisp-strength: 0;
-  --wisp-inset-top: 0px;
-  --wisp-inset-right: 0px;
-  --wisp-inset-bottom: 0px;
-  --wisp-inset-left: 0px;
+  --edge-highlight: currentColor;
+  --edge-shadow: #0008;
+  --edge-border-width: 1px;
+  --edge-intensity: 1;
+  --edge-angle: 315deg;
+  --edge-strength: 0;
+  --edge-inset-top: 0px;
+  --edge-inset-right: 0px;
+  --edge-inset-bottom: 0px;
+  --edge-inset-left: 0px;
 }
 
 :where(.bolerish-edge-before)::before,
 :where(.bolerish-edge-after)::after {
-  content: "";
+  content: '';
   position: absolute;
-  inset: var(--wisp-inset-top, 0px) var(--wisp-inset-right, 0px) var(--wisp-inset-bottom, 0px) var(--wisp-inset-left, 0px);
+  inset: var(--edge-inset-top, 0px) var(--edge-inset-right, 0px) var(--edge-inset-bottom, 0px)
+    var(--edge-inset-left, 0px);
   box-sizing: border-box;
   border-radius: inherit;
   pointer-events: none;
-  padding: var(--wisp-border-width, 1px);
+  padding: var(--edge-border-width, 1px);
   /* The highlight spans 40deg on each side; the shadow peaks opposite it. */
   background-image: conic-gradient(
-    from calc(var(--wisp-angle, 315deg) - 40deg),
+    from calc(var(--edge-angle, 315deg) - 40deg),
     transparent 0deg,
-    var(--wisp-highlight, currentColor) 40deg,
+    var(--edge-highlight, currentColor) 40deg,
     transparent 80deg,
-    var(--wisp-shadow, #0008) 220deg,
+    var(--edge-shadow, #0008) 220deg,
     transparent 360deg
   );
-  opacity: calc(var(--wisp-strength, 0) * var(--wisp-intensity, 1));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  opacity: calc(var(--edge-strength, 0) * var(--edge-intensity, 1));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }

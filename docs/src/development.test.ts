@@ -48,7 +48,7 @@ test('development serves styled content before JavaScript and hydrates it on ref
       }
     }
     await page.addInitScript(() => {
-      localStorage.setItem('wisp:preferences:v1', JSON.stringify({ theme: 'dark' }));
+      localStorage.setItem('edge:preferences:v1', JSON.stringify({ theme: 'dark' }));
     });
     await page.goto(origin + '/docs/');
     await expect(page.getByRole('button', { name: 'Switch to light theme' })).toBeVisible();
