@@ -97,6 +97,16 @@ test('native scrolling keeps touch lighting active until the finger is released'
   if (!box) throw new Error('Missing motion card');
   const session = await context.newCDPSession(page);
   const initialScroll = await page.evaluate(() => scrollY);
+  await page.evaluate(() => {
+    document.documentElement.dataset.pointerCancelled = 'false';
+    document.addEventListener(
+      'pointercancel',
+      () => {
+        document.documentElement.dataset.pointerCancelled = 'true';
+      },
+      { once: true },
+    );
+  });
   const point = { x: box.x + 30, y: box.y + 70, id: 1 };
   await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [point] });
   await expect
@@ -119,7 +129,36 @@ test('native scrolling keeps touch lighting active until the finger is released'
   await expect
     .poll(() => card.evaluate((node) => Number(node.style.getPropertyValue('--edge-strength'))))
     .toBeGreaterThan(0);
+
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.dataset.pointerCancelled))
+    .toBe('true');
+  await expect
+    .poll(() =>
+      card.evaluate(
+        (node, contact) => {
+          const rect = node.getBoundingClientRect();
+          const expected =
+            ((Math.atan2(
+              contact.y - rect.top - rect.height / 2,
+              contact.x - rect.left - rect.width / 2,
+            ) *
+              180) /
+              Math.PI +
+              450) %
+            360;
+          return Math.abs(parseFloat(node.style.getPropertyValue('--edge-angle')) - expected);
+        },
+        { x: point.x, y: point.y - 110 },
+      ),
+    )
+    .toBeLessThan(0.1);
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await expect
+    .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-strength')))
+    .toBe('0.000');
+  await page.evaluate(() => scrollBy(0, 50));
+  await page.evaluate(() => new Promise(requestAnimationFrame));
   await expect
     .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-strength')))
     .toBe('0.000');

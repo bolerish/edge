@@ -239,15 +239,20 @@ it('renders the same light for mouse and touch coordinates, then clears on relea
   point();
   flush();
   const mouse = node.style.cssText;
-  document.dispatchEvent(Object.assign(new Event('touchstart'), {
-    touches: [{ identifier: 1, clientX: 250, clientY: 150 }],
-    changedTouches: [{ identifier: 1, clientX: 250, clientY: 150 }],
-  }));
+  document.dispatchEvent(
+    Object.assign(new Event('touchstart'), {
+      touches: [{ identifier: 1, clientX: 250, clientY: 150 }],
+      changedTouches: [{ identifier: 1, clientX: 250, clientY: 150 }],
+    }),
+  );
   flush();
   expect(node.style.cssText).toBe(mouse);
-  document.dispatchEvent(Object.assign(new Event('touchend'), {
-    touches: [], changedTouches: [{ identifier: 1 }],
-  }));
+  document.dispatchEvent(
+    Object.assign(new Event('touchend'), {
+      touches: [],
+      changedTouches: [{ identifier: 1 }],
+    }),
+  );
   flush();
   expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
   stop();
@@ -616,3 +621,35 @@ it('reconfigures direction and radius with a stationary pointer and preserves st
   entry.destroy();
   stop();
 });
+
+it.each(['input-first', 'scroll-first', 'stationary-touch'])(
+  'uses the newest rectangle and input in one frame: %s',
+  (order) => {
+    const light = createLight({
+      motion: 'dynamic',
+      direction: 'gather',
+      radius: 480,
+      intensity: 1,
+    });
+    const { node, measure } = element();
+    const entry = light.register(node, 'raised');
+    const stop = light.mount(document);
+    if (order === 'stationary-touch') {
+      const contact = { identifier: 1, clientX: 150, clientY: 50 };
+      document.dispatchEvent(
+        Object.assign(new Event('touchstart'), { touches: [contact], changedTouches: [contact] }),
+      );
+    } else point(150, 50);
+    flush();
+    expect(node.style.getPropertyValue('--edge-angle')).toBe('0.0deg');
+    measure.mockReturnValue({ ...measure.mock.results[0]!.value, top: -100, bottom: 0, y: -100 });
+    if (order === 'input-first') point(150, 50);
+    document.dispatchEvent(new Event('scroll'));
+    if (order === 'scroll-first') point(150, 50);
+    flush();
+    expect(node.style.getPropertyValue('--edge-angle')).toBe('180.0deg');
+    expect(node.style.getPropertyValue('--edge-strength')).toBe('0.803');
+    entry.destroy();
+    stop();
+  },
+);

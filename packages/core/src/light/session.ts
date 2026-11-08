@@ -39,7 +39,8 @@ export function createLightSession(
     scheduleFrame();
   }
   function move(event: PointerEvent) {
-    if (event.pointerType !== 'touch') updatePointer(event.clientX, event.clientY);
+    if (touchId === null && event.pointerType !== 'touch')
+      updatePointer(event.clientX, event.clientY);
   }
   function handleTouchStart(event: TouchEvent) {
     if (touchId !== null || event.touches.length !== 1) return;
@@ -70,7 +71,7 @@ export function createLightSession(
     scheduleFrame();
   }
   function out(event: PointerEvent) {
-    if (event.pointerType !== 'touch' && event.relatedTarget === null) clear();
+    if (touchId === null && event.pointerType !== 'touch' && event.relatedTarget === null) clear();
   }
   function invalidateGeometry() {
     if (live) invalidate();
@@ -84,7 +85,7 @@ export function createLightSession(
     invalidate(container);
   }
   const observer = new view.ResizeObserver(invalidateGeometry);
-  // Native scrolling cancels pointer events while touch events continue.
+  // Native scrolling can cancel the pointer stream; touch events track contact lifetime.
   target.addEventListener('touchstart', handleTouchStart, { passive: true });
   target.addEventListener('touchmove', handleTouchMove, { passive: true });
   target.addEventListener('touchend', handleTouchEnd, { passive: true });

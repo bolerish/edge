@@ -213,3 +213,65 @@ it('keeps tracking touch positions after pointer cancellation and native scrolli
   flush();
   expect(render).toHaveBeenLastCalledWith(null, false);
 });
+
+it.each([
+  ['mouse', 'touchend'],
+  ['pen', 'touchend'],
+  ['mouse', 'touchcancel'],
+  ['pen', 'touchcancel'],
+])('keeps touch ownership through %s movement and exit until %s', (pointerType, ending) => {
+  const { render } = scene();
+  touch('touchstart');
+  flush();
+  for (const type of ['pointermove', 'pointerout']) {
+    document.dispatchEvent(
+      Object.assign(new Event(type), {
+        pointerType,
+        clientX: 200,
+        clientY: 300,
+        relatedTarget: null,
+      }),
+    );
+  }
+  expect(frames.size).toBe(0);
+  expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
+  touch('touchstart', 2, false);
+  touch(ending);
+  flush();
+  expect(render).toHaveBeenLastCalledWith(null, false);
+  touch('touchmove', 2);
+  expect(frames.size).toBe(0);
+  document.dispatchEvent(
+    Object.assign(new Event('pointermove'), {
+      pointerType,
+      clientX: 200,
+      clientY: 300,
+    }),
+  );
+  flush();
+  expect(render).toHaveBeenLastCalledWith({ x: 200, y: 300 }, false);
+});
+
+it('ignores fonts ready resolving after stop', async () => {
+  let resolve!: () => void;
+  const ready = new Promise<void>((done) => {
+    resolve = done;
+  });
+  const previous = Object.getOwnPropertyDescriptor(document, 'fonts');
+  Object.defineProperty(document, 'fonts', {
+    configurable: true,
+    value: Object.assign(new EventTarget(), { ready }),
+  });
+  try {
+    const { session, invalidate, render } = scene();
+    session.stop();
+    resolve();
+    await ready;
+    expect(invalidate).not.toHaveBeenCalled();
+    expect(frames.size).toBe(0);
+    expect(render).not.toHaveBeenCalled();
+  } finally {
+    if (previous) Object.defineProperty(document, 'fonts', previous);
+    else Reflect.deleteProperty(document, 'fonts');
+  }
+});
