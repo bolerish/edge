@@ -72,7 +72,7 @@ const surfaceOptions = {
   },
 } satisfies OptionDocs<SurfaceOptions>;
 
-const lightingOwnProps = {
+const providerOwnProps = {
   children: {
     type: 'ReactNode',
     defaultValue: 'Required',
@@ -115,7 +115,7 @@ const surfaceOwnProps = {
 
 export const lightOptionRows = rows(lightOptions);
 export const surfaceOptionRows = rows(surfaceOptions);
-export const lightingPropRows = [...lightOptionRows, ...rows(lightingOwnProps)];
+export const providerPropRows = [...lightOptionRows, ...rows(providerOwnProps)];
 export const surfacePropRows = [...surfaceOptionRows, ...rows(surfaceOwnProps)];
 
 function rows(options: Record<string, OptionDescription>): ApiRow[] {

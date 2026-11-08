@@ -1,12 +1,16 @@
 // @vitest-environment jsdom
-import { act, createRef, StrictMode } from 'react';
-import { createRoot, type Root } from 'react-dom/client';
+import { createRef, StrictMode, type ReactNode } from 'react';
+import { act, cleanup, render, type RenderResult } from '@testing-library/react';
 import { createPortal } from 'react-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { Edge, useLight, useSurface, Lighting, type Motion, type Light } from '../index.js';
+import { Edge, useLight, useSurface, type Motion, type Light } from '../index.js';
 
 let container: HTMLDivElement;
-let root: Root;
+let view: Pick<RenderResult, 'rerender'> | null;
+function renderScene(node: ReactNode) {
+  if (view) view.rerender(node);
+  else view = render(node, { container });
+}
 let frames: Map<number, FrameRequestCallback>;
 function flush() {
   const callbacks = [...frames.values()];
@@ -37,10 +41,10 @@ beforeEach(() => {
     .mockReturnValue(new DOMRect(0, 0, 100, 100));
   container = document.createElement('div');
   document.body.append(container);
-  root = createRoot(container);
+  view = null;
 });
 afterEach(async () => {
-  await act(async () => root.unmount());
+  await act(async () => cleanup());
   container.remove();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
@@ -48,13 +52,13 @@ afterEach(async () => {
 
 it('lights only marked hosts and preserves native props and interactions', async () => {
   const click = vi.fn();
-  await act(async () => root.render(
-    <Lighting motion="static">
-      <Lighting.Surface as="button" className="own-button" style={{ padding: 12 }} onClick={click}>
+  await act(async () => renderScene(
+    <Edge.Provider motion="static">
+      <Edge.Surface as="button" className="own-button" style={{ padding: 12 }} onClick={click}>
         Lit
-      </Lighting.Surface>
+      </Edge.Surface>
       <button>Plain</button>
-    </Lighting>,
+    </Edge.Provider>,
   ));
   flush();
   const [lit, plain] = container.querySelectorAll('button');
@@ -68,14 +72,14 @@ it('lights only marked hosts and preserves native props and interactions', async
   expect(click).toHaveBeenCalledOnce();
 });
 it('uses the nearest light and leaves outer siblings independent', async () => {
-  await act(async () => root.render(
-    <Lighting motion="static" intensity={0.2}>
-      <Lighting.Surface data-testid="outer" />
-      <Lighting motion="static" intensity={0.8}>
-        <Lighting.Surface data-testid="inner" />
-      </Lighting>
-      <Lighting.Surface data-testid="sibling" />
-    </Lighting>,
+  await act(async () => renderScene(
+    <Edge.Provider motion="static" intensity={0.2}>
+      <Edge.Surface data-testid="outer" />
+      <Edge.Provider motion="static" intensity={0.8}>
+        <Edge.Surface data-testid="inner" />
+      </Edge.Provider>
+      <Edge.Surface data-testid="sibling" />
+    </Edge.Provider>,
   ));
   flush();
   for (const id of ['outer', 'sibling'])
@@ -83,8 +87,8 @@ it('uses the nearest light and leaves outer siblings independent', async () => {
   expect(container.querySelector<HTMLElement>('[data-testid=inner]')!.style.getPropertyValue('--wisp-strength')).toBe('0.560');
 });
 it.each(['static', 'dynamic', 'system'] as const)('maps motion %s under reduced motion', async (motion: Motion) => {
-  await act(async () => root.render(
-    <Lighting motion={motion}><Lighting.Surface /></Lighting>,
+  await act(async () => renderScene(
+    <Edge.Provider motion={motion}><Edge.Surface /></Edge.Provider>,
   ));
   move();
   flush();
@@ -92,12 +96,12 @@ it.each(['static', 'dynamic', 'system'] as const)('maps motion %s under reduced 
     .toContain(`--wisp-angle: ${motion === 'dynamic' ? '90.0' : '315.0'}deg`);
 });
 it('defaults to system motion and updates edgeStyle without replacing the host', async () => {
-  await act(async () => root.render(<Lighting><Lighting.Surface /></Lighting>));
+  await act(async () => renderScene(<Edge.Provider><Edge.Surface /></Edge.Provider>));
   flush();
   const host = container.querySelector<HTMLElement>(':scope > div')!;
   expect(host.style.getPropertyValue('--wisp-angle')).toBe('315.0deg');
-  await act(async () => root.render(
-    <Lighting><Lighting.Surface edgeStyle="recessed" color="red" intensity={0.4} /></Lighting>,
+  await act(async () => renderScene(
+    <Edge.Provider><Edge.Surface edgeStyle="recessed" color="red" intensity={0.4} /></Edge.Provider>,
   ));
   flush();
   expect(container.firstElementChild).toBe(host);
@@ -108,20 +112,20 @@ it('defaults to system motion and updates edgeStyle without replacing the host',
 it('composes object refs and releases them when a host is replaced or removed', async () => {
   const button = createRef<HTMLButtonElement>();
   const article = createRef<HTMLElement>();
-  await act(async () => root.render(
-    <Lighting motion="static"><Lighting.Surface as="button" ref={button} /></Lighting>,
+  await act(async () => renderScene(
+    <Edge.Provider motion="static"><Edge.Surface as="button" ref={button} /></Edge.Provider>,
   ));
   flush();
   const previous = button.current!;
   expect(previous).toBeInstanceOf(HTMLButtonElement);
-  await act(async () => root.render(
-    <Lighting motion="static"><Lighting.Surface as="article" ref={article} /></Lighting>,
+  await act(async () => renderScene(
+    <Edge.Provider motion="static"><Edge.Surface as="article" ref={article} /></Edge.Provider>,
   ));
   flush();
   expect(button.current).toBeNull();
   expect(previous.style.getPropertyValue('--wisp-strength')).toBe('');
   expect(article.current).toBe(container.firstElementChild);
-  await act(async () => root.render(null));
+  await act(async () => renderScene(null));
   expect(article.current).toBeNull();
   expect(frames.size).toBe(0);
 });
@@ -130,13 +134,13 @@ it('honors React 19 callback-ref cleanup across StrictMode replay', async () => 
   const ref = vi.fn((element: HTMLDivElement | null) => {
     if (element) return cleanup;
   });
-  await act(async () => root.render(
-    <StrictMode><Lighting motion="static"><Lighting.Surface ref={ref} /></Lighting></StrictMode>,
+  await act(async () => renderScene(
+    <StrictMode><Edge.Provider motion="static"><Edge.Surface ref={ref} /></Edge.Provider></StrictMode>,
   ));
   flush();
   const attachments = ref.mock.calls.filter(([element]) => element !== null).length;
   expect(attachments).toBeGreaterThan(0);
-  await act(async () => root.render(null));
+  await act(async () => renderScene(null));
   expect(cleanup).toHaveBeenCalledTimes(attachments);
   expect(ref.mock.calls.filter(([element]) => element === null)).toHaveLength(0);
   expect(frames.size).toBe(0);
@@ -146,40 +150,40 @@ it('cleans the previous callback ref before attaching its replacement to the sam
   const secondCleanup = vi.fn();
   const first = vi.fn(() => firstCleanup);
   const second = vi.fn(() => secondCleanup);
-  await act(async () => root.render(<Lighting><Lighting.Surface ref={first} /></Lighting>));
+  await act(async () => renderScene(<Edge.Provider><Edge.Surface ref={first} /></Edge.Provider>));
   const host = container.firstElementChild;
-  await act(async () => root.render(<Lighting><Lighting.Surface ref={second} /></Lighting>));
+  await act(async () => renderScene(<Edge.Provider><Edge.Surface ref={second} /></Edge.Provider>));
   expect(container.firstElementChild).toBe(host);
   expect(firstCleanup).toHaveBeenCalledOnce();
   expect(second).toHaveBeenCalledWith(host);
   expect(secondCleanup).not.toHaveBeenCalled();
-  await act(async () => root.render(null));
+  await act(async () => renderScene(null));
   expect(secondCleanup).toHaveBeenCalledOnce();
 });
 it('clears callback refs without cleanup functions', async () => {
   const ref = vi.fn((_element: HTMLDivElement | null) => {});
-  await act(async () => root.render(<Lighting><Lighting.Surface ref={ref} /></Lighting>));
+  await act(async () => renderScene(<Edge.Provider><Edge.Surface ref={ref} /></Edge.Provider>));
   expect(ref).toHaveBeenLastCalledWith(container.firstElementChild);
-  await act(async () => root.render(null));
+  await act(async () => renderScene(null));
   expect(ref).toHaveBeenLastCalledWith(null);
 });
 it('keeps same-document portals in the declaring light scope', async () => {
-  await act(async () => root.render(
-    <Lighting motion="static" intensity={0.4}>
-      {createPortal(<Lighting.Surface as="button">Portal</Lighting.Surface>, document.body)}
-    </Lighting>,
+  await act(async () => renderScene(
+    <Edge.Provider motion="static" intensity={0.4}>
+      {createPortal(<Edge.Surface as="button">Portal</Edge.Surface>, document.body)}
+    </Edge.Provider>,
   ));
   flush();
   const button = document.body.querySelector<HTMLButtonElement>(':scope > button')!;
   expect(button.style.getPropertyValue('--wisp-strength')).toBe('0.280');
-  await act(async () => root.render(null));
+  await act(async () => renderScene(null));
   expect(button.isConnected).toBe(false);
 });
 
 it('exposes optional refresh for position-only changes and clears the root handle', async () => {
   const light = createRef<Light>();
-  await act(async () => root.render(
-    <Lighting motion="dynamic" ref={light}><Lighting.Surface /></Lighting>,
+  await act(async () => renderScene(
+    <Edge.Provider motion="dynamic" ref={light}><Edge.Surface /></Edge.Provider>,
   ));
   move();
   flush();
@@ -190,24 +194,24 @@ it('exposes optional refresh for position-only changes and clears the root handl
   light.current!.refresh();
   flush();
   expect(host.style.getPropertyValue('--wisp-angle')).toBe('270.0deg');
-  await act(async () => root.render(null));
+  await act(async () => renderScene(null));
   expect(light.current).toBeNull();
 });
 
 it('unregisters removed surfaces while their light owner and siblings stay mounted', async () => {
   function Scene({ show }: { show: boolean }) {
     return (
-      <Lighting motion="static">
-        {show ? <Lighting.Surface key="first" data-testid="first" /> : null}
-        <Lighting.Surface key="second" data-testid="second" />
-      </Lighting>
+      <Edge.Provider motion="static">
+        {show ? <Edge.Surface key="first" data-testid="first" /> : null}
+        <Edge.Surface key="second" data-testid="second" />
+      </Edge.Provider>
     );
   }
-  await act(async () => root.render(<Scene show />));
+  await act(async () => renderScene(<Scene show />));
   flush();
   const removed = container.querySelector<HTMLElement>('[data-testid=first]')!;
   const sibling = container.querySelector<HTMLElement>('[data-testid=second]')!;
-  await act(async () => root.render(<Scene show={false} />));
+  await act(async () => renderScene(<Scene show={false} />));
   flush();
   expect(removed.isConnected).toBe(false);
   expect(removed.style.getPropertyValue('--wisp-strength')).toBe('');
@@ -219,15 +223,15 @@ it('switches decoration slots without replacing or registering the host again', 
   const ref = vi.fn((_node: HTMLButtonElement | null) => {});
   const click = vi.fn();
   function Scene({ pseudoElement }: { pseudoElement: 'before' | 'after' }) {
-    return <Lighting motion="dynamic"><Lighting.Surface as="button" ref={ref} onClick={click} pseudoElement={pseudoElement} /></Lighting>;
+    return <Edge.Provider motion="dynamic"><Edge.Surface as="button" ref={ref} onClick={click} pseudoElement={pseudoElement} /></Edge.Provider>;
   }
-  await act(async () => root.render(<Scene pseudoElement="after" />));
+  await act(async () => renderScene(<Scene pseudoElement="after" />));
   move();
   flush();
   const host = container.firstElementChild as HTMLButtonElement;
   const previousClass = host.className;
   const angle = host.style.getPropertyValue('--wisp-angle');
-  await act(async () => root.render(<Scene pseudoElement="before" />));
+  await act(async () => renderScene(<Scene pseudoElement="before" />));
   expect(container.firstElementChild).toBe(host);
   expect(host.className).not.toBe(previousClass);
   expect(host.childElementCount).toBe(0);
@@ -243,7 +247,7 @@ it('shares provider lighting with hook hosts and keeps nested scopes independent
     const ref = useSurface<HTMLButtonElement>();
     return <button ref={ref} data-testid={id} />;
   }
-  await act(async () => root.render(
+  await act(async () => renderScene(
     <Edge.Provider motion="static" intensity={0.2}>
       <Edge.Surface data-testid="surface" />
       <Existing id="outer-hook" />
@@ -266,7 +270,7 @@ it('lets an explicit light override the provider for existing hosts', async () =
     const ref = useSurface<HTMLButtonElement>(light, { intensity: 0.5 });
     return <button ref={ref} />;
   }
-  await act(async () => root.render(
+  await act(async () => renderScene(
     <Edge.Provider motion="static" intensity={0.2}><Existing /></Edge.Provider>,
   ));
   flush();
@@ -278,16 +282,16 @@ it('updates context surface options while preserving the host and restoring styl
     const ref = useSurface<HTMLButtonElement>({ intensity, color: 'red' });
     return <button ref={ref} className="original" />;
   }
-  await act(async () => root.render(<Edge.Provider motion="static"><Existing intensity={1} /></Edge.Provider>));
+  await act(async () => renderScene(<Edge.Provider motion="static"><Existing intensity={1} /></Edge.Provider>));
   flush();
   const host = container.querySelector('button')!;
   expect(host.style.getPropertyValue('--wisp-strength')).toBe('0.525');
-  await act(async () => root.render(<Edge.Provider motion="static"><Existing intensity={0.5} /></Edge.Provider>));
+  await act(async () => renderScene(<Edge.Provider motion="static"><Existing intensity={0.5} /></Edge.Provider>));
   flush();
   expect(container.querySelector('button')).toBe(host);
   expect(host.style.getPropertyValue('--wisp-strength')).toBe('0.525');
   expect(host.style.getPropertyValue('--wisp-intensity')).toBe('0.5');
-  await act(async () => root.render(null));
+  await act(async () => renderScene(null));
   expect(host.className).toBe('original');
   expect(host.style.getPropertyValue('--wisp-strength')).toBe('');
 });

@@ -34,7 +34,7 @@ export function App({ pathname }: { pathname: string }) {
     );
   const { previous, next } = getReadingNeighbors(page);
   return (
-    <DocumentLighting motion={motion} staticDirection={staticDirection}>
+    <DocumentEdge motion={motion} staticDirection={staticDirection}>
     <SiteShell
       section="docs"
       pathname={getPagePath(page)}
@@ -61,11 +61,11 @@ export function App({ pathname }: { pathname: string }) {
         <footer className="page-footer">bolerish/edge{page.section ? ` · ${page.section}` : ''}</footer>
       </article>
     </SiteShell>
-    </DocumentLighting>
+    </DocumentEdge>
   );
 }
 
-function DocumentLighting({ children, ...options }: LightOptions & { children: ReactNode }) {
+function DocumentEdge({ children, ...options }: LightOptions & { children: ReactNode }) {
   const light = useLight(options);
   return <DocumentLightContext value={light}>{children}</DocumentLightContext>;
 }

@@ -23,3 +23,5 @@ Decoration uses ::after by default. Select pseudoElement: "before" when ::after 
 - [Integration](/docs/integration/): Shared input-wrapper, decoration and layout constraints.
 - [Accessibility](/docs/accessibility/): Native controls, focus and forced colors.
 - [React API reference](/docs/react/api/): Complete props, hooks, defaults and cleanup contracts.
+
+Rendering: CSR, SSR and hydratable SSG are supported. Edge.Surface emits appearance classes/variables during server rendering; geometry and lighting activate on the client. useSurface decorates hosts only after hydration. Node renderToPipeableStream and Web renderToReadableStream are tested with delayed Suspense surfaces and hydration of completed output. Await all content for hydratable SSG. renderToStaticMarkup output is not hydratable. Server Component frameworks need a client module marked "use client". Tests do not establish every framework/runtime or incomplete-stream selective hydration.

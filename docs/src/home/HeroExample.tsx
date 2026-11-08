@@ -1,14 +1,14 @@
 import { Card } from '@bolerish/ui/card';
-import { Lighting } from '@bolerish/edge';
+import { Edge } from '@bolerish/edge';
 import { usePreferences } from '../settings/usePreferences.js';
 
 export function HeroExample() {
   const { edgeStyle } = usePreferences();
   return (
-    <section className="hero-example" aria-label="Lighting example">
+    <section className="hero-example" aria-label="Edge example">
       <div className="hero-example-stage" aria-hidden="true">
         {['back', 'middle', 'front'].map((layer) => (
-          <Lighting.Surface
+          <Edge.Surface
             key={layer}
             edgeStyle={edgeStyle}
             color="var(--site-foreground)"
@@ -18,7 +18,7 @@ export function HeroExample() {
             data-testid={layer === 'front' ? 'hero-surface' : undefined}
           >
             <Card className="hero-example-panel">
-            <Lighting.Surface
+            <Edge.Surface
               edgeStyle={edgeStyle}
               color="var(--site-foreground)"
             shadowColor="transparent"
@@ -28,7 +28,7 @@ export function HeroExample() {
             <span className="hero-example-line" />
             <span className="hero-example-line hero-example-line-short" />
             </Card>
-          </Lighting.Surface>
+          </Edge.Surface>
         ))}
       </div>
 

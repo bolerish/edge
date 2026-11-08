@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { createServer } from 'node:http';
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -128,16 +128,29 @@ try {
     for (const environment of ['development', 'production']) {
       execFileSync(process.execPath, ['ssr.mjs'], { cwd: consumer, stdio: 'pipe', env: { ...process.env, NODE_ENV: environment } });
     }
+    for (const name of ['rendering.mjs', 'rendering-scene.mjs', 'rendering-client.mjs']) {
+      await copyFile(new URL(`./fixtures/${name}`, import.meta.url), resolve(consumer, name));
+    }
+    for (const environment of ['development', 'production']) {
+      for (const backend of ['node', 'web']) {
+        execFileSync(process.execPath, ['rendering.mjs', backend, version.react.startsWith('18.') ? 'react-dom/server.browser' : 'react-dom/server.edge'], {
+          cwd: consumer, stdio: 'pipe', timeout: 30000,
+          env: { ...process.env, NODE_ENV: environment },
+        });
+      }
+    }
     await writeFile(resolve(consumer, 'client.js'), `
       import React from 'react';
-      import { hydrateRoot } from 'react-dom/client';
+      import { createRoot, hydrateRoot } from 'react-dom/client';
       import { Scene, lightRef, hostRef, events, detached } from './scene.js';
       import '@bolerish/edge/style.css';
       const tree = props => React.createElement(React.StrictMode, null, React.createElement(Scene, props));
-      const root = hydrateRoot(document.getElementById('root'), tree({}));
+      const container = document.getElementById('root');
+      const root = container.dataset.mode === 'csr' ? createRoot(container) : hydrateRoot(container, tree({}));
+      if (container.dataset.mode === 'csr') root.render(tree({}));
       window.fixture = { lightRef, hostRef, events, detached, update: props => root.render(tree(props)), unmount: () => root.unmount() };
     `);
-    await build({ root: consumer, configFile: false, logLevel: 'error', build: { outDir: 'dist' } });
+    await build({ root: consumer, configFile: false, logLevel: 'error', build: { outDir: 'dist', rollupOptions: { input: ['index.html', 'node-stream.html', 'web-stream.html', 'ssg.html', 'static.html', 'csr.html'].map(name => resolve(consumer, name)) } } });
     const site = resolve(consumer, 'dist');
     const server = createServer(async (request, response) => {
       const path = new URL(request.url ?? '/', 'http://localhost').pathname;
@@ -185,12 +198,37 @@ try {
       assert.equal(await page.evaluate(`window.fixture.hostRef.current`), null);
       assert.equal(await page.evaluate(`window.fixture.hook.className`), 'consumer');
       assert.equal(await page.evaluate(`window.fixture.hook.style.getPropertyValue('--wisp-highlight')`), '');
+      await page.goto(`http://127.0.0.1:${address.port}/csr.html`);
+      await page.waitForFunction(() => document.getElementById('lit')?.style.getPropertyValue('--wisp-angle'));
+      await page.locator('#lit').click();
+      await page.waitForFunction(() => document.getElementById('lit')?.textContent === 'Example button 1');
+      await page.evaluate(`window.fixture.unmount()`);
+      for (const mode of ['node-stream', 'web-stream', 'ssg']) {
+        await page.goto(`http://127.0.0.1:${address.port}/${mode}.html`);
+        await page.waitForFunction(() => document.getElementById('delayed-hook')?.style.getPropertyValue('--wisp-angle') === '90.0deg');
+        assert.equal(await page.locator('#delayed-surface').evaluate(node => node.style.getPropertyValue('--wisp-angle')), '90.0deg');
+        assert.equal(await page.locator('#shell').evaluate(node => node.style.getPropertyValue('--wisp-angle')), '90.0deg');
+        assert.equal(await page.locator('#fallback').count(), 0);
+        assert.deepEqual(await page.evaluate(`window.renderingFixture.errors`), []);
+        await page.evaluate(`window.savedHook = document.getElementById('delayed-hook'); window.renderingFixture.unmount()`);
+        assert.equal(await page.evaluate(`window.savedHook.style.getPropertyValue('--wisp-angle')`), '');
+        assert.equal(await page.evaluate(`window.savedHook.className`), '');
+      }
+      const staticContext = await browser.newContext({ javaScriptEnabled: false });
+      try {
+        const staticPage = await staticContext.newPage();
+        await staticPage.goto(`http://127.0.0.1:${address.port}/static.html`);
+        assert(await staticPage.locator('#lit').isVisible());
+        assert(await staticPage.locator('#lit').evaluate(node => node.classList.contains('bolerish-edge-after')));
+        assert.equal(await staticPage.locator('#hook').getAttribute('class'), 'consumer');
+        assert.equal(await staticPage.locator('#lit').evaluate(node => node.style.getPropertyValue('--wisp-angle')), '');
+      } finally { await staticContext.close(); }
       assert.deepEqual(errors, []);
     } finally {
       await page.close();
       await new Promise<void>((done, reject) => server.close(error => error ? reject(error) : done()));
     }
     await rm(consumer, { recursive: true, force: true });
-    console.log(`React ${version.react}: declarations, SSR, hydration, refs, interactions and cleanup passed.`);
+    console.log(`React ${version.react}: declarations, CSR, SSR, Node/Web streaming Suspense, SSG, static HTML, hydration, refs and cleanup passed.`);
   }
 } finally { await browser.close(); }

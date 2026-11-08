@@ -5,7 +5,7 @@ import { LightContext } from './light-context.js';
 import { Surface } from './Surface.js';
 
 export type Motion = NonNullable<LightOptions['motion']>;
-export interface LightingProps {
+export interface EdgeProviderProps {
   children: ReactNode;
   /** Defaults to system, respecting motion and device preferences. */
   motion?: Motion;
@@ -16,7 +16,7 @@ export interface LightingProps {
   ref?: Ref<Light>;
 }
 /** Shares one light with explicit descendant surfaces, without adding DOM. */
-const LightingRoot = forwardRef<Light, Omit<LightingProps, 'ref'>>(function LightingRoot({
+const EdgeProvider = forwardRef<Light, Omit<EdgeProviderProps, 'ref'>>(function EdgeProvider({
   children, motion = 'system', staticDirection, radius, intensity,
 }, ref) {
   const light = useLight({ motion, radius, intensity, staticDirection });
@@ -24,7 +24,4 @@ const LightingRoot = forwardRef<Light, Omit<LightingProps, 'ref'>>(function Ligh
   return <LightContext.Provider value={light}>{children}</LightContext.Provider>;
 });
 
-export const Lighting = Object.assign(LightingRoot, { Surface });
-
-export type EdgeProviderProps = LightingProps;
-export const Edge = { Provider: LightingRoot, Surface };
+export const Edge = { Provider: EdgeProvider, Surface };

@@ -3,7 +3,7 @@ import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { CodeBlock } from '../../ui/CodeBlock.js';
 import {
   apiTable,
-  lightingPropRows,
+  providerPropRows,
   lightOptionRows,
   surfacePropRows,
   surfaceOptionRows,
@@ -32,7 +32,7 @@ export const api: DocPage = {
             label="Edge.Provider signature"
             code={'<Edge.Provider motion="system" radius={480} intensity={0.75}>\n  {/* Your surfaces */}\n</Edge.Provider>'}
           />
-          {apiTable('Edge.Provider props', lightingPropRows)}
+          {apiTable('Edge.Provider props', providerPropRows)}
           <P>
             Pointer input comes from the document. The scope chooses which
             surfaces respond; it does not clip input to a wrapper rectangle.
@@ -138,7 +138,7 @@ function ExistingCard() {
   return <Card ref={ref}>Your existing component</Card>;
 }`} />
           <P>In React 18, an existing function component must use <code>forwardRef</code> to pass the ref to its HTML host. React 19 also supports receiving ref as a prop.</P>
-          <P>Without an explicit light, this hook requires an Edge.Provider. For advanced ownership, use <code>useSurface(light, options)</code> with a handle returned by <code>useLight</code>. The explicit light takes precedence over the provider. The legacy Lighting and Lighting.Surface names remain supported.</P>
+          <P>Without an explicit light, this hook requires an Edge.Provider. For advanced ownership, use <code>useSurface(light, options)</code> with a handle returned by <code>useLight</code>. The explicit light takes precedence over the provider.</P>
           {apiTable('useSurface options', surfaceOptionRows)}
           <div role="note" aria-label="One owner per element" className="doc-note">
             <P>
@@ -167,9 +167,34 @@ function ExistingCard() {
             React StrictMode checks.
           </P>
           <P>
-            The React adapter supports React 18 and 19. Tests cover React’s server
-            renderer and hydration APIs; they do not establish integration with
-            every SSR framework.
+            Edge.Surface emits its decoration classes and appearance variables on the server.
+            Geometry, fixed direction and pointer tracking activate only on the client.
+            A host connected with useSurface keeps only your own markup and styles until hydration.
+          </P>
+          <div className="table-scroll" role="region" aria-label="Rendering modes table" tabIndex={0}>
+            <table className="api-table">
+              <caption className="visually-hidden">Rendering modes</caption>
+              <thead><tr><th scope="col">Mode</th><th scope="col">Behavior</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">CSR</th><td>The provider and marked hosts activate after the client mounts.</td></tr>
+                <tr><th scope="row">SSR</th><td>Use renderToString with hydrateRoot. Native content and controls remain available before hydration.</td></tr>
+                <tr><th scope="row">Streaming SSR</th><td>Node renderToPipeableStream and Web renderToReadableStream can send a Suspense fallback before delayed surfaces. Surfaces use their nearest provider when they hydrate.</td></tr>
+                <tr><th scope="row">SSG with hydration</th><td>Generate hydratable HTML at build time. For delayed content, wait for onAllReady or stream.allReady before collecting the output.</td></tr>
+                <tr><th scope="row">Static HTML</th><td>renderToStaticMarkup produces HTML that cannot be hydrated. Content and surface classes remain, but lighting does not activate without client code.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <P>
+            In a framework with Server Components, import Edge inside a client module
+            marked with <code>{'"use client"'}</code> and render that module from your server component.
+            The package marks its JavaScript entry as a client module; it does not provide a Server Component API.
+          </P>
+          <P>
+            The isolated React 18 and 19 checks cover development and production server output,
+            delayed Suspense output from both streaming APIs, hydration of completed output, CSR,
+            static HTML without JavaScript and cleanup. Web Streams are tested in Node;
+            this is not a deployment check for every runtime or SSR framework, nor a test of
+            hydrating an incomplete stream.
           </P>
         </>
       ),

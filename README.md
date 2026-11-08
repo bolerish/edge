@@ -26,7 +26,15 @@ export function Area() {
 
 Load the stylesheet once, before application and utility styles; a separate reset may load first. Edge preserves your background, text, padding and base borders. Highlights use the host’s text color and border radius by default.
 
-`Edge.Provider` adds no DOM. Only explicit surfaces respond; nested scopes are independent. Choose `edgeStyle="raised"`, `"recessed"` or `"matte"`. Motion accepts `"dynamic"`, `"static"` or `"system"` (the default, respecting reduced motion). Use `useSurface(options?)` inside the provider to connect existing hosts through its returned callback ref. For advanced ownership, `useLight` and `useSurface(light, options)` remain available. The legacy `Lighting` and `Lighting.Surface` names remain supported.
+`Edge.Provider` adds no DOM. Only explicit surfaces respond; nested scopes are independent. Choose `edgeStyle="raised"`, `"recessed"` or `"matte"`. Motion accepts `"dynamic"`, `"static"` or `"system"` (the default, respecting reduced motion). Use `useSurface(options?)` inside the provider to connect existing hosts through its returned callback ref. For advanced ownership, `useLight` and `useSurface(light, options)` remain available.
+
+## Rendering
+
+`Edge.Provider` and `Edge.Surface` support CSR, SSR and build-time prerendering. `Edge.Surface` emits decoration classes and appearance variables on the server; geometry and lighting activate on the client. `useSurface` attaches decoration after hydration. Keep labels, focus and validation independent of lighting.
+
+Node streaming SSR (`renderToPipeableStream`) and Web streaming SSR (`renderToReadableStream`) can render delayed Suspense surfaces under the same provider. For SSG with hydration, collect hydratable output after all content is ready. `renderToStaticMarkup` is for non-hydratable HTML; without client code, content remains available but lighting does not activate.
+
+In Server Component frameworks, use Edge from a client module marked with `"use client"`. Isolated React 18/19 tests cover both streaming APIs and hydration of completed output, not every framework, deployed runtime or incomplete-stream selective hydration.
 
 ## Compatibility
 

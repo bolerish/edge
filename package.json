@@ -18,6 +18,9 @@
     "test:mutation": "pnpm --filter './packages/**' build && pnpm -r --filter './packages/**' test:mutation",
     "typecheck:scripts": "pnpm --filter @bolerish/edge-docs exec tsc -p tsconfig.scripts.json",
     "deploy:docs": "pnpm build && pnpm verify:packages && npx --yes wrangler@4.157.0 pages deploy --cwd docs --branch main",
-    "test:react-compat": "pnpm --filter './packages/**' build && pnpm --filter @bolerish/edge-docs exec node scripts/verify-react-compatibility.ts"
+    "test:react-compat": "pnpm --filter './packages/**' build && pnpm --filter @bolerish/edge-docs exec node scripts/verify-react-compatibility.ts",
+    "test:unit": "pnpm --filter './packages/**' build && pnpm --filter @bolerish/edge-core --filter @bolerish/edge-styles test && pnpm --filter @bolerish/edge test:unit",
+    "test:integration": "pnpm --filter './packages/**' build && pnpm --filter @bolerish/edge test:integration",
+    "test:e2e": "pnpm test:browser"
   }
 }

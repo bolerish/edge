@@ -392,7 +392,7 @@ test('hero compares lighting and package-manager tabs expose matching commands',
   page,
 }) => {
   await page.goto('/');
-  await expect(page.getByRole('button', { name: /Lighting (on|off)/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /Edge (on|off)/ })).toHaveCount(0);
   for (const [manager, command] of [
     ['npm', 'npm install'],
     ['pnpm', 'pnpm add'],

@@ -24,7 +24,9 @@
     "dev": "vite build --watch --emptyOutDir false",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:mutation": "stryker run"
+    "test:mutation": "stryker run",
+    "test:unit": "vitest run --exclude \"src/**/*.integration.test.*\"",
+    "test:integration": "vitest run src/components/Surface.integration.test.tsx src/hooks/useSurface.integration.test.tsx"
   },
   "dependencies": {
     "@bolerish/edge-core": "workspace:^",
@@ -44,7 +46,9 @@
     "jsdom": "catalog:",
     "@types/node": "catalog:",
     "@stryker-mutator/core": "catalog:",
-    "@stryker-mutator/vitest-runner": "catalog:"
+    "@stryker-mutator/vitest-runner": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@testing-library/dom": "catalog:"
   },
   "description": "Shared directional border lighting for your React components.",
   "repository": {

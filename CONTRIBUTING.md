@@ -33,6 +33,17 @@ pnpm check
 
 `pnpm check` builds packages and prerendered docs, checks types (including Node scripts), runs unit and Chromium tests, and verifies package archives. The browser runner owns its preview server.
 
+Use the following test layers. Keep tests beside the implementation; use `.integration.test.tsx` for React integration tests. Existing low-level hydration tests may use React's rendering APIs directly where the lifecycle itself is under test.
+
+| Layer | Tool | Purpose | Command |
+| --- | --- | --- | --- |
+| Unit | Vitest | Validate individual functions and controller logic. | `pnpm test:unit` |
+| Integration | Vitest + Testing Library | Validate providers, surfaces, existing hosts, native events and cleanup together. | `pnpm test:integration` |
+| E2E | Playwright | Validate real browser user flows, CSS, navigation and accessibility. | `pnpm test:e2e` |
+| Mutation | StrykerJS | Check whether tests detect deliberately introduced defects. | `pnpm test:mutation` |
+
+`pnpm test` runs unit and integration tests together. Mutation testing supplements these layers; a completed run or a high score does not prove correctness. Inspect surviving and uncovered mutants before deciding whether to add a behavioral test or document a limitation.
+
 For focused work, use `pnpm test`, `pnpm --filter @bolerish/edge-docs typecheck`, or `pnpm test:browser`. Run `pnpm verify:packages` after rebuilding changed exports, declarations, package assets or prerendering.
 
 ```sh
@@ -44,6 +55,8 @@ pnpm --filter @bolerish/edge-docs test:browser --browser=webkit
 Keep the same `PLAYWRIGHT_BROWSERS_PATH`; leave `WISP_CHROMIUM_EXECUTABLE` unset for Firefox and WebKit. If Firefox on macOS fails with `Could not find profile folder`, create `.private/firefox-home` and prefix its command with `CFFIXED_USER_HOME="$PWD/.private/firefox-home"`.
 
 `pnpm test:react-compat` packs the libraries and installs isolated React 18.0, 18.3, 19.0 and 19.3 consumers. It checks declarations without skipping library types, SSR, hydration, refs and native interactions in Chromium. Use the same browser cache above. The original React 18.0 types use classic JSX; later types use the automatic runtime. The docs site itself stays on React 19. Run this check before releasing React compatibility changes.
+
+The same command checks CSR, Node and Web streaming SSR with delayed Suspense content, SSG that waits for all content, and non-hydratable static markup without JavaScript. Server checks run in development and production. Each streaming API runs in its own process so React's different server renderers do not share context state. Web Streams use React 18's server.browser entry and React 19's server.edge entry in Node; React 19's browser scheduler otherwise keeps a MessagePort open in this Node test host. Browser checks hydrate completed stream output; incomplete-stream selective hydration, individual SSR frameworks and deployed Web runtimes are outside this matrix.
 
 `pnpm test:mutation` supplements unit tests. Review surviving and uncovered mutants in `.private/mutation/{core,styles,react}/report.json`; completion alone does not establish coverage. CSS behavior is checked in browser tests.
 
