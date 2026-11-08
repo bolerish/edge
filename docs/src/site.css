@@ -1,6 +1,9 @@
 /* Establish order before either package declares its own layers. */
 @layer reset, bolerish-edge, priority1, priority2, priority3, priority4, priority5, priority6, priority7, priority8, priority9;
 
+@import '@bolerish/ui/global.css';
+@import '@bolerish/edge/style.css';
+
 /* Document-wide preferences apply to native hosts and third-party portal content.
    StyleX 0.19 has no global/universal selector API; authored UI lives in its owner. */
 html {

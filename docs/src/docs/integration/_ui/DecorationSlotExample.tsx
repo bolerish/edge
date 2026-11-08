@@ -3,7 +3,6 @@ import * as stylex from '@stylexjs/stylex';
 import { useState } from 'react';
 import { Button } from '@bolerish/ui/button';
 import { Edge } from '@bolerish/edge';
-import '@bolerish/edge/style.css';
 
 export function DecorationSlotExample() {
   const [pseudoElement, setPseudoElement] = useState<'before' | 'after'>('before');

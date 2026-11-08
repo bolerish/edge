@@ -1,9 +1,6 @@
 import { overwriteGetLocale } from './paraglide/runtime.js';
 import { localeFromPath, basePath } from './shared/locale.js';
 overwriteGetLocale(() => localeFromPath(location.pathname));
-import './site.css';
-import '@bolerish/ui/global.css';
-import '@bolerish/edge/style.css';
 import { documentStyles } from './shared/document-styles.js';
 import * as stylex from '@stylexjs/stylex';
 import { useEffect, useState } from 'react';

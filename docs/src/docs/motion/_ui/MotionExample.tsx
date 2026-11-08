@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@bolerish/ui/select';
-import '@bolerish/edge/style.css';
 
 const motions = {
   get system() {

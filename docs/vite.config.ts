@@ -3,13 +3,6 @@ import { defineConfig } from 'vite';
 import stylex from '@stylexjs/unplugin';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-
-const stylesheets = [
-  fileURLToPath(new URL('./src/site.css', import.meta.url)),
-  fileURLToPath(import.meta.resolve('@bolerish/ui/global.css')),
-  fileURLToPath(import.meta.resolve('@bolerish/edge/style.css')),
-];
 
 export default defineConfig({
   optimizeDeps: { exclude: ['@bolerish/tokens'] },
@@ -23,6 +16,7 @@ export default defineConfig({
       strategy: ['baseLocale'],
     }),
     stylex.vite({
+      devMode: 'css-only',
       // The document prelude places Edge below the shared StyleX priority layers.
       useCSSLayers: true,
       // Match the published UI package so xstyle replaces its base property keys.
@@ -76,11 +70,18 @@ export default defineConfig({
         const path = new URL(context.originalUrl ?? context.path, 'http://localhost').pathname;
         return {
           html: renderDocument(html, path),
-          tags: stylesheets.map((path) => ({
-            tag: 'link',
-            attrs: { rel: 'stylesheet', href: `/@fs/${path}?direct` },
-            injectTo: path === stylesheets[0] ? ('head-prepend' as const) : ('head' as const),
-          })),
+          tags: [
+            {
+              tag: 'link',
+              attrs: { rel: 'stylesheet', href: '/virtual:stylex.css' },
+              injectTo: 'head',
+            },
+            {
+              tag: 'script',
+              attrs: { type: 'module', src: '/@id/virtual:stylex:css-only' },
+              injectTo: 'head',
+            },
+          ],
         };
       },
     },
