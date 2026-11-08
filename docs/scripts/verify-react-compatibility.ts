@@ -19,7 +19,7 @@ for (const name of ['core', 'styles', 'react']) {
 
 const scene = `
 import React, { createRef, forwardRef, useState } from 'react';
-import { Lighting, useLight, useSurface } from '@bolerish/edge';
+import { Edge, useLight, useSurface } from '@bolerish/edge';
 export const lightRef = createRef();
 export const hostRef = createRef();
 export const events = { attached: 0, cleaned: 0, nulls: 0, replacementAttached: 0, replacementDetached: 0 };
@@ -38,45 +38,46 @@ const Existing = forwardRef(function Existing(props, ref) {
   return React.createElement('button', { ...props, ref });
 });
 function HookHost() {
-  const light = useLight({ motion: 'static' });
-  const ref = useSurface(light, { color: 'red' });
+  const ref = useSurface({ color: 'red' });
   return React.createElement(Existing, { ref, id: 'hook', className: 'consumer' }, 'Existing host');
 }
 export function Scene({ edgeStyle = 'raised', pseudoElement = 'after', motion = 'static', show = true, alternate = false }) {
   const [clicks, setClicks] = useState(0);
   return React.createElement(React.Fragment, null,
-    React.createElement(Lighting, { ref: lightRef, motion, staticDirection: 315 },
-      show ? React.createElement(Lighting.Surface, {
+    React.createElement(Edge.Provider, { ref: lightRef, motion, staticDirection: 315 },
+      show ? React.createElement(Edge.Surface, {
         as: 'button', type: 'button', id: 'lit', ref: alternate ? replacement : callback,
         edgeStyle, pseudoElement, className: 'consumer',
         style: { padding: 12, borderRadius: 8 },
         onClick: () => setClicks(n => n + 1),
       }, 'Example button ' + clicks) : null,
-      React.createElement(Lighting.Surface, { as: 'article', id: 'object-ref', ref: hostRef }, 'Example card'),
+      React.createElement(Edge.Surface, { as: 'article', id: 'object-ref', ref: hostRef }, 'Example card'),
+      React.createElement(HookHost),
       React.createElement('button', { id: 'plain' }, 'Unlit'),
-      React.createElement(Lighting, { motion: 'static', staticDirection: 90 },
-        React.createElement(Lighting.Surface, { id: 'nested' }, 'Independent'))),
-    React.createElement(HookHost));
+      React.createElement(Edge.Provider, { motion: 'static', staticDirection: 90 },
+        React.createElement(Edge.Surface, { id: 'nested' }, 'Independent'))));
 }
 `;
 const consumerTypes = `
 import * as React from 'react';
-import { Lighting, type Light, useLight, useSurface } from '@bolerish/edge';
+import { Edge, type Light, useLight, useSurface } from '@bolerish/edge';
 import '@bolerish/edge/style.css';
 const light = React.createRef<Light>();
 const button = React.createRef<HTMLButtonElement>();
 const article = React.createRef<HTMLElement>();
-<Lighting ref={light}><Lighting.Surface as="button" ref={button} disabled onClick={e => { e.currentTarget.disabled = true; }} /></Lighting>;
-<Lighting.Surface as="article" ref={article} />;
-<Lighting.Surface as="a" href="/" />;
+<Edge.Provider ref={light}><Edge.Surface as="button" ref={button} disabled onClick={e => { e.currentTarget.disabled = true; }} /></Edge.Provider>;
+<Edge.Surface as="article" ref={article} />;
+<Edge.Surface as="a" href="/" />;
 // @ts-expect-error The default host is a div.
-<Lighting.Surface href="/" />;
+<Edge.Surface href="/" />;
 // @ts-expect-error Buttons do not accept href.
-<Lighting.Surface as="button" href="/" />;
+<Edge.Surface as="button" href="/" />;
 // @ts-expect-error Refs must match the selected host.
-<Lighting.Surface as="a" ref={button} />;
+<Edge.Surface as="a" ref={button} />;
 function ExistingHost() {
-  const ref: React.RefCallback<HTMLButtonElement> = useSurface<HTMLButtonElement>(useLight());
+  const ref: React.RefCallback<HTMLButtonElement> = useSurface<HTMLButtonElement>();
+  const explicit: React.RefCallback<HTMLButtonElement> = useSurface<HTMLButtonElement>(useLight());
+  void explicit;
   return <button ref={ref} />;
 }
 void ExistingHost;

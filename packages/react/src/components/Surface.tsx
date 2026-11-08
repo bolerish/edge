@@ -26,7 +26,7 @@ type SurfaceComponent = <T extends SurfaceTag = 'div'>(props: SurfaceProps<T>) =
 /** Renders and registers one host; ordinary children remain untouched. */
 const SurfaceRoot = forwardRef<HTMLElement, Omit<SurfaceProps<SurfaceTag>, 'ref'>>(function Surface(props, forwardedRef) {
   const light = useContext(LightContext);
-  if (!light) throw new Error('Lighting.Surface must be inside Lighting');
+  if (!light) throw new Error('Edge.Surface must be inside Edge.Provider (legacy Lighting.Surface must be inside Lighting)');
   const surface = getSurfaceProps(props);
   const registrationRef = useSurfaceRegistration<HTMLElement>(light, props.edgeStyle ?? 'raised');
   const {

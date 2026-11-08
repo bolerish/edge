@@ -6,10 +6,10 @@ import { EdgeStylesExample } from './edge-styles.example.js';
 export const sharedLightExample = {
   title: 'One light, your components',
   Component: SharedLightExample,
-  code: `<Lighting>
-  <Lighting.Surface>Example card</Lighting.Surface>
-  <Lighting.Surface>Another example card</Lighting.Surface>
-</Lighting>`,
+  code: `<Edge.Provider>
+  <Edge.Surface>Example card</Edge.Surface>
+  <Edge.Surface>Another example card</Edge.Surface>
+</Edge.Provider>`,
 };
 export const edgeStylesExample = {
   title: 'Compare edge styles',
@@ -25,13 +25,13 @@ const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 export const decorationSlotExample = {
   title: 'Keep existing pseudo-elements',
   Component: DecorationSlotExample,
-  code: `import { Lighting } from '@bolerish/edge';
+  code: `import { Edge } from '@bolerish/edge';
 
-<Lighting>
-  <Lighting.Surface as="article" pseudoElement="before" className="existing-after">
+<Edge.Provider>
+  <Edge.Surface as="article" pseudoElement="before" className="existing-after">
     Your existing ::after stays intact.
-  </Lighting.Surface>
-</Lighting>`,
+  </Edge.Surface>
+</Edge.Provider>`,
 };
 
 export const motionExample = { title: 'Compare motion', Component: MotionExample, code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__ });

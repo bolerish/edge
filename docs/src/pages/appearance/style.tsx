@@ -81,7 +81,7 @@ export const styles: DocPage = {
             Surface intensity multiplies the shared light intensity. Internal
             CSS variables are reserved for Edge; no CSS variable declarations
             are required in your application. In React, pass these options to{' '}
-            <Link href="/docs/react/api/#lighting-surface">Lighting.Surface</Link>.
+            <Link href="/docs/react/api/#lighting-surface">Edge.Surface</Link>.
           </P>
           <P>
             The effect approximates lighting on axis-aligned rectangles. It is

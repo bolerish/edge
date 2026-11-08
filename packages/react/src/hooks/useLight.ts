@@ -40,3 +40,7 @@ export function getLightController(light: Light): LightController {
     throw new Error('useSurface requires a Light returned by useLight');
   return core;
 }
+
+export function isLight(value: unknown): value is Light {
+  return typeof value === 'object' && value !== null && lightBrand in value;
+}

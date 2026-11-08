@@ -11,7 +11,7 @@ import { Heading } from '@bolerish/ui/heading';
 import { Input } from '@bolerish/ui/input';
 import { Label } from '@bolerish/ui/label';
 import { Paragraph } from '@bolerish/ui/paragraph';
-import { Lighting } from '@bolerish/edge';
+import { Edge } from '@bolerish/edge';
 import { SiteShell } from '../ui/SiteShell.js';
 import { InstallCommands } from '../ui/InstallCommands.js';
 import { HeroExample } from './HeroExample.js';
@@ -41,7 +41,7 @@ const projects: readonly Project[] = [
 export function Home() {
   const { motion, staticDirection } = usePreferences();
   return (
-    <Lighting motion={motion} staticDirection={staticDirection} intensity={0.8}>
+    <Edge.Provider motion={motion} staticDirection={staticDirection} intensity={0.8}>
       <SiteShell section="home" pathname="/">
         <div className="home-hero-layout">
           <section className="home-hero" aria-labelledby="home-title">
@@ -67,7 +67,7 @@ export function Home() {
         </div>
         <Dashboard />
       </SiteShell>
-    </Lighting>
+    </Edge.Provider>
   );
 }
 
@@ -122,7 +122,7 @@ function Dashboard() {
                 <Label htmlFor="project-search" className="visually-hidden">
                   Search projects
                 </Label>
-                <Lighting.Surface
+                <Edge.Surface
                   edgeStyle="recessed"
                   className="dashboard-input"
                   data-testid="surface-input"
@@ -132,16 +132,16 @@ function Dashboard() {
                     placeholder="Search projects…"
                     readOnly
                   />
-                </Lighting.Surface>
+                </Edge.Surface>
               </div>
-              <Lighting.Surface
+              <Edge.Surface
                 as="span"
                 edgeStyle={edgeStyle}
                 className="dashboard-button"
                 data-testid="surface-button"
               >
                 <Button disabled>New project</Button>
-              </Lighting.Surface>
+              </Edge.Surface>
             </div>
           </CardHeader>
           <CardContent>
@@ -246,12 +246,12 @@ function SurfaceCard({
   children: ReactNode;
 }) {
   return (
-    <Lighting.Surface
+    <Edge.Surface
       edgeStyle={edgeStyle}
       className="dashboard-surface"
       data-testid={testId}
     >
       <Card className="dashboard-card">{children}</Card>
-    </Lighting.Surface>
+    </Edge.Surface>
   );
 }

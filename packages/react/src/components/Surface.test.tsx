@@ -3,7 +3,7 @@ import { act, createRef, StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { Lighting, type Motion, type Light } from '../index.js';
+import { Edge, useLight, useSurface, Lighting, type Motion, type Light } from '../index.js';
 
 let container: HTMLDivElement;
 let root: Root;
@@ -236,4 +236,58 @@ it('switches decoration slots without replacing or registering the host again', 
   expect(ref).toHaveBeenCalledTimes(1);
   await act(async () => host.click());
   expect(click).toHaveBeenCalledOnce();
+});
+
+it('shares provider lighting with hook hosts and keeps nested scopes independent', async () => {
+  function Existing({ id }: { id: string }) {
+    const ref = useSurface<HTMLButtonElement>();
+    return <button ref={ref} data-testid={id} />;
+  }
+  await act(async () => root.render(
+    <Edge.Provider motion="static" intensity={0.2}>
+      <Edge.Surface data-testid="surface" />
+      <Existing id="outer-hook" />
+      <button data-testid="plain" />
+      <Edge.Provider motion="static" intensity={0.8}>
+        <Existing id="inner-hook" />
+      </Edge.Provider>
+    </Edge.Provider>,
+  ));
+  flush();
+  for (const id of ['surface', 'outer-hook'])
+    expect(container.querySelector<HTMLElement>(`[data-testid=${id}]`)!.style.getPropertyValue('--wisp-strength')).toBe('0.140');
+  expect(container.querySelector<HTMLElement>('[data-testid=inner-hook]')!.style.getPropertyValue('--wisp-strength')).toBe('0.560');
+  expect(container.querySelector('[data-testid=plain]')!.getAttribute('style')).toBeNull();
+});
+
+it('lets an explicit light override the provider for existing hosts', async () => {
+  function Existing() {
+    const light = useLight({ motion: 'static', intensity: 0.8 });
+    const ref = useSurface<HTMLButtonElement>(light, { intensity: 0.5 });
+    return <button ref={ref} />;
+  }
+  await act(async () => root.render(
+    <Edge.Provider motion="static" intensity={0.2}><Existing /></Edge.Provider>,
+  ));
+  flush();
+  expect(container.querySelector('button')!.style.getPropertyValue('--wisp-strength')).toBe('0.560');
+});
+
+it('updates context surface options while preserving the host and restoring styles on detach', async () => {
+  function Existing({ intensity }: { intensity: number }) {
+    const ref = useSurface<HTMLButtonElement>({ intensity, color: 'red' });
+    return <button ref={ref} className="original" />;
+  }
+  await act(async () => root.render(<Edge.Provider motion="static"><Existing intensity={1} /></Edge.Provider>));
+  flush();
+  const host = container.querySelector('button')!;
+  expect(host.style.getPropertyValue('--wisp-strength')).toBe('0.525');
+  await act(async () => root.render(<Edge.Provider motion="static"><Existing intensity={0.5} /></Edge.Provider>));
+  flush();
+  expect(container.querySelector('button')).toBe(host);
+  expect(host.style.getPropertyValue('--wisp-strength')).toBe('0.525');
+  expect(host.style.getPropertyValue('--wisp-intensity')).toBe('0.5');
+  await act(async () => root.render(null));
+  expect(host.className).toBe('original');
+  expect(host.style.getPropertyValue('--wisp-strength')).toBe('');
 });

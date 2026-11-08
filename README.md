@@ -11,26 +11,26 @@ npm install @bolerish/edge
 ```
 
 ```tsx
-import { Lighting } from '@bolerish/edge';
+import { Edge } from '@bolerish/edge';
 import '@bolerish/edge/style.css';
 
 export function Area() {
   return (
-    <Lighting>
-      <Lighting.Surface as="article">Your card</Lighting.Surface>
-      <Lighting.Surface as="button" type="button">Save</Lighting.Surface>
-    </Lighting>
+    <Edge.Provider>
+      <Edge.Surface as="article">Your card</Edge.Surface>
+      <Edge.Surface as="button" type="button">Save</Edge.Surface>
+    </Edge.Provider>
   );
 }
 ```
 
 Load the stylesheet once, before application and utility styles; a separate reset may load first. Edge preserves your background, text, padding and base borders. Highlights use the host’s text color and border radius by default.
 
-`Lighting` adds no DOM. Only explicit surfaces respond; nested scopes are independent. Choose `edgeStyle="raised"`, `"recessed"` or `"matte"`. Motion accepts `"dynamic"`, `"static"` or `"system"` (the default, respecting reduced motion). Use `useLight` and the callback ref returned by `useSurface` to connect existing hosts.
+`Edge.Provider` adds no DOM. Only explicit surfaces respond; nested scopes are independent. Choose `edgeStyle="raised"`, `"recessed"` or `"matte"`. Motion accepts `"dynamic"`, `"static"` or `"system"` (the default, respecting reduced motion). Use `useSurface(options?)` inside the provider to connect existing hosts through its returned callback ref. For advanced ownership, `useLight` and `useSurface(light, options)` remain available. The legacy `Lighting` and `Lighting.Surface` names remain supported.
 
 ## Compatibility
 
-SSR, static rendering and hydration are supported. Hook decoration attaches on the client; `Lighting.Surface` also emits decorative classes during SSR. Dedicated Vue, Svelte and Solid adapters are not available.
+SSR, static rendering and hydration are supported. Hook decoration attaches on the client; `Edge.Surface` also emits decorative classes during SSR. Dedicated Vue, Svelte and Solid adapters are not available.
 
 Decoration uses `::after`; choose `pseudoElement="before"` if needed. Native inputs and hosts using both pseudo-elements need a wrapper. Keep native focus indicators and sufficient contrast.
 

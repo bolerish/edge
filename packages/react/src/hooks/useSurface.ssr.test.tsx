@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { renderToStaticMarkup, renderToString } from 'react-dom/server';
 import { expect, it, vi } from 'vitest';
-import { useLight, useSurface } from '../index.js';
+import { Edge, useLight, useSurface } from '../index.js';
 
 function Scene() {
   const light = useLight();
@@ -34,7 +34,7 @@ it.each([{}, null, undefined])('rejects an invalid light handle %s', (handle) =>
   function Invalid() {
     // Untyped consumers can pass an arbitrary object at runtime.
     // @ts-expect-error Invalid handle is intentional.
-    useSurface(handle);
+    useSurface(handle, {});
     return null;
   }
   expect(() => renderToStaticMarkup(<Invalid />)).toThrow(/returned by useLight/);
@@ -47,4 +47,28 @@ it('validates hook decoration options during SSR', () => {
     return null;
   }
   expect(() => renderToStaticMarkup(<Invalid />)).toThrow(RangeError);
+});
+
+it('requires a provider for context-based surfaces', () => {
+  function Host() { useSurface(); return <button />; }
+  expect(() => renderToStaticMarkup(<Host />)).toThrow(/Edge.Provider/);
+  expect(renderToStaticMarkup(<Edge.Provider><Host /></Edge.Provider>)).toBe('<button></button>');
+});
+
+it.each([null, { refresh() {} }, 42])('rejects malformed explicit handles inside a provider: %s', (handle) => {
+  function Host() {
+    // @ts-expect-error Runtime validation of malformed explicit handles.
+    useSurface(handle, {});
+    return null;
+  }
+  expect(() => renderToStaticMarkup(<Edge.Provider><Host /></Edge.Provider>)).toThrow(/returned by useLight/);
+});
+
+it.each([null, { refresh() {} }, 42])('rejects a malformed single-argument handle: %s', (handle) => {
+  function Host() {
+    // @ts-expect-error Runtime validation of malformed handles.
+    useSurface(handle);
+    return null;
+  }
+  expect(() => renderToStaticMarkup(<Edge.Provider><Host /></Edge.Provider>)).toThrow(/returned by useLight/);
 });

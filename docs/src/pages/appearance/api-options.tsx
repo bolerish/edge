@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type {
   LightOptions,
-  LightingProps,
+  EdgeProviderProps,
   SurfaceOptions,
   SurfaceProps,
 } from '@bolerish/edge';
@@ -83,7 +83,7 @@ const lightingOwnProps = {
     defaultValue: 'Unset',
     description: 'Optional stable light handle. Call its refresh() method after position-only layout changes.',
   },
-} satisfies OptionDocs<Omit<LightingProps, keyof LightOptions>>;
+} satisfies OptionDocs<Omit<EdgeProviderProps, keyof LightOptions>>;
 
 const surfaceOwnProps = {
   as: {

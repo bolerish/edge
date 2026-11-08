@@ -255,7 +255,7 @@ test('SSG documents include highlighted code and remain readable without JavaScr
     'Integration',
   );
   await expect(page.locator('.token.tag:visible').first()).toBeVisible();
-  await expect(page.locator('pre').first()).toContainText('Lighting.Surface');
+  await expect(page.locator('pre').first()).toContainText('Edge.Surface');
   await page.goto('http://127.0.0.1:4183/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
     'A little more alive.',
@@ -333,12 +333,12 @@ test('API navigation follows the URL hash after hydration and in-page navigation
   const toc = page.locator('.table-of-contents');
   await expect(sidebar.getByRole('link', { name: 'API reference', exact: true }))
     .toHaveAttribute('aria-current', 'page');
-  await expect(toc.getByRole('link', { name: 'useSurface(light, options?)', exact: true }))
+  await expect(toc.getByRole('link', { name: 'useSurface(options?)', exact: true }))
     .toHaveAttribute('aria-current', 'location');
   await page.locator('.table-of-contents').getByRole('link', { name: 'useLight(options?)', exact: true }).click();
   await expect(toc.getByRole('link', { name: 'useLight(options?)', exact: true }))
     .toHaveAttribute('aria-current', 'location');
-  await expect(toc.getByRole('link', { name: 'useSurface(light, options?)', exact: true }))
+  await expect(toc.getByRole('link', { name: 'useSurface(options?)', exact: true }))
     .not.toHaveAttribute('aria-current');
 });
 
@@ -355,7 +355,7 @@ test('previous guide URLs preserve their content and API anchors', async ({ page
       .toHaveAttribute('aria-current', 'page');
   }
   await page.goto('/docs/api/#use-surface');
-  await expect(page.locator('.table-of-contents').getByRole('link', { name: 'useSurface(light, options?)', exact: true }))
+  await expect(page.locator('.table-of-contents').getByRole('link', { name: 'useSurface(options?)', exact: true }))
     .toHaveAttribute('aria-current', 'location');
 });
 
@@ -545,9 +545,9 @@ test('shared light demo uses site settings and shows concise integration code', 
   await page.getByRole('group', { name: 'One light, your components', exact: true }).getByRole('tab', { name: 'Code', exact: true }).click();
   await page.getByRole('button', { name: 'Copy One light, your components', exact: true }).click();
   const copied = await page.evaluate(() => (window as unknown as { copied: string }).copied);
-  expect(copied).toContain('<Lighting>');
-  expect(copied).toContain('<Lighting.Surface>Example card</Lighting.Surface>');
-  expect(copied).toContain('<Lighting.Surface>Another example card</Lighting.Surface>');
+  expect(copied).toContain('<Edge.Provider>');
+  expect(copied).toContain('<Edge.Surface>Example card</Edge.Surface>');
+  expect(copied).toContain('<Edge.Surface>Another example card</Edge.Surface>');
   expect(copied).not.toContain('saveProject');
   expect(copied).not.toContain('<Input');
   expect(copied).not.toContain('useState');
@@ -583,12 +583,12 @@ test('style example changes only edge style and retains Bolerish UI colors', asy
 
 test('component and hook tables expose complete searchable options', async ({ page }) => {
   await page.goto('/docs/react/api/');
-  for (const caption of ['Lighting props', 'useLight options']) {
+  for (const caption of ['Edge.Provider props', 'useLight options']) {
     const table = page.getByRole('table', { name: caption, exact: true });
     for (const option of ['motion', 'staticDirection', 'radius', 'intensity'])
       await expect(table.getByRole('rowheader', { name: option, exact: true })).toBeVisible();
   }
-  for (const caption of ['Lighting.Surface props', 'useSurface options']) {
+  for (const caption of ['Edge.Surface props', 'useSurface options']) {
     const table = page.getByRole('table', { name: caption, exact: true });
     for (const option of ['edgeStyle', 'color', 'shadowColor', 'borderWidth', 'intensity', 'pseudoElement'])
       await expect(table.getByRole('rowheader', { name: option, exact: true })).toBeVisible();
@@ -624,7 +624,7 @@ test('decoration slots preserve consumer pseudo-elements and switch without extr
   const example = page.getByRole('group', { name: 'Keep existing pseudo-elements', exact: true });
   await example.getByRole('tab', { name: 'Code', exact: true }).click();
   const code = example.getByRole('region', { name: 'Keep existing pseudo-elements code', exact: true });
-  await expect(code).toContainText("import { Lighting } from '@bolerish/edge'");
+  await expect(code).toContainText("import { Edge } from '@bolerish/edge'");
   await expect(code).toContainText('pseudoElement="before"');
   await expect(code).not.toContainText('getSurfaceProps');
   await example.getByRole('tab', { name: 'Preview', exact: true }).click();
@@ -807,12 +807,12 @@ test('React Integration teaches components and links advanced hooks to the API',
   const example = page.getByRole('group', { name: 'One light, your components', exact: true });
   await example.getByRole('tab', { name: 'Code', exact: true }).click();
   const code = example.getByRole('region', { name: 'One light, your components code', exact: true });
-  await expect(code).toContainText('<Lighting>');
-  await expect(code).toContainText('<Lighting.Surface');
+  await expect(code).toContainText('<Edge.Provider>');
+  await expect(code).toContainText('<Edge.Surface');
   await expect(code).not.toContainText('useLight');
   await expect(code).not.toContainText('className');
   await page.locator('#connect-existing-components a').first().click();
-  await expect(page.getByRole('region', { name: 'Share one light with existing components code', exact: true })).toContainText('<ExistingCard light={light} />');
+  await expect(page.getByRole('region', { name: 'Share one light with existing components code', exact: true })).toContainText('<Edge.Provider><ExistingCard /><ExistingCard /></Edge.Provider>');
 });
 
 test('plain CSS follows host color and radius while preserving its layout and background', async ({ page }) => {
@@ -848,7 +848,7 @@ test('common Usage teaches shared concepts and leads to the React adapter', asyn
   await expect(page).toHaveURL(/\/docs\/usage\/$/);
   const document = page.locator('.document');
   await expect(document.getByRole('heading', { level: 1 })).toHaveText('Usage');
-  await expect(document).not.toContainText('Lighting.Surface');
+  await expect(document).not.toContainText('Edge.Surface');
   await expect(document.locator('.example-preview, pre')).toHaveCount(0);
   await expect(document).toContainText('currently available adapter');
   await document.getByRole('link', { name: 'React Integration', exact: true }).click();

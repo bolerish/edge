@@ -16,23 +16,23 @@ export const api: DocPage = {
   section: 'React',
   title: 'API reference',
   description:
-    'Look up component props, hook options and their defaults. Start with Lighting and Lighting.Surface; use the hooks when you need to connect an existing host.',
+    'Look up component props, hook options and their defaults. Start with Edge.Provider and Edge.Surface; use the hooks when you need to connect an existing host.',
   sections: [
     {
       id: 'lighting',
-      title: 'Lighting',
+      title: 'Edge.Provider',
       content: (
         <>
           <P>
             Wrap the part of your interface that should share a light.
-            <code> Lighting</code> adds no DOM element. Each surface uses its
+            <code> Edge.Provider</code> adds no DOM element. Each surface uses its
             nearest owner, so nested owners create independent lights.
           </P>
           <CodeBlock
-            label="Lighting signature"
-            code={'<Lighting motion="system" radius={480} intensity={0.75}>\n  {/* Your surfaces */}\n</Lighting>'}
+            label="Edge.Provider signature"
+            code={'<Edge.Provider motion="system" radius={480} intensity={0.75}>\n  {/* Your surfaces */}\n</Edge.Provider>'}
           />
-          {apiTable('Lighting props', lightingPropRows)}
+          {apiTable('Edge.Provider props', lightingPropRows)}
           <P>
             Pointer input comes from the document. The scope chooses which
             surfaces respond; it does not clip input to a wrapper rectangle.
@@ -45,7 +45,7 @@ export const api: DocPage = {
     },
     {
       id: 'lighting-surface',
-      title: 'Lighting.Surface',
+      title: 'Edge.Surface',
       content: (
         <>
           <P>
@@ -53,14 +53,14 @@ export const api: DocPage = {
             one HTML host and preserves your native attributes and event handlers.
           </P>
           <CodeBlock
-            label="Lighting.Surface signature"
-            code={'<Lighting.Surface as="article" edgeStyle="raised">\n  Your content\n</Lighting.Surface>'}
+            label="Edge.Surface signature"
+            code={'<Edge.Surface as="article" edgeStyle="raised">\n  Your content\n</Edge.Surface>'}
           />
-          {apiTable('Lighting.Surface props', surfacePropRows)}
+          {apiTable('Edge.Surface props', surfacePropRows)}
           <div role="note" aria-label="Surface ownership" className="doc-note">
             <P>
-              Place every <code>Lighting.Surface</code> inside a
-              <code> Lighting</code> owner; rendering it outside one throws an
+              Place every <code>Edge.Surface</code> inside a
+              <code> Edge.Provider</code> owner; rendering it outside one throws an
               error. For native inputs and occupied pseudo-elements, see <Link href="/docs/integration/">Integration</Link>.
             </P>
           </div>
@@ -79,8 +79,7 @@ export const api: DocPage = {
       content: (
         <>
           <P>
-            Create a light when you need to connect existing components through
-            hooks. The returned <code>Light</code> handle stays stable; changing
+            Create an independent light when you need to manage it explicitly. Normally, use Edge.Provider and useSurface(options) instead. Pass this handle to useSurface(light, options) to connect a host without a provider. The returned <code>Light</code> handle stays stable; changing
             options updates the existing light.
           </P>
           <CodeBlock
@@ -119,27 +118,27 @@ export const api: DocPage = {
     },
     {
       id: 'use-surface',
-      title: 'useSurface(light, options?)',
+      title: 'useSurface(options?)',
       content: (
         <>
           <P>
-            Connect one existing HTML host to a light. Attach the returned
+            Connect one existing HTML host to the nearest Edge.Provider. Attach the returned
             <code> ref</code>. Edge applies and removes its own decoration; keep your existing className and style props.
           </P>
           <CodeBlock
             label="useSurface signature"
-            code={'const ref = useSurface<HTMLElement>(light, options);'}
+            code={'const ref = useSurface<HTMLElement>(options);'}
           />
           <CodeBlock label="Share one light with existing components" code={`function Area() {
-  const light = useLight();
-  return <><ExistingCard light={light} /><ExistingCard light={light} /></>;
+  return <Edge.Provider><ExistingCard /><ExistingCard /></Edge.Provider>;
 }
 
-function ExistingCard({ light }: { light: Light }) {
-  const ref = useSurface<HTMLDivElement>(light);
+function ExistingCard() {
+  const ref = useSurface<HTMLDivElement>();
   return <Card ref={ref}>Your existing component</Card>;
 }`} />
           <P>In React 18, an existing function component must use <code>forwardRef</code> to pass the ref to its HTML host. React 19 also supports receiving ref as a prop.</P>
+          <P>Without an explicit light, this hook requires an Edge.Provider. For advanced ownership, use <code>useSurface(light, options)</code> with a handle returned by <code>useLight</code>. The explicit light takes precedence over the provider. The legacy Lighting and Lighting.Surface names remain supported.</P>
           {apiTable('useSurface options', surfaceOptionRows)}
           <div role="note" aria-label="One owner per element" className="doc-note">
             <P>
@@ -150,7 +149,7 @@ function ExistingCard({ light }: { light: Light }) {
           </div>
           <P>
             <code>edgeStyle</code> changes update the existing registration.
-            Appearance options update without replacing the host. Hook decoration is attached on the client; its server markup contains only your own styles. Use Lighting.Surface when you need the decorative CSS in server output too.
+            Appearance options update without replacing the host. Hook decoration is attached on the client; its server markup contains only your own styles. Use Edge.Surface when you need the decorative CSS in server output too.
           </P>
         </>
       ),

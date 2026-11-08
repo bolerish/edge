@@ -25,3 +25,6 @@ const LightingRoot = forwardRef<Light, Omit<LightingProps, 'ref'>>(function Ligh
 });
 
 export const Lighting = Object.assign(LightingRoot, { Surface });
+
+export type EdgeProviderProps = LightingProps;
+export const Edge = { Provider: LightingRoot, Surface };
