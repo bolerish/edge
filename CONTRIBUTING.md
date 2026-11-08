@@ -9,7 +9,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open http://localhost:4173. The dev command builds libraries, then starts their watchers and the documentation site.
+Open http://localhost:3000. The dev command builds libraries, then starts their watchers and the documentation site.
 
 ## Code organization
 
