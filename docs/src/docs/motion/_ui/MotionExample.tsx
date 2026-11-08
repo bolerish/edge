@@ -1,3 +1,4 @@
+import { Field, FieldLabel } from '@bolerish/ui/field';
 import { LightingControls } from '../../../shared/preferences/LightingControls.js';
 import { m } from '../../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
@@ -15,21 +16,9 @@ import {
   SelectValue,
 } from '@bolerish/ui/select';
 
-const motions = {
-  get system() {
-    return m.system();
-  },
-  get dynamic() {
-    return m.dynamic();
-  },
-  get static() {
-    return m.label_static();
-  },
-};
+const motions = { system: 'system', dynamic: 'dynamic', static: 'static' };
 const directions = {
-  get random() {
-    return m.random();
-  },
+  random: 'random',
   '0': '0°',
   '90': '90°',
   '180': '180°',
@@ -41,10 +30,8 @@ export function MotionExample() {
   return (
     <div role="group" aria-label={m.motion_comparison()}>
       <div {...stylex.props(styles.appearanceControls)}>
-        <div {...stylex.props(styles.appearanceControl)}>
-          <span {...stylex.props(styles.controlLabel)} id="example-motion-label">
-            {m.motion()}
-          </span>
+        <Field xstyle={styles.appearanceControl}>
+          <FieldLabel id="example-motion-label">motion</FieldLabel>
           <Select
             value={motion}
             items={motions}
@@ -66,12 +53,10 @@ export function MotionExample() {
               </SelectList>
             </SelectPopup>
           </Select>
-        </div>
+        </Field>
         {motion === 'static' ? (
-          <div {...stylex.props(styles.appearanceControl)}>
-            <span {...stylex.props(styles.controlLabel)} id="example-direction-label">
-              {m.static_direction()}
-            </span>
+          <Field xstyle={styles.appearanceControl}>
+            <FieldLabel id="example-direction-label">staticDirection</FieldLabel>
             <Select
               value={String(direction)}
               items={directions}
@@ -106,7 +91,7 @@ export function MotionExample() {
                 </SelectList>
               </SelectPopup>
             </Select>
-          </div>
+          </Field>
         ) : null}
       </div>
       <LightingControls />
@@ -162,10 +147,6 @@ const styles = stylex.create({
     display: 'grid',
     gap: '8px',
     minWidth: '0',
-  },
-  controlLabel: {
-    fontSize: '14px',
-    fontWeight: '500',
   },
   controlTrigger: {
     width: '100%',

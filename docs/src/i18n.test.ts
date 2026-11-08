@@ -96,7 +96,10 @@ test('language menu preserves the current document and section', async ({ page }
   await page.goto('/docs/installation/#stylesheet');
   for (const language of [...languages.slice(1), languages[0]!]) {
     await page.getByRole('button', { name: /^(Language|언어 선택|Idioma|语言|言語)$/ }).click();
-    await page.getByRole('menuitemradio', { name: language.name, exact: true }).click();
+    await Promise.all([
+      page.waitForEvent('load'),
+      page.getByRole('menuitemradio', { name: language.name, exact: true }).click(),
+    ]);
     const prefix = language.code === 'en' ? '' : `/${language.code}`;
     await expect(page).toHaveURL(new RegExp(`${prefix}/docs/installation/#stylesheet$`));
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(language.installation);
@@ -138,5 +141,27 @@ test('translated sentences keep native inline code in the language’s word orde
     await expect(paragraph).toContainText(opening);
     await expect(paragraph.locator('code')).toHaveText(['as', 'className', 'style']);
     await expect(page.locator('.document')).not.toContainText(/<part\d+\/>/);
+  }
+});
+
+test('languages use the English typography sizes and literal API control names', async ({
+  page,
+}) => {
+  let english: string[] | undefined;
+  for (const language of languages) {
+    const prefix = language.code === 'en' ? '' : `/${language.code}`;
+    await page.goto(`${prefix}/docs/motion/`);
+    const sizes = await page.evaluate(() =>
+      ['h1', '.document > p', '.document section p'].map((selector) => {
+        const node = document.querySelector(selector);
+        if (!node) throw new Error(`Missing typography sample: ${selector}`);
+        return getComputedStyle(node).fontSize;
+      }),
+    );
+    if (!english) english = sizes;
+    expect(sizes).toEqual(english);
+    await expect(page.getByRole('combobox', { name: 'motion', exact: true })).toHaveText('dynamic');
+    await expect(page.getByRole('slider', { name: 'radius', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'gather', exact: true })).toBeVisible();
   }
 });

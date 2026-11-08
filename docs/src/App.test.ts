@@ -158,10 +158,10 @@ test('one light changes preview borders while project actions stay inactive', as
 test('appearance controls update the document and persist across navigation', async ({ page }) => {
   await page.goto('/docs/motion/');
   await expect(page.getByRole('button', { name: 'Settings', exact: true })).toHaveCount(0);
-  const motion = page.getByRole('combobox', { name: 'Motion', exact: true });
+  const motion = page.getByRole('combobox', { name: 'motion', exact: true });
   await motion.click();
-  await page.getByRole('option', { name: 'Static', exact: true }).click();
-  await page.getByRole('combobox', { name: 'Static direction', exact: true }).click();
+  await page.getByRole('option', { name: 'static', exact: true }).click();
+  await page.getByRole('combobox', { name: 'staticDirection', exact: true }).click();
   await page.getByRole('option', { name: '315°', exact: true }).click();
   const card = page
     .getByRole('group', { name: 'Motion comparison', exact: true })
@@ -187,7 +187,7 @@ test('appearance controls update the document and persist across navigation', as
     'Recessed',
   );
   await page.locator('.sidebar').getByRole('link', { name: 'Motion', exact: true }).click();
-  await expect(motion).toContainText('Static');
+  await expect(motion).toContainText('static');
   await page
     .getByRole('group', { name: 'Compare motion', exact: true })
     .getByRole('tab', { name: 'Code', exact: true })
@@ -321,11 +321,11 @@ test('static direction presets update every shared surface, code and persisted s
   page,
 }) => {
   await page.goto('/docs/motion/');
-  await page.getByRole('combobox', { name: 'Motion', exact: true }).click();
-  await page.getByRole('option', { name: 'Static', exact: true }).click();
+  await page.getByRole('combobox', { name: 'motion', exact: true }).click();
+  await page.getByRole('option', { name: 'static', exact: true }).click();
   const example = page.getByRole('group', { name: 'Compare motion', exact: true });
   for (const angle of [0, 90, 180, 270, 315]) {
-    await example.getByRole('combobox', { name: 'Static direction', exact: true }).click();
+    await example.getByRole('combobox', { name: 'staticDirection', exact: true }).click();
     await page.getByRole('option', { name: `${angle}°`, exact: true }).click();
     for (const target of [example.getByRole('article'), page.locator('.example-preview-result')])
       await expect
@@ -339,7 +339,7 @@ test('static direction presets update every shared surface, code and persisted s
   }
   await page.reload();
   await expect(
-    example.getByRole('combobox', { name: 'Static direction', exact: true }),
+    example.getByRole('combobox', { name: 'staticDirection', exact: true }),
   ).toContainText('315°');
 });
 
@@ -770,7 +770,7 @@ test('style example changes only edge style and retains Bolerish UI colors', asy
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/docs/styles/');
   const demo = page.getByRole('group', { name: 'Style comparison', exact: true });
-  await expect(demo.getByRole('combobox', { name: 'Motion' })).toHaveCount(0);
+  await expect(demo.getByRole('combobox', { name: 'motion' })).toHaveCount(0);
   const card = demo.getByRole('article');
   await expect
     .poll(() =>
@@ -1017,12 +1017,12 @@ test('appearance pages expose topic options and examples retain state across pre
   for (const name of ['system', 'dynamic', 'static'])
     await expect(table.getByRole('rowheader', { name, exact: true })).toBeVisible();
   const example = page.getByRole('group', { name: 'Compare motion', exact: true });
-  await expect(
-    example.getByRole('combobox', { name: 'Static direction', exact: true }),
-  ).toHaveCount(0);
+  await expect(example.getByRole('combobox', { name: 'staticDirection', exact: true })).toHaveCount(
+    0,
+  );
   await expect(table.getByRole('rowheader', { name: 'radius', exact: true })).toHaveCount(0);
-  await example.getByRole('combobox', { name: 'Motion', exact: true }).click();
-  await page.getByRole('option', { name: 'Static', exact: true }).click();
+  await example.getByRole('combobox', { name: 'motion', exact: true }).click();
+  await page.getByRole('option', { name: 'static', exact: true }).click();
   const card = example.getByRole('article');
   await expect
     .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
@@ -1033,11 +1033,11 @@ test('appearance pages expose topic options and examples retain state across pre
   ).toContainText('staticDirection');
   await expect(card).toBeHidden();
   await example.getByRole('tab', { name: 'Preview', exact: true }).click();
-  await expect(example.getByRole('combobox', { name: 'Motion', exact: true })).toContainText(
-    'Static',
+  await expect(example.getByRole('combobox', { name: 'motion', exact: true })).toContainText(
+    'static',
   );
-  await example.getByRole('combobox', { name: 'Static direction', exact: true }).click();
-  await page.getByRole('option', { name: 'Random per mount', exact: true }).click();
+  await example.getByRole('combobox', { name: 'staticDirection', exact: true }).click();
+  await page.getByRole('option', { name: 'random', exact: true }).click();
   await expect
     .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
     .not.toBe('315.0deg');

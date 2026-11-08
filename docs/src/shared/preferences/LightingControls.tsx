@@ -1,59 +1,53 @@
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
-import { Button } from '@bolerish/ui/button';
+import { FieldSet, FieldLegend, Field, FieldLabel, FieldDescription } from '@bolerish/ui/field';
+import { ToggleGroup, ToggleGroupItem } from '@bolerish/ui/toggle-group';
 import { Slider } from '@bolerish/ui/slider';
 import { usePreferences, updatePreferences } from './usePreferences.js';
 
 export function LightingControls() {
   const { direction, radius, motion } = usePreferences();
+  const disabled = motion === 'static';
   return (
-    <fieldset {...stylex.props(styles.controls)} disabled={motion === 'static'}>
-      <legend>{m.pointer_lighting()}</legend>
-      <div role="group" aria-label={m.highlight_direction()} {...stylex.props(styles.directions)}>
-        <Button
-          variant="outline"
-          aria-pressed={direction === 'gather'}
-          onClick={() => updatePreferences({ direction: 'gather' })}
+    <FieldSet xstyle={styles.controls} disabled={disabled}>
+      <FieldLegend>{m.pointer_lighting()}</FieldLegend>
+      <Field>
+        <FieldLabel id="lighting-direction-label">direction</FieldLabel>
+        <ToggleGroup
+          aria-labelledby="lighting-direction-label"
+          value={[direction]}
+          disabled={disabled}
+          onValueChange={(values) => {
+            const next = values[0];
+            if (next === 'gather' || next === 'spread') updatePreferences({ direction: next });
+          }}
         >
-          {m.gather()}
-        </Button>
-        <Button
-          variant="outline"
-          aria-pressed={direction === 'spread'}
-          onClick={() => updatePreferences({ direction: 'spread' })}
-        >
-          {m.spread()}
-        </Button>
-      </div>
-      <div {...stylex.props(styles.range)}>
-        <span>{m.range_value({ radius })}</span>
+          <ToggleGroupItem value="gather">gather</ToggleGroupItem>
+          <ToggleGroupItem value="spread">spread</ToggleGroupItem>
+        </ToggleGroup>
+      </Field>
+      <Field xstyle={styles.range}>
+        <FieldLabel id="lighting-radius-label">
+          radius: <output>{radius} px</output>
+        </FieldLabel>
         <Slider
-          aria-label={m.light_range()}
+          aria-label="radius"
           min={40}
           max={1200}
           step={20}
           value={radius}
-          disabled={motion === 'static'}
+          disabled={disabled}
           onValueChange={(value) => {
             const next = typeof value === 'number' ? value : value[0];
             if (next !== undefined) updatePreferences({ radius: next });
           }}
         />
-      </div>
-      <small>{m.pointer_settings_hint()}</small>
-    </fieldset>
+        <FieldDescription>{m.pointer_settings_hint()}</FieldDescription>
+      </Field>
+    </FieldSet>
   );
 }
-
 const styles = stylex.create({
-  controls: {
-    borderWidth: 0,
-    padding: 0,
-    margin: '0 0 24px',
-    minWidth: 0,
-    display: 'grid',
-    gap: 12,
-  },
-  directions: { display: 'flex', flexWrap: 'wrap', gap: 8 },
-  range: { display: 'grid', gap: 12, maxWidth: 360 },
+  controls: { marginBlockEnd: 24, minWidth: 0 },
+  range: { maxWidth: 360 },
 });

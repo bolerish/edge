@@ -1,4 +1,3 @@
-import { LightingControls } from './shared/preferences/LightingControls.js';
 import { localePath } from './shared/locale.js';
 import { m } from './paraglide/messages.js';
 import { Badge } from '@bolerish/ui/badge';
@@ -103,7 +102,6 @@ export function Home() {
             </section>
             <HeroExample />
           </div>
-          <LightingControls />
           <Dashboard />
         </main>
       </div>
