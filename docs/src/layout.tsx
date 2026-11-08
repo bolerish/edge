@@ -86,14 +86,14 @@ function SiteHeader({
           <Button
             size="icon"
             variant="ghost"
+            data-testid="theme-toggle"
             aria-label={theme === 'light' ? m.switch_dark() : m.switch_light()}
             onClick={() => updatePreferences({ theme: theme === 'light' ? 'dark' : 'light' })}
           >
-            {theme === 'light' ? (
-              <SunIcon {...stylex.props(styles.headerIcon)} aria-hidden="true" />
-            ) : (
-              <MoonIcon {...stylex.props(styles.headerIcon)} aria-hidden="true" />
-            )}
+            <span {...stylex.props(styles.themeIcons)}>
+              <SunIcon {...stylex.props(styles.headerIcon, styles.lightIcon)} aria-hidden="true" />
+              <MoonIcon {...stylex.props(styles.headerIcon, styles.darkIcon)} aria-hidden="true" />
+            </span>
           </Button>
         </div>
       </header>
@@ -163,7 +163,11 @@ const styles = stylex.create({
     marginInlineStart: 'auto',
     minWidth: '0',
   },
+  themeIcons: { display: 'grid' },
+  lightIcon: { color: `light-dark(${colorVars.fgPrimary}, transparent)` },
+  darkIcon: { color: `light-dark(transparent, ${colorVars.fgPrimary})` },
   headerIcon: {
+    gridArea: '1 / 1',
     width: '20px',
     height: '20px',
     flexShrink: '0',

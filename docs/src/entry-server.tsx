@@ -63,11 +63,25 @@ function renderLocalizedDocument(template: string, path: string) {
   const alternate = document
     ? `<link rel="alternate" type="text/markdown" href="${getPagePath(document)}index.md">`
     : '';
+  const fontNames = ['line-seed-en'];
+  const locale = localeFromPath(path);
+  if (locale === 'es') fontNames.push('edge-latin-supplement');
+  if (locale === 'ko') fontNames.push('line-seed-kr');
+  if (locale === 'ja') fontNames.push('line-seed-jp');
+  const fonts = fontNames
+    .flatMap((name) =>
+      ['regular', 'bold'].map(
+        (weight) =>
+          `<link rel="preload" href="/fonts/${name}-${weight}.woff2" as="font" type="font/woff2" crossorigin>`,
+      ),
+    )
+    .join('');
   return template
     .replace(
       'lang="en"',
       `lang="${localeFromPath(path) === 'zh' ? 'zh-Hans' : localeFromPath(path)}"`,
     )
+    .replace('<head>', `<head>${fonts}`)
     .replace('<html ', `<html class="${stylex.props(documentStyles.html).className}" `)
     .replace('<body>', `<body class="${stylex.props(documentStyles.body).className}">`)
     .replace(
