@@ -29,12 +29,12 @@
   "description": "Framework-independent shared directional lighting engine.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bolerish/wisp.git",
+    "url": "git+https://github.com/bolerish/edge.git",
     "directory": "packages/core"
   },
-  "homepage": "https://github.com/bolerish/wisp#readme",
+  "homepage": "https://github.com/bolerish/edge#readme",
   "bugs": {
-    "url": "https://github.com/bolerish/wisp/issues"
+    "url": "https://github.com/bolerish/edge/issues"
   },
   "publishConfig": {
     "access": "public",

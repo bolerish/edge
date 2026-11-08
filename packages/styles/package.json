@@ -40,12 +40,12 @@
   "description": "Plain CSS and surface bindings for Edge directional lighting.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bolerish/wisp.git",
+    "url": "git+https://github.com/bolerish/edge.git",
     "directory": "packages/styles"
   },
-  "homepage": "https://github.com/bolerish/wisp#readme",
+  "homepage": "https://github.com/bolerish/edge#readme",
   "bugs": {
-    "url": "https://github.com/bolerish/wisp/issues"
+    "url": "https://github.com/bolerish/edge/issues"
   },
   "publishConfig": {
     "access": "public",

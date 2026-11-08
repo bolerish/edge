@@ -53,12 +53,12 @@
   "description": "Shared directional border lighting for your React components.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bolerish/wisp.git",
+    "url": "git+https://github.com/bolerish/edge.git",
     "directory": "packages/react"
   },
-  "homepage": "https://github.com/bolerish/wisp#readme",
+  "homepage": "https://github.com/bolerish/edge#readme",
   "bugs": {
-    "url": "https://github.com/bolerish/wisp/issues"
+    "url": "https://github.com/bolerish/edge/issues"
   },
   "publishConfig": {
     "access": "public",
