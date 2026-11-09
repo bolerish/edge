@@ -1,4 +1,5 @@
-import { Benefits } from './_ui/Benefits.js';
+import { Link } from '@bolerish/ui/link';
+import { inlineMessage } from './docs/_shared/inline-message.js';
 import { localePath } from './shared/locale.js';
 import { m } from './paraglide/messages.js';
 import { Badge } from '@bolerish/ui/badge';
@@ -103,7 +104,6 @@ export function Home() {
             </section>
             <HeroExample />
           </div>
-          <Benefits />
           <Dashboard />
         </main>
       </div>
@@ -122,11 +122,13 @@ function Dashboard() {
             {m.dashboard()}
           </Heading>
           <Paragraph variant="description">
-            {m.built_with_bolerish_ui_move_your_pointer()}
+            {inlineMessage(m.built_with_bolerish_ui_move_your_pointer(), {
+              part0: <Link href="https://ui.bolerish.com">bolerish/ui</Link>,
+            })}
           </Paragraph>
         </div>
       </header>
-      <Paragraph variant="caption" xstyle={styles.dashboardNote}>
+      <Paragraph variant="description" xstyle={styles.dashboardNote}>
         {m.interface_preview_search_and_project_actions_are()}{' '}
         <span id="dashboard-motion-description">{motionDescriptions[motion]}</span>
       </Paragraph>

@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from '@playwright/test';
 
-test('localized home loads its fonts and keeps benefit cards inside the viewport', async ({
+test('localized home loads its fonts and keeps the dashboard inside the viewport', async ({
   page,
 }) => {
   for (const [locale, family, sample] of [
@@ -22,9 +22,11 @@ test('localized home loads its fonts and keeps benefit cards inside the viewport
       { family, sample },
     );
     expect(fonts).toEqual(['loaded']);
-    const benefits = page.locator('section[aria-labelledby="why-edge"]');
-    await expect(benefits.getByRole('heading', { level: 2 })).toBeVisible();
-    await expect(benefits.getByRole('heading', { level: 3 })).toHaveCount(4);
+    await expect(page.locator('#dashboard-title')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'bolerish/ui', exact: true })).toHaveAttribute(
+      'href',
+      'https://ui.bolerish.com',
+    );
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
