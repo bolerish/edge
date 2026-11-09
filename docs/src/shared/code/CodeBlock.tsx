@@ -53,7 +53,11 @@ export function CodeBlock({
       <Highlight prism={Prism} code={code} language={language} theme={codeTheme}>
         {({ tokens, getLineProps, getTokenProps }) => (
           <pre
-            {...stylex.props(styles.pre, scrollable && styles.scrollable)}
+            {...stylex.props(
+              styles.pre,
+              scrollable && styles.scrollable,
+              compact && styles.compactPre,
+            )}
             role="region"
             tabIndex={0}
             aria-label={m.code_region({ label })}
@@ -144,6 +148,7 @@ const styles = stylex.create({
     },
   },
   scrollable: { maxBlockSize: '20rem' },
+  compactPre: { blockSize: '120px', boxSizing: 'border-box' },
   prose: { whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' },
   code: {
     fontSize: '0.88em',
