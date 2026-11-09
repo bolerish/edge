@@ -10,6 +10,7 @@ import * as stylex from '@stylexjs/stylex';
 import { useState } from 'react';
 import { Button } from '@bolerish/ui/button';
 import { Link } from '@bolerish/ui/link';
+import { GithubLogoIcon } from '@phosphor-icons/react/GithubLogo';
 import { MoonIcon } from '@phosphor-icons/react/Moon';
 import { SunIcon } from '@phosphor-icons/react/Sun';
 import { DocumentationSearch } from './shared/search/DocumentationSearch.js';
@@ -88,6 +89,14 @@ function SiteHeader({
               <MoonIcon {...stylex.props(styles.headerIcon, styles.darkIcon)} aria-hidden="true" />
             </span>
           </Button>
+          <Link
+            variant="plain"
+            href="https://github.com/bolerish/edge"
+            aria-label="GitHub"
+            className={stylex.props(styles.githubLink).className}
+          >
+            <GithubLogoIcon {...stylex.props(styles.headerIcon)} aria-hidden="true" />
+          </Link>
         </div>
       </header>
       {section === 'docs' ? (
@@ -160,6 +169,17 @@ const styles = stylex.create({
     },
     marginInlineStart: 'auto',
     minWidth: '0',
+  },
+  githubLink: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '32px',
+    height: '32px',
+    flexShrink: 0,
+    borderRadius: '6px',
+    color: { default: colorVars.fgSecondary, ':hover': colorVars.fgPrimary },
+    textDecoration: 'none',
   },
   themeIcons: { display: 'grid' },
   lightIcon: { color: `light-dark(${colorVars.fgPrimary}, transparent)` },

@@ -9,10 +9,14 @@ for (const locale of ['', '/ko', '/es', '/zh', '/ja']) {
       for (const path of ['/', '/docs/installation/']) {
         await page.goto(locale + path);
         await page.evaluate(() => document.fonts.ready);
+        await expect(page.getByRole('link', { name: 'GitHub', exact: true })).toHaveAttribute(
+          'href',
+          'https://github.com/bolerish/edge',
+        );
         const layout = await page.locator('.site-header').evaluate((header) => {
           const [brand, toggleOrNav] = header.children;
           const nav = header.querySelector('nav');
-          const buttons = [...header.querySelectorAll('button')];
+          const buttons = [...header.querySelectorAll('button, a[aria-label="GitHub"]')];
           if (!brand || !toggleOrNav || !nav) throw new Error('Missing header regions');
           const bounds = header.getBoundingClientRect();
           const brandBounds = brand.getBoundingClientRect();
