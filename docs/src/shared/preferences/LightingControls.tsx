@@ -1,6 +1,6 @@
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
-import { FieldSet, FieldLegend, Field, FieldLabel } from '@bolerish/ui/field';
+import { FieldSet, Field, FieldLabel } from '@bolerish/ui/field';
 import {
   Select,
   SelectTrigger,
@@ -16,8 +16,7 @@ export function LightingControls({ alwaysEnabled = false }: { alwaysEnabled?: bo
   const { direction, radius, motion } = usePreferences();
   const disabled = !alwaysEnabled && motion === 'static';
   return (
-    <FieldSet xstyle={styles.controls} disabled={disabled}>
-      <FieldLegend>{m.pointer_lighting()}</FieldLegend>
+    <FieldSet xstyle={styles.controls} disabled={disabled} aria-label={m.pointer_lighting()}>
       <Field>
         <FieldLabel id="lighting-direction-label">direction</FieldLabel>
         <Select
@@ -60,7 +59,17 @@ export function LightingControls({ alwaysEnabled = false }: { alwaysEnabled?: bo
   );
 }
 const styles = stylex.create({
-  controls: { marginBlockEnd: 24, minWidth: 0 },
+  controls: {
+    display: 'grid',
+    gridTemplateColumns: {
+      default: 'repeat(2, minmax(0, 240px))',
+      '@media (max-width: 600px)': 'minmax(0, 1fr)',
+    },
+    alignItems: 'start',
+    gap: 24,
+    marginBlockEnd: 24,
+    minWidth: 0,
+  },
   select: { width: 240, maxWidth: '100%' },
   range: { width: 240, maxWidth: '100%' },
 });
