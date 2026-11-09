@@ -46,7 +46,7 @@
   "refresh_signature": "refresh signature",
   "layout_updates": "layout updates",
   "rendering_and_cleanup": "Rendering and cleanup",
-  "server_rendering_does_not_access_the_dom": "Server rendering does not access the DOM. Lighting starts on the client after hydration. Cleanup restores owned inline variables, removes listeners and cancels pending frames; setup can restart in React StrictMode.",
+  "server_rendering_does_not_access_the_dom": "Content can be rendered on the server. Lighting starts after client mounting or hydration. Static HTML without client JavaScript has no lighting. Cleanup restores owned inline CSS variables, removes listeners and cancels pending frames; setup can restart in React StrictMode.",
   "rendering_modes_table": "Rendering modes table",
   "rendering_modes": "Rendering modes",
   "mode": "Mode",

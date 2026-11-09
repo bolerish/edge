@@ -46,7 +46,7 @@
   "refresh_signature": "refresh 시그니처",
   "layout_updates": "레이아웃 갱신",
   "rendering_and_cleanup": "렌더링과 클린업",
-  "server_rendering_does_not_access_the_dom": "서버 렌더링에서는 DOM에 접근하지 않습니다. 조명은 하이드레이션(hydration) 이후 클라이언트에서 시작합니다. 클린업 시 Edge가 관리하던 인라인 CSS 변수를 복원하고, 이벤트 리스너와 예약된 프레임을 제거합니다. React StrictMode에서도 다시 설정할 수 있습니다.",
+  "server_rendering_does_not_access_the_dom": "서버에서도 콘텐츠를 렌더링할 수 있습니다. 조명은 클라이언트에서 마운트 또는 하이드레이션한 뒤 시작합니다. 클라이언트 JavaScript가 없는 정적 HTML에서는 조명이 동작하지 않습니다. 클린업 시 Edge가 관리하던 인라인 CSS 변수를 복원하고, 이벤트 리스너와 예약된 프레임을 제거합니다. React StrictMode에서도 다시 설정할 수 있습니다.",
   "rendering_modes_table": "렌더링 방식 표",
   "rendering_modes": "렌더링 방식",
   "mode": "방식",

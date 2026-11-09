@@ -46,7 +46,7 @@
   "refresh_signature": "refresh 签名",
   "layout_updates": "布局更新",
   "rendering_and_cleanup": "渲染与清理",
-  "server_rendering_does_not_access_the_dom": "服务端渲染不访问 DOM。光照在客户端水合后启动。清理会恢复受管理的内联变量、移除监听器并取消待执行帧；可在 React StrictMode 中重新初始化。",
+  "server_rendering_does_not_access_the_dom": "内容可以在服务端渲染。光照在客户端挂载或水合后启动。没有客户端 JavaScript 的静态 HTML 不会启用光照。清理时会恢复由 Edge 管理的内联 CSS 变量、移除监听器并取消待执行帧；可在 React StrictMode 中重新初始化。",
   "rendering_modes_table": "渲染模式表",
   "rendering_modes": "渲染模式",
   "mode": "模式",

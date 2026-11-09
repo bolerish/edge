@@ -46,7 +46,7 @@
   "refresh_signature": "refresh のシグネチャ",
   "layout_updates": "レイアウトの更新",
   "rendering_and_cleanup": "レンダリングとクリーンアップ",
-  "server_rendering_does_not_access_the_dom": "サーバーレンダリングでは DOM にアクセスしません。照明はハイドレーション後にクライアントで開始します。クリーンアップでインライン変数を復元し、リスナーと保留中のフレームを削除します。React StrictMode でも再セットアップできます。",
+  "server_rendering_does_not_access_the_dom": "コンテンツはサーバーでもレンダリングできます。照明はクライアントでのマウントまたはハイドレーション後に開始します。クライアントのJavaScriptがない静的HTMLでは照明は動作しません。クリーンアップ時に管理対象のインラインCSS変数を復元し、リスナーと保留中のフレームを削除します。React StrictModeでも再セットアップできます。",
   "rendering_modes_table": "レンダリング方式の表",
   "rendering_modes": "レンダリング方式",
   "mode": "方式",

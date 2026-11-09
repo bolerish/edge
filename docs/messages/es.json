@@ -46,7 +46,7 @@
   "refresh_signature": "Firma de refresh",
   "layout_updates": "actualizaciones de diseño",
   "rendering_and_cleanup": "Renderizado y limpieza",
-  "server_rendering_does_not_access_the_dom": "El renderizado del servidor no accede al DOM. La iluminación empieza en el cliente tras la hidratación. La limpieza restaura las variables en línea, elimina los listeners y cancela fotogramas pendientes; la inicialización puede repetirse en React StrictMode.",
+  "server_rendering_does_not_access_the_dom": "El contenido se puede renderizar en el servidor. La iluminación empieza tras el montaje o la hidratación en el cliente. El HTML estático sin JavaScript del cliente no tiene iluminación. La limpieza restaura las variables CSS en línea, elimina los listeners y cancela los fotogramas pendientes; la inicialización puede repetirse en React StrictMode.",
   "rendering_modes_table": "Tabla de modos de renderizado",
   "rendering_modes": "Modos de renderizado",
   "mode": "Modo",

@@ -2,16 +2,6 @@ import { inlineMessage } from '../../_shared/inline-message.js';
 import { localePath } from '../../../shared/locale.js';
 import { m } from '../../../paraglide/messages.js';
 import { Banner } from '@bolerish/ui/banner';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-  TableCaption,
-  TableContainer,
-} from '@bolerish/ui/table';
 import * as stylex from '@stylexjs/stylex';
 import { contentStyles } from '../../_shared/content-styles.js';
 import { Link } from '@bolerish/ui/link';
@@ -251,73 +241,6 @@ function ExistingCard() {
                 part1: <code {...stylex.props(contentStyles.inlineCode)}>{'useSurface'}</code>,
               })}
             </P>
-            <TableContainer
-              className={`table-scroll ${stylex.props(contentStyles.tableScroll).className}`}
-              role="region"
-              aria-label={m.rendering_modes_table()}
-              tabIndex={0}
-            >
-              <Table className={`api-table ${stylex.props(contentStyles.apiTable).className}`}>
-                <TableCaption
-                  xstyle={[contentStyles.tableCaption]}
-                  className={`visually-hidden ${stylex.props(contentStyles.visuallyHidden).className}`}
-                >
-                  {m.rendering_modes()}
-                </TableCaption>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-                      {m.mode()}
-                    </TableHead>
-                    <TableHead xstyle={[contentStyles.tableCell]} scope="col">
-                      {m.behavior()}
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                      {'CSR'}
-                    </TableHead>
-                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                      {m.the_provider_and_marked_hosts_activate_after()}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                      {'SSR'}
-                    </TableHead>
-                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                      {m.use_rendertostring_with_hydrateroot_native_content_and()}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                      {m.streaming_ssr()}
-                    </TableHead>
-                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                      {m.node_rendertopipeablestream_and_web_rendertoreadablestream_can_se()}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                      {m.ssg_with_hydration()}
-                    </TableHead>
-                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                      {m.generate_hydratable_html_at_build_time_for()}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableHead xstyle={[contentStyles.tableCell]} scope="row">
-                      {m.static_html()}
-                    </TableHead>
-                    <TableCell xstyle={[contentStyles.tableCell, contentStyles.tableData]}>
-                      {m.rendertostaticmarkup_produces_html_that_cannot_be_hydrated()}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {inlineMessage(m.server_component_boundary(), {
                 part0: <code {...stylex.props(contentStyles.inlineCode)}>{'"use client"'}</code>,
