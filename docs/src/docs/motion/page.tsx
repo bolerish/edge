@@ -30,6 +30,24 @@ export const motion: DocPage = {
   },
   sections: [
     {
+      id: 'choose-an-input-mode',
+      get title() {
+        return m.choose_motion_behavior();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {inlineMessage(m.accessible_motion_choice(), {
+              part0: <code {...stylex.props(contentStyles.inlineCode)}>{'system'}</code>,
+              part1: <code {...stylex.props(contentStyles.inlineCode)}>{'dynamic'}</code>,
+              part2: <Link href={localePath('/docs/motion/')}>{m.motion()}</Link>,
+            })}
+          </P>
+        );
+      },
+    },
+
+    {
       id: 'compare-motion',
       get title() {
         return m.choose_motion_behavior();
@@ -171,7 +189,11 @@ export const motion: DocPage = {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
             {inlineMessage(m.motion_accessibility_link(), {
-              part0: <Link href={localePath('/docs/accessibility/')}>{m.accessibility()}</Link>,
+              part0: (
+                <Link href={localePath('/docs/integration/#preserve-native-interactions')}>
+                  {m.accessibility()}
+                </Link>
+              ),
             })}
           </P>
         );

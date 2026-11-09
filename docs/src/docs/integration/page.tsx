@@ -11,6 +11,7 @@ import type { DocPage } from '../_shared/types.js';
 
 export const integration: DocPage = {
   slug: 'integration',
+  aliases: ['accessibility', 'react/accessibility'],
   section: 'Guides',
   get title() {
     return m.integration();
@@ -19,6 +20,24 @@ export const integration: DocPage = {
     return m.handle_decoration_conflicts_native_inputs_and_layout();
   },
   sections: [
+    {
+      id: 'preserve-native-interactions',
+      get title() {
+        return m.preserve_native_interactions();
+      },
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.keep_labels_text_contrast_base_borders_and()}
+            </P>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.forced_colors_mode_hides_decoration_communicate_selection()}
+            </P>
+          </>
+        );
+      },
+    },
     {
       id: 'existing-decorations',
       get title() {
@@ -95,7 +114,11 @@ export const integration: DocPage = {
         return (
           <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
             {inlineMessage(m.geometry_limits_link(), {
-              part0: <Link href={localePath('/docs/accessibility/')}>{m.accessibility()}</Link>,
+              part0: (
+                <Link href={localePath('/docs/integration/#preserve-native-interactions')}>
+                  {m.accessibility()}
+                </Link>
+              ),
             })}
           </P>
         );
