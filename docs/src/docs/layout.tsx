@@ -11,7 +11,6 @@ import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
-  NavigationMenuLink,
 } from '@bolerish/ui/navigation-menu';
 import { colorVars, sizeVars, spacingVars, typo } from '@bolerish/tokens/semantic.stylex';
 import { documentStyles } from '../shared/document-styles.js';
@@ -83,16 +82,14 @@ export function DocumentLayout({
                     {item.group}
                   </Paragraph>
                 ) : null}
-                <NavigationMenuLink
+                <Link
                   href={item.href}
-                  {...stylex.props(active && styles.navLinkActive)}
-                  xstyle={styles.navLink}
-                  active={active}
+                  {...stylex.props(styles.navLink)}
                   aria-current={active ? 'page' : undefined}
                   onClick={() => setOpen(false)}
                 >
                   {item.title}
-                </NavigationMenuLink>
+                </Link>
               </div>
             );
           });
@@ -284,6 +281,8 @@ const styles = stylex.create({
     maxHeight: 'calc(100dvh - 120px)',
     overflowY: 'auto',
     scrollbarWidth: 'none',
+    overscrollBehavior: 'contain',
+    overflowAnchor: 'none',
     paddingRight: '16px',
     display: {
       default: null,
@@ -307,8 +306,30 @@ const styles = stylex.create({
   navAccordionContent: { paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0 },
   navHeading: { marginBlockEnd: 10, marginInline: 10 },
   navSubheading: { marginBlock: '16px 6px', marginInline: 10 },
-  navLink: { width: '100%' },
-  navLinkActive: { backgroundColor: colorVars.bgSubtle, color: colorVars.fgPrimary },
+  navLink: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: spacingVars.space2,
+    paddingBlock: `calc(${spacingVars.space0_5} * 3.0)`,
+    paddingInline: `calc(${spacingVars.space0_5} * 5.0)`,
+    marginBlock: `calc(${spacingVars.space0_5} * 0.5)`,
+    borderRadius: 6,
+    textDecoration: 'none',
+    fontSize: typo.fontSizeSm,
+    lineHeight: typo.lineHeightNormal,
+    color: {
+      default: colorVars.fgSecondary,
+      ':hover': colorVars.fgPrimary,
+      ':is([aria-current="page"])': colorVars.fgPrimary,
+    },
+    backgroundColor: {
+      default: null,
+      ':hover': colorVars.bgSubtle,
+      ':is([aria-current="page"])': colorVars.bgSubtle,
+    },
+    fontWeight: { default: null, ':is([aria-current="page"])': typo.fontWeightMedium },
+    textUnderlineOffset: 3,
+  },
   siteContent: {
     minWidth: '0',
     padding: {
