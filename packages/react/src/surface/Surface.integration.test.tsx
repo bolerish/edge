@@ -148,7 +148,7 @@ it('defaults to system motion and updates edgeStyle without replacing the host',
   );
   flush();
   expect(container.firstElementChild).toBe(host);
-  expect(host.style.getPropertyValue('--edge-angle')).toBe('135.0deg');
+  expect(host.style.getPropertyValue('--edge-angle')).toBe('315.0deg');
   expect(host.style.getPropertyValue('--edge-highlight')).toBe('red');
   expect(host.style.getPropertyValue('--edge-intensity')).toBe('0.4');
 });

@@ -44,3 +44,66 @@ test('direction and range update live surfaces and persist across pages', async 
     page.locator('pre').filter({ hasText: 'direction: "spread"' }).first(),
   ).toContainText('radius: 500');
 });
+
+for (const theme of ['light', 'dark'] as const) {
+  for (const edgeStyle of ['raised', 'recessed', 'matte'] as const) {
+    test(`${theme} ${edgeStyle}: gather faces the pointer and spread faces away`, async ({
+      page,
+    }) => {
+      await page.addInitScript(
+        ({ theme, edgeStyle }) => {
+          localStorage.setItem(
+            'edge:preferences:v1',
+            JSON.stringify({
+              theme,
+              edgeStyle,
+              motion: 'dynamic',
+              direction: 'gather',
+              radius: 100,
+            }),
+          );
+        },
+        { theme, edgeStyle },
+      );
+      await page.goto('/docs/motion/');
+      const example = page.getByRole('group', { name: 'Pointer lighting', exact: true });
+      const card = example.getByRole('article');
+      await card.scrollIntoViewIfNeeded();
+      const move = async () => {
+        await card.scrollIntoViewIfNeeded();
+        const box = await card.boundingBox();
+        if (!box) throw new Error('Missing direction card');
+        await page.mouse.move(box.x + 4, box.y + box.height / 2);
+      };
+      await move();
+      await expect(card).toHaveCSS('--edge-angle', '270.0deg');
+      const appearance = await card.evaluate((node) => {
+        const css = getComputedStyle(node, '::after');
+        return {
+          background: css.backgroundImage,
+          content: css.content,
+          inset: parseFloat(css.top),
+          base: parseFloat(node.style.getPropertyValue('--edge-inset-top')),
+        };
+      });
+      expect(appearance.background).toContain('from 230deg');
+      expect(appearance.content).toBe('""');
+      expect(appearance.inset).toBe(appearance.base + (edgeStyle === 'recessed' ? 1 : 0));
+      await page.getByRole('combobox', { name: 'direction', exact: true }).click();
+      await page.getByRole('option', { name: 'spread', exact: true }).click();
+      await move();
+      await expect(card).toHaveCSS('--edge-angle', '90.0deg');
+      expect(
+        await card.evaluate((node) => getComputedStyle(node, '::after').backgroundImage),
+      ).toContain('from 50deg');
+      await page.addStyleTag({
+        content:
+          '.bolerish-edge { position: absolute; } .bolerish-edge::after { background-image: none; }',
+      });
+      await expect(card).toHaveCSS('position', 'absolute');
+      expect(await card.evaluate((node) => getComputedStyle(node, '::after').backgroundImage)).toBe(
+        'none',
+      );
+    });
+  }
+}

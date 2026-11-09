@@ -46,3 +46,11 @@ it.each(['first-line', '', null, 0])('rejects invalid decoration slot %s', (pseu
     new RangeError('Unknown surface pseudoElement'),
   );
 });
+
+it('uses an inset appearance class without changing color bindings', () => {
+  const raised = getSurfaceProps({ edgeStyle: 'raised' });
+  const recessed = getSurfaceProps({ edgeStyle: 'recessed' });
+  expect(recessed.className).toContain('bolerish-edge-recessed');
+  expect(raised.className).not.toContain('bolerish-edge-recessed');
+  expect(recessed.style).toEqual(raised.style);
+});

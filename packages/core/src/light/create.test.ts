@@ -136,7 +136,7 @@ it('updates edgeStyle and options without a new pointer and attaches late surfac
   flush();
   entry.update('recessed');
   flush();
-  expect(node.style.getPropertyValue('--edge-angle')).toBe('135.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('315.0deg');
   light.configure({ motion: 'static', intensity: 0.4 });
   flush();
   expect(node.style.getPropertyValue('--edge-strength')).toBe('0.280');
@@ -298,7 +298,7 @@ it('reads all dirty rectangles before writing and skips unchanged output', () =>
   b.destroy();
   stop();
 });
-it('writes only the changed CSS property when edgeStyle flips the direction', () => {
+it('keeps direction unchanged when the surface becomes recessed', () => {
   const light = createLight({ motion: 'static' });
   const { node } = element();
   const entry = light.register(node, 'raised');
@@ -307,7 +307,7 @@ it('writes only the changed CSS property when edgeStyle flips the direction', ()
   const write = vi.spyOn(node.style, 'setProperty');
   entry.update('recessed');
   flush();
-  expect(write.mock.calls).toEqual([['--edge-angle', '135.0deg']]);
+  expect(write).not.toHaveBeenCalled();
   entry.destroy();
   stop();
 });
@@ -614,10 +614,10 @@ it('reconfigures direction and radius with a stationary pointer and preserves st
   expect(measure).toHaveBeenCalledOnce();
   entry.update('recessed');
   flush();
-  expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('270.0deg');
   light.configure({ motion: 'static', staticDirection: 45, direction: 'spread', radius: 1 });
   flush();
-  expect(node.style.getPropertyValue('--edge-angle')).toBe('225.0deg');
+  expect(node.style.getPropertyValue('--edge-angle')).toBe('45.0deg');
   entry.destroy();
   stop();
 });

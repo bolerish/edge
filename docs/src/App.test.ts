@@ -184,7 +184,7 @@ test('appearance controls update the document and persist across navigation', as
         .first()
         .evaluate((node) => node.style.getPropertyValue('--edge-angle')),
     )
-    .toBe('135.0deg');
+    .toBe('315.0deg');
   await page.reload();
   await expect(page.getByRole('combobox', { name: 'Style', exact: true })).toContainText(
     'Recessed',
@@ -205,7 +205,7 @@ test('appearance controls update the document and persist across navigation', as
         .getByTestId('surface-card')
         .evaluate((node) => node.style.getPropertyValue('--edge-angle')),
     )
-    .toBe('135.0deg');
+    .toBe('315.0deg');
 });
 
 test('mobile navigation supports Escape and pages stay inside the viewport', async ({ page }) => {
@@ -817,7 +817,7 @@ test('style example changes only edge style and retains Bolerish UI colors', asy
   await page.getByRole('option', { name: 'Recessed', exact: true }).click();
   await expect
     .poll(() => card.evaluate((node) => node.style.getPropertyValue('--edge-angle')))
-    .toBe('135.0deg');
+    .toBe('315.0deg');
   const strength = await card.evaluate((node) =>
     Number(node.style.getPropertyValue('--edge-strength')),
   );

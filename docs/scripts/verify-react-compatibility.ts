@@ -267,7 +267,9 @@ try {
         `window.fixture.update({ edgeStyle: 'recessed', pseudoElement: 'before' })`,
       );
       await page.waitForFunction(
-        () => document.getElementById('lit')?.style.getPropertyValue('--edge-angle') === '135.0deg',
+        () =>
+          document.getElementById('lit')?.classList.contains('bolerish-edge-before') &&
+          document.getElementById('lit')?.style.getPropertyValue('--edge-angle') === '315.0deg',
       );
       assert(
         await page

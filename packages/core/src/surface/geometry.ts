@@ -23,21 +23,12 @@ const STATIC_LIGHT_STRENGTH = 0.7;
 
 export function getStaticLighting(edgeStyle: EdgeStyle, direction = DEFAULT_DIRECTION_DEGREES) {
   return {
-    angle:
-      (direction +
-        (edgeStyle === 'recessed' ? HALF_TURN_DEGREES : 0)) % FULL_TURN_DEGREES,
-    strength:
-      STATIC_LIGHT_STRENGTH *
-      (edgeStyle === 'matte' ? MATTE_STRENGTH_MULTIPLIER : 1),
+    angle: direction % FULL_TURN_DEGREES,
+    strength: STATIC_LIGHT_STRENGTH * (edgeStyle === 'matte' ? MATTE_STRENGTH_MULTIPLIER : 1),
   };
 }
 
-export function getLighting(
-  rect: Rectangle,
-  point: Point,
-  radius: number,
-  edgeStyle: EdgeStyle,
-) {
+export function getLighting(rect: Rectangle, point: Point, radius: number, edgeStyle: EdgeStyle) {
   const dx = point.x - rect.left - rect.width / 2;
   const dy = point.y - rect.top - rect.height / 2;
   const centerDistance = Math.hypot(dx, dy);
@@ -48,15 +39,17 @@ export function getLighting(
   const direction =
     centerDistance === 0
       ? DEFAULT_DIRECTION_DEGREES
-      : ((Math.atan2(dy, dx) * HALF_TURN_DEGREES) / Math.PI +
-          CSS_ANGLE_OFFSET_DEGREES) % FULL_TURN_DEGREES;
+      : ((Math.atan2(dy, dx) * HALF_TURN_DEGREES) / Math.PI + CSS_ANGLE_OFFSET_DEGREES) %
+        FULL_TURN_DEGREES;
   return {
-    angle:
-      (direction + (edgeStyle === 'recessed' ? HALF_TURN_DEGREES : 0)) %
-      FULL_TURN_DEGREES,
+    angle: direction,
     strength:
       Math.max(0, 1 - edgeDistance / radius) ** DISTANCE_FALLOFF_EXPONENT *
-      Math.min(1, centerDistance / Math.max(1, Math.max(rect.width, rect.height) * CENTER_FADE_SIZE_RATIO)) ** CENTER_FADE_EXPONENT *
+      Math.min(
+        1,
+        centerDistance / Math.max(1, Math.max(rect.width, rect.height) * CENTER_FADE_SIZE_RATIO),
+      ) **
+        CENTER_FADE_EXPONENT *
       (edgeStyle === 'matte' ? MATTE_STRENGTH_MULTIPLIER : 1),
   };
 }

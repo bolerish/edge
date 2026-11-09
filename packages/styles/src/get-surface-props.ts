@@ -19,7 +19,7 @@ export function getSurfaceProps(options: SurfaceOptions = {}) {
   const pseudoElement = options.pseudoElement === undefined ? 'after' : options.pseudoElement;
   if (pseudoElement !== 'after' && pseudoElement !== 'before')
     throw new RangeError('Unknown surface pseudoElement');
-  const className = `bolerish-edge bolerish-edge-${pseudoElement}`;
+  const className = `bolerish-edge bolerish-edge-${pseudoElement}${options.edgeStyle === 'recessed' ? ' bolerish-edge-recessed' : ''}`;
   const intensity = options.intensity;
   const style = {
     '--edge-highlight': options.color,

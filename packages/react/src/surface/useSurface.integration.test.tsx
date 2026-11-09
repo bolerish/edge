@@ -115,13 +115,13 @@ it('updates stationary edgeStyle and intensity, then replaces the ref target wit
   await act(async () => root.render(<App edgeStyle="recessed" intensity={0.4} />));
   flush();
   expect(container.querySelector('button')).toBe(original);
-  expect(original.style.getPropertyValue('--edge-angle')).toBe('135.0deg');
+  expect(original.style.getPropertyValue('--edge-angle')).toBe('315.0deg');
   expect(original.style.getPropertyValue('--edge-strength')).toBe('0.280');
   await act(async () => root.render(<App edgeStyle="recessed" intensity={0.4} replace />));
   flush();
   expect(original.style.getPropertyValue('--edge-angle')).toBe('');
   expect(container.querySelector('button')?.style.getPropertyValue('--edge-angle')).toBe(
-    '135.0deg',
+    '315.0deg',
   );
 });
 it('does not rerender React components during pointer updates and preserves nodes', async () => {

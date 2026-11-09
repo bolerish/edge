@@ -39,8 +39,8 @@ Load the stylesheet once, before your application styles. Only marked surfaces r
 ```
 
 `direction` defaults to `gather`, facing highlights toward the pointer. Use `spread`
-for the opposite direction. Recessed surfaces keep their inverted response in either
-mode. `radius` is the fade distance outside each surface in CSS pixels, defaults to
+for the opposite direction. Recessed surfaces draw the highlight one decorative
+edge thickness inward while preserving the selected direction. `radius` is the fade distance outside each surface in CSS pixels, defaults to
 480, and must be positive and finite. These options affect pointer-driven lighting;
 fixed lighting uses `staticDirection` instead.
 
