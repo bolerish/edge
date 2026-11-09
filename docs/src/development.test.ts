@@ -6,6 +6,8 @@ test('development serves styled content before JavaScript and hydrates it on ref
   request,
   page,
 }) => {
+  // This includes cold Vite/SSR startup, five locales, no-JS rendering and hydration.
+  test.slow();
   const server = await createServer({ server: { host: '127.0.0.1', port: 0 }, logLevel: 'error' });
   await server.listen();
   const address = server.httpServer?.address();
