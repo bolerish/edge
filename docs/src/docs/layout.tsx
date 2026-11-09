@@ -1,4 +1,9 @@
-import { Collapsible, CollapsibleTrigger, CollapsiblePanel } from '@bolerish/ui/collapsible';
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '@bolerish/ui/accordion';
 import { inlineMessage } from './_shared/inline-message.js';
 import { localePath, sectionLabel } from '../shared/locale.js';
 import { m } from '../paraglide/messages.js';
@@ -98,18 +103,17 @@ export function DocumentLayout({
               key={group.title ?? index}
             >
               {group.collapsible ? (
-                <Collapsible
+                <Accordion
                   key={String(page?.section === 'React')}
-                  defaultOpen={page?.section === 'React'}
+                  defaultValue={page?.section === 'React' ? ['react'] : []}
                 >
-                  <CollapsibleTrigger {...stylex.props(styles.navToggle)}>
-                    {group.title}
-                    <span aria-hidden="true" {...stylex.props(styles.navChevron)}>
-                      ⌄
-                    </span>
-                  </CollapsibleTrigger>
-                  <CollapsiblePanel>{items}</CollapsiblePanel>
-                </Collapsible>
+                  <AccordionItem value="react" xstyle={styles.navAccordionItem}>
+                    <AccordionTrigger {...stylex.props(styles.navToggle)}>
+                      {group.title}
+                    </AccordionTrigger>
+                    <AccordionContent xstyle={styles.navAccordionContent}>{items}</AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               ) : (
                 <>
                   {group.title ? (
@@ -291,21 +295,21 @@ const styles = stylex.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    padding: '10px',
+    minHeight: 32,
+    padding: '8px 10px',
     borderWidth: 0,
     backgroundColor: 'transparent',
     color: colorVars.fgPrimary,
     font: 'inherit',
+    fontSize: 13,
     fontWeight: 600,
     cursor: 'pointer',
     borderRadius: 6,
     outline: { default: null, ':focus-visible': `2px solid ${colorVars.fgPrimary}` },
     outlineOffset: 2,
   },
-  navChevron: {
-    display: 'inline-block',
-    transform: { default: 'rotate(0deg)', ':is([data-panel-open] *)': 'rotate(180deg)' },
-  },
+  navAccordionItem: { borderWidth: 0 },
+  navAccordionContent: { padding: 0 },
   navHeading: { marginBlockEnd: 10, marginInline: 10 },
   navSubheading: { marginBlock: '16px 6px', marginInline: 10 },
   navLink: { width: '100%' },
