@@ -2,6 +2,8 @@
 
 A little more alive. Connect your React components to one shared directional light.
 
+![edge Demo](./docs/src/assets/edge.gif)
+
 ## Quick start
 
 Requires React 18 or 19.
