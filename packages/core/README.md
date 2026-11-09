@@ -19,6 +19,6 @@ unmount();
 
 Use `@bolerish/edge-styles` separately for decorative CSS and appearance bindings. The engine owns pointer scheduling, geometry and output variables. It does not add React or a styling runtime.
 
-See the [repository](https://github.com/bolerish/wisp) for supported geometry, cleanup and integration contracts.
+See the [repository](https://github.com/bolerish/edge) for supported geometry, cleanup and integration contracts.
 
 MIT licensed.
