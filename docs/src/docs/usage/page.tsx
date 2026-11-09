@@ -1,4 +1,4 @@
-import { AtomIcon, ArrowRightIcon } from '@phosphor-icons/react';
+import { ReactLogo } from './_ui/ReactLogo.js';
 import { inlineMessage } from '../_shared/inline-message.js';
 import { Card, CardHeader, CardTitle } from '@bolerish/ui/card';
 import { localePath } from '../../shared/locale.js';
@@ -100,10 +100,8 @@ export const usage: DocPage = {
             >
               <Card>
                 <CardHeader>
-                  <AtomIcon size={32} aria-hidden="true" />
-                  <CardTitle>
-                    React <ArrowRightIcon size={18} aria-hidden="true" />
-                  </CardTitle>
+                  <ReactLogo />
+                  <CardTitle>React</CardTitle>
                 </CardHeader>
               </Card>
             </Link>
