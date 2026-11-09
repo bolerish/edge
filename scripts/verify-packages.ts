@@ -169,7 +169,13 @@ assert(library.startsWith('"use client"') || library.startsWith("'use client'"))
 const serverUrl = new URL('../.private/docs-ssr/entry-server.js', import.meta.url);
 const { titleFor, pages, learningPath }: typeof import('../docs/src/entry-server.js') =
   await import(serverUrl.href);
-assert.equal(new Set(learningPath).size, pages.length, 'Reading path covers each page once');
+const navigablePages = pages.filter((page) => page.navigation !== false);
+assert.equal(new Set(learningPath).size, learningPath.length, 'Reading path has no duplicates');
+assert.equal(learningPath.length, navigablePages.length, 'Reading path covers each navigable page');
+assert(
+  navigablePages.every((page) => learningPath.includes(page)),
+  'Reading path includes every navigable page',
+);
 assert(
   learningPath.every((page) => pages.includes(page)),
   'Reading path contains only known pages',
