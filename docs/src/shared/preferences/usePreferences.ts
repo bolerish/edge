@@ -123,3 +123,11 @@ function parseStaticDirection(value: unknown): SitePreferences['staticDirection'
   if (value === 0 || value === 90 || value === 180 || value === 270 || value === 315) return value;
   return 'random';
 }
+
+const subscribeToHydration = () => () => {};
+const clientReady = () => true;
+const serverReady = () => false;
+
+export function usePreferencesReady() {
+  return useSyncExternalStore(subscribeToHydration, clientReady, serverReady);
+}

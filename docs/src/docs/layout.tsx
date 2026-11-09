@@ -83,6 +83,7 @@ export function DocumentLayout({
                   </Paragraph>
                 ) : null}
                 <Link
+                  variant="plain"
                   href={item.href}
                   {...stylex.props(styles.navLink)}
                   aria-current={active ? 'page' : undefined}
@@ -299,10 +300,10 @@ const styles = stylex.create({
     font: 'inherit',
     fontSize: `calc(${typo.fontSizeSm} * 13 / 14)`,
     fontWeight: typo.fontWeightSemibold,
-    color: 'inherit',
+    color: colorVars.fgSecondary,
     justifyContent: 'space-between',
   },
-  navAccordionItem: { border: '0', marginTop: spacingVars.space3 },
+  navAccordionItem: { borderBottomWidth: 0, marginTop: 0 },
   navAccordionContent: { paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0 },
   navHeading: { marginBlockEnd: 10, marginInline: 10 },
   navSubheading: { marginBlock: '16px 6px', marginInline: 10 },
