@@ -42,7 +42,7 @@
   "one_owner_per_element": "One light per element",
   "an_element_can_belong_to_only_one": "A DOM element can connect to only one light. Do not attach the ref to a parent element with different dimensions.",
   "uselight_signature": "useLight signature",
-  "remeasures_surfaces_on_the_next_frame_even": "Remeasures surfaces on the next frame, even with a stationary pointer. Call after React commits a position or element's border-thickness change without a size notification.",
+  "remeasures_surfaces_on_the_next_frame_even": "Remeasures surfaces on the next frame, even with a stationary pointer. Call after React commits changes to an element’s position or border thickness without a size notification.",
   "refresh_signature": "refresh signature",
   "layout_updates": "layout updates",
   "rendering_and_cleanup": "Rendering and cleanup",
