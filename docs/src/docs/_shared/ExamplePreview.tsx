@@ -82,6 +82,7 @@ const styles = stylex.create({
   pending: { visibility: 'hidden' },
   examplePreview: {
     display: 'grid',
+    gridTemplateColumns: 'minmax(0, 1fr)',
     gap: '16px',
     minWidth: '0',
     marginBlock: '24px',

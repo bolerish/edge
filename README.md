@@ -46,7 +46,7 @@ fixed lighting uses `staticDirection` instead.
 
 ## Documentation
 
-See the [guides and API reference](docs/src/docs) for styles, motion, integration and rendering.
+See the [guides and API reference](https://edge.bolerish.com/docs/) for styles, motion, integration and rendering.
 
 ## Contributing
 

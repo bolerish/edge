@@ -35,8 +35,8 @@ test('development serves styled content before JavaScript and hydrates it on ref
     );
     const agentIndex = await request.get(origin + '/llms.txt');
     expect(agentIndex.ok()).toBe(true);
-    expect(await agentIndex.text()).toContain('/docs/react/api/index.md');
-    const agentApi = await request.get(origin + '/docs/react/api/index.md');
+    expect(await agentIndex.text()).toContain('/docs/react/use-surface/index.md');
+    const agentApi = await request.get(origin + '/docs/react/use-surface/index.md');
     expect(agentApi.headers()['content-type']).toContain('text/markdown');
     expect(await agentApi.text()).toContain('const ref = useSurface<HTMLElement>(options);');
     const staticPage = await noScript.newPage();
@@ -52,7 +52,7 @@ test('development serves styled content before JavaScript and hydrates it on ref
       if (path === '/docs/') {
         await expect(staticPage.locator('.sidebar nav')).toHaveCSS('display', 'block');
         await expect(staticPage.locator('.sidebar ul')).toHaveCSS('display', 'block');
-        await expect(staticPage.locator('.sidebar a').first()).toHaveCSS('display', 'flex');
+        await expect(staticPage.locator('.sidebar a').first()).toHaveCSS('display', 'inline-flex');
         expect(
           await staticPage
             .locator('.sidebar')

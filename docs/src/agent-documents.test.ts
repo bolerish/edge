@@ -1,8 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 
-test('agent documents preserve versioned guides, code and API tables without UI chrome', async ({ request }) => {
-  const { version } = JSON.parse(await readFile(new URL('../../packages/react/package.json', import.meta.url), 'utf8'));
+test('agent documents preserve versioned guides, code and API tables without UI chrome', async ({
+  request,
+}) => {
+  const { version } = JSON.parse(
+    await readFile(new URL('../../packages/react/package.json', import.meta.url), 'utf8'),
+  );
   const indexResponse = await request.get('/llms.txt');
   expect(indexResponse.ok()).toBe(true);
   const index = await indexResponse.text();
@@ -11,7 +15,7 @@ test('agent documents preserve versioned guides, code and API tables without UI 
   expect(fullResponse.ok()).toBe(true);
   const full = await fullResponse.text();
   const links = [...index.matchAll(/\]\((https:\/\/edge\.bolerish\.com\/docs\/[^)]*index\.md)\)/g)];
-  expect(links).toHaveLength(10);
+  expect(links).toHaveLength(12);
   for (const [, url] of links) {
     const response = await request.get(new URL(url!).pathname);
     expect(response.ok()).toBe(true);

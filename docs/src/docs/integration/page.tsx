@@ -21,6 +21,32 @@ export const integration: DocPage = {
   },
   sections: [
     {
+      id: 'choose-an-input-mode',
+      get title() {
+        return m.choose_motion_behavior();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.system_respects_reduced_motion_and_device_preferences()}
+          </P>
+        );
+      },
+    },
+    {
+      id: 'understand-rendering-cost',
+      get title() {
+        return m.understand_rendering_cost();
+      },
+      get content() {
+        return (
+          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+            {m.each_light_queues_at_most_one_frame()}
+          </P>
+        );
+      },
+    },
+    {
       id: 'preserve-native-interactions',
       get title() {
         return m.preserve_native_interactions();

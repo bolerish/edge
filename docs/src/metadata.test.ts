@@ -8,7 +8,7 @@ test('initial HTML exposes the current favicon and logo sharing metadata', async
   for (const [path, title] of [
     ['/', 'bolerish/edge · Directional surface lighting'],
     ['/docs/', 'Getting started · Introduction · bolerish/edge'],
-    ['/docs/react/api/', 'React · API reference · bolerish/edge'],
+    ['/docs/react/api/', 'React · React API overview · bolerish/edge'],
   ]) {
     const response = await request.get(path!);
     expect(response.ok()).toBe(true);
@@ -16,8 +16,12 @@ test('initial HTML exposes the current favicon and logo sharing metadata', async
     expect(html).toContain(`href="/favicon.ico?v=${version}"`);
     expect(html).toContain(`<meta property="og:title" content="${title}"`);
     expect(html).toContain(`<meta property="og:url" content="https://edge.bolerish.com${path}"`);
-    expect(html).toContain('<meta property="og:image" content="https://edge.bolerish.com/logo.webp"');
-    expect(html).toContain('<meta name="twitter:image" content="https://edge.bolerish.com/logo.webp"');
+    expect(html).toContain(
+      '<meta property="og:image" content="https://edge.bolerish.com/logo.webp"',
+    );
+    expect(html).toContain(
+      '<meta name="twitter:image" content="https://edge.bolerish.com/logo.webp"',
+    );
   }
   const icon = await request.get(`/favicon.ico?v=${version}`);
   expect(icon.ok()).toBe(true);
@@ -25,5 +29,7 @@ test('initial HTML exposes the current favicon and logo sharing metadata', async
   const logo = await request.get('/logo.webp');
   expect(logo.ok()).toBe(true);
   expect(logo.headers()['content-type']).toContain('image/webp');
-  expect(await logo.body()).toEqual(await readFile(new URL('../public/logo.webp', import.meta.url)));
+  expect(await logo.body()).toEqual(
+    await readFile(new URL('../public/logo.webp', import.meta.url)),
+  );
 });

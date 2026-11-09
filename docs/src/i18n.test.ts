@@ -194,6 +194,8 @@ test('languages use the English typography sizes and literal API control names',
     expect(sizes).toEqual(english);
     await expect(page.getByRole('combobox', { name: 'motion', exact: true })).toHaveText('dynamic');
     await expect(page.getByRole('slider', { name: 'radius', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'gather', exact: true })).toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'direction', exact: true })).toHaveText(
+      'gather',
+    );
   }
 });
