@@ -94,7 +94,7 @@ Before using the publish workflow, configure a Trusted Publisher in the npm sett
 
 Create the matching GitHub `npm` environment and configure its deployment branch as `main`. The workflow uses GitHub-hosted runners, `id-token: write` and npm 12.2.2 for OIDC; no npm token secret is required. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/). Local npm login is separate from this trust configuration.
 
-After pushing the reviewed release commit, manually run **Publish npm packages** on `main` with the exact version. Do not run it until publication is authorized and all three versions are unused. The current candidate is `0.2.0`; `0.1.0` has already been published. After publication, verify the default registry install in a new consumer project before deploying documentation.
+After pushing the reviewed release commit, manually run **Publish npm packages** on `main` with the exact version. Do not run it until publication is authorized and all three versions are unused. The current candidate is `0.3.0`; `0.1.0` and `0.2.0` have already been published. After publication, verify the default registry install in a new consumer project before deploying documentation.
 
 Check real iOS and Android devices separately before release; Chromium and React compatibility checks do not cover real devices. Publish only upon future explicit authorization, in order: core, styles, React. Publish the exact verified tarballs from that release preparation, rather than repacking source afterward. `release-prepare.yml` does not configure npm authentication.
 
