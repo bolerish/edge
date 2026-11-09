@@ -20,17 +20,26 @@ const edgeStyles = [
     get label() {
       return m.raised();
     },
+    get description() {
+      return m.highlights_the_edge_facing_the_light_default();
+    },
   },
   {
     value: 'recessed',
     get label() {
       return m.recessed();
     },
+    get description() {
+      return m.reverses_the_direction_for_an_inset_appearance();
+    },
   },
   {
     value: 'matte',
     get label() {
       return m.matte();
+    },
+    get description() {
+      return m.softens_the_edge_response();
     },
   },
 ] as const;
@@ -80,7 +89,7 @@ function StyleCard({ edgeStyle }: { edgeStyle: EdgeStyle }) {
       <CardHeader>
         <CardTitle>{edgeStyles.find((style) => style.value === edgeStyle)?.label}</CardTitle>
         <CardDescription xstyle={styles.description}>
-          {m.a_border_that_responds_to_your_pointer()}
+          {edgeStyles.find((style) => style.value === edgeStyle)?.description}
         </CardDescription>
       </CardHeader>
       <CardContent>{m.your_component_keeps_its_own_colors_and()}</CardContent>
