@@ -279,6 +279,7 @@ const styles = stylex.create({
     alignSelf: 'start',
     maxHeight: 'calc(100dvh - 120px)',
     overflowY: 'auto',
+    scrollbarWidth: 'none',
     paddingRight: '16px',
     display: {
       default: null,
