@@ -10,6 +10,7 @@ import { CodeBlock } from '../../../shared/code/CodeBlock.js';
 import {
   apiTable,
   providerPropRows,
+  stylesPropRows,
   lightOptionRows,
   surfacePropRows,
   surfaceOptionRows,
@@ -27,6 +28,21 @@ export const apiReference: DocPage = {
     return m.component_props_hook_signatures_defaults_and_rendering();
   },
   sections: [
+    {
+      id: 'styles',
+      title: 'Edge.Styles',
+      get content() {
+        return (
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {m.styles_usage()}
+            </P>
+            <CodeBlock label="Edge.Styles" code={'<Edge.Styles nonce={nonce} />'} />
+            {apiTable('Edge.Styles props', stylesPropRows)}
+          </>
+        );
+      },
+    },
     {
       id: 'lighting',
       get title() {

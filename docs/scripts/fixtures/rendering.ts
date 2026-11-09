@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { PassThrough } from 'node:stream';
 import React from 'react';
 import { renderToPipeableStream, renderToStaticMarkup } from 'react-dom/server';
 import { Scene } from './scene.js';
+import { Edge } from '@bolerish/edge';
 import { createStreamingScene } from './rendering-scene.ts';
 
 const errors: string[] = [];
@@ -16,6 +17,7 @@ const tree = (fixture: ReturnType<typeof createStreamingScene>) =>
       'head',
       null,
       React.createElement('title', null, 'Rendering compatibility'),
+      React.createElement(Edge.Styles),
     ),
     React.createElement(
       'body',
@@ -24,8 +26,11 @@ const tree = (fixture: ReturnType<typeof createStreamingScene>) =>
       React.createElement('script', { type: 'module', src: '/rendering-client.ts' }),
     ),
   );
+const ssrStyles = renderToStaticMarkup(React.createElement(Edge.Styles));
 const document = (html: string, script = 'rendering-client.ts', mode = '') =>
-  '<!doctype html><html><head><title>Rendering compatibility</title></head><body>' +
+  '<!doctype html><html><head><title>Rendering compatibility</title>' +
+  (mode === 'csr' ? '' : ssrStyles) +
+  '</head><body>' +
   `<div id="root" data-mode="${mode}">${html}</div>` +
   (script ? `<script type="module" src="/${script}"></script>` : '') +
   '</body></html>';
@@ -73,17 +78,7 @@ if (process.argv[2] !== 'web') {
   const staticHtml = renderToStaticMarkup(React.createElement(Scene));
   assert(staticHtml.includes('bolerish-edge-after'));
   assert(!staticHtml.includes('--edge-angle:'));
-  writeFileSync(
-    'static.css',
-    readFileSync(new URL(import.meta.resolve('@bolerish/edge/style.css'))),
-  );
-  writeFileSync(
-    'static.html',
-    document(staticHtml, '').replace(
-      '</head>',
-      '<link rel="stylesheet" href="./static.css"></head>',
-    ),
-  );
+  writeFileSync('static.html', document(staticHtml, ''));
   writeFileSync('csr.html', document('', 'client.js', 'csr'));
 } else {
   const { renderToReadableStream } = await import(process.argv[3] ?? 'react-dom/server.edge');
@@ -95,7 +90,12 @@ if (process.argv[2] !== 'web') {
   const first = await reader.read();
   const decoder = new TextDecoder();
   let html = decoder.decode(first.value, { stream: true });
-  assert(html.includes('Loading') && !html.includes('delayed-surface'));
+  while (!html.includes('Loading')) {
+    const shell = await reader.read();
+    assert(!shell.done, 'Stream ended before the Suspense fallback');
+    html += decoder.decode(shell.value, { stream: true });
+  }
+  assert(!html.includes('delayed-surface'));
   fixture.resolve();
   while (true) {
     const next = await reader.read();

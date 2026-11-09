@@ -145,13 +145,13 @@
   "assistant_prompt": "Petición para el asistente",
   "match_the_installed_version": "Comprobar la versión instalada",
   "check_your_package_manifest_or_lockfile_web": "Comprueba el manifiesto o el archivo de bloqueo. La web puede describir una versión más reciente; si difieren, usa las declaraciones y documentación de la versión instalada. No actualices dependencias solo para seguir un ejemplo.",
-  "install_edge_and_load_its_stylesheet": "Instala Edge y carga su hoja de estilos.",
+  "install_edge_and_load_its_stylesheet": "Instala Edge y empieza a usarlo en React.",
   "the_react_adapter_requires_react_18_or": "El adaptador de React requiere React 18 o 19. Aún no hay adaptadores para otros frameworks.",
-  "load_the_stylesheet": "Cargar la hoja de estilos",
-  "load_the_stylesheet_once_before_application_and": "Carga la hoja de estilos una vez, antes de los estilos de la aplicación y utilidades para que puedan sobrescribir la posición predeterminada de Edge. El reset puede ir primero. Elige una opción:",
+  "load_the_stylesheet": "Estilos predeterminados",
+  "load_the_stylesheet_once_before_application_and": "React prepara el CSS predeterminado al conectar una superficie, también al usar hooks sin Edge.Provider. No hace falta importar una hoja de estilos. Para SSR, renderiza Edge.Styles una vez por documento, antes de los estilos de la aplicación. Si la CSP requiere un nonce, usa el mismo nonce de la solicitud en el servidor y durante la hidratación.",
   "application_entry": "Punto de entrada de la aplicación",
   "global_css_alternative": "Alternativa con CSS global",
-  "the_css_alternative_needs_a_build_tool": "La alternativa CSS necesita una herramienta de compilación que resuelva las importaciones de paquetes. No requiere un compilador de estilos ni un proveedor para inyectar estilos.",
+  "the_css_alternative_needs_a_build_tool": "Las importaciones de CSS existentes siguen siendo compatibles. El archivo CSS también está disponible para su uso sin un framework. Si lo importas explícitamente, cárgalo antes de los estilos de la aplicación y las utilidades; el reset puede ir primero. Las importaciones de CSS de paquetes requieren una herramienta de compilación que resuelva esas rutas.",
   "choose_whether_a_shared_light_follows_the": "Elige si la luz compartida sigue al puntero o mantiene una dirección fija.",
   "try_each_mode_below_the_selection_updates": "Prueba cada modo. La selección actualiza la luz compartida de todo el sitio, incluida la tarjeta de ejemplo.",
   "motion_values": "Valores de movimiento",
@@ -288,5 +288,9 @@
   "surface_summary": "Aplica iluminación a un elemento DOM.",
   "use_light_summary": "Crea y configura un identificador de luz.",
   "use_surface_summary": "Devuelve una ref que conecta un elemento DOM existente a una luz.",
-  "react_api_choice": "Empieza con Edge.Provider y Edge.Surface. Usa useSurface para conectar directamente un componente existente."
+  "react_api_choice": "Empieza con Edge.Provider y Edge.Surface. Usa useSurface para conectar directamente un componente existente.",
+  "ssr_styles": "SSR y CSP",
+  "optional_css_import": "Importación de CSS opcional",
+  "styles_nonce_description": "Nonce opcional de la solicitud para el elemento style. Usa el mismo valor en el servidor y durante la hidratación. Es necesario si la CSP solo permite estilos en línea con nonce.",
+  "styles_usage": "Renderízalo una vez por documento SSR, antes de los estilos de la aplicación. React reutiliza esta hoja de estilos al conectar superficies. Mantén el componente montado mientras uses Edge y pasa un nonce si la CSP lo requiere. Sin este componente ni una importación explícita de CSS, el CSS predeterminado se añade en el cliente al conectar una superficie."
 }

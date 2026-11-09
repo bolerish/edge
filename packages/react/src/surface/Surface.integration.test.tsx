@@ -3,6 +3,7 @@ import { createRef, StrictMode, type ReactNode } from 'react';
 import { act, cleanup, render, type RenderResult } from '@testing-library/react';
 import { createPortal } from 'react-dom';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { registerLightSurface } from '../light/useLight.js';
 import { Edge, useLight, useSurface, type Motion, type Light } from '../index.js';
 
 let container: HTMLDivElement;
@@ -426,4 +427,21 @@ it('updates direction and radius through Provider without another pointer event'
   flush();
   expect(host.style.getPropertyValue('--edge-angle')).toBe('270.0deg');
   expect(host.style.getPropertyValue('--edge-strength')).toBe('0.422');
+});
+
+it('does not inject styles into a document rejected by a light owner', async () => {
+  const light = createRef<Light>();
+  await act(async () =>
+    renderScene(
+      <Edge.Provider ref={light}>
+        <Edge.Surface />
+      </Edge.Provider>,
+    ),
+  );
+  if (!light.current) throw new Error('Missing light');
+  const handle = light.current;
+  const foreign = document.implementation.createHTMLDocument();
+  const host = foreign.createElement('div');
+  expect(() => registerLightSurface(handle, host, 'raised')).toThrow(/different document/);
+  expect(foreign.querySelector('style[data-bolerish-edge-styles]')).toBeNull();
 });

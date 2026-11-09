@@ -145,13 +145,13 @@
   "assistant_prompt": "Assistant prompt",
   "match_the_installed_version": "Match the installed version",
   "check_your_package_manifest_or_lockfile_web": "Check your package manifest or lockfile. Web documentation may describe a newer release; if versions differ, use the installed package’s declarations and matching documentation. Do not upgrade dependencies just to match an example.",
-  "install_edge_and_load_its_stylesheet": "Install Edge and load its stylesheet.",
+  "install_edge_and_load_its_stylesheet": "Install Edge and start using it in React.",
   "the_react_adapter_requires_react_18_or": "The React adapter requires React 18 or 19. Other framework adapters are not available yet.",
-  "load_the_stylesheet": "Load the stylesheet",
-  "load_the_stylesheet_once_before_application_and": "Load the stylesheet once, before application and utility styles so they can override Edge’s positioning defaults. A reset may load first. Choose one of the following:",
+  "load_the_stylesheet": "Default styles",
+  "load_the_stylesheet_once_before_application_and": "React prepares the default CSS automatically when a surface connects, with or without Edge.Provider. No stylesheet import is required. For SSR, render Edge.Styles once per document before application styles. If CSP requires a nonce, pass the same request nonce on the server and during hydration.",
   "application_entry": "Application entry",
   "global_css_alternative": "Global CSS alternative",
-  "the_css_alternative_needs_a_build_tool": "The CSS alternative needs a build tool that resolves package imports. No styling compiler or style-injection provider is required.",
+  "the_css_alternative_needs_a_build_tool": "Existing CSS imports remain supported. The CSS file is also available for framework-independent use. When loading it explicitly, put it before application and utility styles; a reset may load first. Package CSS imports require a build tool that resolves package paths.",
   "choose_whether_a_shared_light_follows_the": "Choose whether a shared light follows the pointer or keeps a fixed direction.",
   "try_each_mode_below_the_selection_updates": "Try each mode below. The selection updates the shared light across this site, including the example card.",
   "motion_values": "Motion values",
@@ -288,5 +288,9 @@
   "surface_summary": "Applies lighting to a DOM element.",
   "use_light_summary": "Creates and configures a light handle.",
   "use_surface_summary": "Returns a ref that connects an existing DOM element to a light.",
-  "react_api_choice": "Start with Edge.Provider and Edge.Surface. Use useSurface to connect an existing component directly."
+  "react_api_choice": "Start with Edge.Provider and Edge.Surface. Use useSurface to connect an existing component directly.",
+  "ssr_styles": "SSR and CSP",
+  "optional_css_import": "Optional CSS import",
+  "styles_nonce_description": "Optional request nonce for the style element. Use the same value on the server and during hydration. Required when your CSP permits inline style elements only with a nonce.",
+  "styles_usage": "Render once per SSR document, before application styles. React reuses this stylesheet when surfaces connect. Keep this component mounted while Edge is in use; use nonce when your CSP requires it. Without it or an explicit CSS import, the default CSS is added on the client when a surface connects."
 }

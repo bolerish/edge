@@ -52,7 +52,6 @@ export const decorationSlotExample = {
   },
   Component: DecorationSlotExample,
   code: `import { Edge } from '@bolerish/edge';
-import '@bolerish/edge/style.css';
 
 <Edge.Provider>
   <Edge.Surface as="article" pseudoElement="before" className="existing-after">

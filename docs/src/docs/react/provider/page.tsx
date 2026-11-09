@@ -10,6 +10,6 @@ export const provider: DocPage = {
     return m.provider_summary();
   },
   get sections() {
-    return apiReference.sections.filter((section) => ['lighting'].includes(section.id));
+    return apiReference.sections.filter((section) => ['lighting', 'styles'].includes(section.id));
   },
 };

@@ -145,13 +145,13 @@
   "assistant_prompt": "助手提示词",
   "match_the_installed_version": "确认已安装版本",
   "check_your_package_manifest_or_lockfile_web": "请检查包清单或锁文件。在线文档可能对应较新版本；若版本不同，请以已安装包的声明和对应文档为准。不要仅为匹配示例而升级依赖。",
-  "install_edge_and_load_its_stylesheet": "安装 Edge 并加载样式表。",
+  "install_edge_and_load_its_stylesheet": "安装 Edge 并在 React 中开始使用。",
   "the_react_adapter_requires_react_18_or": "React 适配器需要 React 18 或 19。其他框架的适配器暂未提供。",
-  "load_the_stylesheet": "加载样式表",
-  "load_the_stylesheet_once_before_application_and": "样式表只需加载一次，并应先于应用和工具样式，以便覆盖 Edge 的默认定位。重置样式可更早加载。请选择一种方式：",
+  "load_the_stylesheet": "默认样式",
+  "load_the_stylesheet_once_before_application_and": "React 会在连接表面时自动准备默认 CSS，即使仅使用 Hook 而不使用 Edge.Provider 也是如此，无需导入样式表。使用 SSR 时，请在应用样式之前为每个文档渲染一次 Edge.Styles。如果 CSP 要求 nonce，请在服务端和水合时使用同一请求的 nonce。",
   "application_entry": "应用入口",
   "global_css_alternative": "全局 CSS 方式",
-  "the_css_alternative_needs_a_build_tool": "CSS 方式需要能解析包导入的构建工具。无需样式编译器或样式注入 Provider。",
+  "the_css_alternative_needs_a_build_tool": "现有的 CSS 导入方式仍然可用，也提供不依赖框架的 CSS 文件。显式导入时，请将其放在应用和工具类样式之前；重置样式可以更早加载。 通过包路径导入 CSS 时，需要能解析该路径的构建工具。",
   "choose_whether_a_shared_light_follows_the": "选择共享光照是跟随指针还是保持固定方向。",
   "try_each_mode_below_the_selection_updates": "试用以下模式。所选设置会更新全站的共享光照，包括示例卡片。",
   "motion_values": "动态效果值",
@@ -288,5 +288,9 @@
   "surface_summary": "为 DOM 元素应用光照效果。",
   "use_light_summary": "创建并配置光照句柄。",
   "use_surface_summary": "返回将现有 DOM 元素连接到光照的 ref。",
-  "react_api_choice": "先使用 Edge.Provider 和 Edge.Surface。要直接连接现有组件，可以使用 useSurface。"
+  "react_api_choice": "先使用 Edge.Provider 和 Edge.Surface。要直接连接现有组件，可以使用 useSurface。",
+  "ssr_styles": "SSR 和 CSP",
+  "optional_css_import": "显式导入 CSS（可选）",
+  "styles_nonce_description": "传给 style 元素的可选请求级 nonce。请在服务端和水合时使用相同值。如果 CSP 只允许带 nonce 的内联样式元素，则必须提供。",
+  "styles_usage": "请为每个 SSR 文档在应用样式之前渲染一次。React 会在连接表面时复用此样式。在使用 Edge 期间请保留此组件，并在 CSP 要求时传入 nonce。如果没有此组件或显式 CSS 导入，则会在连接表面时由客户端添加默认 CSS。"
 }

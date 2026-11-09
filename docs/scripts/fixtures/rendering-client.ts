@@ -1,7 +1,6 @@
 import React from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { createStreamingScene } from './rendering-scene.ts';
-import '@bolerish/edge/style.css';
 
 const fixture = createStreamingScene();
 fixture.resolve();

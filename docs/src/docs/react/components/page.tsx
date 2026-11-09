@@ -11,7 +11,7 @@ export const components: DocPage = {
   get description() {
     return m.react_components_description();
   },
-  sections: ['lighting', 'lighting-surface'].map((id) =>
+  sections: ['lighting', 'lighting-surface', 'styles'].map((id) =>
     apiReference.sections.find((section) => section.id === id)!,
   ),
 };

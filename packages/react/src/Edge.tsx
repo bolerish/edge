@@ -3,6 +3,7 @@ import type { LightOptions } from '@bolerish/edge-core';
 import { useLight, type Light } from './light/useLight.js';
 import { LightContext } from './light/light-context.js';
 import { Surface } from './surface/Surface.js';
+import { Styles } from './styles/Styles.js';
 
 export type Motion = NonNullable<LightOptions['motion']>;
 export interface EdgeProviderProps {
@@ -26,4 +27,4 @@ const EdgeProvider = forwardRef<Light, Omit<EdgeProviderProps, 'ref'>>(function 
   return <LightContext.Provider value={light}>{children}</LightContext.Provider>;
 });
 
-export const Edge = { Provider: EdgeProvider, Surface };
+export const Edge = { Provider: EdgeProvider, Surface, Styles };

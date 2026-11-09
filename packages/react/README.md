@@ -12,7 +12,6 @@ npm install @bolerish/edge
 
 ```tsx
 import { Edge } from '@bolerish/edge';
-import '@bolerish/edge/style.css';
 
 export function Area() {
   return (
@@ -26,7 +25,7 @@ export function Area() {
 }
 ```
 
-Load the stylesheet once, before your application styles. Only marked surfaces respond; your colors, layout and interactions stay yours.
+React prepares the default styles automatically when a surface connects. For SSR, render `<Edge.Styles />` once before application styles; pass your request nonce with `<Edge.Styles nonce={nonce} />` when CSP requires it. Keep the same nonce during hydration. Existing `@bolerish/edge/style.css` imports remain supported. Only marked surfaces respond; your colors, layout and interactions stay yours.
 
 ## Documentation
 

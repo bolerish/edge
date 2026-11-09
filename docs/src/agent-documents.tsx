@@ -18,7 +18,7 @@ export function renderAgentDocuments(version: string) {
     '# Edge',
     '> Shared directional highlights for your existing UI.',
     `Documentation target: @bolerish/edge ${version}. Check the installed package version and declarations before applying these examples.`,
-    'React 18 and 19 are supported. Other framework adapters are not available yet. The library defaults to motion="system"; interactive examples use the documentation site’s preferences.',
+    'React prepares styles automatically; for SSR render Edge.Styles once per document before application styles, with the request nonce when CSP requires it. React 18 and 19 are supported. Other framework adapters are not available yet. The library defaults to motion="system"; interactive examples use the documentation site’s preferences.',
     '## Documentation',
   ];
   const full: string[] = [];

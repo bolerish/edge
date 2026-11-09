@@ -1,3 +1,4 @@
+import { Edge } from '@bolerish/edge';
 import { localePath } from './shared/locale.js';
 import { basePath } from './shared/locale.js';
 import { LanguageMenu } from './shared/LanguageMenu.js';
@@ -22,6 +23,7 @@ export function Layout({ pathname }: { pathname: string }) {
   const [navigationOpen, setNavigationOpen] = useState(false);
   return (
     <>
+      <Edge.Styles />
       <SiteHeader
         section={path === '/' ? 'home' : 'docs'}
         navigationOpen={navigationOpen}

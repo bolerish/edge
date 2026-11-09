@@ -46,9 +46,9 @@ export const installation: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {m.load_the_stylesheet_once_before_application_and()}
             </P>
-            <CodeBlock label={m.application_entry()} code={"import '@bolerish/edge/style.css';"} />
+            <CodeBlock label={m.ssr_styles()} code={'<Edge.Styles nonce={nonce} />'} />
             <CodeBlock
-              label={m.global_css_alternative()}
+              label={m.optional_css_import()}
               language="css"
               code={'@import "@bolerish/edge/style.css";'}
             />

@@ -12,7 +12,13 @@ import {
 import * as stylex from '@stylexjs/stylex';
 import { contentStyles } from './content-styles.js';
 import type { ReactNode } from 'react';
-import type { LightOptions, EdgeProviderProps, SurfaceOptions, SurfaceProps } from '@bolerish/edge';
+import type {
+  LightOptions,
+  EdgeProviderProps,
+  SurfaceOptions,
+  SurfaceProps,
+  StylesProps,
+} from '@bolerish/edge';
 
 interface OptionDescription {
   type: string;
@@ -161,6 +167,16 @@ const surfaceOwnProps = {
     },
   },
 } satisfies OptionDocs<Pick<SurfaceProps, 'as' | 'children' | 'ref' | 'className' | 'style'>>;
+
+export const stylesPropRows = rows({
+  nonce: {
+    type: 'string',
+    defaultValue: 'undefined',
+    get description() {
+      return m.styles_nonce_description();
+    },
+  },
+} satisfies OptionDocs<StylesProps>);
 
 export const lightOptionRows = rows(lightOptions);
 export const surfaceOptionRows = rows(surfaceOptions);

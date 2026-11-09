@@ -306,7 +306,7 @@ test('getting started owns shared installation and the AI prompt without demos',
   ).toBeVisible();
   const prompt = await page.evaluate(() => (window as unknown as { copied: string }).copied);
   expect(prompt).toBe(installPrompt);
-  expect(prompt).toContain('@bolerish/edge/style.css');
+  expect(prompt).toContain('Edge.Styles');
   expect(prompt).toContain('Do not add a demo page');
 
   await page.evaluate(() =>
@@ -342,7 +342,7 @@ test('getting started owns shared installation and the AI prompt without demos',
     }
   }
 
-  await expect(page.locator('#stylesheet')).toContainText('@import "@bolerish/edge/style.css";');
+  await expect(page.locator('#stylesheet')).toContainText('Edge.Styles');
   await expect(page.getByRole('list', { name: 'Framework integrations' })).toHaveCount(0);
   await page.goto('/docs/react/');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Usage');

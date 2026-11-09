@@ -62,13 +62,14 @@ export function Scene({ edgeStyle = 'raised', pseudoElement = 'after', motion = 
 const consumerTypes = `
 import * as React from 'react';
 import { Edge, type Light, useLight, useSurface } from '@bolerish/edge';
-import '@bolerish/edge/style.css';
+
 const light = React.createRef<Light>();
 const button = React.createRef<HTMLButtonElement>();
 const article = React.createRef<HTMLElement>();
 <Edge.Provider ref={light}><Edge.Surface as="button" ref={button} disabled onClick={e => { e.currentTarget.disabled = true; }} /></Edge.Provider>;
 <Edge.Surface as="article" ref={article} />;
 <Edge.Surface as="a" href="/" />;
+<Edge.Styles nonce="request-nonce" />;
 // @ts-expect-error The default host is a div.
 <Edge.Surface href="/" />;
 // @ts-expect-error Buttons do not accept href.
@@ -151,13 +152,19 @@ try {
       import React from 'react';
       import { renderToString } from 'react-dom/server';
       import { Scene } from './scene.js';
+      import { Edge } from '@bolerish/edge';
       const errors = [];
       console.error = (...args) => errors.push(args.join(' '));
       const html = renderToString(React.createElement(React.StrictMode, null, React.createElement(Scene, {})));
       assert.equal(errors.length, 0, errors.join('\\n'));
       assert(html.startsWith('<button'));
       assert(html.includes('bolerish-edge-after'));
-      writeFileSync('index.html', '<!doctype html><html><head><title>React compatibility</title></head><body><div id="root">' + html + '</div><script type="module" src="/client.js"></script></body></html>');
+      const styles = renderToString(React.createElement(Edge.Styles, {nonce:'edge-request'}));
+      assert(styles.includes("content: '';"));
+      assert(!styles.includes('&#x27;'));
+      writeFileSync('index.html', '<!doctype html><html><head><title>React compatibility</title>' + styles + '</head><body><div id="root">' + html + '</div><script type="module" src="/client.js"></script></body></html>');
+      const styledTree = React.createElement(React.StrictMode, null, React.createElement(React.Fragment, null, React.createElement(Edge.Styles, {nonce:'edge-request'}), React.createElement(Scene, {})));
+      writeFileSync('styles-root.html', '<!doctype html><html><head><title>Styles hydration</title></head><body><div id="root" data-styles="true">' + renderToString(styledTree) + '</div><script type="module" src="/client.js"></script></body></html>');
     `,
     );
     for (const environment of ['development', 'production']) {
@@ -167,6 +174,7 @@ try {
         env: { ...process.env, NODE_ENV: environment },
       });
     }
+    await copyFile(resolve(consumer, 'index.html'), resolve(consumer, 'csp.html'));
     for (const name of ['rendering.ts', 'rendering-scene.ts', 'rendering-client.ts']) {
       await copyFile(new URL(`./fixtures/${name}`, import.meta.url), resolve(consumer, name));
     }
@@ -194,12 +202,14 @@ try {
       import React from 'react';
       import { createRoot, hydrateRoot } from 'react-dom/client';
       import { Scene, lightRef, hostRef, events, detached } from './scene.js';
-      import '@bolerish/edge/style.css';
-      const tree = props => React.createElement(React.StrictMode, null, React.createElement(Scene, props));
+      import { Edge, useLight, useSurface } from '@bolerish/edge';
+
+      const tree = props => React.createElement(React.StrictMode, null, container.dataset.styles === 'true' ? React.createElement(React.Fragment, null, React.createElement(Edge.Styles, {nonce:'edge-request'}), React.createElement(Scene, props)) : React.createElement(Scene, props));
       const container = document.getElementById('root');
       const root = container.dataset.mode === 'csr' ? createRoot(container) : hydrateRoot(container, tree({}));
       if (container.dataset.mode === 'csr') root.render(tree({}));
-      window.fixture = { lightRef, hostRef, events, detached, update: props => root.render(tree(props)), unmount: () => root.unmount() };
+      function HookOnly() { const ref = useSurface(useLight({motion:'static'})); return React.createElement('article', {ref, id:'hook-only'}, 'Hook only'); }
+      window.fixture = { addRoot: host => {const other=createRoot(host); other.render(React.createElement(HookOnly)); return () => other.unmount();}, lightRef, hostRef, events, detached, update: props => root.render(tree(props)), unmount: () => root.unmount() };
     `,
     );
     await build({
@@ -211,6 +221,8 @@ try {
         rollupOptions: {
           input: [
             'index.html',
+            'csp.html',
+            'styles-root.html',
             'node-stream.html',
             'web-stream.html',
             'ssg.html',
@@ -224,6 +236,11 @@ try {
     const server = createServer(async (request, response) => {
       const path = new URL(request.url ?? '/', 'http://localhost').pathname;
       try {
+        if (path === '/csp.html')
+          response.setHeader(
+            'Content-Security-Policy',
+            "default-src 'self'; style-src 'self' 'nonce-edge-request'; style-src-attr 'unsafe-inline'",
+          );
         const file = resolve(site, path === '/' ? 'index.html' : `.${path}`);
         response.setHeader(
           'Content-Type',
@@ -253,6 +270,22 @@ try {
         () => document.getElementById('lit')?.style.getPropertyValue('--edge-angle') === '315.0deg',
       );
       assert.equal(await page.locator('#plain').getAttribute('class'), null);
+      assert.equal(await page.locator('style[data-bolerish-edge-styles]').count(), 1);
+      assert.equal(
+        await page.locator('#lit').evaluate((node) => getComputedStyle(node).position),
+        'relative',
+      );
+      assert(
+        (
+          await page
+            .locator('#lit')
+            .evaluate((node) => getComputedStyle(node, '::after').backgroundImage)
+        ).includes('conic-gradient'),
+      );
+      assert.equal(
+        await page.locator('style[data-bolerish-edge-styles]').getAttribute('nonce'),
+        'edge-request',
+      );
       assert.equal(
         await page
           .locator('#nested')
@@ -274,7 +307,7 @@ try {
       assert(
         await page
           .locator('#lit')
-          .evaluate((node) => node.classList.contains('bolerish-edge-before')),
+          .evaluate((node) => node.classList.contains('bolerish-edge-recessed')),
       );
       assert.equal(await page.evaluate(`window.fixture.events.attached`), 1);
       assert.equal(
@@ -319,15 +352,87 @@ try {
         await page.evaluate(`window.fixture.hook.style.getPropertyValue('--edge-highlight')`),
         '',
       );
+      await page.goto(`http://127.0.0.1:${address.port}/styles-root.html`);
+      await page.waitForFunction(() =>
+        document.getElementById('lit')?.style.getPropertyValue('--edge-angle'),
+      );
+      assert.equal(await page.locator('style[data-bolerish-edge-styles]').count(), 1);
+      assert(
+        (
+          await page
+            .locator('#lit')
+            .evaluate((node) => getComputedStyle(node, '::after').backgroundImage)
+        ).includes('conic-gradient'),
+      );
+      await page.evaluate(`window.fixture.unmount()`);
       await page.goto(`http://127.0.0.1:${address.port}/csr.html`);
       await page.waitForFunction(() =>
         document.getElementById('lit')?.style.getPropertyValue('--edge-angle'),
       );
-      await page.locator('#lit').click();
-      await page.waitForFunction(
-        () => document.getElementById('lit')?.textContent === 'Example button 1',
+      assert.equal(await page.locator('head > style[data-bolerish-edge-styles]').count(), 1);
+      assert.equal(
+        await page.locator('#lit').evaluate((node) => getComputedStyle(node).position),
+        'relative',
+      );
+      assert(
+        (
+          await page
+            .locator('#lit')
+            .evaluate((node) => getComputedStyle(node, '::after').backgroundImage)
+        ).includes('conic-gradient'),
+      );
+      await page.evaluate(
+        `const host=document.createElement('div');document.body.append(host);window.otherStop=window.fixture.addRoot(host);`,
+      );
+      await page.waitForSelector('#hook-only');
+      assert.equal(await page.locator('style[data-bolerish-edge-styles]').count(), 1);
+      await page.evaluate(`window.otherStop();`);
+      await page.evaluate(
+        `const frame=document.createElement('iframe');frame.id='test-frame';document.body.append(frame);window.frameStop=window.fixture.addRoot(frame.contentDocument.body);`,
+      );
+      const frame = page.frameLocator('#test-frame');
+      await frame.locator('#hook-only').waitFor();
+      assert.equal(await frame.locator('head > style[data-bolerish-edge-styles]').count(), 1);
+      assert.equal(
+        await frame.locator('#hook-only').evaluate((node) => getComputedStyle(node).position),
+        'relative',
+      );
+      await page.evaluate(`window.frameStop();window.fixture.unmount()`);
+      await page.goto(`http://127.0.0.1:${address.port}/csp.html`);
+      await page.waitForFunction(() =>
+        document.getElementById('lit')?.style.getPropertyValue('--edge-angle'),
+      );
+      assert.equal(await page.locator('style[data-bolerish-edge-styles]').count(), 1);
+      assert(
+        (
+          await page
+            .locator('#lit')
+            .evaluate((node) => getComputedStyle(node, '::after').backgroundImage)
+        ).includes('conic-gradient'),
       );
       await page.evaluate(`window.fixture.unmount()`);
+      const blocked = await browser.newPage();
+      try {
+        await blocked.route('**/csp.html', async (route) => {
+          const response = await route.fetch();
+          await route.fulfill({
+            response,
+            body: (await response.text()).replace('nonce="edge-request"', 'nonce="blocked"'),
+          });
+        });
+        await blocked.goto(`http://127.0.0.1:${address.port}/csp.html`);
+        await blocked.waitForFunction(() =>
+          document.getElementById('lit')?.style.getPropertyValue('--edge-angle'),
+        );
+        assert.equal(
+          await blocked
+            .locator('#lit')
+            .evaluate((node) => getComputedStyle(node, '::after').backgroundImage),
+          'none',
+        );
+      } finally {
+        await blocked.close();
+      }
       for (const mode of ['node-stream', 'web-stream', 'ssg']) {
         await page.goto(`http://127.0.0.1:${address.port}/${mode}.html`);
         await page.waitForFunction(
@@ -369,6 +474,14 @@ try {
             .evaluate((node) => node.classList.contains('bolerish-edge-after')),
         );
         assert.equal(await staticPage.locator('#hook').getAttribute('class'), 'consumer');
+        assert.equal(await staticPage.locator('style[data-bolerish-edge-styles]').count(), 1);
+        assert(
+          (
+            await staticPage
+              .locator('#lit')
+              .evaluate((node) => getComputedStyle(node, '::after').backgroundImage)
+          ).includes('conic-gradient'),
+        );
         assert.equal(
           await staticPage
             .locator('#lit')

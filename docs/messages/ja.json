@@ -145,13 +145,13 @@
   "assistant_prompt": "アシスタントへの依頼例",
   "match_the_installed_version": "インストール済みのバージョンを確認する",
   "check_your_package_manifest_or_lockfile_web": "パッケージ設定やロックファイルを確認してください。ウェブの文書は新しい版の説明かもしれません。異なる場合は、インストール済みパッケージの型宣言と対応する文書を使います。例に合わせるだけの依存更新は避けてください。",
-  "install_edge_and_load_its_stylesheet": "Edge をインストールし、スタイルシートを読み込みます。",
+  "install_edge_and_load_its_stylesheet": "Edge をインストールして React で使い始めます。",
   "the_react_adapter_requires_react_18_or": "React アダプターには React 18 または 19 が必要です。他のフレームワーク用アダプターはまだありません。",
-  "load_the_stylesheet": "スタイルシートを読み込む",
-  "load_the_stylesheet_once_before_application_and": "アプリとユーティリティのスタイルで Edge の位置設定を上書きできるよう、スタイルシートを先に一度だけ読み込みます。リセットはさらに先に読み込めます。次のいずれかを選びます:",
+  "load_the_stylesheet": "デフォルトのスタイル",
+  "load_the_stylesheet_once_before_application_and": "React はサーフェスの接続時にデフォルトの CSS を自動で用意します。Edge.Provider を使わずフックだけで接続する場合も、CSS のインポートは不要です。SSR では、アプリのスタイルより前に Edge.Styles をドキュメントごとに一度レンダリングしてください。CSP で nonce が必要な場合は、サーバーとハイドレーションで同じリクエストの nonce を使います。",
   "application_entry": "アプリのエントリーポイント",
   "global_css_alternative": "グローバル CSS を使う場合",
-  "the_css_alternative_needs_a_build_tool": "CSS から読み込む場合は、パッケージのインポートを解決できるビルドツールが必要です。スタイル用のコンパイラーや、スタイルを注入するためのプロバイダーは不要です。",
+  "the_css_alternative_needs_a_build_tool": "既存の CSS インポートも引き続き使えます。フレームワークに依存せず使える CSS ファイルも提供します。明示的に読み込む場合は、アプリやユーティリティのスタイルより前に配置してください。リセットはさらに前に読み込めます。 パッケージのパスで CSS を読み込むには、そのパスを解決できるビルドツールが必要です。",
   "choose_whether_a_shared_light_follows_the": "共有する光がポインターに追従するか、方向を固定するかを選びます。",
   "try_each_mode_below_the_selection_updates": "各モードを試してください。選択はサンプルカードを含む、サイト全体の共有するライトに反映されます。",
   "motion_values": "動きの値",
@@ -288,5 +288,9 @@
   "surface_summary": "DOM 要素に照明効果を適用します。",
   "use_light_summary": "照明ハンドルを作成して設定します。",
   "use_surface_summary": "既存の DOM 要素を照明に接続する ref を返します。",
-  "react_api_choice": "まず Edge.Provider と Edge.Surface を使用してください。既存のコンポーネントに直接接続する場合は useSurface を使用できます。"
+  "react_api_choice": "まず Edge.Provider と Edge.Surface を使用してください。既存のコンポーネントに直接接続する場合は useSurface を使用できます。",
+  "ssr_styles": "SSR と CSP",
+  "optional_css_import": "CSS を明示的に読み込む場合",
+  "styles_nonce_description": "style 要素に渡すリクエストごとの nonce です。サーバーとハイドレーションで同じ値を使います。CSP が nonce 付きのインラインスタイル要素のみを許可する場合に必要です。",
+  "styles_usage": "SSR ドキュメントごとに、アプリのスタイルより前に一度レンダリングしてください。React はサーフェスの接続時にこのスタイルを再利用します。Edge を使う間はこのコンポーネントを維持し、CSP で必要な場合は nonce を渡します。このコンポーネントも明示的な CSS インポートもない場合、サーフェスの接続時にクライアントでデフォルトの CSS を追加します。"
 }

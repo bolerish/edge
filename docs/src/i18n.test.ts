@@ -116,6 +116,7 @@ for (const language of languages) {
       new RegExp(`^${prefix}/docs/`),
     );
     await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog')).toBeHidden();
     const accessibility = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze();
