@@ -75,7 +75,7 @@ export function createLightSession(
   function cancelTouch() {
     if (!touchOwned && touchId === null) return;
     touchCancelled = true;
-    clear();
+    touchId = null;
   }
   function cancelled(event: PointerEvent) {
     if (event.pointerType === 'touch') cancelTouch();

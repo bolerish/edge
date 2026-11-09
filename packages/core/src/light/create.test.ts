@@ -231,7 +231,7 @@ it('clears pointer output on window blur and ignores touch movement without a pr
   expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
   stop();
 });
-it('renders the same light for mouse and touch coordinates, then clears on release', () => {
+it('renders the same light for mouse and touch coordinates, then retains the position on release', () => {
   const light = createLight();
   const { node } = element();
   light.register(node, 'raised');
@@ -254,7 +254,7 @@ it('renders the same light for mouse and touch coordinates, then clears on relea
     }),
   );
   flush();
-  expect(node.style.getPropertyValue('--edge-strength')).toBe('0.000');
+  expect(node.style.cssText).toBe(mouse);
   stop();
 });
 it('validates options atomically', () => {
@@ -648,11 +648,11 @@ it.each(['input-first', 'scroll-first', 'stationary-touch'])(
     if (order === 'scroll-first') point(250, 50);
     flush();
     expect(node.style.getPropertyValue('--edge-angle')).toBe(
-      order === 'stationary-touch' ? '315.0deg' : '135.0deg',
+      order === 'stationary-touch' ? '180.0deg' : '135.0deg',
     );
-    expect(node.style.getPropertyValue('--edge-strength')).toBe(
-      order === 'stationary-touch' ? '0.000' : '0.727',
-    );
+    if (order === 'stationary-touch') {
+      expect(Number(node.style.getPropertyValue('--edge-strength'))).toBeGreaterThan(0);
+    } else expect(node.style.getPropertyValue('--edge-strength')).toBe('0.727');
     entry.destroy();
     stop();
   },

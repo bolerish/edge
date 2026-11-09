@@ -153,7 +153,7 @@ function touch(type: string, pointerId = 1, isPrimary = true) {
   );
 }
 it.each(['touchend', 'touchcancel'])(
-  'tracks a touch until %s and restores fixed lighting',
+  'retains the last viewport touch coordinate after %s',
   (ending) => {
     const { render } = scene();
     queries.get('(hover: hover) and (pointer: fine)')!.matches = false;
@@ -171,7 +171,7 @@ it.each(['touchend', 'touchcancel'])(
     expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
     touch(ending);
     flush();
-    expect(render).toHaveBeenLastCalledWith(null, true);
+    expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
     touch('touchmove');
     expect(frames.size).toBe(0);
   },
@@ -189,7 +189,7 @@ it('ignores secondary touches and honors static and reduced motion on touch down
   expect(frames.size).toBe(0);
 });
 
-it('stops touch lighting after native scrolling until release', () => {
+it('retains the viewport touch coordinate through native scrolling and release', () => {
   const { render, invalidate } = scene();
   function send(type: string, x = 40, y = 50) {
     const contact = { identifier: 7, clientX: x, clientY: y };
@@ -207,11 +207,11 @@ it('stops touch lighting after native scrolling until release', () => {
   document.dispatchEvent(new Event('scroll'));
   send('touchmove', 60, 80);
   flush();
-  expect(render).toHaveBeenLastCalledWith(null, false);
+  expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
   expect(invalidate).toHaveBeenCalled();
   send('touchend');
   flush();
-  expect(render).toHaveBeenLastCalledWith(null, false);
+  expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
 });
 
 it.each([
@@ -238,7 +238,7 @@ it.each([
   touch('touchstart', 2, false);
   touch(ending);
   flush();
-  expect(render).toHaveBeenLastCalledWith(null, false);
+  expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
   touch('touchmove', 2);
   expect(frames.size).toBe(0);
   document.dispatchEvent(
@@ -289,7 +289,7 @@ it.each(['scroll', 'pointercancel'])('retains cancelled gesture ownership after 
     document.dispatchEvent(Object.assign(new Event('pointercancel'), { pointerType: 'touch' }));
   }
   flush();
-  expect(render).toHaveBeenLastCalledWith(null, false);
+  expect(render).toHaveBeenLastCalledWith({ x: 40, y: 50 }, false);
   touch('touchstart', 2, false);
   touch('touchmove');
   move();
