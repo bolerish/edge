@@ -4,6 +4,7 @@ import type { DocPage } from '../../_shared/types.js';
 export const hooks: DocPage = {
   slug: 'react/hooks',
   section: 'React',
+  navigation: false,
   get title() {
     return m.react_hooks();
   },

@@ -4,6 +4,7 @@ import type { DocPage } from '../../_shared/types.js';
 export const components: DocPage = {
   slug: 'react/components',
   section: 'React',
+  navigation: false,
   get title() {
     return m.react_components();
   },

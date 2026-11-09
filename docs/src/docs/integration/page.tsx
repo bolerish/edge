@@ -97,7 +97,9 @@ export const integration: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {inlineMessage(m.react_refresh_link(), {
                 part0: (
-                  <Link href={localePath('/docs/react/hooks/#refresh')}>{'light.refresh()'}</Link>
+                  <Link href={localePath('/docs/react/use-light/#refresh')}>
+                    {'light.refresh()'}
+                  </Link>
                 ),
               })}
             </P>

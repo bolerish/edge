@@ -283,5 +283,9 @@
   "react_api_overview_description": "Choose components or hooks to find their API.",
   "direction_label": "Direction",
   "radius_label": "Range",
-  "framework_guide_description": "Follow the guide for your framework."
+  "framework_guide_description": "Follow the guide for your framework.",
+  "provider_summary": "Creates a shared light for descendant surfaces.",
+  "surface_summary": "Applies lighting to a DOM element.",
+  "use_light_summary": "Creates and configures a light handle.",
+  "use_surface_summary": "Returns a ref that connects an existing DOM element to a light."
 }

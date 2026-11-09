@@ -283,5 +283,9 @@
   "react_api_overview_description": "Elige componentes o hooks para consultar su API.",
   "direction_label": "Dirección",
   "radius_label": "Alcance",
-  "framework_guide_description": "Consulta la guía de tu framework."
+  "framework_guide_description": "Consulta la guía de tu framework.",
+  "provider_summary": "Crea una luz compartida para las superficies descendientes.",
+  "surface_summary": "Aplica iluminación a un elemento DOM.",
+  "use_light_summary": "Crea y configura un identificador de luz.",
+  "use_surface_summary": "Devuelve una ref que conecta un elemento DOM existente a una luz."
 }

@@ -283,5 +283,9 @@
   "react_api_overview_description": "컴포넌트 또는 훅을 선택해 API를 확인하세요.",
   "direction_label": "방향",
   "radius_label": "범위",
-  "framework_guide_description": "사용하는 프레임워크에 맞는 가이드를 확인하세요."
+  "framework_guide_description": "사용하는 프레임워크에 맞는 가이드를 확인하세요.",
+  "provider_summary": "하위 서피스가 공유할 조명 영역을 만듭니다.",
+  "surface_summary": "DOM 요소에 조명 효과를 적용합니다.",
+  "use_light_summary": "조명 핸들을 만들고 설정합니다.",
+  "use_surface_summary": "기존 DOM 요소를 조명에 연결할 ref를 반환합니다."
 }

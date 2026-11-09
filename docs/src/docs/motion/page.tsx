@@ -144,7 +144,7 @@ export const motion: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {inlineMessage(m.motion_options_link(), {
                 part0: (
-                  <Link href={localePath('/docs/react/components/#lighting')}>
+                  <Link href={localePath('/docs/react/provider/#lighting')}>
                     {m.api_reference()}
                   </Link>
                 ),

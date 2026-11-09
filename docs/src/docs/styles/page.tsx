@@ -109,7 +109,7 @@ export const styles: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {inlineMessage(m.additional_options_link(), {
                 part0: (
-                  <Link href={localePath('/docs/react/components/#lighting-surface')}>
+                  <Link href={localePath('/docs/react/surface/#lighting-surface')}>
                     {m.api_reference()}
                   </Link>
                 ),
@@ -190,7 +190,7 @@ export const styles: DocPage = {
                 ),
                 part3: <code {...stylex.props(contentStyles.inlineCode)}>{'borderWidth'}</code>,
                 part4: (
-                  <Link href={localePath('/docs/react/components/#lighting-surface')}>
+                  <Link href={localePath('/docs/react/surface/#lighting-surface')}>
                     {'Edge.Surface'}
                   </Link>
                 ),

@@ -15,7 +15,7 @@ export const reactIntegration: DocPage = {
   aliases: ['react'],
   section: 'React',
   get title() {
-    return m.react_usage_title();
+    return m.usage();
   },
   get description() {
     return m.connect_components_to_a_shared_light_with();
@@ -96,7 +96,7 @@ export const reactIntegration: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {inlineMessage(m.react_existing_component(), {
                 part0: (
-                  <Link href={localePath('/docs/react/hooks/#use-surface')}>
+                  <Link href={localePath('/docs/react/use-surface/#use-surface')}>
                     {'useSurface(options)'}
                   </Link>
                 ),

@@ -1,3 +1,7 @@
+import { provider } from '../react/provider/page.js';
+import { surface } from '../react/surface/page.js';
+import { use_light } from '../react/use-light/page.js';
+import { use_surface } from '../react/use-surface/page.js';
 import { introduction } from '../page.js';
 import { installation } from '../installation/page.js';
 import { usage } from '../usage/page.js';
@@ -18,6 +22,10 @@ export const pages = [
   integration,
   aiIntegration,
   reactIntegration,
+  provider,
+  surface,
+  use_light,
+  use_surface,
   api,
   components,
   hooks,
@@ -29,13 +37,14 @@ export const learningPath = [
   installation,
   usage,
   reactIntegration,
+  provider,
+  surface,
+  use_light,
+  use_surface,
   styles,
   motion,
   integration,
   aiIntegration,
-  api,
-  components,
-  hooks,
 ];
 
 export function getReadingNeighbors(page: (typeof pages)[number]) {

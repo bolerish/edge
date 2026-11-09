@@ -92,7 +92,9 @@ export const apiReference: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {inlineMessage(m.surface_existing_element(), {
                 part0: (
-                  <Link href={localePath('/docs/react/hooks/#use-surface')}>{'useSurface'}</Link>
+                  <Link href={localePath('/docs/react/use-surface/#use-surface')}>
+                    {'useSurface'}
+                  </Link>
                 ),
               })}
             </P>
