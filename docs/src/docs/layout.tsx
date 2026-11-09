@@ -1,3 +1,4 @@
+import { Collapsible, CollapsibleTrigger, CollapsiblePanel } from '@bolerish/ui/collapsible';
 import { inlineMessage } from './_shared/inline-message.js';
 import { localePath, sectionLabel } from '../shared/locale.js';
 import { m } from '../paraglide/messages.js';
@@ -25,6 +26,7 @@ import { SurfaceLightContext } from '../shared/lighting/light-context.js';
 import { LightingSurface } from '../shared/lighting/LightingSurface.js';
 export interface NavigationGroup {
   title?: string;
+  collapsible?: boolean;
   items: { title: string; href: string; group?: string }[];
 }
 
@@ -64,43 +66,63 @@ export function DocumentLayout({
       xstyle={styles.navigationRoot}
     >
       <NavigationMenuList xstyle={styles.navigationList}>
-        {navigation.map((group, index) => (
-          <NavigationMenuItem
-            className="nav-group"
-            xstyle={styles.navGroup}
-            key={group.title ?? index}
-          >
-            {group.title ? (
-              <Paragraph variant="caption" xstyle={styles.navHeading}>
-                {group.title}
-              </Paragraph>
-            ) : null}
-            {group.items.map((item) => {
-              const active =
-                item.href === (page ? getPagePath(page) : pathname) ||
-                item.href === (page ? getPagePath(page) : pathname) + hash;
-              return (
-                <div key={item.href}>
-                  {item.group ? (
-                    <Paragraph variant="caption" xstyle={styles.navSubheading}>
-                      {item.group}
+        {navigation.map((group, index) => {
+          const items = group.items.map((item) => {
+            const active =
+              item.href === (page ? getPagePath(page) : pathname) ||
+              item.href === (page ? getPagePath(page) : pathname) + hash;
+            return (
+              <div key={item.href}>
+                {item.group ? (
+                  <Paragraph variant="caption" xstyle={styles.navSubheading}>
+                    {item.group}
+                  </Paragraph>
+                ) : null}
+                <NavigationMenuLink
+                  href={item.href}
+                  {...stylex.props(active && styles.navLinkActive)}
+                  xstyle={styles.navLink}
+                  active={active}
+                  aria-current={active ? 'page' : undefined}
+                  onClick={() => setOpen(false)}
+                >
+                  {item.title}
+                </NavigationMenuLink>
+              </div>
+            );
+          });
+          return (
+            <NavigationMenuItem
+              className="nav-group"
+              xstyle={styles.navGroup}
+              key={group.title ?? index}
+            >
+              {group.collapsible ? (
+                <Collapsible
+                  key={String(page?.section === 'React')}
+                  defaultOpen={page?.section === 'React'}
+                >
+                  <CollapsibleTrigger {...stylex.props(styles.navToggle)}>
+                    {group.title}
+                    <span aria-hidden="true" {...stylex.props(styles.navChevron)}>
+                      ⌄
+                    </span>
+                  </CollapsibleTrigger>
+                  <CollapsiblePanel>{items}</CollapsiblePanel>
+                </Collapsible>
+              ) : (
+                <>
+                  {group.title ? (
+                    <Paragraph variant="caption" xstyle={styles.navHeading}>
+                      {group.title}
                     </Paragraph>
                   ) : null}
-                  <NavigationMenuLink
-                    href={item.href}
-                    {...stylex.props(active && styles.navLinkActive)}
-                    xstyle={styles.navLink}
-                    active={active}
-                    aria-current={active ? 'page' : undefined}
-                    onClick={() => setOpen(false)}
-                  >
-                    {item.title}
-                  </NavigationMenuLink>
-                </div>
-              );
-            })}
-          </NavigationMenuItem>
-        ))}
+                  {items}
+                </>
+              )}
+            </NavigationMenuItem>
+          );
+        })}
       </NavigationMenuList>
     </NavigationMenu>
   );
@@ -262,6 +284,26 @@ const styles = stylex.create({
       default: null,
       '@media (max-width: 760px)': 'none',
     },
+  },
+  navToggle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    padding: '10px',
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    color: colorVars.fgPrimary,
+    font: 'inherit',
+    fontWeight: 600,
+    cursor: 'pointer',
+    borderRadius: 6,
+    outline: { default: null, ':focus-visible': `2px solid ${colorVars.fgPrimary}` },
+    outlineOffset: 2,
+  },
+  navChevron: {
+    display: 'inline-block',
+    transform: { default: 'rotate(0deg)', ':is([data-panel-open] *)': 'rotate(180deg)' },
   },
   navHeading: { marginBlockEnd: 10, marginInline: 10 },
   navSubheading: { marginBlock: '16px 6px', marginInline: 10 },

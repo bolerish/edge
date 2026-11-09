@@ -7,6 +7,7 @@ import { getPagePath } from './routes.js';
 export function getDocsNavigation(): NavigationGroup[] {
   return [...new Set(pages.map((page) => page.section))].map((section) => ({
     title: section ? sectionLabel(section) : undefined,
+    collapsible: section === 'React',
     items: pages
       .filter((page) => page.section === section && page.navigation !== false)
       .map((page, index, sectionPages) => ({
