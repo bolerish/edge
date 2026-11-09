@@ -474,7 +474,7 @@ const styles = stylex.create({
       default: '64px',
       '@media (max-width: 1000px)': '0',
     },
-    alignItems: 'center',
+    alignItems: 'start',
   },
   heroTitle: {
     fontSize: 'clamp(30px, 3.2vw, 44px)',

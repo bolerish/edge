@@ -26,19 +26,14 @@ export function InstallCommands({ compact = false }: { compact?: boolean }) {
         </div>
         {installationCommands.map(({ manager, command }) => (
           <TabsContent key={manager} value={manager}>
-            <CodeBlock
-              compact={compact}
-              label={`${manager} installation`}
-              hideLabel
-              language="bash"
-              code={command}
-            />
+            <CodeBlock compact={compact} label={manager} language="bash" code={command} />
           </TabsContent>
         ))}
         <TabsContent value="prompt">
           <CodeBlock
             compact={compact}
             label={m.installation_prompt()}
+            scrollable
             language="text"
             code={installPrompt}
           />

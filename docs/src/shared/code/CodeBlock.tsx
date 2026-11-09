@@ -20,12 +20,14 @@ export function CodeBlock({
   hideLabel = false,
   language = 'tsx',
   compact = false,
+  scrollable = false,
 }: {
   code: string;
   label?: string;
   hideLabel?: boolean;
   language?: 'tsx' | 'bash' | 'css' | 'text';
   compact?: boolean;
+  scrollable?: boolean;
 }) {
   const [status, setStatus] = useState<'idle' | 'copied' | 'unavailable'>('idle');
   async function copy() {
@@ -51,7 +53,7 @@ export function CodeBlock({
       <Highlight prism={Prism} code={code} language={language} theme={codeTheme}>
         {({ tokens, getLineProps, getTokenProps }) => (
           <pre
-            {...stylex.props(styles.pre)}
+            {...stylex.props(styles.pre, scrollable && styles.scrollable)}
             role="region"
             tabIndex={0}
             aria-label={m.code_region({ label })}
@@ -141,6 +143,7 @@ const styles = stylex.create({
       ':focus-visible': '-2px',
     },
   },
+  scrollable: { maxBlockSize: '20rem' },
   prose: { whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' },
   code: {
     fontSize: '0.88em',
