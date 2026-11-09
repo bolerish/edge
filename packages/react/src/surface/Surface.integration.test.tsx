@@ -411,19 +411,19 @@ it('updates context surface options while preserving the host and restoring styl
   expect(host.style.getPropertyValue('--edge-strength')).toBe('');
 });
 
-it('updates direction and radius through Provider without another pointer event', async () => {
-  const scene = (direction: 'gather' | 'spread', radius: number) => (
-    <Edge.Provider motion="dynamic" direction={direction} radius={radius}>
+it('updates direction and range through Provider without another pointer event', async () => {
+  const scene = (direction: 'toward' | 'away', range: number) => (
+    <Edge.Provider motion="dynamic" direction={direction} range={range}>
       <Edge.Surface data-testid="direction-surface" />
     </Edge.Provider>
   );
-  await act(async () => renderScene(scene('gather', 40)));
+  await act(async () => renderScene(scene('toward', 40)));
   move();
   flush();
   const host = container.querySelector<HTMLElement>('[data-testid="direction-surface"]')!;
   expect(host.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
   expect(host.style.getPropertyValue('--edge-strength')).toBe('0.188');
-  await act(async () => renderScene(scene('spread', 80)));
+  await act(async () => renderScene(scene('away', 80)));
   flush();
   expect(host.style.getPropertyValue('--edge-angle')).toBe('270.0deg');
   expect(host.style.getPropertyValue('--edge-strength')).toBe('0.422');

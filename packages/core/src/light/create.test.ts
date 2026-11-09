@@ -258,10 +258,10 @@ it('renders the same light for mouse and touch coordinates, then retains the pos
   stop();
 });
 it('validates options atomically', () => {
-  expect(() => createLight({ radius: 0 })).toThrow(RangeError);
+  expect(() => createLight({ range: 0 })).toThrow(RangeError);
   expect(() => createLight({ intensity: Infinity })).toThrow(RangeError);
   const light = createLight({ motion: 'static' });
-  expect(() => light.configure({ radius: NaN })).toThrow(RangeError);
+  expect(() => light.configure({ range: NaN })).toThrow(RangeError);
 });
 
 it('reads all dirty rectangles before writing and skips unchanged output', () => {
@@ -598,8 +598,8 @@ it('remeasures host borders when surface style changes without a resize event', 
   stop();
 });
 
-it('reconfigures direction and radius with a stationary pointer and preserves static lighting', () => {
-  const light = createLight({ motion: 'dynamic', radius: 100 });
+it('reconfigures direction and range with a stationary pointer and preserves static lighting', () => {
+  const light = createLight({ motion: 'dynamic', range: 100 });
   const { node, measure } = element();
   const entry = light.register(node, 'raised');
   const stop = light.mount(document);
@@ -607,7 +607,7 @@ it('reconfigures direction and radius with a stationary pointer and preserves st
   flush();
   expect(node.style.getPropertyValue('--edge-angle')).toBe('90.0deg');
   expect(node.style.getPropertyValue('--edge-strength')).toBe('0.188');
-  light.configure({ motion: 'dynamic', direction: 'spread', radius: 200 });
+  light.configure({ motion: 'dynamic', direction: 'away', range: 200 });
   flush();
   expect(node.style.getPropertyValue('--edge-angle')).toBe('270.0deg');
   expect(node.style.getPropertyValue('--edge-strength')).toBe('0.422');
@@ -615,7 +615,7 @@ it('reconfigures direction and radius with a stationary pointer and preserves st
   entry.update('recessed');
   flush();
   expect(node.style.getPropertyValue('--edge-angle')).toBe('270.0deg');
-  light.configure({ motion: 'static', staticDirection: 45, direction: 'spread', radius: 1 });
+  light.configure({ motion: 'static', staticDirection: 45, direction: 'away', range: 1 });
   flush();
   expect(node.style.getPropertyValue('--edge-angle')).toBe('45.0deg');
   entry.destroy();
@@ -627,8 +627,8 @@ it.each(['input-first', 'scroll-first', 'stationary-touch'])(
   (order) => {
     const light = createLight({
       motion: 'dynamic',
-      direction: 'gather',
-      radius: 480,
+      direction: 'toward',
+      range: 480,
       intensity: 1,
     });
     const { node, measure } = element();

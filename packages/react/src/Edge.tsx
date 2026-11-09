@@ -12,17 +12,17 @@ export interface EdgeProviderProps {
   motion?: Motion;
   staticDirection?: LightOptions['staticDirection'];
   direction?: LightOptions['direction'];
-  radius?: number;
+  range?: number;
   intensity?: number;
   /** Optional handle for explicit refresh after position-only layout changes. */
   ref?: Ref<Light>;
 }
 /** Shares one light with explicit descendant surfaces, without adding DOM. */
 const EdgeProvider = forwardRef<Light, Omit<EdgeProviderProps, 'ref'>>(function EdgeProvider(
-  { children, motion = 'system', staticDirection, direction, radius, intensity },
+  { children, motion = 'system', staticDirection, direction, range, intensity },
   ref,
 ) {
-  const light = useLight({ motion, radius, intensity, staticDirection, direction });
+  const light = useLight({ motion, range, intensity, staticDirection, direction });
   useImperativeHandle(ref, () => light, [light]);
   return <LightContext.Provider value={light}>{children}</LightContext.Provider>;
 });

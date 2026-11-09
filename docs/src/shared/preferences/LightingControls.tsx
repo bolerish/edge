@@ -13,7 +13,7 @@ import { Slider } from '@bolerish/ui/slider';
 import { usePreferences, updatePreferences } from './usePreferences.js';
 
 export function LightingControls({ alwaysEnabled = false }: { alwaysEnabled?: boolean }) {
-  const { direction, radius, motion } = usePreferences();
+  const { direction, range, motion } = usePreferences();
   const disabled = !alwaysEnabled && motion === 'static';
   return (
     <FieldSet xstyle={styles.controls} disabled={disabled} aria-label={m.pointer_lighting()}>
@@ -21,10 +21,10 @@ export function LightingControls({ alwaysEnabled = false }: { alwaysEnabled?: bo
         <FieldLabel id="lighting-direction-label">direction</FieldLabel>
         <Select
           value={direction}
-          items={{ gather: 'gather', spread: 'spread' }}
+          items={{ toward: 'toward', away: 'away' }}
           disabled={disabled}
           onValueChange={(value) => {
-            if (value === 'gather' || value === 'spread') updatePreferences({ direction: value });
+            if (value === 'toward' || value === 'away') updatePreferences({ direction: value });
           }}
         >
           <SelectTrigger xstyle={styles.select} aria-labelledby="lighting-direction-label">
@@ -32,26 +32,26 @@ export function LightingControls({ alwaysEnabled = false }: { alwaysEnabled?: bo
           </SelectTrigger>
           <SelectPopup>
             <SelectList>
-              <SelectItem value="gather">gather</SelectItem>
-              <SelectItem value="spread">spread</SelectItem>
+              <SelectItem value="toward">toward</SelectItem>
+              <SelectItem value="away">away</SelectItem>
             </SelectList>
           </SelectPopup>
         </Select>
       </Field>
       <Field xstyle={styles.range}>
-        <FieldLabel id="lighting-radius-label">
-          radius: <output>{radius} px</output>
+        <FieldLabel id="lighting-range-label">
+          range: <output>{range} px</output>
         </FieldLabel>
         <Slider
-          aria-label="radius"
+          aria-label="range"
           min={40}
           max={1200}
           step={20}
-          value={radius}
+          value={range}
           disabled={disabled}
           onValueChange={(value) => {
             const next = typeof value === 'number' ? value : value[0];
-            if (next !== undefined) updatePreferences({ radius: next });
+            if (next !== undefined) updatePreferences({ range: next });
           }}
         />
       </Field>

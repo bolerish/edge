@@ -46,13 +46,13 @@ const lightOptions = {
     },
   },
   direction: {
-    type: "'gather' | 'spread'",
-    defaultValue: "'gather'",
+    type: "'toward' | 'away'",
+    defaultValue: "'toward'",
     get description() {
       return m.direction_description();
     },
   },
-  radius: {
+  range: {
     type: 'number',
     defaultValue: '480',
     get description() {

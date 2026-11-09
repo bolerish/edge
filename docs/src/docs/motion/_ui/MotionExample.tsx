@@ -109,8 +109,8 @@ const styles = stylex.create({
 });
 
 export function PointerExample() {
-  const { direction, radius } = usePreferences();
-  const light = useLight({ motion: 'dynamic', direction, radius });
+  const { direction, range } = usePreferences();
+  const light = useLight({ motion: 'dynamic', direction, range });
   return (
     <SurfaceLightContext.Provider value={light}>
       <LightingControls alwaysEnabled />
@@ -160,7 +160,7 @@ export const pointerExample = {
     return m.pointer_lighting();
   },
   Component: PointerExample,
-  code: `const light = useLight({ motion: 'dynamic', direction: __DIRECTION__, radius: __RADIUS__ });`,
+  code: `const light = useLight({ motion: 'dynamic', direction: __DIRECTION__, range: __RANGE__ });`,
 };
 export const staticExample = {
   get title() {

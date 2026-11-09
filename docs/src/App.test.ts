@@ -848,7 +848,7 @@ test('component and hook tables expose complete searchable options', async ({ pa
   ]) {
     await page.goto(`/docs/react/${route}/`);
     const table = page.getByRole('table', { name: caption, exact: true });
-    for (const option of ['motion', 'staticDirection', 'radius', 'intensity'])
+    for (const option of ['motion', 'staticDirection', 'range', 'intensity'])
       await expect(table.getByRole('rowheader', { name: option, exact: true })).toBeVisible();
   }
   for (const [route, caption] of [
@@ -1061,7 +1061,7 @@ test('appearance pages expose topic options and examples retain state across pre
     await expect(table.getByRole('rowheader', { name, exact: true })).toBeVisible();
   const example = page.getByRole('group', { name: 'Compare motion', exact: true });
   await expect(page.getByRole('combobox', { name: 'staticDirection', exact: true })).toHaveCount(1);
-  await expect(table.getByRole('rowheader', { name: 'radius', exact: true })).toHaveCount(0);
+  await expect(table.getByRole('rowheader', { name: 'range', exact: true })).toHaveCount(0);
   await example.getByRole('combobox', { name: 'motion', exact: true }).click();
   await page.getByRole('option', { name: 'static', exact: true }).click();
   const card = example.getByRole('article');

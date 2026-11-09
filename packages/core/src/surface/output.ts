@@ -72,8 +72,8 @@ export function renderSurfaces(
     if (entry.element.isConnected && rect.width > 0 && rect.height > 0) {
       if (fixed) strength = staticLighting.strength;
       else if (pointer) {
-        ({ angle, strength } = getLighting(rect, pointer, options.radius, entry.edgeStyle));
-        if (options.direction === 'spread') angle = (angle + 180) % 360;
+        ({ angle, strength } = getLighting(rect, pointer, options.range, entry.edgeStyle));
+        if (options.direction === 'away') angle = (angle + 180) % 360;
       }
     }
     const values = [

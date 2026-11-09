@@ -246,7 +246,7 @@ it('allows a surface hook without an attached host', async () => {
 it('exposes refresh to remeasure a stationary pointer after a position change', async () => {
   let refresh: (() => void) | undefined;
   function Scene() {
-    const light = useLight({ motion: 'dynamic', radius: 10 });
+    const light = useLight({ motion: 'dynamic', range: 10 });
     refresh = light.refresh;
     return <button ref={useSurface<HTMLButtonElement>(light)}>Save</button>;
   }

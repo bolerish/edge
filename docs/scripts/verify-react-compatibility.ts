@@ -42,10 +42,10 @@ function HookHost() {
   const ref = useSurface({ color: 'red' });
   return React.createElement(Existing, { ref, id: 'hook', className: 'consumer' }, 'Existing host');
 }
-export function Scene({ edgeStyle = 'raised', pseudoElement = 'after', motion = 'static', show = true, alternate = false }) {
+export function Scene({ edgeStyle = 'raised', pseudoElement = 'after', motion = 'static', direction = 'toward', range = 480, show = true, alternate = false }) {
   const [clicks, setClicks] = useState(0);
   return React.createElement(React.Fragment, null,
-    React.createElement(Edge.Provider, { ref: lightRef, motion, staticDirection: 315 },
+    React.createElement(Edge.Provider, { ref: lightRef, motion, staticDirection: 315, direction, range },
       show ? React.createElement(Edge.Surface, {
         as: 'button', type: 'button', id: 'lit', ref: alternate ? replacement : callback,
         edgeStyle, pseudoElement, className: 'consumer',
@@ -70,6 +70,14 @@ const article = React.createRef<HTMLElement>();
 <Edge.Surface as="article" ref={article} />;
 <Edge.Surface as="a" href="/" />;
 <Edge.Styles nonce="request-nonce" />;
+<Edge.Provider direction="toward" range={40}><Edge.Surface /></Edge.Provider>;
+<Edge.Provider direction="away" range={480}><Edge.Surface /></Edge.Provider>;
+// @ts-expect-error Use toward instead of gather.
+<Edge.Provider direction="gather"><Edge.Surface /></Edge.Provider>;
+// @ts-expect-error Use away instead of spread.
+<Edge.Provider direction="spread"><Edge.Surface /></Edge.Provider>;
+// @ts-expect-error Use range instead of radius.
+<Edge.Provider radius={40}><Edge.Surface /></Edge.Provider>;
 // @ts-expect-error The default host is a div.
 <Edge.Surface href="/" />;
 // @ts-expect-error Buttons do not accept href.
@@ -78,7 +86,9 @@ const article = React.createRef<HTMLElement>();
 <Edge.Surface as="a" ref={button} />;
 function ExistingHost() {
   const ref: React.RefCallback<HTMLButtonElement> = useSurface<HTMLButtonElement>();
-  const explicit: React.RefCallback<HTMLButtonElement> = useSurface<HTMLButtonElement>(useLight());
+  const explicit: React.RefCallback<HTMLButtonElement> = useSurface<HTMLButtonElement>(useLight({ direction: 'away', range: 40 }));
+  // @ts-expect-error Hook options also use range.
+  useLight({ radius: 40 });
   void explicit;
   return <button ref={ref} />;
 }

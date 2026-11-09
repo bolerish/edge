@@ -32,16 +32,21 @@ React prepares the default styles automatically when a surface connects. For SSR
 ## Direction and range
 
 ```tsx
-<Edge.Provider direction="gather" radius={480}>
+<Edge.Provider direction="toward" range={480}>
   <Edge.Surface>Your card</Edge.Surface>
 </Edge.Provider>
 ```
 
-`direction` defaults to `gather`, facing highlights toward the pointer. Use `spread`
+`direction` defaults to `toward`, facing highlights toward the pointer. Use `away`
 for the opposite direction. Recessed surfaces draw the highlight one decorative
-edge thickness inward while preserving the selected direction. `radius` is the fade distance outside each surface in CSS pixels, defaults to
+edge thickness inward while preserving the selected direction. `range` is the fade distance outside each surface in CSS pixels, defaults to
 480, and must be positive and finite. These options affect pointer-driven lighting;
-fixed lighting uses `staticDirection` instead.
+fixed lighting uses `staticDirection` instead. With `range={40}`, the effect fades to
+zero when the pointer is 40 CSS pixels outside a surface. It does not limit the
+bright area inside a surface to a 40-pixel circle around the pointer.
+
+The direction values were renamed: replace `gather` with `toward` and `spread`
+with `away`, and replace `radius` with `range` when upgrading from 0.3.0.
 
 ## Documentation
 

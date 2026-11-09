@@ -70,13 +70,13 @@ const projects: readonly Project[] = [
 ];
 
 export function Home() {
-  const { motion, staticDirection, direction, radius } = usePreferences();
+  const { motion, staticDirection, direction, range } = usePreferences();
   return (
     <Edge.Provider
       motion={motion}
       staticDirection={staticDirection}
       direction={direction}
-      radius={radius}
+      range={range}
       intensity={0.8}
     >
       <div {...stylex.props(styles.homeLayout)}>

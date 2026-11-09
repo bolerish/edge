@@ -131,8 +131,8 @@
       <fieldset>
         <legend>빛의 방향 비교</legend>
         <div class="controls">
-          <label><input type="radio" name="direction" value="gather" checked />모이기</label>
-          <label><input type="radio" name="direction" value="spread" />퍼지기</label>
+          <label><input type="radio" name="direction" value="toward" checked />포인터 쪽</label>
+          <label><input type="radio" name="direction" value="away" />포인터 반대쪽</label>
         </div>
       </fieldset>
       <p id="description" aria-live="polite">
@@ -159,7 +159,7 @@
       const surfaces = [...document.querySelectorAll('.surface')];
       const dot = document.querySelector('.dot');
       const description = document.querySelector('#description');
-      let mode = 'gather';
+      let mode = 'toward';
       let point = null;
       let frame = 0;
 
@@ -177,8 +177,7 @@
             Math.max(0, Math.abs(dy) - rect.height / 2),
           );
           return {
-            angle:
-              ((Math.atan2(dy, dx) * 180) / Math.PI + 450 + (mode === 'spread' ? 180 : 0)) % 360,
+            angle: ((Math.atan2(dy, dx) * 180) / Math.PI + 450 + (mode === 'away' ? 180 : 0)) % 360,
             strength:
               Math.max(0, 1 - edgeDistance / 600) ** 2 *
               Math.min(1, distance / Math.max(1, Math.max(rect.width, rect.height) * 0.25)) ** 2,
@@ -207,7 +206,7 @@
         input.addEventListener('change', () => {
           mode = input.value;
           description.textContent =
-            mode === 'gather'
+            mode === 'toward'
               ? '밝은 면이 마우스를 향합니다. 카드 사이로 마우스를 움직여 보세요.'
               : '밝은 면이 마우스 반대쪽을 향합니다. 카드 사이로 마우스를 움직여 보세요.';
           schedule();

@@ -57,7 +57,7 @@ export const apiReference: DocPage = {
             <CodeBlock
               label={m.edge_provider_signature()}
               code={
-                '<Edge.Provider motion="system" radius={480} intensity={0.75}>\n  {/* Your surfaces */}\n</Edge.Provider>'
+                '<Edge.Provider motion="system" range={480} intensity={0.75}>\n  {/* Your surfaces */}\n</Edge.Provider>'
               }
             />
             {apiTable('Edge.Provider props', providerPropRows)}
@@ -205,8 +205,8 @@ function ExistingCard() {
             />
             {apiTable('useLight options', lightOptionRows)}
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {inlineMessage(m.light_radius_modes(), {
-                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'radius'}</code>,
+              {inlineMessage(m.light_range_modes(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'range'}</code>,
                 part1: <code {...stylex.props(contentStyles.inlineCode)}>{'staticDirection'}</code>,
               })}
             </P>

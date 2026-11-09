@@ -121,6 +121,15 @@ await writeFile(
   import {Edge, useLight, useSurface, type SurfaceProps} from '@bolerish/edge';
   import type {RefCallback} from 'react';
   import {getSurfaceProps} from '@bolerish/edge-styles';
+  import {createLight} from '@bolerish/edge-core';
+  createLight({direction:'toward',range:40});
+  createLight({direction:'away',range:480});
+  // @ts-expect-error Use toward instead of gather.
+  createLight({direction:'gather'});
+  // @ts-expect-error Use away instead of spread.
+  createLight({direction:'spread'});
+  // @ts-expect-error Use range instead of radius.
+  createLight({radius:40});
   void Edge;
   function ExistingHost(){const ref: RefCallback<HTMLButtonElement> = useSurface<HTMLButtonElement>(useLight()); return ref;}
   void ExistingHost;

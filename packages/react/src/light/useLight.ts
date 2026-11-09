@@ -23,12 +23,12 @@ export function useLight({
   motion,
   staticDirection,
   direction,
-  radius,
+  range,
   intensity,
 }: LightOptions = {}): Light {
   const lightRef = useRef<Light | null>(null);
   if (lightRef.current === null) {
-    const core = createLight({ motion, radius, intensity, staticDirection, direction });
+    const core = createLight({ motion, range, intensity, staticDirection, direction });
     lightRef.current = { [lightBrand]: { core, active: false }, refresh: core.refresh };
   }
   const light = lightRef.current;
@@ -44,8 +44,8 @@ export function useLight({
     };
   }, [state, core]);
   useEffect(
-    () => core.configure({ motion, radius, intensity, staticDirection, direction }),
-    [core, motion, radius, intensity, staticDirection, direction],
+    () => core.configure({ motion, range, intensity, staticDirection, direction }),
+    [core, motion, range, intensity, staticDirection, direction],
   );
   return light;
 }

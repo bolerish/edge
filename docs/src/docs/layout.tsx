@@ -44,8 +44,8 @@ export function DocumentLayout({
   setOpen: (open: boolean) => void;
 }) {
   const page = findPage(pathname);
-  const { motion, staticDirection, direction, radius } = usePreferences();
-  const light = useLight({ motion, staticDirection, direction, radius });
+  const { motion, staticDirection, direction, range } = usePreferences();
+  const light = useLight({ motion, staticDirection, direction, range });
   const { previous, next } = page
     ? getReadingNeighbors(page)
     : { previous: undefined, next: undefined };

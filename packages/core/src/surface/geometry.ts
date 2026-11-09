@@ -28,7 +28,7 @@ export function getStaticLighting(edgeStyle: EdgeStyle, direction = DEFAULT_DIRE
   };
 }
 
-export function getLighting(rect: Rectangle, point: Point, radius: number, edgeStyle: EdgeStyle) {
+export function getLighting(rect: Rectangle, point: Point, range: number, edgeStyle: EdgeStyle) {
   const dx = point.x - rect.left - rect.width / 2;
   const dy = point.y - rect.top - rect.height / 2;
   const centerDistance = Math.hypot(dx, dy);
@@ -44,7 +44,7 @@ export function getLighting(rect: Rectangle, point: Point, radius: number, edgeS
   return {
     angle: direction,
     strength:
-      Math.max(0, 1 - edgeDistance / radius) ** DISTANCE_FALLOFF_EXPONENT *
+      Math.max(0, 1 - edgeDistance / range) ** DISTANCE_FALLOFF_EXPONENT *
       Math.min(
         1,
         centerDistance / Math.max(1, Math.max(rect.width, rect.height) * CENTER_FADE_SIZE_RATIO),
