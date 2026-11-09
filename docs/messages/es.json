@@ -220,7 +220,7 @@
   "spread": "Spread",
   "light_range": "Alcance de la luz",
   "range_value": "Alcance: {radius} px",
-  "pointer_settings_hint": "Gather orienta el reflejo hacia el puntero; Spread, en sentido contrario. El alcance es la distancia de atenuación fuera de cada superficie. Estos ajustes no afectan a la luz fija.",
+  "pointer_settings_hint": "Gather orienta el reflejo hacia el puntero y Spread en sentido contrario. Radius es la distancia de atenuación fuera de cada superficie, no el tamaño de la zona iluminada en su interior. Mueve el puntero fuera de la tarjeta para comparar los valores. Estos ajustes no afectan a la iluminación fija.",
   "direction_description": "gather orienta el reflejo hacia el puntero y spread lo invierte 180 grados. Todos los estilos mantienen esta elección. Solo afecta a la luz que sigue al puntero; staticDirection controla la dirección fija.",
   "motion_system_hint": "Respeta las preferencias de movimiento y entrada.",
   "motion_dynamic_hint": "Sigue al puntero incluso con movimiento reducido.",

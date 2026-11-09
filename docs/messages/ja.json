@@ -220,7 +220,7 @@
   "spread": "Spread",
   "light_range": "照明の範囲",
   "range_value": "範囲: {radius} px",
-  "pointer_settings_hint": "Gather はハイライトをポインターの方向に向け、Spread は反対に向けます。範囲は、サーフェスの外でライトが減衰する距離です。固定ライトには適用されません。",
+  "pointer_settings_hint": "gather はポインター側、spread は反対側の境界を強調します。radius はサーフェスの外で光が減衰する距離で、内側の明るい領域の大きさではありません。ポインターをカードの外へ動かして値の違いを確認してください。固定ライトには適用されません。",
   "direction_description": "gather はハイライトをポインターの方向に向け、spread は 180 度反転させます。すべてのサーフェススタイルでこの選択を維持します。ポインターに追従するライトのみが対象で、固定方向は staticDirection で設定します。",
   "motion_system_hint": "動きと入力の設定に従います。",
   "motion_dynamic_hint": "動きを減らす設定でもポインターに追従します。",

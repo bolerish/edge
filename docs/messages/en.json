@@ -220,7 +220,7 @@
   "spread": "Spread",
   "light_range": "Light range",
   "range_value": "Range: {radius} px",
-  "pointer_settings_hint": "Gather faces the pointer; Spread faces away. Range is the fade distance outside each surface. Fixed lighting ignores these settings.",
+  "pointer_settings_hint": "Gather faces the pointer; Spread faces away. Radius is the fade distance outside each surface, not the size of the bright area inside it. Move the pointer outside the card to compare radius values. Fixed lighting ignores these settings.",
   "direction_description": "gather faces highlights toward the pointer; spread reverses them by 180 degrees. All surface styles preserve this choice. Only affects pointer-driven lighting; staticDirection controls fixed lighting.",
   "motion_system_hint": "Respects motion and input preferences.",
   "motion_dynamic_hint": "Follows your pointer, even when reduced motion is enabled.",

@@ -220,7 +220,7 @@
   "spread": "Spread",
   "light_range": "光照范围",
   "range_value": "范围：{radius} px",
-  "pointer_settings_hint": "Gather 使高光朝向指针，Spread 则朝向相反方向。范围是光照在表面外衰减的距离。固定光照不受这些设置影响。",
+  "pointer_settings_hint": "gather 强调朝向指针的边缘，spread 则强调相反方向。radius 表示光照在表面外部逐渐消失的距离，不会改变内部亮区的大小。请将指针移到卡片外部，比较不同数值的效果。这些设置不影响固定光照。",
   "direction_description": "gather 使高光朝向指针，spread 将方向反转 180 度。所有表面样式均保持这一选择。仅影响跟随指针的光照；固定方向由 staticDirection 控制。",
   "motion_system_hint": "遵循动态效果和输入偏好。",
   "motion_dynamic_hint": "即使开启减少动态效果，也跟随指针。",

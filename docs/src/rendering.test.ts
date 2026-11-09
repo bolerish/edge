@@ -107,3 +107,70 @@ for (const locale of ['', '/ko', '/es', '/zh', '/ja']) {
     }
   });
 }
+
+for (const width of [390, 1440]) {
+  test(`example blocks remain visible before and through hydration and reload at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.addInitScript(() => {
+      localStorage.setItem('edge:preferences:v1', JSON.stringify({ edgeStyle: 'recessed' }));
+      const samples: boolean[] = [];
+      Object.assign(window, { exampleSamples: samples, exampleSamplingDone: false });
+      let completeFrames = 0;
+      function sample() {
+        const tabs = [...document.querySelectorAll('.example-preview [role="tablist"]')];
+        if (tabs.length) {
+          samples.push(
+            tabs.every(
+              (node) =>
+                getComputedStyle(node).visibility === 'visible' &&
+                node.getBoundingClientRect().height > 0,
+            ),
+          );
+          if (document.readyState === 'complete') completeFrames++;
+        }
+        if (completeFrames < 30) requestAnimationFrame(sample);
+        else Reflect.set(window, 'exampleSamplingDone', true);
+      }
+      requestAnimationFrame(sample);
+    });
+    let release: () => void = () => {};
+    let scriptsReady = Promise.resolve();
+    await page.route('**/*.js', async (route) => {
+      await scriptsReady;
+      await route.continue();
+    });
+    try {
+      for (const path of ['/docs/react/usage/', '/docs/styles/', '/docs/motion/']) {
+        for (const refresh of [false, true]) {
+          scriptsReady = new Promise<void>((resolve) => {
+            release = resolve;
+          });
+          if (refresh) await page.reload({ waitUntil: 'commit' });
+          else await page.goto(path, { waitUntil: 'commit' });
+          const example = page.locator('.example-preview').first();
+          await expect(example).toHaveCSS('display', 'grid');
+          await expect(example.getByRole('tablist', { includeHidden: true })).toBeVisible();
+          await expect(example.locator('.example-preview-result')).toBeVisible();
+          release();
+          await page.waitForFunction(() => Reflect.get(window, 'exampleSamplingDone'));
+          const samples: boolean[] = await page.evaluate(() =>
+            Reflect.get(window, 'exampleSamples'),
+          );
+          expect(samples.length).toBeGreaterThanOrEqual(30);
+          expect(samples.every(Boolean)).toBe(true);
+          if (path === '/docs/styles/') {
+            await expect(page.getByRole('combobox', { name: 'Style', exact: true })).toHaveText(
+              'Recessed',
+            );
+          }
+          await example.getByRole('tab', { name: 'Code', exact: true }).click();
+          await expect(example.getByRole('region', { name: / code$/ })).toBeVisible();
+        }
+      }
+    } finally {
+      release();
+    }
+  });
+}

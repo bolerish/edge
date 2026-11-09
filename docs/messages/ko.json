@@ -220,7 +220,7 @@
   "spread": "Spread",
   "light_range": "조명 범위",
   "range_value": "범위: {radius} px",
-  "pointer_settings_hint": "Gather는 하이라이트가 포인터를 향하게 하고, Spread는 반대 방향을 향하게 합니다. 범위는 서피스 바깥에서 조명이 희미해지는 거리입니다. 고정 조명에는 이 설정이 적용되지 않습니다.",
+  "pointer_settings_hint": "gather는 포인터 쪽, spread는 반대쪽 테두리를 강조합니다. radius는 서피스 바깥에서 조명이 사라지는 거리이며, 내부의 밝은 영역 크기를 바꾸지 않습니다. 포인터를 카드 바깥으로 옮겨 값을 비교해 보세요. 고정 조명에는 적용되지 않습니다.",
   "direction_description": "gather는 하이라이트가 포인터를 향하게 하고, spread는 방향을 180도 반전합니다. 모든 서피스 스타일이 이 선택을 유지합니다. 포인터를 따르는 조명에만 적용되며, 고정 조명은 staticDirection으로 방향을 정합니다.",
   "motion_system_hint": "동작과 입력 환경 설정을 따릅니다.",
   "motion_dynamic_hint": "동작 줄이기가 켜져 있어도 포인터를 따라갑니다.",

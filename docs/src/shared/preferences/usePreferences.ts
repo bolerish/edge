@@ -93,7 +93,7 @@ function parsePreferences(serialized: string | null): Readonly<SitePreferences> 
           : ('edgeStyle' in value && value.edgeStyle === 'matte') ||
               ('material' in value && value.material === 'matte')
             ? 'matte'
-            : 'raised',
+            : defaults.edgeStyle,
       motion:
         ('motion' in value && value.motion === 'static') ||
         ('mode' in value && value.mode === 'static')
@@ -122,12 +122,4 @@ function parseStaticDirection(value: unknown): SitePreferences['staticDirection'
   if (value === 'fixed') return 315;
   if (value === 0 || value === 90 || value === 180 || value === 270 || value === 315) return value;
   return 'random';
-}
-
-const subscribeToHydration = () => () => {};
-const clientReady = () => true;
-const serverReady = () => false;
-
-export function usePreferencesReady() {
-  return useSyncExternalStore(subscribeToHydration, clientReady, serverReady);
 }

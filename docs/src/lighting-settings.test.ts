@@ -107,3 +107,35 @@ for (const theme of ['light', 'dark'] as const) {
     });
   }
 }
+
+test('radius changes the outside fade with a stationary pointer and keeps the inside strength', async ({
+  page,
+}) => {
+  await page.goto('/docs/styles/');
+  await expect(page.getByRole('combobox', { name: 'Style', exact: true })).toHaveText('Raised');
+  await page.goto('/docs/motion/');
+  const example = page.getByRole('group', { name: 'Pointer lighting', exact: true });
+  const card = example.getByRole('article');
+  const radius = page.getByRole('slider', { name: 'radius', exact: true });
+  await card.scrollIntoViewIfNeeded();
+  await radius.focus();
+  const box = await card.boundingBox();
+  if (!box) throw new Error('Missing pointer lighting card');
+  const strength = () => card.evaluate((node) => node.style.getPropertyValue('--edge-strength'));
+  await page.mouse.move(box.x + box.width + 60, box.y + box.height / 2);
+  await radius.press('Home');
+  await expect(radius).toHaveAttribute('aria-valuenow', '40');
+  await expect.poll(strength).toBe('0.000');
+  await radius.press('End');
+  await expect(radius).toHaveAttribute('aria-valuenow', '1200');
+  await expect.poll(async () => Number(await strength())).toBeGreaterThan(0.6);
+  await page.mouse.move(box.x + box.width - 10, box.y + box.height / 2);
+  await radius.press('Home');
+  await expect.poll(strength).toBe('0.750');
+  await radius.press('End');
+  await expect.poll(strength).toBe('0.750');
+  await example.getByRole('tab', { name: 'Code', exact: true }).click();
+  await expect(
+    example.getByRole('region', { name: 'Pointer lighting code', exact: true }),
+  ).toContainText('radius: 1200');
+});
