@@ -36,7 +36,7 @@
   "edge_provider_signature": "Firma de Edge.Provider",
   "edge_surface_signature": "Firma de Edge.Surface",
   "surface_ownership": "Usar dentro de Edge.Provider",
-  "integration": "Integración",
+  "integration": "Consideraciones de integración",
   "usesurface_signature": "Firma de useSurface",
   "share_one_light_with_existing_components": "Compartir una luz con componentes existentes",
   "one_owner_per_element": "Una luz por elemento",
@@ -78,7 +78,7 @@
   "group_elements_under_one_shared_light_and": "Agrupa los elementos que deban responder a una misma luz y elige cuáles mostrarán el reflejo. Usa otra luz para las áreas que deban responder por separado.",
   "start_using_edge": "Empezar con Edge",
   "usage": "Uso",
-  "react_integration": "Integración con React",
+  "react_integration": "React",
   "accessibility": "Accesibilidad",
   "keep_components_readable_and_operable_without_lighting": "Mantén los componentes legibles y operables sin iluminación.",
   "choose_motion_behavior": "Elegir el comportamiento del movimiento",
@@ -178,7 +178,7 @@
   "keep_your_ui": "Conservar tu UI",
   "edge_keeps_your_background_text_spacing_and": "Edge conserva el fondo, texto, espaciado y borde base. El reflejo usa el color de texto y el radio de cada superficie por defecto. Conserva las interacciones y el foco del teclado.",
   "layout_changes": "cambios de diseño",
-  "connect_your_components": "Conectar tus componentes",
+  "connect_your_components": "Elige tu framework",
   "handle_decoration_conflicts_native_inputs_and_layout": "Consulta cómo usar Edge con pseudoelementos existentes, elementos input y cambios de diseño.",
   "keep_existing_decorations": "Usar pseudoelementos existentes",
   "wrap_native_inputs": "Envolver elementos input",
@@ -264,7 +264,7 @@
   "style_and_motion_links": "Elige la respuesta de las superficies en <part0/> y el movimiento de la luz en <part1/>.",
   "input_integration_link": "Para contenedores de inputs y conflictos con la decoración existente, consulta <part0/>.",
   "application_layout_link": "Si tu aplicación cambia la posición de los elementos, consulta <part0/>.",
-  "react_usage_link": "Sigue <part0/> para conectar componentes nuevos o existentes. React es el adaptador disponible actualmente.",
+  "react_usage_link": "Consulta la guía de tu framework. Actualmente se admite React. <part0/>",
   "assistant_document_links": "<part0/> contiene un índice breve con enlaces a las guías y la referencia de la API en Markdown. Si tu asistente necesita toda la documentación, proporciona <part1/>.",
   "pseudo_element_options": "Edge dibuja el reflejo en <part0/> por defecto. Usa <part1/> para conservar un <part2/> existente. Si ambos pseudoelementos están ocupados, aplica Edge a un contenedor externo.",
   "native_input_wrapper": "Los inputs nativos no muestran pseudoelementos de forma fiable. Conecta un <part0/> o <part1/> externo con el mismo border-radius. Conserva la etiqueta, el foco, la validación y el teclado del input. Usa <part2/> para un aspecto hundido.",
@@ -273,5 +273,6 @@
   "geometry_limits_link": "Edge aproxima rectángulos alineados con los ejes. No admite rotación, transformaciones de perspectiva ni portales entre documentos. Los portales del mismo documento pueden compartir luz. Para foco, selección y validación, consulta <part0/>.",
   "switch_pseudo_element": "Usar {element} para el reflejo",
   "current_pseudo_element": "El reflejo usa ::{element}",
-  "not_found_navigation": "Esta página no está disponible. Vuelve a <part0/> o explora el <part1/>."
+  "not_found_navigation": "Esta página no está disponible. Vuelve a <part0/> o explora el <part1/>.",
+  "react_usage_title": "Usar con React"
 }

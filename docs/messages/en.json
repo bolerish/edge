@@ -36,7 +36,7 @@
   "edge_provider_signature": "Edge.Provider signature",
   "edge_surface_signature": "Edge.Surface signature",
   "surface_ownership": "Use Edge.Surface inside Edge.Provider",
-  "integration": "Integration",
+  "integration": "Integration considerations",
   "usesurface_signature": "useSurface signature",
   "share_one_light_with_existing_components": "Share one light with existing components",
   "one_owner_per_element": "One light per element",
@@ -78,7 +78,7 @@
   "group_elements_under_one_shared_light_and": "Group elements under one shared light and choose which surfaces respond. Give an area its own light when it should react independently.",
   "start_using_edge": "Start using Edge",
   "usage": "Usage",
-  "react_integration": "React Integration",
+  "react_integration": "React",
   "accessibility": "Accessibility",
   "keep_components_readable_and_operable_without_lighting": "Keep components readable and operable without lighting.",
   "choose_motion_behavior": "Choose motion behavior",
@@ -178,7 +178,7 @@
   "keep_your_ui": "Keep your UI",
   "edge_keeps_your_background_text_spacing_and": "Edge keeps your background, text, spacing and base border. Its highlight uses each surface’s own text color and border radius by default. Keep existing interactions and keyboard focus indicators.",
   "layout_changes": "layout changes",
-  "connect_your_components": "Connect your components",
+  "connect_your_components": "Choose your framework",
   "handle_decoration_conflicts_native_inputs_and_layout": "Handle decoration conflicts, native inputs and layout changes.",
   "keep_existing_decorations": "Keep existing decorations",
   "wrap_native_inputs": "Wrap native inputs",
@@ -264,7 +264,7 @@
   "style_and_motion_links": "Choose the surface response in <part0/> and how the light moves in <part1/>.",
   "input_integration_link": "For input wrappers and decoration conflicts, see <part0/>.",
   "application_layout_link": "For application-controlled position changes, see <part0/>.",
-  "react_usage_link": "Follow <part0/> to connect new or existing components. React is the currently available adapter.",
+  "react_usage_link": "Follow the guide for your framework. React is currently supported. <part0/>",
   "assistant_document_links": "Start with <part0/> for a short index linking to Markdown versions of each guide and API reference. Use <part1/> when your assistant needs all the documentation in one file.",
   "pseudo_element_options": "Edge uses <part0/> by default. Set <part1/> to keep an existing <part2/>. If both pseudo-elements are occupied, decorate a wrapper.",
   "native_input_wrapper": "Native inputs do not reliably display pseudo-element decoration. Connect a surrounding <part0/> or <part1/> with a matching radius instead. Keep the input’s label, focus, validation and keyboard behavior. Use <part2/> for an inset appearance.",
@@ -273,5 +273,6 @@
   "geometry_limits_link": "Edge approximates axis-aligned rectangles. Rotation, perspective transforms and cross-document portals are unsupported. Portals within the same document can share a light. For focus, selection and validation, see <part0/>.",
   "switch_pseudo_element": "Use {element} decoration",
   "current_pseudo_element": "Decoration uses ::{element}",
-  "not_found_navigation": "This page is not available. Return to <part0/> or explore the <part1/>."
+  "not_found_navigation": "This page is not available. Return to <part0/> or explore the <part1/>.",
+  "react_usage_title": "Use with React"
 }

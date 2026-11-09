@@ -15,7 +15,7 @@ export const reactIntegration: DocPage = {
   aliases: ['react'],
   section: 'React',
   get title() {
-    return m.integration();
+    return m.react_usage_title();
   },
   get description() {
     return m.connect_components_to_a_shared_light_with();

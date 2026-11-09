@@ -36,7 +36,7 @@
   "edge_provider_signature": "Edge.Provider のシグネチャ",
   "edge_surface_signature": "Edge.Surface のシグネチャ",
   "surface_ownership": "Edge.Provider の内側で使う",
-  "integration": "統合",
+  "integration": "導入時の注意点",
   "usesurface_signature": "useSurface のシグネチャ",
   "share_one_light_with_existing_components": "既存コンポーネントで光を共有する",
   "one_owner_per_element": "1 つの要素に接続できるライトは 1 つ",
@@ -78,7 +78,7 @@
   "group_elements_under_one_shared_light_and": "同じライトに反応させる要素をまとめ、その中でハイライトを表示するサーフェスを選びます。独立して反応させたい領域には別のライトを用意します。",
   "start_using_edge": "Edge を使い始める",
   "usage": "使い方",
-  "react_integration": "React との統合",
+  "react_integration": "React",
   "accessibility": "アクセシビリティ",
   "keep_components_readable_and_operable_without_lighting": "照明がなくてもコンポーネントを読んで操作できるようにします。",
   "choose_motion_behavior": "動きの設定を選ぶ",
@@ -178,7 +178,7 @@
   "keep_your_ui": "既存の UI を維持する",
   "edge_keeps_your_background_text_spacing_and": "Edge は背景、文字、余白、基本の境界線を維持します。デフォルトのハイライトは各サーフェスの文字色と角丸を使います。既存の操作とキーボードフォーカスを維持してください。",
   "layout_changes": "レイアウトの変更",
-  "connect_your_components": "コンポーネントを接続する",
+  "connect_your_components": "フレームワークを選ぶ",
   "handle_decoration_conflicts_native_inputs_and_layout": "既存の擬似要素、input 要素、レイアウト変更と組み合わせる方法を確認します。",
   "keep_existing_decorations": "既存の擬似要素と組み合わせる",
   "wrap_native_inputs": "input 要素をラップする",
@@ -264,7 +264,7 @@
   "style_and_motion_links": "サーフェスの反応は<part0/>、光の動きは<part1/>で選べます。",
   "input_integration_link": "input のラッパーや既存の装飾との競合は、<part0/>を参照してください。",
   "application_layout_link": "アプリから要素の位置を変更する場合は、<part0/>を参照してください。",
-  "react_usage_link": "<part0/>の手順で新規または既存のコンポーネントを接続します。現在は React アダプターを提供しています。",
+  "react_usage_link": "使用するフレームワークのガイドを確認してください。現在はReactに対応しています。<part0/>",
   "assistant_document_links": "<part0/> は各ガイドと API リファレンスの Markdown へのリンクをまとめた短い索引です。ドキュメント全体が必要な場合は、<part1/> をアシスタントに渡してください。",
   "pseudo_element_options": "Edge はデフォルトで <part0/> にハイライトを描画します。既存の <part2/> を維持するには <part1/> を設定します。両方の擬似要素が使用済みなら、外側にラッパーを追加して適用してください。",
   "native_input_wrapper": "ネイティブの input では擬似要素を安定して表示できません。代わりに周囲の <part0/> または <part1/> に接続し、border-radius を合わせます。input のラベル、フォーカス、検証、キーボード操作は維持してください。くぼんだ外観には <part2/> を使います。",
@@ -273,5 +273,6 @@
   "geometry_limits_link": "Edge は軸に沿った矩形を前提とします。回転、遠近変換、別ドキュメントへのポータルには対応していません。同一ドキュメント内のポータルは光を共有できます。フォーカス、選択、検証については<part0/>を参照してください。",
   "switch_pseudo_element": "{element} にハイライトを適用",
   "current_pseudo_element": "ハイライトは ::{element} を使用",
-  "not_found_navigation": "ページが見つかりません。<part0/>に戻るか、<part1/>をご覧ください。"
+  "not_found_navigation": "ページが見つかりません。<part0/>に戻るか、<part1/>をご覧ください。",
+  "react_usage_title": "Reactで使う"
 }

@@ -36,7 +36,7 @@
   "edge_provider_signature": "Edge.Provider 签名",
   "edge_surface_signature": "Edge.Surface 签名",
   "surface_ownership": "在 Edge.Provider 内使用",
-  "integration": "集成",
+  "integration": "集成注意事项",
   "usesurface_signature": "useSurface 签名",
   "share_one_light_with_existing_components": "在现有组件间共享光照",
   "one_owner_per_element": "一个元素只能连接一个光照",
@@ -78,7 +78,7 @@
   "group_elements_under_one_shared_light_and": "将需要响应同一光照的元素分组，再选择其中显示高光的表面。需要独立响应的区域可以使用单独的光照。",
   "start_using_edge": "开始使用 Edge",
   "usage": "用法",
-  "react_integration": "React 集成",
+  "react_integration": "React",
   "accessibility": "无障碍",
   "keep_components_readable_and_operable_without_lighting": "确保组件在没有光照时仍可阅读和操作。",
   "choose_motion_behavior": "选择动态效果",
@@ -178,7 +178,7 @@
   "keep_your_ui": "保留现有 UI",
   "edge_keeps_your_background_text_spacing_and": "Edge 保留背景、文字、间距和基础边框。高光默认使用各表面的文字颜色和圆角。请保留现有交互和键盘焦点标识。",
   "layout_changes": "布局变化",
-  "connect_your_components": "连接组件",
+  "connect_your_components": "选择框架",
   "handle_decoration_conflicts_native_inputs_and_layout": "了解如何与现有伪元素、input 元素及布局变化配合使用。",
   "keep_existing_decorations": "与现有伪元素配合使用",
   "wrap_native_inputs": "包裹 input 元素",
@@ -264,7 +264,7 @@
   "style_and_motion_links": "在<part0/>中选择 表面的响应方式，在<part1/>中设置光照的移动方式。",
   "input_integration_link": "input 的包裹方式和现有装饰冲突见<part0/>。",
   "application_layout_link": "如果应用自行改变元素位置，请参阅<part0/>。",
-  "react_usage_link": "按照<part0/>连接新组件或现有组件。目前提供 React 适配器。",
+  "react_usage_link": "查看所用框架的指南。目前支持 React。<part0/>",
   "assistant_document_links": "<part0/> 是一个简短索引，链接到各指南和 API 参考的 Markdown 文档。如果助手需要完整文档，请提供 <part1/>。",
   "pseudo_element_options": "Edge 默认在 <part0/> 上绘制高光。要保留现有的 <part2/>，请设置 <part1/>。如果两个伪元素都已使用，请在外层添加容器并应用 Edge。",
   "native_input_wrapper": "原生 input 无法可靠显示伪元素。请连接外围的 <part0/> 或 <part1/>，并匹配 border-radius。保留 input 的标签、焦点、验证和键盘行为。使用 <part2/> 可呈现内凹效果。",
@@ -273,5 +273,6 @@
   "geometry_limits_link": "Edge 近似模拟轴对齐矩形。不支持旋转、透视变换和跨文档 Portal。同一文档内的 Portal 可以共享光照。焦点、选择状态和验证见<part0/>。",
   "switch_pseudo_element": "使用 {element} 绘制高光",
   "current_pseudo_element": "高光使用 ::{element}",
-  "not_found_navigation": "此页面不存在。请返回<part0/>，或查看<part1/>。"
+  "not_found_navigation": "此页面不存在。请返回<part0/>，或查看<part1/>。",
+  "react_usage_title": "在 React 中使用"
 }

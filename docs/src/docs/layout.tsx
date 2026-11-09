@@ -83,6 +83,7 @@ export function DocumentLayout({
                 <NavigationMenuLink
                   key={item.href}
                   href={item.href}
+                  {...stylex.props(active && styles.navLinkActive)}
                   xstyle={styles.navLink}
                   active={active}
                   aria-current={active ? 'page' : undefined}
@@ -258,6 +259,7 @@ const styles = stylex.create({
   },
   navHeading: { marginBlockEnd: 10, marginInline: 10 },
   navLink: { width: '100%' },
+  navLinkActive: { backgroundColor: colorVars.bgSubtle, color: colorVars.fgPrimary },
   siteContent: {
     minWidth: '0',
     padding: {
