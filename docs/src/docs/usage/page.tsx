@@ -1,4 +1,5 @@
 import { ReactLogo } from './_ui/ReactLogo.js';
+import { spacingVars } from '@bolerish/tokens/semantic.stylex';
 import { inlineMessage } from '../_shared/inline-message.js';
 import { Card, CardHeader, CardTitle } from '@bolerish/ui/card';
 import { localePath } from '../../shared/locale.js';
@@ -98,8 +99,8 @@ export const usage: DocPage = {
               href={localePath('/docs/react/usage/')}
               {...stylex.props(frameworkStyles.link)}
             >
-              <Card>
-                <CardHeader>
+              <Card xstyle={frameworkStyles.card}>
+                <CardHeader xstyle={frameworkStyles.header}>
                   <ReactLogo />
                   <CardTitle>React</CardTitle>
                 </CardHeader>
@@ -114,4 +115,11 @@ export const usage: DocPage = {
 
 const frameworkStyles = stylex.create({
   link: { display: 'inline-block', marginBlockStart: 20, textDecoration: 'none' },
+  card: { alignItems: 'center', justifyContent: 'center' },
+  header: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacingVars.space3,
+    textAlign: 'center',
+  },
 });
