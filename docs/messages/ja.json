@@ -287,5 +287,6 @@
   "provider_summary": "子孫のサーフェスで共有する照明を作成します。",
   "surface_summary": "DOM要素に照明効果を適用します。",
   "use_light_summary": "照明ハンドルを作成して設定します。",
-  "use_surface_summary": "既存のDOM要素を照明に接続するrefを返します。"
+  "use_surface_summary": "既存のDOM要素を照明に接続するrefを返します。",
+  "react_api_choice": "まずEdge.ProviderとEdge.Surfaceを使用してください。既存のコンポーネントに直接接続する場合はuseSurfaceを使用できます。"
 }

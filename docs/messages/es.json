@@ -287,5 +287,6 @@
   "provider_summary": "Crea una luz compartida para las superficies descendientes.",
   "surface_summary": "Aplica iluminación a un elemento DOM.",
   "use_light_summary": "Crea y configura un identificador de luz.",
-  "use_surface_summary": "Devuelve una ref que conecta un elemento DOM existente a una luz."
+  "use_surface_summary": "Devuelve una ref que conecta un elemento DOM existente a una luz.",
+  "react_api_choice": "Empieza con Edge.Provider y Edge.Surface. Usa useSurface para conectar directamente un componente existente."
 }

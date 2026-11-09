@@ -4,6 +4,7 @@ import type { DocPage } from '../../_shared/types.js';
 export const provider: DocPage = {
   slug: 'react/provider',
   section: 'React',
+  navigationGroup: 'components',
   title: 'Edge.Provider',
   get description() {
     return m.provider_summary();

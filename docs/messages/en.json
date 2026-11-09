@@ -287,5 +287,6 @@
   "provider_summary": "Creates a shared light for descendant surfaces.",
   "surface_summary": "Applies lighting to a DOM element.",
   "use_light_summary": "Creates and configures a light handle.",
-  "use_surface_summary": "Returns a ref that connects an existing DOM element to a light."
+  "use_surface_summary": "Returns a ref that connects an existing DOM element to a light.",
+  "react_api_choice": "Start with Edge.Provider and Edge.Surface. Use useSurface to connect an existing component directly."
 }

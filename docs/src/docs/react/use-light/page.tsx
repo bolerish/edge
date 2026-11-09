@@ -4,6 +4,7 @@ import type { DocPage } from '../../_shared/types.js';
 export const use_light: DocPage = {
   slug: 'react/use-light',
   section: 'React',
+  navigationGroup: 'hooks',
   title: 'useLight',
   get description() {
     return m.use_light_summary();

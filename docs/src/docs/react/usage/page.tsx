@@ -18,7 +18,7 @@ export const reactIntegration: DocPage = {
     return m.usage();
   },
   get description() {
-    return m.connect_components_to_a_shared_light_with();
+    return m.react_api_choice();
   },
   sections: [
     {

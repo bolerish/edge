@@ -25,7 +25,7 @@ import { SurfaceLightContext } from '../shared/lighting/light-context.js';
 import { LightingSurface } from '../shared/lighting/LightingSurface.js';
 export interface NavigationGroup {
   title?: string;
-  items: { title: string; href: string }[];
+  items: { title: string; href: string; group?: string }[];
 }
 
 export function DocumentLayout({
@@ -80,17 +80,23 @@ export function DocumentLayout({
                 item.href === (page ? getPagePath(page) : pathname) ||
                 item.href === (page ? getPagePath(page) : pathname) + hash;
               return (
-                <NavigationMenuLink
-                  key={item.href}
-                  href={item.href}
-                  {...stylex.props(active && styles.navLinkActive)}
-                  xstyle={styles.navLink}
-                  active={active}
-                  aria-current={active ? 'page' : undefined}
-                  onClick={() => setOpen(false)}
-                >
-                  {item.title}
-                </NavigationMenuLink>
+                <div key={item.href}>
+                  {item.group ? (
+                    <Paragraph variant="caption" xstyle={styles.navSubheading}>
+                      {item.group}
+                    </Paragraph>
+                  ) : null}
+                  <NavigationMenuLink
+                    href={item.href}
+                    {...stylex.props(active && styles.navLinkActive)}
+                    xstyle={styles.navLink}
+                    active={active}
+                    aria-current={active ? 'page' : undefined}
+                    onClick={() => setOpen(false)}
+                  >
+                    {item.title}
+                  </NavigationMenuLink>
+                </div>
               );
             })}
           </NavigationMenuItem>
@@ -258,6 +264,7 @@ const styles = stylex.create({
     },
   },
   navHeading: { marginBlockEnd: 10, marginInline: 10 },
+  navSubheading: { marginBlock: '16px 6px', marginInline: 10 },
   navLink: { width: '100%' },
   navLinkActive: { backgroundColor: colorVars.bgSubtle, color: colorVars.fgPrimary },
   siteContent: {

@@ -287,5 +287,6 @@
   "provider_summary": "创建供后代界面共享的光照。",
   "surface_summary": "为 DOM 元素应用光照效果。",
   "use_light_summary": "创建并配置光照句柄。",
-  "use_surface_summary": "返回将现有 DOM 元素连接到光照的 ref。"
+  "use_surface_summary": "返回将现有 DOM 元素连接到光照的 ref。",
+  "react_api_choice": "先使用 Edge.Provider 和 Edge.Surface。要直接连接现有组件，可以使用 useSurface。"
 }

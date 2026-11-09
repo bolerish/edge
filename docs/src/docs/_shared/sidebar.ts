@@ -1,3 +1,4 @@
+import { m } from '../../paraglide/messages.js';
 import { sectionLabel } from '../../shared/locale.js';
 import type { NavigationGroup } from '../layout.js';
 import { pages } from './page-registry.js';
@@ -8,6 +9,15 @@ export function getDocsNavigation(): NavigationGroup[] {
     title: section ? sectionLabel(section) : undefined,
     items: pages
       .filter((page) => page.section === section && page.navigation !== false)
-      .map((page) => ({ title: page.title, href: getPagePath(page) })),
+      .map((page, index, sectionPages) => ({
+        title: page.title,
+        href: getPagePath(page),
+        group:
+          page.navigationGroup && page.navigationGroup !== sectionPages[index - 1]?.navigationGroup
+            ? page.navigationGroup === 'components'
+              ? m.react_components()
+              : m.react_hooks()
+            : undefined,
+      })),
   }));
 }
