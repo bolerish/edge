@@ -1,4 +1,5 @@
 import { inlineMessage } from '../_shared/inline-message.js';
+import { Card, CardHeader, CardTitle } from '@bolerish/ui/card';
 import { localePath } from '../../shared/locale.js';
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
@@ -89,10 +90,15 @@ export const usage: DocPage = {
         return (
           <>
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {inlineMessage(m.react_usage_link(), {
-                part0: <Link href={localePath('/docs/react/usage/')}>{m.react_integration()}</Link>,
-              })}
+              {m.framework_guide_description()}
             </P>
+            <Link href={localePath('/docs/react/usage/')}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>React →</CardTitle>
+                </CardHeader>
+              </Card>
+            </Link>
           </>
         );
       },

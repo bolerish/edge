@@ -274,5 +274,14 @@
   "switch_pseudo_element": "Usar {element} para el reflejo",
   "current_pseudo_element": "El reflejo usa ::{element}",
   "not_found_navigation": "Esta página no está disponible. Vuelve a <part0/> o explora el <part1/>.",
-  "react_usage_title": "Usar con React"
+  "react_usage_title": "Usar con React",
+  "react_components": "Componentes",
+  "react_components_description": "Uso y props de Provider y Surface.",
+  "react_hooks": "Hooks",
+  "react_hooks_description": "Argumentos, valores devueltos y uso de los hooks.",
+  "react_api_overview": "Resumen de la API de React",
+  "react_api_overview_description": "Elige componentes o hooks para consultar su API.",
+  "direction_label": "Dirección",
+  "radius_label": "Alcance",
+  "framework_guide_description": "Consulta la guía de tu framework."
 }

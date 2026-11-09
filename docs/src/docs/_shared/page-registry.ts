@@ -4,6 +4,8 @@ import { usage } from '../usage/page.js';
 import { styles } from '../styles/page.js';
 import { motion } from '../motion/page.js';
 import { integration } from '../integration/page.js';
+import { components } from '../react/components/page.js';
+import { hooks } from '../react/hooks/page.js';
 import { api } from '../react/api/page.js';
 import { aiIntegration } from '../ai-integration/page.js';
 import { reactIntegration } from '../react/usage/page.js';
@@ -17,6 +19,8 @@ export const pages = [
   aiIntegration,
   reactIntegration,
   api,
+  components,
+  hooks,
 ];
 
 // A reading journey differs from the sidebar's responsibility-based catalog.
@@ -30,6 +34,8 @@ export const learningPath = [
   integration,
   aiIntegration,
   api,
+  components,
+  hooks,
 ];
 
 export function getReadingNeighbors(page: (typeof pages)[number]) {

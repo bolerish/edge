@@ -274,5 +274,14 @@
   "switch_pseudo_element": "Use {element} decoration",
   "current_pseudo_element": "Decoration uses ::{element}",
   "not_found_navigation": "This page is not available. Return to <part0/> or explore the <part1/>.",
-  "react_usage_title": "Use with React"
+  "react_usage_title": "Use with React",
+  "react_components": "Components",
+  "react_components_description": "Provider and Surface usage and props.",
+  "react_hooks": "Hooks",
+  "react_hooks_description": "Hook arguments, return values and usage.",
+  "react_api_overview": "React API overview",
+  "react_api_overview_description": "Choose components or hooks to find their API.",
+  "direction_label": "Direction",
+  "radius_label": "Range",
+  "framework_guide_description": "Follow the guide for your framework."
 }

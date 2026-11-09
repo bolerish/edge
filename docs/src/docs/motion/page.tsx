@@ -16,7 +16,7 @@ import { contentStyles } from '../_shared/content-styles.js';
 import { Paragraph as P } from '@bolerish/ui/paragraph';
 import { Link } from '@bolerish/ui/link';
 import { ExamplePreview } from '../_shared/ExamplePreview.js';
-import { motionExample } from './_ui/MotionExample.js';
+import { motionExample, pointerExample, staticExample } from './_ui/MotionExample.js';
 import type { DocPage } from '../_shared/types.js';
 
 export const motion: DocPage = {
@@ -58,9 +58,6 @@ export const motion: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {m.try_each_mode_below_the_selection_updates()}
             </P>
-            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-              {m.pointer_settings_hint()}
-            </P>
             <ExamplePreview title={motionExample.title} code={motionExample.code}>
               <motionExample.Component />
             </ExamplePreview>
@@ -68,6 +65,23 @@ export const motion: DocPage = {
         );
       },
     },
+    {
+      id: 'pointer-lighting',
+      get title() {
+        return m.pointer_lighting();
+      },
+      get content() {
+        return (
+          <>
+            <P xstyle={contentStyles.paragraph}>{m.pointer_settings_hint()}</P>
+            <ExamplePreview title={pointerExample.title} code={pointerExample.code}>
+              <pointerExample.Component />
+            </ExamplePreview>
+          </>
+        );
+      },
+    },
+
     {
       id: 'options',
       get title() {
@@ -130,7 +144,9 @@ export const motion: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {inlineMessage(m.motion_options_link(), {
                 part0: (
-                  <Link href={localePath('/docs/react/api/#lighting')}>{m.api_reference()}</Link>
+                  <Link href={localePath('/docs/react/components/#lighting')}>
+                    {m.api_reference()}
+                  </Link>
                 ),
               })}
             </P>
@@ -171,12 +187,17 @@ export const motion: DocPage = {
       },
       get content() {
         return (
-          <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
-            {inlineMessage(m.static_direction_options(), {
-              part0: <code {...stylex.props(contentStyles.inlineCode)}>{'staticDirection'}</code>,
-              part1: <code {...stylex.props(contentStyles.inlineCode)}>{'"random"'}</code>,
-            })}
-          </P>
+          <>
+            <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
+              {inlineMessage(m.static_direction_options(), {
+                part0: <code {...stylex.props(contentStyles.inlineCode)}>{'staticDirection'}</code>,
+                part1: <code {...stylex.props(contentStyles.inlineCode)}>{'"random"'}</code>,
+              })}
+            </P>
+            <ExamplePreview title={staticExample.title} code={staticExample.code}>
+              <staticExample.Component />
+            </ExamplePreview>
+          </>
         );
       },
     },

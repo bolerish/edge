@@ -5,8 +5,8 @@ import * as stylex from '@stylexjs/stylex';
 import { use } from 'react';
 import { SurfaceLightContext } from '../../../shared/lighting/light-context.js';
 import { usePreferences, updatePreferences } from '../../../shared/preferences/usePreferences.js';
-import { useSurface } from '@bolerish/edge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@bolerish/ui/card';
+import { useLight, useSurface } from '@bolerish/edge';
+import { Card, CardHeader, CardTitle } from '@bolerish/ui/card';
 import {
   Select,
   SelectItem,
@@ -26,12 +26,12 @@ const directions = {
   '315': '315°',
 };
 export function MotionExample() {
-  const { motion, staticDirection: direction } = usePreferences();
+  const { motion } = usePreferences();
   return (
     <div role="group" aria-label={m.motion_comparison()}>
       <div {...stylex.props(styles.appearanceControls)}>
         <Field xstyle={styles.appearanceControl}>
-          <FieldLabel id="example-motion-label">motion</FieldLabel>
+          <FieldLabel id="example-motion-label">{m.motion()}</FieldLabel>
           <Select
             value={motion}
             items={motions}
@@ -54,52 +54,12 @@ export function MotionExample() {
             </SelectPopup>
           </Select>
         </Field>
-        {motion === 'static' ? (
-          <Field xstyle={styles.appearanceControl}>
-            <FieldLabel id="example-direction-label">staticDirection</FieldLabel>
-            <Select
-              value={String(direction)}
-              items={directions}
-              onValueChange={(value) => {
-                if (value === 'random') updatePreferences({ staticDirection: value });
-                else {
-                  const angle = Number(value);
-                  if (
-                    angle === 0 ||
-                    angle === 90 ||
-                    angle === 180 ||
-                    angle === 270 ||
-                    angle === 315
-                  )
-                    updatePreferences({ staticDirection: angle });
-                }
-              }}
-            >
-              <SelectTrigger
-                xstyle={styles.controlTrigger}
-                aria-labelledby="example-direction-label"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectPopup>
-                <SelectList>
-                  {Object.entries(directions).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectList>
-              </SelectPopup>
-            </Select>
-          </Field>
-        ) : null}
       </div>
-      <LightingControls />
       <MotionCard />
     </div>
   );
 }
-function MotionCard() {
+export function MotionCard({ fixed = false }: { fixed?: boolean }) {
   const light = use(SurfaceLightContext);
   if (!light) throw new Error('Appearance examples require document lighting');
   const { edgeStyle } = usePreferences();
@@ -107,12 +67,8 @@ function MotionCard() {
   return (
     <Card role="article" ref={surface}>
       <CardHeader>
-        <CardTitle>{m.follow_your_pointer()}</CardTitle>
-        <CardDescription xstyle={styles.description}>
-          {m.choose_how_this_card_responds_to_movement()}
-        </CardDescription>
+        <CardTitle>{fixed ? m.label_static() : m.follow_your_pointer()}</CardTitle>
       </CardHeader>
-      <CardContent>{m.system_respects_your_motion_preferences_static_keeps()}</CardContent>
     </Card>
   );
 }
@@ -122,7 +78,7 @@ export const motionExample = {
     return m.compare_motion();
   },
   Component: MotionExample,
-  code: `const light = useLight({ motion: __MOTION__, staticDirection: __STATIC_DIRECTION__, direction: __DIRECTION__, radius: __RADIUS__ });
+  code: `const light = useLight({ motion: __MOTION__ });
 const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 
 <Card ref={surface}>
@@ -152,3 +108,65 @@ const styles = stylex.create({
     width: '100%',
   },
 });
+
+export function PointerExample() {
+  const { direction, radius } = usePreferences();
+  const light = useLight({ motion: 'dynamic', direction, radius });
+  return (
+    <SurfaceLightContext.Provider value={light}>
+      <LightingControls alwaysEnabled />
+      <MotionCard />
+    </SurfaceLightContext.Provider>
+  );
+}
+export function StaticExample() {
+  const { staticDirection: direction } = usePreferences();
+  const light = useLight({ motion: 'static', staticDirection: direction });
+  return (
+    <SurfaceLightContext.Provider value={light}>
+      <Field xstyle={styles.appearanceControl}>
+        <FieldLabel id="example-direction-label">{m.direction_label()}</FieldLabel>
+        <Select
+          value={String(direction)}
+          items={directions}
+          onValueChange={(value) => {
+            if (value === 'random') updatePreferences({ staticDirection: value });
+            else {
+              const angle = Number(value);
+              if (angle === 0 || angle === 90 || angle === 180 || angle === 270 || angle === 315)
+                updatePreferences({ staticDirection: angle });
+            }
+          }}
+        >
+          <SelectTrigger xstyle={styles.controlTrigger} aria-labelledby="example-direction-label">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectPopup>
+            <SelectList>
+              {Object.entries(directions).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectList>
+          </SelectPopup>
+        </Select>
+      </Field>
+      <MotionCard fixed />
+    </SurfaceLightContext.Provider>
+  );
+}
+export const pointerExample = {
+  get title() {
+    return m.pointer_lighting();
+  },
+  Component: PointerExample,
+  code: `const light = useLight({ motion: 'dynamic', direction: __DIRECTION__, radius: __RADIUS__ });`,
+};
+export const staticExample = {
+  get title() {
+    return m.label_static();
+  },
+  Component: StaticExample,
+  code: `const light = useLight({ motion: 'static', staticDirection: __STATIC_DIRECTION__ });`,
+};

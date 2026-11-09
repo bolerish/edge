@@ -1,18 +1,18 @@
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
-import { FieldSet, FieldLegend, Field, FieldLabel, FieldDescription } from '@bolerish/ui/field';
+import { FieldSet, FieldLegend, Field, FieldLabel } from '@bolerish/ui/field';
 import { ToggleGroup, ToggleGroupItem } from '@bolerish/ui/toggle-group';
 import { Slider } from '@bolerish/ui/slider';
 import { usePreferences, updatePreferences } from './usePreferences.js';
 
-export function LightingControls() {
+export function LightingControls({ alwaysEnabled = false }: { alwaysEnabled?: boolean }) {
   const { direction, radius, motion } = usePreferences();
-  const disabled = motion === 'static';
+  const disabled = !alwaysEnabled && motion === 'static';
   return (
     <FieldSet xstyle={styles.controls} disabled={disabled}>
       <FieldLegend>{m.pointer_lighting()}</FieldLegend>
       <Field>
-        <FieldLabel id="lighting-direction-label">direction</FieldLabel>
+        <FieldLabel id="lighting-direction-label">{m.direction_label()}</FieldLabel>
         <ToggleGroup
           aria-labelledby="lighting-direction-label"
           value={[direction]}
@@ -28,10 +28,10 @@ export function LightingControls() {
       </Field>
       <Field xstyle={styles.range}>
         <FieldLabel id="lighting-radius-label">
-          radius: <output>{radius} px</output>
+          {m.radius_label()}: <output>{radius} px</output>
         </FieldLabel>
         <Slider
-          aria-label="radius"
+          aria-label={m.radius_label()}
           min={40}
           max={1200}
           step={20}
@@ -42,7 +42,6 @@ export function LightingControls() {
             if (next !== undefined) updatePreferences({ radius: next });
           }}
         />
-        <FieldDescription>{m.pointer_settings_hint()}</FieldDescription>
       </Field>
     </FieldSet>
   );

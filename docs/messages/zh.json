@@ -274,5 +274,14 @@
   "switch_pseudo_element": "使用 {element} 绘制高光",
   "current_pseudo_element": "高光使用 ::{element}",
   "not_found_navigation": "此页面不存在。请返回<part0/>，或查看<part1/>。",
-  "react_usage_title": "在 React 中使用"
+  "react_usage_title": "在 React 中使用",
+  "react_components": "组件",
+  "react_components_description": "Provider 和 Surface 的用法及 props。",
+  "react_hooks": "钩子",
+  "react_hooks_description": "钩子的参数、返回值和用法。",
+  "react_api_overview": "React API 概览",
+  "react_api_overview_description": "选择组件或钩子以查看其 API。",
+  "direction_label": "方向",
+  "radius_label": "范围",
+  "framework_guide_description": "查看所用框架的指南。"
 }

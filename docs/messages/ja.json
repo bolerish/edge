@@ -274,5 +274,14 @@
   "switch_pseudo_element": "{element} にハイライトを適用",
   "current_pseudo_element": "ハイライトは ::{element} を使用",
   "not_found_navigation": "ページが見つかりません。<part0/>に戻るか、<part1/>をご覧ください。",
-  "react_usage_title": "Reactで使う"
+  "react_usage_title": "Reactで使う",
+  "react_components": "コンポーネント",
+  "react_components_description": "ProviderとSurfaceの使い方とprops。",
+  "react_hooks": "フック",
+  "react_hooks_description": "フックの引数、戻り値と使い方。",
+  "react_api_overview": "React APIの概要",
+  "react_api_overview_description": "コンポーネントまたはフックのAPIを確認できます。",
+  "direction_label": "方向",
+  "radius_label": "範囲",
+  "framework_guide_description": "使用するフレームワークのガイドを確認してください。"
 }

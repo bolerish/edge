@@ -274,5 +274,14 @@
   "switch_pseudo_element": "{element}에 하이라이트 적용",
   "current_pseudo_element": "하이라이트에 사용하는 가상 요소: ::{element}",
   "not_found_navigation": "이 페이지를 찾을 수 없습니다. <part0/>로 돌아가거나 <part1/>를 살펴보세요.",
-  "react_usage_title": "React에서 사용하기"
+  "react_usage_title": "React에서 사용하기",
+  "react_components": "컴포넌트",
+  "react_components_description": "Provider와 Surface의 사용법과 props를 확인하세요.",
+  "react_hooks": "훅",
+  "react_hooks_description": "훅의 인자, 반환값과 사용법을 확인하세요.",
+  "react_api_overview": "React API 개요",
+  "react_api_overview_description": "컴포넌트 또는 훅을 선택해 API를 확인하세요.",
+  "direction_label": "방향",
+  "radius_label": "범위",
+  "framework_guide_description": "사용하는 프레임워크에 맞는 가이드를 확인하세요."
 }

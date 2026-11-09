@@ -96,7 +96,7 @@ export const reactIntegration: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {inlineMessage(m.react_existing_component(), {
                 part0: (
-                  <Link href={localePath('/docs/react/api/#use-surface')}>
+                  <Link href={localePath('/docs/react/hooks/#use-surface')}>
                     {'useSurface(options)'}
                   </Link>
                 ),
