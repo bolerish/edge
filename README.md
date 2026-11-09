@@ -2,7 +2,7 @@
 
 A little more alive. Connect your React components to one shared directional light.
 
-![edge Demo](./docs/src/assets/edge.gif)
+![edge Demo](./assets/edge.gif)
 
 ## Quick start
 
