@@ -1,3 +1,4 @@
+import { installPrompt } from './shared/installation/install-prompt.js';
 import { test, expect } from '@playwright/test';
 
 const routes = [
@@ -290,13 +291,22 @@ test('getting started owns shared installation and the AI prompt without demos',
       },
     }),
   );
-  await install.getByRole('button', { name: 'Copy prompt', exact: true }).click();
-  await expect(install.getByRole('button', { name: 'Copied', exact: true })).toBeVisible();
+  await install.getByRole('tab', { name: 'npm', exact: true }).focus();
+  await page.keyboard.press('End');
+  await expect(install.getByRole('tab', { name: 'Prompt', exact: true })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(
+    install.getByRole('region', { name: 'Installation prompt code', exact: true }),
+  ).toBeVisible();
+  await install.getByRole('button', { name: 'Copy Installation prompt', exact: true }).click();
+  await expect(
+    install.getByRole('button', { name: 'Copy Installation prompt', exact: true }),
+  ).toBeVisible();
   const prompt = await page.evaluate(() => (window as unknown as { copied: string }).copied);
-  expect(prompt).toContain('React 18 or 19');
+  expect(prompt).toBe(installPrompt);
   expect(prompt).toContain('@bolerish/edge/style.css');
   expect(prompt).toContain('Do not add a demo page');
-  await expect(install.getByRole('button', { name: 'Copy prompt', exact: true })).toBeVisible();
+
   await page.evaluate(() =>
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -307,9 +317,28 @@ test('getting started owns shared installation and the AI prompt without demos',
       },
     }),
   );
-  await install.getByRole('button', { name: 'Copy prompt', exact: true }).click();
+  await install.getByRole('tab', { name: 'Prompt', exact: true }).click();
+  await expect(
+    install.getByRole('region', { name: 'Installation prompt code', exact: true }),
+  ).toBeVisible();
+  await install.getByRole('button', { name: 'Copy Installation prompt', exact: true }).click();
   await expect(install.getByRole('status').last()).toContainText('Copy unavailable');
-  await expect(install.locator('pre[aria-label="Installation prompt"]')).toContainText(prompt);
+  await expect(
+    install.getByRole('region', { name: 'Installation prompt code', exact: true }),
+  ).toContainText('Do not add a demo page');
+
+  for (const width of [320, 375, 768]) {
+    await page.setViewportSize({ width, height: 900 });
+    const region = install.getByRole('region', { name: 'Installation prompt code', exact: true });
+    expect(await region.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(
+      true,
+    );
+    for (const tab of await install.getByRole('tab').all()) {
+      const bounds = await tab.boundingBox();
+      expect(bounds).not.toBeNull();
+      expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
+    }
+  }
 
   await expect(page.locator('#stylesheet')).toContainText('@import "@bolerish/edge/style.css";');
   await expect(page.getByRole('list', { name: 'Framework integrations' })).toHaveCount(0);

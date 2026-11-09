@@ -1,12 +1,8 @@
 import { m } from '../../paraglide/messages.js';
-import { colorVars } from '@bolerish/tokens/semantic.stylex';
 import * as stylex from '@stylexjs/stylex';
-import { useEffect, useState } from 'react';
-import { Button } from '@bolerish/ui/button';
 import { installPrompt } from './install-prompt.js';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
 import { CodeBlock } from '../code/CodeBlock.js';
-const COPY_CONFIRMATION_DURATION_MS = 2000;
 
 export const installationCommands = [
   { manager: 'npm', command: 'npm install @bolerish/edge' },
@@ -15,34 +11,18 @@ export const installationCommands = [
   { manager: 'Bun', command: 'bun add @bolerish/edge' },
 ];
 export function InstallCommands({ compact = false }: { compact?: boolean }) {
-  const [status, setStatus] = useState<'idle' | 'copied' | 'unavailable'>('idle');
-  useEffect(() => {
-    if (status !== 'copied') return;
-    const timeout = window.setTimeout(() => setStatus('idle'), COPY_CONFIRMATION_DURATION_MS);
-    return () => window.clearTimeout(timeout);
-  }, [status]);
-  async function copyPrompt() {
-    try {
-      await navigator.clipboard.writeText(installPrompt);
-      setStatus('copied');
-    } catch {
-      setStatus('unavailable');
-    }
-  }
   return (
     <div className="install-commands">
       <Tabs defaultValue="npm">
         <div {...stylex.props(styles.installToolbar)}>
-          <TabsList aria-label={m.package_manager()}>
+          <TabsList aria-label={m.installation_choices()} xstyle={styles.tabsList}>
             {installationCommands.map(({ manager }) => (
               <TabsTrigger key={manager} value={manager}>
                 {manager}
               </TabsTrigger>
             ))}
+            <TabsTrigger value="prompt">Prompt</TabsTrigger>
           </TabsList>
-          <Button xstyle={styles.copyButton} size="sm" variant="ghost" onClick={copyPrompt}>
-            {status === 'copied' ? m.copied() : m.copy_prompt()}
-          </Button>
         </div>
         {installationCommands.map(({ manager, command }) => (
           <TabsContent key={manager} value={manager}>
@@ -55,63 +35,25 @@ export function InstallCommands({ compact = false }: { compact?: boolean }) {
             />
           </TabsContent>
         ))}
+        <TabsContent value="prompt">
+          <CodeBlock
+            compact={compact}
+            label={m.installation_prompt()}
+            language="text"
+            code={installPrompt}
+          />
+        </TabsContent>
       </Tabs>
-
-      <span
-        role="status"
-        {...stylex.props(status === 'unavailable' ? styles.copyError : styles.visuallyHidden)}
-      >
-        {status === 'copied'
-          ? m.prompt_copied()
-          : status === 'unavailable'
-            ? m.prompt_unavailable()
-            : ''}
-      </span>
-      {status === 'unavailable' ? (
-        <pre {...stylex.props(styles.prompt)} tabIndex={0} aria-label={m.installation_prompt()}>
-          {installPrompt}
-        </pre>
-      ) : null}
     </div>
   );
 }
 
 const styles = stylex.create({
-  prompt: {
-    padding: {
-      default: '18px 20px',
-      '@media (max-width: 760px)': 16,
-    },
-    overflow: 'auto',
-    lineHeight: 1.8,
-    tabSize: 4,
-    fontSize: 14,
-    outline: {
-      default: null,
-      ':focus-visible': `2px solid ${colorVars.fgPrimary}`,
-    },
-    outlineOffset: -2,
-  },
+  tabsList: { flexWrap: 'wrap' },
   installToolbar: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
     flexWrap: 'wrap',
-  },
-  copyButton: {
-    marginInlineStart: 'auto',
-  },
-  copyError: {
-    display: 'block',
-    padding: '0 20px 16px',
-    fontSize: '12px',
-  },
-  visuallyHidden: {
-    position: 'absolute',
-    width: '1px',
-    height: '1px',
-    overflow: 'hidden',
-    clipPath: 'inset(50%)',
-    whiteSpace: 'nowrap',
   },
 });

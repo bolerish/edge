@@ -56,7 +56,7 @@ export function CodeBlock({
             tabIndex={0}
             aria-label={m.code_region({ label })}
           >
-            <code {...stylex.props(styles.code)}>
+            <code {...stylex.props(styles.code, language === 'text' && styles.prose)}>
               {tokens.map((line, index) => (
                 <div key={index} {...getLineProps({ line })}>
                   {line.map((token, tokenIndex) => (
@@ -141,6 +141,7 @@ const styles = stylex.create({
       ':focus-visible': '-2px',
     },
   },
+  prose: { whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' },
   code: {
     fontSize: '0.88em',
     fontFamily: 'ui-monospace, monospace',
