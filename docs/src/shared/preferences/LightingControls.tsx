@@ -1,7 +1,14 @@
 import { m } from '../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { FieldSet, FieldLegend, Field, FieldLabel } from '@bolerish/ui/field';
-import { ToggleGroup, ToggleGroupItem } from '@bolerish/ui/toggle-group';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectPopup,
+  SelectList,
+  SelectItem,
+} from '@bolerish/ui/select';
 import { Slider } from '@bolerish/ui/slider';
 import { usePreferences, updatePreferences } from './usePreferences.js';
 
@@ -12,26 +19,32 @@ export function LightingControls({ alwaysEnabled = false }: { alwaysEnabled?: bo
     <FieldSet xstyle={styles.controls} disabled={disabled}>
       <FieldLegend>{m.pointer_lighting()}</FieldLegend>
       <Field>
-        <FieldLabel id="lighting-direction-label">{m.direction_label()}</FieldLabel>
-        <ToggleGroup
-          aria-labelledby="lighting-direction-label"
-          value={[direction]}
+        <FieldLabel id="lighting-direction-label">direction</FieldLabel>
+        <Select
+          value={direction}
+          items={{ gather: 'gather', spread: 'spread' }}
           disabled={disabled}
-          onValueChange={(values) => {
-            const next = values[0];
-            if (next === 'gather' || next === 'spread') updatePreferences({ direction: next });
+          onValueChange={(value) => {
+            if (value === 'gather' || value === 'spread') updatePreferences({ direction: value });
           }}
         >
-          <ToggleGroupItem value="gather">gather</ToggleGroupItem>
-          <ToggleGroupItem value="spread">spread</ToggleGroupItem>
-        </ToggleGroup>
+          <SelectTrigger xstyle={styles.select} aria-labelledby="lighting-direction-label">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectPopup>
+            <SelectList>
+              <SelectItem value="gather">gather</SelectItem>
+              <SelectItem value="spread">spread</SelectItem>
+            </SelectList>
+          </SelectPopup>
+        </Select>
       </Field>
       <Field xstyle={styles.range}>
         <FieldLabel id="lighting-radius-label">
-          {m.radius_label()}: <output>{radius} px</output>
+          radius: <output>{radius} px</output>
         </FieldLabel>
         <Slider
-          aria-label={m.radius_label()}
+          aria-label="radius"
           min={40}
           max={1200}
           step={20}
@@ -48,5 +61,6 @@ export function LightingControls({ alwaysEnabled = false }: { alwaysEnabled?: bo
 }
 const styles = stylex.create({
   controls: { marginBlockEnd: 24, minWidth: 0 },
-  range: { maxWidth: 360 },
+  select: { width: 240, maxWidth: '100%' },
+  range: { width: 240, maxWidth: '100%' },
 });

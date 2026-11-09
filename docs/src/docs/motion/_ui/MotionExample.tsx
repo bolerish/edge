@@ -31,7 +31,7 @@ export function MotionExample() {
     <div role="group" aria-label={m.motion_comparison()}>
       <div {...stylex.props(styles.appearanceControls)}>
         <Field xstyle={styles.appearanceControl}>
-          <FieldLabel id="example-motion-label">{m.motion()}</FieldLabel>
+          <FieldLabel id="example-motion-label">motion</FieldLabel>
           <Select
             value={motion}
             items={motions}
@@ -87,13 +87,10 @@ const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 };
 
 const styles = stylex.create({
-  description: {
-    marginBlock: '12px 0',
-  },
   appearanceControls: {
     display: 'grid',
     gridTemplateColumns: {
-      default: 'repeat(2, minmax(0, 1fr))',
+      default: 'minmax(0, 1fr)',
       '@media (max-width: 480px)': 'minmax(0, 1fr)',
     },
     gap: '16px',
@@ -104,8 +101,10 @@ const styles = stylex.create({
     gap: '8px',
     minWidth: '0',
   },
+  staticControl: { marginBlockEnd: 24 },
   controlTrigger: {
-    width: '100%',
+    width: 240,
+    maxWidth: '100%',
   },
 });
 
@@ -124,8 +123,8 @@ export function StaticExample() {
   const light = useLight({ motion: 'static', staticDirection: direction });
   return (
     <SurfaceLightContext.Provider value={light}>
-      <Field xstyle={styles.appearanceControl}>
-        <FieldLabel id="example-direction-label">{m.direction_label()}</FieldLabel>
+      <Field xstyle={[styles.appearanceControl, styles.staticControl]}>
+        <FieldLabel id="example-direction-label">staticDirection</FieldLabel>
         <Select
           value={String(direction)}
           items={directions}
