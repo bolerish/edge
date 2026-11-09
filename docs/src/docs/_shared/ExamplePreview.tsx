@@ -1,7 +1,11 @@
 import { m } from '../../paraglide/messages.js';
 import { colorVars } from '@bolerish/tokens/semantic.stylex';
 import * as stylex from '@stylexjs/stylex';
-import { usePreferences, type SitePreferences } from '../../shared/preferences/usePreferences.js';
+import {
+  usePreferences,
+  usePreferencesReady,
+  type SitePreferences,
+} from '../../shared/preferences/usePreferences.js';
 import { LightingSurface } from '../../shared/lighting/LightingSurface.js';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@bolerish/ui/tabs';
 import type { ReactNode } from 'react';
@@ -18,6 +22,7 @@ export function ExamplePreview({
   children: ReactNode;
 }) {
   const { edgeStyle, motion, staticDirection, direction, radius } = usePreferences();
+  const ready = usePreferencesReady();
   const displayedCode = formatExampleCode(code, {
     edgeStyle,
     motion,
@@ -31,25 +36,27 @@ export function ExamplePreview({
       role="group"
       aria-label={title}
     >
-      <Tabs defaultValue="preview" variant="underline">
-        <TabsList aria-label={m.view_region({ title })}>
-          <TabsTrigger value="preview">{m.preview()}</TabsTrigger>
-          <TabsTrigger value="code">{m.code()}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="preview" keepMounted>
-          <LightingSurface
-            className="example-preview-result"
-            xstyle={styles.examplePreviewResult}
-            role="group"
-            aria-label={m.preview_region({ title })}
-          >
-            {children}
-          </LightingSurface>
-        </TabsContent>
-        <TabsContent value="code" keepMounted>
-          <CodeBlock label={title} code={displayedCode} />
-        </TabsContent>
-      </Tabs>
+      <div {...stylex.props(!ready && styles.pending)} aria-busy={!ready}>
+        <Tabs defaultValue="preview" variant="segmented">
+          <TabsList aria-label={m.view_region({ title })}>
+            <TabsTrigger value="preview">{m.preview()}</TabsTrigger>
+            <TabsTrigger value="code">{m.code()}</TabsTrigger>
+          </TabsList>
+          <TabsContent value="preview" keepMounted>
+            <LightingSurface
+              className="example-preview-result"
+              xstyle={styles.examplePreviewResult}
+              role="group"
+              aria-label={m.preview_region({ title })}
+            >
+              {children}
+            </LightingSurface>
+          </TabsContent>
+          <TabsContent value="code" keepMounted>
+            <CodeBlock label={title} code={displayedCode} />
+          </TabsContent>
+        </Tabs>
+      </div>
       <noscript>
         <p>{m.the_example_becomes_interactive_when_javascript_is()}</p>
         <CodeBlock label={title} code={displayedCode} />
@@ -72,6 +79,7 @@ export function formatExampleCode(
 }
 
 const styles = stylex.create({
+  pending: { visibility: 'hidden' },
   examplePreview: {
     display: 'grid',
     gap: '16px',

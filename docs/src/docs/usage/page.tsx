@@ -1,3 +1,4 @@
+import { AtomIcon, ArrowRightIcon } from '@phosphor-icons/react';
 import { inlineMessage } from '../_shared/inline-message.js';
 import { Card, CardHeader, CardTitle } from '@bolerish/ui/card';
 import { localePath } from '../../shared/locale.js';
@@ -92,10 +93,17 @@ export const usage: DocPage = {
             <P {...stylex.props(stylex.defaultMarker())} xstyle={contentStyles.paragraph}>
               {m.framework_guide_description()}
             </P>
-            <Link href={localePath('/docs/react/usage/')}>
+            <Link
+              variant="plain"
+              href={localePath('/docs/react/usage/')}
+              {...stylex.props(frameworkStyles.link)}
+            >
               <Card>
                 <CardHeader>
-                  <CardTitle>React →</CardTitle>
+                  <AtomIcon size={32} aria-hidden="true" />
+                  <CardTitle>
+                    React <ArrowRightIcon size={18} aria-hidden="true" />
+                  </CardTitle>
                 </CardHeader>
               </Card>
             </Link>
@@ -105,3 +113,7 @@ export const usage: DocPage = {
     },
   ],
 };
+
+const frameworkStyles = stylex.create({
+  link: { display: 'inline-block', marginBlockStart: 20, textDecoration: 'none' },
+});

@@ -2,11 +2,7 @@ import { m } from '../../../paraglide/messages.js';
 import * as stylex from '@stylexjs/stylex';
 import { use } from 'react';
 import { SurfaceLightContext } from '../../../shared/lighting/light-context.js';
-import {
-  usePreferences,
-  usePreferencesReady,
-  updatePreferences,
-} from '../../../shared/preferences/usePreferences.js';
+import { usePreferences, updatePreferences } from '../../../shared/preferences/usePreferences.js';
 import { useSurface, type EdgeStyle } from '@bolerish/edge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@bolerish/ui/card';
 import {
@@ -50,9 +46,8 @@ const edgeStyles = [
 
 export function EdgeStylesExample() {
   const { edgeStyle } = usePreferences();
-  const ready = usePreferencesReady();
   return (
-    <div role="group" aria-label={m.style_comparison()} {...stylex.props(!ready && styles.pending)}>
+    <div role="group" aria-label={m.style_comparison()}>
       <div {...stylex.props(styles.appearanceControls)}>
         <div {...stylex.props(styles.appearanceControl)}>
           <span {...stylex.props(styles.controlLabel)} id="example-style-label">
@@ -116,7 +111,6 @@ const surface = useSurface(light, { edgeStyle: __EDGE_STYLE__ });
 };
 
 const styles = stylex.create({
-  pending: { visibility: 'hidden' },
   description: {
     marginBlock: '12px 0',
   },
