@@ -13,7 +13,7 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
 } from '@bolerish/ui/navigation-menu';
-import { colorVars } from '@bolerish/tokens/semantic.stylex';
+import { colorVars, sizeVars, spacingVars, typo } from '@bolerish/tokens/semantic.stylex';
 import { documentStyles } from '../shared/document-styles.js';
 import { siteColors } from '../shared/site.stylex';
 import * as stylex from '@stylexjs/stylex';
@@ -291,25 +291,20 @@ const styles = stylex.create({
     },
   },
   navToggle: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     width: '100%',
-    minHeight: 32,
-    padding: '8px 10px',
-    borderWidth: 0,
-    backgroundColor: 'transparent',
-    color: colorVars.fgPrimary,
+    minHeight: sizeVars.controlSm,
+    paddingTop: spacingVars.space2,
+    paddingRight: `calc(${spacingVars.space0_5} * 5.0)`,
+    paddingBottom: spacingVars.space2,
+    paddingLeft: `calc(${spacingVars.space0_5} * 5.0)`,
     font: 'inherit',
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: 'pointer',
-    borderRadius: 6,
-    outline: { default: null, ':focus-visible': `2px solid ${colorVars.fgPrimary}` },
-    outlineOffset: 2,
+    fontSize: `calc(${typo.fontSizeSm} * 13 / 14)`,
+    fontWeight: typo.fontWeightSemibold,
+    color: 'inherit',
+    justifyContent: 'space-between',
   },
-  navAccordionItem: { borderWidth: 0 },
-  navAccordionContent: { padding: 0 },
+  navAccordionItem: { border: '0', marginTop: spacingVars.space3 },
+  navAccordionContent: { paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0 },
   navHeading: { marginBlockEnd: 10, marginInline: 10 },
   navSubheading: { marginBlock: '16px 6px', marginInline: 10 },
   navLink: { width: '100%' },
