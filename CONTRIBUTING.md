@@ -11,6 +11,8 @@ pnpm dev
 
 Open http://localhost:3000.
 
+Installation enables Lefthook locally. Before committing, it checks formatting and lint for staged files without rewriting them. Before pushing, it runs type checks and unit/integration tests. Run `pnpm exec lefthook install` to reinstall the hooks, or `pnpm exec lefthook run pre-push` to run the push checks manually. Browser and packed-consumer checks run in release preparation. CI disables local hooks with `LEFTHOOK=0`.
+
 ## Structure and conventions
 
 - `packages/core/src/`: framework-independent light, geometry and frame scheduling.
@@ -78,8 +80,20 @@ pnpm release:prepare
 
 This runs `pnpm check` followed by `pnpm test:react-compat`. Verified archives remain at `.private/package-check/core.tgz`, `.private/package-check/styles.tgz` and `.private/package-check/react.tgz`. The compatibility check creates separate archives in `.private/react-compatibility` and preserves the package-check archives. Each preparation run replaces its previous package-check output.
 
-The manually dispatched `.github/workflows/release-prepare.yml` installs the pinned Node and pnpm versions, runs the same checks and uploads only those three package-check archives. It does not publish packages or deploy the site. Passing preparation is not proof that a version can be published: all three packages at `0.1.0` were already published on November 5, 2026, and cannot be overwritten. The current release candidate uses aligned version `0.2.0`; verify that it remains unused before publishing and run preparation again after any release change.
+The manually dispatched `.github/workflows/release-prepare.yml` runs preparation and uploads the three verified archives without publishing. `.github/workflows/publish.yml` runs the same preparation on `main`, verifies the requested stable version against all three manifests, uploads the archives, then publishes those exact archives in core → styles → React order. Concurrent publish runs are serialized. A failed partial publish needs manual investigation before retrying; published versions cannot be overwritten.
 
-Check real iOS and Android devices separately before release; Chromium and React compatibility checks do not cover real devices. Publish only upon future explicit authorization, in order: core, styles, React. Publish the exact verified tarballs from that release preparation, rather than repacking source afterward. npm authentication is not configured by this workflow.
+Before using the publish workflow, configure a Trusted Publisher in the npm settings for **each** package (`@bolerish/edge-core`, `@bolerish/edge-styles`, `@bolerish/edge`):
+
+- GitHub organization: `bolerish`
+- Repository: `edge`
+- Workflow filename: `publish.yml`
+- Environment: `npm`
+- Allowed action: direct publishing with `npm publish`
+
+Create the matching GitHub `npm` environment and configure its deployment branch as `main`. The workflow uses GitHub-hosted runners, `id-token: write` and npm 12.2.2 for OIDC; no npm token secret is required. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/). Local npm login is separate from this trust configuration.
+
+After pushing the reviewed release commit, manually run **Publish npm packages** on `main` with the exact version. Do not run it until publication is authorized and all three versions are unused. The current candidate is `0.2.0`; `0.1.0` has already been published. After publication, verify the default registry install in a new consumer project before deploying documentation.
+
+Check real iOS and Android devices separately before release; Chromium and React compatibility checks do not cover real devices. Publish only upon future explicit authorization, in order: core, styles, React. Publish the exact verified tarballs from that release preparation, rather than repacking source afterward. `release-prepare.yml` does not configure npm authentication.
 
 Deploy only when requested with `pnpm deploy:docs`. Cloudflare Pages serves `docs/dist` at `edge.bolerish.com`; `.private/docs-ssr` is a build artifact and must not be deployed.

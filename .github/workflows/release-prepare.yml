@@ -10,6 +10,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     env:
+      LEFTHOOK: '0'
       PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.private/playwright-browsers
     steps:
       - uses: actions/checkout@v7

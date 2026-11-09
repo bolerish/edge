@@ -2,6 +2,9 @@ packages:
   - packages/*
   - docs
 
+allowBuilds:
+  lefthook: true
+
 catalog:
   '@inlang/paraglide-js': 3.2.1
   oxfmt: 0.77.0

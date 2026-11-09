@@ -26,10 +26,12 @@
     "format:check": "oxfmt --check",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "release:prepare": "pnpm check && pnpm test:react-compat"
+    "release:prepare": "pnpm check && pnpm test:react-compat",
+    "prepare": "lefthook install"
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "lefthook": "2.2.2",
     "oxfmt": "catalog:",
     "oxlint": "catalog:"
   }
